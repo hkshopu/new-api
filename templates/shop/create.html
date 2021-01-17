@@ -1,0 +1,79 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}新增商店{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/shop/create.css' %}">
+{% endblock %}
+{% block content %}
+    <main>
+        <form id="create-form" method="POST" action="/shop/createProcess/" enctype="multipart/form-data">
+            <div class="container">
+                <h2 class="m-3">新增商店</h2>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="shop_icon">商店小圖</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="file" name="shop_icon" id="shop_icon">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="shop_title">商店名稱</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" name="shop_title" id="shop_title">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="shop_category_id">商店分類</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select name="shop_category_id" id="shop_category_id">
+                                <option value="1">時尚精品</option>
+                                <option value="2">美食天堂</option>
+                                <option value="3">精選家電</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="shop_pic">商店主圖</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="file" name="shop_pic" id="shop_pic">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="shop_desc">商店描述</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <textarea name="shop_desc" id="shop_desc" cols="30" rows="10" form="create-form"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">新增</button>
+            </div>
+        </form>
+    </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/shop/create.js' %}"></script>
+{% endblock %}

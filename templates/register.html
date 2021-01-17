@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}會員註冊{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+{% block content %}
+    <main>
+        <div id="register-form">
+            <div class="container">
+                <h2 class="m-3">會員註冊</h2>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="account-name">用戶名稱</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="account-name">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="email">電子郵件</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="password">密碼</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="confirm-password">確認密碼</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="confirm-password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="first-name">名字</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="first-name">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="last-name">姓氏</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="last-name">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="phone">手機號碼</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="phone">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="gender">性別</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="gender">
+                                <option value="M">男</option>
+                                <option value="F">女</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="birthday">出生日期</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" id="birthday">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="address">居住地址</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="address">
+                        </div>
+                    </div>
+                </div>
+
+                <a href="javascript:register();" class="btn btn-primary" id="register-btn">
+                    註冊
+                </a>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
