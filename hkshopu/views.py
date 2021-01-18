@@ -170,7 +170,8 @@ def socialLoginProcess(request):
             if googleAccount and email:
                 try:
                     user = models.User.objects.get(email=email)
-                    user.update(google_account=googleAccount)
+                    user.google_account = googleAccount
+                    user.save()
                     responseData['ret_val'] = '已使用 Google 帳戶登入!'
                     responseData['status'] = 1
                 except:
@@ -185,7 +186,8 @@ def socialLoginProcess(request):
             if facebookAccount and email:
                 try:
                     user = models.User.objects.get(email=email)
-                    user.update(facebook_account=facebookAccount)
+                    user.facebook_account = facebookAccount
+                    user.save()
                     responseData['ret_val'] = '已使用 Facebook 帳戶登入!'
                     responseData['status'] = 2
                 except:
@@ -200,7 +202,8 @@ def socialLoginProcess(request):
             if appleAccount and email:
                 try:
                     user = models.User.objects.get(email=email)
-                    user.update(apple_account=appleAccount)
+                    user.apple_account = appleAccount
+                    user.save()
                     responseData['ret_val'] = '已使用 Apple 帳戶登入!'
                     responseData['status'] = 3
                 except:
@@ -247,7 +250,8 @@ def forgetPasswordProcess(request):
                 users = models.User.objects.filter(forget_password_token=token)
                 i = len(users)
             # 更新使用者的 Token
-            user.update(forget_password_token=token)
+            user.forget_password_token = token
+            user.save()
             # 發送忘記密碼通知信
             subject = 'HKShopU - 忘記密碼'
             htmlMessage = render_to_string('forget_password_mail.html', {'id': user.id, 'account_name': user.account_name, 'token': user.forget_password_token})
@@ -449,3 +453,4 @@ def createProcess(request):
             )
             responseData['ret_val'] = '商店新增成功!'
     return JsonResponse(responseData)
+    
