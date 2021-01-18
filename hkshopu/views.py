@@ -8,7 +8,6 @@ from django.utils.html import strip_tags
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from hkshopu import models
-import mysql.connector
 import re
 import random
 import datetime
