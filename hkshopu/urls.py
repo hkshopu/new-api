@@ -12,4 +12,5 @@ urlpatterns = [
     path('shop/create/', views.create), 
     path('shop/save/', views.save), 
     path('shop/<id>/update/', views.update), 
+    path('shop/<id>/show/', views.show), 
 ]

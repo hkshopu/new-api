@@ -634,3 +634,42 @@ def update(request, id):
             shop.save()
             responseData['ret_val'] = '商店更新成功!'
     return JsonResponse(responseData)
+# 單一商店
+def show(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'shop': {}
+    }
+
+    if request.method == 'GET':
+        # 檢查商店編號是否正確
+        if responseData['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+                responseData['shop']['id'] = shop.id
+                responseData['shop']['user_id'] = shop.user_id
+                responseData['shop']['shop_category_id'] = shop.shop_category_id
+                responseData['shop']['shop_title'] = shop.shop_title
+                responseData['shop']['shop_icon'] = shop.shop_icon
+                responseData['shop']['shop_pic'] = shop.shop_pic
+                responseData['shop']['shop_description'] = shop.shop_description
+                responseData['shop']['paypal'] = shop.paypal
+                responseData['shop']['visa'] = shop.visa
+                responseData['shop']['master'] = shop.master
+                responseData['shop']['apple'] = shop.apple
+                responseData['shop']['android'] = shop.android
+                responseData['shop']['is_ship_free'] = shop.is_ship_free
+                responseData['shop']['ship_by_product'] = shop.ship_by_product
+                responseData['shop']['ship_free_quota'] = shop.ship_free_quota
+                responseData['shop']['fix_ship_fee'] = shop.fix_ship_fee
+                responseData['shop']['fix_ship_fee_from'] = shop.fix_ship_fee_from
+                responseData['shop']['fix_ship_fee_to'] = shop.fix_ship_fee_to
+                responseData['shop']['created_at'] = shop.created_at
+                responseData['shop']['updated_at'] = shop.updated_at
+                responseData['ret_val'] = '已找到商店資料!'
+            except:
+                responseData['status'] = -1
+                responseData['ret_val'] = '找不到此商店編號的商店!'
+    return JsonResponse(responseData)
