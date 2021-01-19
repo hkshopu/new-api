@@ -632,4 +632,5 @@ def update(request, id):
             shop.fix_ship_fee_from = fixShipFeeFr
             shop.fix_ship_fee_to = fixShipFeeTo
             shop.save()
+            responseData['ret_val'] = '商店更新成功!'
     return JsonResponse(responseData)
