@@ -261,6 +261,48 @@ def forgetPasswordProcess(request):
             mail.send_mail(subject=subject, message=message, from_email=fromEmail, recipient_list=toEmail, html_message=htmlMessage)
             responseData['ret_val'] = '已發送重設密碼連結至您的電子郵件!'
     return JsonResponse(responseData)
+# 使用者商店列表
+def getShopListProcess(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'shop_list': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shops = models.Shop.objects.filter(user_id=id)
+            if len(shops) == 0:
+                responseData['status'] = 1
+                responseData['ret_val'] = '您尚未建立任何商店!'
+            else:
+                for shop in shops:
+                    shopInfo = {
+                        'id': shop.id, 
+                        'user_id': shop.user_id, 
+                        'shop_category_id': shop.shop_category_id, 
+                        'shop_title': shop.shop_title, 
+                        'shop_icon': shop.shop_icon, 
+                        'shop_pic': shop.shop_pic, 
+                        'shop_description': shop.shop_description, 
+                        'paypal': shop.paypal, 
+                        'visa': shop.visa, 
+                        'master': shop.master, 
+                        'apple': shop.apple, 
+                        'android': shop.android, 
+                        'is_ship_free': shop.is_ship_free, 
+                        'ship_by_product': shop.ship_by_product, 
+                        'ship_free_quota': shop.ship_free_quota, 
+                        'fix_ship_fee': shop.fix_ship_fee, 
+                        'fix_ship_fee_from': shop.fix_ship_fee_from, 
+                        'fix_ship_fee_to': shop.fix_ship_fee_to, 
+                        'created_at': shop.created_at, 
+                        'updated_at': shop.updated_at
+                    }
+                    responseData['shop_list'].append(shopInfo)
+                responseData['ret_val'] = '已取得您的商店清單!'
+    return JsonResponse(responseData)
 
 
 # shop
