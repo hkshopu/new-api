@@ -10,5 +10,6 @@ urlpatterns = [
     path('user/forgetPasswordProcess/', views.forgetPasswordProcess),
     # shop
     path('shop/create/', views.create), 
-    path('shop/createProcess/', views.createProcess), 
+    path('shop/save/', views.save), 
+    path('shop/<id>/update/', views.update), 
 ]
