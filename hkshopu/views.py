@@ -262,7 +262,7 @@ def forgetPasswordProcess(request):
             responseData['ret_val'] = '已發送重設密碼連結至您的電子郵件!'
     return JsonResponse(responseData)
 # 使用者商店列表
-def getShopListProcess(request, id):
+def getUserShopListProcess(request, id):
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -308,13 +308,13 @@ def getShopListProcess(request, id):
 # shop
 
 # 新增商店頁面
-def create(request):
+def createShop(request):
     template = get_template('shop/create.html')
     html = template.render()
     return HttpResponse(html)
 
 # 新增商店
-def save(request):
+def saveShop(request):
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -496,7 +496,7 @@ def save(request):
             responseData['ret_val'] = '商店新增成功!'
     return JsonResponse(responseData)
 # 更新商店
-def update(request, id):
+def updateShop(request, id):
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -677,7 +677,7 @@ def update(request, id):
             responseData['ret_val'] = '商店更新成功!'
     return JsonResponse(responseData)
 # 單一商店
-def show(request, id):
+def showShop(request, id):
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -714,4 +714,35 @@ def show(request, id):
             except:
                 responseData['status'] = -1
                 responseData['ret_val'] = '找不到此商店編號的商店!'
+    return JsonResponse(responseData)
+
+
+# shop_category
+
+# 取得商店分類清單
+def getShopCategoryList(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'shop_category_list': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shopCategories = models.Shop_Category.objects.all()
+            if len(shopCategories) == 0:
+                responseData['status'] = 1
+                responseData['ret_val'] = '未建立任何商店分類!'
+            else:
+                for shopCategory in shopCategories:
+                    shopCategoryInfo = {
+                        'id': shopCategory.id, 
+                        'c_shop_category': shopCategory.c_shop_category, 
+                        'e_shop_category': shopCategory.e_shop_category, 
+                        'created_at': shopCategory.created_at, 
+                        'updated_at': shopCategory.updated_at
+                    }
+                    responseData['shop_category_list'].append(shopCategoryInfo)
+                responseData['ret_val'] = '已取得商店清單!'
     return JsonResponse(responseData)

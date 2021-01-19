@@ -8,10 +8,12 @@ urlpatterns = [
     path('user/loginProcess/', views.loginProcess),
     path('user/socialLoginProcess/', views.socialLoginProcess),
     path('user/forgetPasswordProcess/', views.forgetPasswordProcess),
-    path('user/<id>/shop/', views.getShopListProcess), 
+    path('user/<id>/shop/', views.getUserShopListProcess), 
     # shop
-    path('shop/create/', views.create), 
-    path('shop/save/', views.save), 
-    path('shop/<id>/update/', views.update), 
-    path('shop/<id>/show/', views.show), 
+    path('shop/create/', views.createShop), 
+    path('shop/save/', views.saveShop), 
+    path('shop/<id>/update/', views.updateShop), 
+    path('shop/<id>/show/', views.showShop), 
+    # shop_category
+    path('shop_category/', views.getShopCategoryList), 
 ]
