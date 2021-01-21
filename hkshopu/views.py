@@ -787,7 +787,7 @@ def getShopCategoryList(request):
 # product_color
 
 # 取得商品顏色
-def getProductColors(request):
+def getProductColorList(request):
     # 回傳資料
     responseData = {
         'status': 0, 

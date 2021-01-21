@@ -17,5 +17,5 @@ urlpatterns = [
     # shop_category
     path('shop_category/', views.getShopCategoryList), 
     # color
-    path('color/', views.getProductColors), 
+    path('color/', views.getProductColorList), 
 ]
