@@ -339,6 +339,8 @@ def saveShop(request):
         fixShipFeeFr = request.POST.get('fix_ship_fee_fr', 0)
         fixShipFeeTo = request.POST.get('fix_ship_fee_to', 0)
         shipByProduct = request.POST.get('ship_by_product', '')
+        discountByPercent = request.POST.get('discount_by_percent', 0)
+        discountByAmount = request.POST.get('discount_by_amount', 0)
         # 檢查使用者是否登入
         if responseData['status'] == 0:
             if not('user' in request.session):
@@ -450,11 +452,26 @@ def saveShop(request):
                 if not(re.match('^\w+$', shipByProduct)):
                     responseData['status'] = -20
                     responseData['ret_val'] = '運費由商品設定格式錯誤!'
+
+        if responseData['status'] == 0:
+            if not(discountByPercent) and not(discountByAmount):
+                responseData['status'] = -21
+                responseData['ret_val'] = '折扣欄位必須擇一填寫!'
+            else:
+                if discountByPercent:
+                    if not(re.match('^\d+$', discountByPercent)):
+                        responseData['status'] = -22
+                        responseData['ret_val'] = '百分比折扣格式錯誤!'
+
+                if discountByAmount:
+                    if not(re.match('^\d+$', discountByAmount)):
+                        responseData['status'] = -23
+                        responseData['ret_val'] = '價格折扣格式錯誤!'
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
             try:
                 shop = models.Shop.objects.get(shop_title=shopTitle)
-                responseData['status'] = -21
+                responseData['status'] = -24
                 responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
             except:
                 pass
@@ -491,7 +508,9 @@ def saveShop(request):
                 ship_free_quota=shipFreeQuota, 
                 fix_ship_fee=fixShipFee, 
                 fix_ship_fee_from=fixShipFeeFr, 
-                fix_ship_fee_to=fixShipFeeTo
+                fix_ship_fee_to=fixShipFeeTo, 
+                discount_by_percent=discountByPercent, 
+                discount_by_amount=discountByAmount
             )
             responseData['ret_val'] = '商店新增成功!'
     return JsonResponse(responseData)
@@ -520,6 +539,8 @@ def updateShop(request, id):
         fixShipFeeFr = request.POST.get('fix_ship_fee_fr', 0)
         fixShipFeeTo = request.POST.get('fix_ship_fee_to', 0)
         shipByProduct = request.POST.get('ship_by_product', '')
+        discountByPercent = request.POST.get('discount_by_percent', 0)
+        discountByAmount = request.POST.get('discount_by_amount', 0)
         # 現在時間
         now = datetime.datetime.now()
         # FileSystemStorage
@@ -648,6 +669,21 @@ def updateShop(request, id):
                 if not(re.match('^\w+$', shipByProduct)):
                     responseData['status'] = -19
                     responseData['ret_val'] = '運費由商品設定格式錯誤!'
+        
+        if responseData['status'] == 0:
+            if not(discountByPercent) and not(discountByAmount):
+                responseData['status'] = -20
+                responseData['ret_val'] = '折扣欄位必須擇一填寫!'
+            else:
+                if discountByPercent:
+                    if not(re.match('^\d+$', discountByPercent)):
+                        responseData['status'] = -21
+                        responseData['ret_val'] = '百分比折扣格式錯誤!'
+
+                if discountByAmount:
+                    if not(re.match('^\d+$', discountByAmount)):
+                        responseData['status'] = -22
+                        responseData['ret_val'] = '價格折扣格式錯誤!'
         # 先檢查使用者是否更改商店名稱，若有更改，則檢查是否更改名稱為其他同名的商店
         if responseData['status'] == 0:
             try:
@@ -655,7 +691,7 @@ def updateShop(request, id):
             except:
                 sameNameShops = models.Shop.objects.filter(shop_title=shopTitle)
                 if len(sameNameShops) > 0:
-                    responseData['status'] = -20
+                    responseData['status'] = -23
                     responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
         # 更新商店
         if responseData['status'] == 0:

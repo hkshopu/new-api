@@ -37,11 +37,39 @@ class Shop(models.Model):
     fix_ship_fee = models.PositiveIntegerField(null=True)
     fix_ship_fee_from = models.PositiveIntegerField(null=True)
     fix_ship_fee_to = models.PositiveIntegerField(null=True)
+    discount_by_percent = models.PositiveIntegerField(null=True)
+    discount_by_amount = models.PositiveIntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Category(models.Model):
     c_shop_category = models.CharField(max_length=50)
     e_shop_category = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product(models.Model):
+    shop_id = models.PositiveIntegerField()
+    product_category_id = models.PositiveIntegerField()
+    product_sub_category_id = models.PositiveIntegerField()
+    product_title = models.CharField(max_length=50)
+    quantity = models.PositiveIntegerField()
+    product_description = models.TextField()
+    product_country_code = models.CharField(max_length=5)
+    product_price = models.PositiveIntegerField()
+    shipping_fee = models.PositiveIntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Category(models.Model):
+    c_product_category = models.CharField(max_length=50)
+    e_product_category = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Sub_Category(models.Model):
+    product_category_id = models.PositiveIntegerField()
+    c_product_category = models.CharField(max_length=50)
+    e_product_category = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
