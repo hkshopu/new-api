@@ -782,3 +782,34 @@ def getShopCategoryList(request):
                     responseData['shop_category_list'].append(shopCategoryInfo)
                 responseData['ret_val'] = '已取得商店清單!'
     return JsonResponse(responseData)
+
+
+# product_color
+
+# 取得商品顏色
+def getProductColors(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'product_color_list': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            productColors = models.Product_Color.objects.all()
+            if len(productColors) == 0:
+                responseData['status'] = 1
+                responseData['ret_val'] = '您尚未建立任何商品顏色!'
+            else:
+                for productColor in productColors:
+                    productColorInfo = {
+                        'id': productColor.id, 
+                        'c_product_color': productColor.c_product_color, 
+                        'e_product_color': productColor.e_product_color, 
+                        'created_at': productColor.created_at, 
+                        'updated_at': productColor.updated_at
+                    }
+                    responseData['product_color_list'].append(productColorInfo)
+                responseData['ret_val'] = '已取得商品顏色!'
+    return JsonResponse(responseData)

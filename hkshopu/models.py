@@ -73,3 +73,15 @@ class Product_Sub_Category(models.Model):
     e_product_category = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Color(models.Model):
+    c_product_color = models.CharField(max_length=50)
+    e_product_color = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Selected_Product_Color(models.Model):
+    product_id = models.PositiveIntegerField()
+    color_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
