@@ -85,3 +85,21 @@ class Selected_Product_Color(models.Model):
     color_id = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Size(models.Model):
+    c_product_size = models.CharField(max_length=50)
+    e_product_size = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Selected_Product_Size(models.Model):
+    product_id = models.PositiveIntegerField()
+    size_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Origin(models.Model):
+    c_product_origin = models.CharField(max_length=50)
+    e_product_origin = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
