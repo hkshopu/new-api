@@ -7,6 +7,11 @@ import re
 
 # Create your views here.
 
+# 新增選擇的產品顏色頁面
+def create(request):
+    template = get_template('selected_product_color/create.html')
+    html = template.render()
+    return HttpResponse(html)
 # 新增選擇的產品顏色
 def save(request):
     # 回傳資料

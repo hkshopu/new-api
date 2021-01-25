@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+#create-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    font-family: "微軟正黑體";
+    padding: 1rem;
+    text-align: center;
+}

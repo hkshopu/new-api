@@ -1,0 +1,47 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}新增產品顏色{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/selected_product_color/create.css' %}">
+{% endblock %}
+{% block content %}
+    <main>
+        <div id="create-form">
+            <div class="container">
+                <h2 class="m-3">新增產品顏色</h2>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>產品</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="product-id">
+                                <option value="1">極品愛文芒果</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>產品顏色</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="checkbox" id="product-color-red" value="1">
+                            <label>紅色</label>
+                            <input type="checkbox" id="product-color-green" value="2">
+                            <label>綠色</label>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="javascript:create();" id="create-btn" class="btn btn-primary">新增產品顏色</a>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/selected_product_color/create.js' %}"></script>
+{% endblock %}
