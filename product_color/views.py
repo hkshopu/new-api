@@ -33,4 +33,4 @@ def index(request):
                     }
                     responseData['product_color_list'].append(productColorInfo)
                 responseData['ret_val'] = '已取得商品顏色!'
-    return JsonResponse(responseData)
+    return JsonResponse(responseData) 

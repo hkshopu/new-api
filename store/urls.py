@@ -23,4 +23,6 @@ urlpatterns = [
     path('shop_category/', include('shop_category.urls')), 
     path('product/', include('product.urls')), 
     path('product_color/', include('product_color.urls')), 
+    path('selected_product_color/', include('selected_product_color.urls')), 
+    path('selected_product_size/', include('selected_product_size.urls')), 
 ]
