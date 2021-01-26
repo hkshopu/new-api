@@ -23,7 +23,7 @@ def save(request):
     if request.method == 'POST':
         # 欄位資料
         product_id = request.POST.get('product_id', '')
-        color_id = request.POST.get('color_id', '')
+        color_id_list = request.POST.getlist('color_id[]', '')
 
         if response_data['status'] == 0:
             if not(product_id):
@@ -31,7 +31,7 @@ def save(request):
                 response_data['ret_val'] = '未填寫產品編號!'
 
         if response_data['status'] == 0:
-            if not(color_id):
+            if not(color_id_list):
                 response_data['status'] = -2
                 response_data['ret_val'] = '未填寫產品顏色編號!'
 
@@ -41,9 +41,11 @@ def save(request):
                 response_data['ret_val'] = '產品編號格式錯誤!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', color_id)):
-                response_data['status'] = -4
-                response_data['ret_val'] = '產品顏色編號格式錯誤!'
+            for color_id in color_id_list:
+                if not(re.match('^\d+$', color_id)):
+                    response_data['status'] = -4
+                    response_data['ret_val'] = '產品顏色編號格式錯誤!'
+                    break
 
         if response_data['status'] == 0:
             try:
@@ -53,22 +55,27 @@ def save(request):
                 response_data['ret_val'] = '該產品編號錯誤或不存在!'
 
         if response_data['status'] == 0:
-            try:
-                product_color = models.Product_Color.objects.get(id=color_id)
-            except:
-                response_data['status'] = -6
-                response_data['ret_val'] = '該產品顏色編號錯誤或不存在!'
+            for color_id in color_id_list:
+                try:
+                    product_color = models.Product_Color.objects.get(id=color_id)
+                except:
+                    response_data['status'] = -6
+                    response_data['ret_val'] = '該產品顏色編號錯誤或不存在!'
+                    break
 
         if response_data['status'] == 0:
-            same_selected_product_color = models.Selected_Product_Color.objects.filter(product_id=product_id, color_id=color_id)
-            if len(same_selected_product_color) > 0:
-                response_data['status'] = -7
-                response_data['ret_val'] = '您選擇的產品與產品顏色已存在!'
+            for color_id in color_id_list:
+                same_selected_product_color = models.Selected_Product_Color.objects.filter(product_id=product_id, color_id=color_id)
+                if len(same_selected_product_color) > 0:
+                    response_data['status'] = -7
+                    response_data['ret_val'] = '您選擇的產品與產品顏色已存在!'
+                    break
 
         if response_data['status'] == 0:
-            models.Selected_Product_Color.objects.create(
-                product_id=product_id, 
-                color_id=color_id
-            )
+            for color_id in color_id_list:
+                models.Selected_Product_Color.objects.create(
+                    product_id=product_id, 
+                    color_id=color_id
+                )
             response_data['ret_val'] = '產品顏色新增成功!'
     return JsonResponse(response_data)

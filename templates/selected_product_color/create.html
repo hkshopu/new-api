@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
     <main>
-        <div id="create-form">
+        <form id="create-form" method="POST" action="/selected_product_color/save/">
             <div class="container">
                 <h2 class="m-3">新增產品顏色</h2>
 
@@ -16,7 +16,7 @@
                             <label>產品</label>
                         </div>
                         <div class="col-sm-8">
-                            <select id="product-id">
+                            <select name="product_id">
                                 <option value="1">極品愛文芒果</option>
                             </select>
                         </div>
@@ -29,17 +29,21 @@
                             <label>產品顏色</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="checkbox" id="product-color-red" value="1">
+                            <input type="checkbox" name="color_id[]" value="1">
                             <label>紅色</label>
-                            <input type="checkbox" id="product-color-green" value="2">
+                            <input type="checkbox" name="color_id[]" value="2">
                             <label>綠色</label>
+                            <input type="checkbox" name="color_id[]" value="3">
+                            <label>藍色</label>
+                            <input type="checkbox" name="color_id[]" value="4">
+                            <label>黃色</label>
                         </div>
                     </div>
                 </div>
 
-                <a href="javascript:create();" id="create-btn" class="btn btn-primary">新增產品顏色</a>
+                <button type="submit" class="btn btn-primary">新增產品顏色</button>
             </div>
-        </div>
+        </form>
     </main>
 {% endblock %}
 {% block js %}
