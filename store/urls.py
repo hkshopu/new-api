@@ -23,6 +23,10 @@ urlpatterns = [
     path('shop_category/', include('shop_category.urls')), 
     path('product/', include('product.urls')), 
     path('product_color/', include('product_color.urls')), 
+    path('product_size/', include('product_size.urls')), 
+    path('product_category/', include('product_category.urls')), 
+    path('product_sub_category/', include('product_sub_category.urls')), 
+    path('product_origin/', include('product_origin.urls')), 
     path('selected_product_color/', include('selected_product_color.urls')), 
     path('selected_product_size/', include('selected_product_size.urls')), 
 ]
