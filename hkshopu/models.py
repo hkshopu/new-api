@@ -103,3 +103,9 @@ class Product_Origin(models.Model):
     e_product_origin = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Selected_Product_Pic(models.Model):
+    product_id = models.PositiveIntegerField()
+    product_pic = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

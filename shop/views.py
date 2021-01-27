@@ -2,8 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
 from django.db.models import Q
+from django.core.files.storage import FileSystemStorage
 from hkshopu import models
 import re
+import datetime
+import math
 
 # Create your views here.
 
@@ -181,11 +184,11 @@ def save(request):
             # shop_icon
             shopIconName = str(shopIcon.name).split('.')[0]
             shopIconExtension = str(shopIcon.name).split('.')[1]
-            shopIconFullName = shopIconName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(round(now.timestamp())) + '.' + shopIconExtension
+            shopIconFullName = shopIconName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopIconExtension
             # shop_pic
             shopPicName = str(shopPic.name).split('.')[0]
             shopPicExtension = str(shopPic.name).split('.')[1]
-            shopPicFullName = shopPicName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(round(now.timestamp())) + '.' + shopPicExtension
+            shopPicFullName = shopPicName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopPicExtension
             # 移動圖檔到指定路徑
             fs = FileSystemStorage(location='templates/static/images/')
             fs.save(name=shopIconFullName, content=shopIcon)
@@ -286,7 +289,7 @@ def update(request, id):
                 else:
                     shopIconName = str(shopIcon.name).split('.')[0]
                     shopIconExtension = str(shopIcon.name).split('.')[1]
-                    shopIconFullName = shopIconName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(round(now.timestamp())) + '.' + shopIconExtension
+                    shopIconFullName = shopIconName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopIconExtension
                     fs.save(name=shopIconFullName, content=shopIcon)
                     shop.shop_icon = shopIconFullName
                     shop.save()
@@ -299,7 +302,7 @@ def update(request, id):
                 else:
                     shopPicName = str(shopPic.name).split('.')[0]
                     shopPicExtension = str(shopPic.name).split('.')[1]
-                    shopPicFullName = shopPicName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(round(now.timestamp())) + '.' + shopPicExtension
+                    shopPicFullName = shopPicName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopPicExtension
                     fs.save(name=shopPicFullName, content=shopPic)
                     shop.shop_pic = shopPicFullName
                     shop.save()
