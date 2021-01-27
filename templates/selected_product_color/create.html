@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
     <main>
-        <form id="create-form" method="POST" action="/selected_product_color/save/">
+        <div id="create-form">
             <div class="container">
                 <h2 class="m-3">新增產品顏色</h2>
 
@@ -16,7 +16,7 @@
                             <label>產品</label>
                         </div>
                         <div class="col-sm-8">
-                            <select name="product_id">
+                            <select name="product_id" id="product_id">
                                 <option value="1">極品愛文芒果</option>
                             </select>
                         </div>
@@ -29,21 +29,25 @@
                             <label>產品顏色</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="checkbox" name="color_id[]" value="1">
+                            <input type="checkbox" name="color_id" value="1">
                             <label>紅色</label>
-                            <input type="checkbox" name="color_id[]" value="2">
+                            <input type="checkbox" name="color_id" value="2">
                             <label>綠色</label>
-                            <input type="checkbox" name="color_id[]" value="3">
+                            <input type="checkbox" name="color_id" value="3">
                             <label>藍色</label>
-                            <input type="checkbox" name="color_id[]" value="4">
+                            <input type="checkbox" name="color_id" value="4">
                             <label>黃色</label>
+                            <input type="checkbox" name="color_id" value="5">
+                            <label>紫色</label>
+                            <input type="checkbox" name="color_id" value="6">
+                            <label>橙色</label>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">新增產品顏色</button>
+                <a href="javascript:create();" class="btn btn-primary">新增產品顏色</a>
             </div>
-        </form>
+        </div>
     </main>
 {% endblock %}
 {% block js %}

@@ -23,7 +23,7 @@ def save(request):
     if request.method == 'POST':
         # 欄位資料
         product_id = request.POST.get('product_id', '')
-        color_id_list = request.POST.getlist('color_id[]', '')
+        color_id_list = request.POST.getlist('color_id', [])
 
         if response_data['status'] == 0:
             if not(product_id):
