@@ -48,7 +48,7 @@ def registerProcess(request):
                 responseData['ret_val'] = '電子郵件格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[A-Za-z0-9]{8,16}$', password)):
+            if not(re.match('^[~!@#$%^&*()_+]{1}[A-Za-z0-9]{7,15}$', password)):
                 responseData['status'] = -3
                 responseData['ret_val'] = '密碼格式錯誤!'
 
