@@ -21,7 +21,7 @@ def index(request):
             product_sub_category_list = models.Product_Sub_Category.objects.all()
             if len(product_sub_category_list) == 0:
                 response_data['status'] = 1
-                response_data['ret_val'] = '您尚未新增任何產品子分類清單!'
+                response_data['ret_val'] = '您尚未新增任何產品子分類!'
 
         if response_data['status'] == 0:
             for product_sub_category in product_sub_category_list:
