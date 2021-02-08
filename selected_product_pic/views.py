@@ -46,6 +46,13 @@ def save(request):
                     break
 
         if response_data['status'] == 0:
+            try:
+                product = models.Product.objects.get(id=product_id)
+            except:
+                response_data['status'] = -5
+                response_data['ret_val'] = '該產品編號錯誤或不存在!'
+
+        if response_data['status'] == 0:
             for product_pic in product_pic_list:
                 # 自訂圖片檔名
                 now = datetime.datetime.now()
