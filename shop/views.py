@@ -451,6 +451,6 @@ def show(request, id):
                 responseData['shop']['updated_at'] = shop.updated_at
                 responseData['ret_val'] = '已找到商店資料!'
             except:
-                responseData['status'] = -1
+                responseData['status'] = 1
                 responseData['ret_val'] = '找不到此商店編號的商店!'
     return JsonResponse(responseData)
