@@ -26,6 +26,7 @@ def save(request):
         product_country_code = request.POST.get('product_country_code', '')
         product_price = request.POST.get('product_price', 0)
         shipping_fee = request.POST.get('shipping_fee', 0)
+        weight = request.POST.get('weight', 0)
         # 檢查各欄位是否填寫
         if response_data['status'] == 0:
             if not(shop_id):
@@ -108,26 +109,32 @@ def save(request):
             if not(re.match('^\d+$', shipping_fee)):
                 response_data['status'] = -16
                 response_data['ret_val'] = '產品運費格式錯誤!'
+
+        if response_data['status'] == 0:
+            if weight:
+                if not(re.match('^\d+$', weight)):
+                    response_data['status'] = -17
+                    response_data['ret_val'] = '產品重量格式錯誤!'
         # 檢查商店編號是否存在
         if response_data['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=shop_id)
             except:
-                response_data['status'] = -17
+                response_data['status'] = -18
                 response_data['ret_val'] = '商店編號不存在!'
         # 檢查產品分類編號是否正確
         if response_data['status'] == 0:
             try:
                 product_category = models.Product_Category.objects.get(id=product_category_id)
             except:
-                response_data['status'] = -18
+                response_data['status'] = -19
                 response_data['ret_val'] = '產品分類編號不存在!'
         # 檢查產品子分類編號是否正確
         if response_data['status'] == 0:
             try:
                 product_sub_category = models.Product_Sub_Category.objects.get(id=product_sub_category_id)
             except:
-                response_data['status'] = -19
+                response_data['status'] = -20
                 response_data['ret_val'] = '產品子分類編號不存在!'
 
         if response_data['status'] == 0:
@@ -140,7 +147,8 @@ def save(request):
                 product_description=product_description, 
                 product_country_code=product_country_code, 
                 product_price=product_price, 
-                shipping_fee=shipping_fee
+                shipping_fee=shipping_fee, 
+                weight=weight
             )
             response_data['ret_val'] = '產品新增成功!'
     return JsonResponse(response_data)

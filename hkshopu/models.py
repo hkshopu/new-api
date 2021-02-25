@@ -58,6 +58,7 @@ class Product(models.Model):
     product_country_code = models.CharField(max_length=5)
     product_price = models.PositiveIntegerField()
     shipping_fee = models.PositiveIntegerField(null=True)
+    weight = models.PositiveIntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
