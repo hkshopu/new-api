@@ -68,11 +68,11 @@ def registerProcess(request):
                 responseData['ret_val'] = '姓氏格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^09[0-9]{8}$', phone)):
+            if not(re.match('^[0-9]{8,10}$', phone)):
                 responseData['status'] = -7
                 responseData['ret_val'] = '手機號碼格式錯誤!'
         if responseData['status'] == 0:
-            if not(re.match('^[M|F]{1}$', gender)):
+            if not(re.match('^[M|F|O]{1}$', gender)):
                 responseData['status'] = -8
                 responseData['ret_val'] = '性別格式錯誤!'
 
