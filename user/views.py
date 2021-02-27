@@ -106,9 +106,9 @@ def registerProcess(request):
                 birthday=birthday, 
                 address=address
             )
-            # 預設將使用者登入，並建立使用者登入 session
             try:
                 user = models.User.objects.get(email=email)
+                # 預設將使用者登入
                 request.session['user'] = {
                     'id': user.id, 
                     'account_name': user.account_name, 
@@ -116,7 +116,7 @@ def registerProcess(request):
                     'first_name': user.first_name, 
                     'last_name': user.last_name
                 }
-                # 產生帳號註冊驗證碼後寫入資料表，並發送電子郵件
+                # 產生帳號註冊驗證碼後寫入資料表
                 rand_str = ''
                 needle = '0123456789'
                 for i in range(4):
@@ -126,6 +126,13 @@ def registerProcess(request):
                     email=user.email, 
                     validation_code=rand_str
                 )
+                # 發送電子郵件，告知帳號註冊驗證碼
+                subject = ''
+                html_message = render_to_string('validation_mail.html', {'account_name': user.account_name, 'validation_code': rand_str})
+                message = strip_tags(html_message)
+                from_email = 'HKShopU'
+                recipient_list = [email, ]
+                mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
             except:
                 pass
             responseData['ret_val'] = '註冊成功!'

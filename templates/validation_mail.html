@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}會員註冊驗證信{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/validation_mail.css' %}">
+{% endblock %}
+{% block content %}
+    親愛的 <b>{{ account_name }}</b> 您好!<br>
+    您的驗證碼為: <b>{{ validation_code }}</b>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/validation_mail.js' %}"></script>
+{% endblock %}
