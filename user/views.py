@@ -106,6 +106,28 @@ def registerProcess(request):
                 birthday=birthday, 
                 address=address
             )
+            # 預設將使用者登入，並建立使用者登入 session
+            try:
+                user = models.User.objects.get(email=email)
+                request.session['user'] = {
+                    'id': user.id, 
+                    'account_name': user.account_name, 
+                    'email': user.email, 
+                    'first_name': user.first_name, 
+                    'last_name': user.last_name
+                }
+                # 產生帳號註冊驗證碼後寫入資料表，並發送電子郵件
+                rand_str = ''
+                needle = '0123456789'
+                for i in range(4):
+                    rand_str += random.choice(needle)
+                models.Email_Validation.objects.create(
+                    user_id=user.id, 
+                    email=user.email, 
+                    validation_code=rand_str
+                )
+            except:
+                pass
             responseData['ret_val'] = '註冊成功!'
     return JsonResponse(responseData)
 # 會員登入

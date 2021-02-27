@@ -112,6 +112,7 @@ class Selected_Product_Pic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Email_Validation(models.Model):
+    user_id = models.PositiveIntegerField()
     email = models.CharField(max_length=50)
     validation_code = models.CharField(max_length=4)
     created_at = models.DateTimeField(auto_now_add=True)
