@@ -38,9 +38,10 @@ def registerProcess(request):
         address = request.POST.get('address', '')
         # 判斷欄位資料是否符合要求格式
         if responseData['status'] == 0:
-            if not(re.match('^[A-Za-z]{3,45}$', accountName)):
-                responseData['status'] = -1
-                responseData['ret_val'] = '用戶名稱格式錯誤!'
+            if accountName:
+                if not(re.match('^[A-Za-z]{3,45}$', accountName)):
+                    responseData['status'] = -1
+                    responseData['ret_val'] = '用戶名稱格式錯誤!'
 
         if responseData['status'] == 0:
             if not(re.match('[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+', email)):
@@ -48,7 +49,7 @@ def registerProcess(request):
                 responseData['ret_val'] = '電子郵件格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[~!@#$%^&*()_+]{1}[A-Za-z0-9]{7,15}$', password)):
+            if not(re.match('^(?!.*[^\x21-\x7e])(?=.{8,16})(?=.*[\W])(?=.*[a-zA-Z])(?=.*\d).*$', password)):
                 responseData['status'] = -3
                 responseData['ret_val'] = '密碼格式錯誤!'
 
@@ -58,39 +59,45 @@ def registerProcess(request):
                 responseData['ret_val'] = '兩次密碼輸入不一致!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', firstName)):
-                responseData['status'] = -5
-                responseData['ret_val'] = '名字格式錯誤!'
+            if firstName:
+                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', firstName)):
+                    responseData['status'] = -5
+                    responseData['ret_val'] = '名字格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', lastName)):
-                responseData['status'] = -6
-                responseData['ret_val'] = '姓氏格式錯誤!'
+            if lastName:
+                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', lastName)):
+                    responseData['status'] = -6
+                    responseData['ret_val'] = '姓氏格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[0-9]{8,10}$', phone)):
-                responseData['status'] = -7
-                responseData['ret_val'] = '手機號碼格式錯誤!'
+            if phone:
+                if not(re.match('^[0-9]{8,10}$', phone)):
+                    responseData['status'] = -7
+                    responseData['ret_val'] = '手機號碼格式錯誤!'
         if responseData['status'] == 0:
-            if not(re.match('^[M|F|O]{1}$', gender)):
-                responseData['status'] = -8
-                responseData['ret_val'] = '性別格式錯誤!'
+            if gender:
+                if not(re.match('^[M|F|O]{1}$', gender)):
+                    responseData['status'] = -8
+                    responseData['ret_val'] = '性別格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[0-9]{4}-[0-9]{2}-[0-9]{2}$', birthday)):
-                responseData['status'] = -9
-                responseData['ret_val'] = '出生日期格式錯誤!'
+            if birthday:
+                if not(re.match('^[0-9]{4}-[0-9]{2}-[0-9]{2}$', birthday)):
+                    responseData['status'] = -9
+                    responseData['ret_val'] = '出生日期格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[A-Za-z\u4e00-\u9fa5]{10,95}$', address)):
-                responseData['status'] = -10
-                responseData['ret_val'] = '居住地址格式錯誤!'
-        # 判斷使用者是否使用相同電子郵件或手機號碼重複註冊
+            if address:
+                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{10,95}$', address)):
+                    responseData['status'] = -10
+                    responseData['ret_val'] = '居住地址格式錯誤!'
+        # 判斷使用者是否使用相同電子郵件重複註冊
         if responseData['status'] == 0:
             try:
-                user = models.User.objects.get(Q(email=email) | Q(phone=phone))
+                user = models.User.objects.get(email=email)
                 responseData['status'] = -11
-                responseData['ret_val'] = '該電子郵件或手機號碼已被使用!'
+                responseData['ret_val'] = '該電子郵件已被使用!'
             except:
                 pass
                 
@@ -116,27 +123,44 @@ def registerProcess(request):
                     'first_name': user.first_name, 
                     'last_name': user.last_name
                 }
-                # 產生帳號註冊驗證碼後寫入資料表
-                rand_str = ''
-                needle = '0123456789'
-                for i in range(4):
-                    rand_str += random.choice(needle)
-                models.Email_Validation.objects.create(
-                    user_id=user.id, 
-                    email=user.email, 
-                    validation_code=rand_str
-                )
-                # 發送電子郵件，告知帳號註冊驗證碼
-                subject = ''
-                html_message = render_to_string('validation_mail.html', {'account_name': user.account_name, 'validation_code': rand_str})
-                message = strip_tags(html_message)
-                from_email = 'HKShopU'
-                recipient_list = [email, ]
-                mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
             except:
                 pass
             responseData['ret_val'] = '註冊成功!'
     return JsonResponse(responseData)
+# 產生並發送驗證碼到使用者電子郵件
+def validateEmailProcess(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 檢查使用者是否登入
+        if response_data['status'] == 0:
+            if not('user' in request.session):
+                response_data['status'] = -1
+                response_data['ret_val'] = '您尚未登入!'
+
+        if response_data['status'] == 0:
+            user_session = request.session['user']
+            # 產生帳號註冊驗證碼後寫入資料表
+            rand_str = ''
+            needle = '0123456789'
+            for i in range(4):
+                rand_str += random.choice(needle)
+            models.Email_Validation.objects.create(
+                user_id=user_session['id'], 
+                email=user_session['email'], 
+                validation_code=rand_str
+            )
+            # 發送電子郵件，告知帳號註冊驗證碼
+            subject = ''
+            html_message = render_to_string('validation_mail.html', {'account_name': user_session['account_name'], 'validation_code': rand_str})
+            message = strip_tags(html_message)
+            from_email = 'HKShopU'
+            recipient_list = [user_session['email'], ]
+            mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
+            response_data['ret_val'] = '已寄出驗證碼!'
+    return JsonResponse(response_data)
 # 會員登入
 def loginProcess(request):
     # 回傳資料
