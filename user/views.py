@@ -128,7 +128,7 @@ def registerProcess(request):
             responseData['ret_val'] = '註冊成功!'
     return JsonResponse(responseData)
 # 產生並發送驗證碼到使用者電子郵件
-def validateEmailProcess(request):
+def generateAndSendValidationCodeProcess(request):
     response_data = {
         'status': 0, 
         'ret_val': ''
@@ -142,16 +142,22 @@ def validateEmailProcess(request):
 
         if response_data['status'] == 0:
             user_session = request.session['user']
-            # 產生帳號註冊驗證碼後寫入資料表
+            # 產生帳號註冊驗證碼
             rand_str = ''
             needle = '0123456789'
-            for i in range(4):
+            for j in range(4):
                 rand_str += random.choice(needle)
-            models.Email_Validation.objects.create(
-                user_id=user_session['id'], 
-                email=user_session['email'], 
-                validation_code=rand_str
-            )
+            # 判斷資料表中是否已有使用者電子郵件和驗證碼，若沒有則新增，若有則更新
+            try:
+                user_validation = models.Email_Validation.objects.get(email=user_session['email'])
+                user_validation.validation_code = rand_str
+                user_validation.save()
+            except:
+                models.Email_Validation.objects.create(
+                    user_id=user_session['id'], 
+                    email=user_session['email'], 
+                    validation_code=rand_str
+                )
             # 發送電子郵件，告知帳號註冊驗證碼
             subject = ''
             html_message = render_to_string('validation_mail.html', {'account_name': user_session['account_name'], 'validation_code': rand_str})
@@ -160,6 +166,36 @@ def validateEmailProcess(request):
             recipient_list = [user_session['email'], ]
             mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
             response_data['ret_val'] = '已寄出驗證碼!'
+    return JsonResponse(response_data)
+# 驗證電子郵件
+def validateEmailProcess(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 取得欄位資料
+        email = request.POST.get('email', '')
+        validation_code = request.POST.get('validation_code', '')
+        # 確認電子郵件是否存在
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(email=email)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '該電子郵件不存在!'
+        # 確認電子郵件及驗證碼是否正確
+        if response_data['status'] == 0:
+            try:
+                user_validation = models.Email_Validation.objects.get(email=email, validation_code=validation_code)
+            except:
+                response_data['status'] = -2
+                response_data['ret_val'] = '電子郵件或驗證碼錯誤!'
+
+        if response_data['status'] == 0:
+            user.activated = 'Y'
+            user.save()
+            response_data['ret_val'] = '驗證成功!'
     return JsonResponse(response_data)
 # 會員登入
 def loginProcess(request):
