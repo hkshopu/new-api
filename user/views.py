@@ -7,6 +7,7 @@ from django.core import mail
 from django.utils.html import strip_tags
 from django.db.models import Q
 from hkshopu import models
+import datetime
 import re
 import random
 
@@ -191,6 +192,13 @@ def validateEmailProcess(request):
             except:
                 response_data['status'] = -2
                 response_data['ret_val'] = '電子郵件或驗證碼錯誤!'
+
+        if response_data['status'] == 0:
+            now = datetime.datetime.now()
+            updated_at = user_validation.updated_at
+            if (now - updated_at).min > 10:
+                response_data['status'] = -3
+                response_data['ret_val'] = '驗證碼已過期，請重新產生!'
 
         if response_data['status'] == 0:
             user.activated = 'Y'
