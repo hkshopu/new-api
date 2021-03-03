@@ -64,6 +64,8 @@ def registerProcess(request):
                 if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', firstName)):
                     responseData['status'] = -5
                     responseData['ret_val'] = '名字格式錯誤!'
+            else:
+                firstName = str(email).split('@')[0]
 
         if responseData['status'] == 0:
             if lastName:
