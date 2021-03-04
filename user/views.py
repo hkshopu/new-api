@@ -131,7 +131,7 @@ def registerProcess(request):
             responseData['ret_val'] = '註冊成功!'
     return JsonResponse(responseData)
 # 產生並發送驗證碼到使用者電子郵件
-def generateAndSendValidationCodeProcess(request):
+def generateAndSendValidationCodeProcess(request, id):
     response_data = {
         'status': 0, 
         'ret_val': ''
