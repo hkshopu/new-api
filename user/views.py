@@ -355,6 +355,39 @@ def forgetPasswordProcess(request):
             mail.send_mail(subject=subject, message=message, from_email=fromEmail, recipient_list=toEmail, html_message=htmlMessage)
             responseData['ret_val'] = '已發送重設密碼連結至您的電子郵件!'
     return JsonResponse(responseData)
+# 會員密碼更新
+def resetPasswordProcess(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        email = request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+        # 檢查電子郵件是否存在
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(email=email)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '該電子郵件不存在或未被使用!'
+        # 檢查密碼格式是否正確
+        if response_data['status'] == 0:
+            if not(re.match('^(?!.*[^\x21-\x7e])(?=.{8,16})(?=.*[\W])(?=.*[a-zA-Z])(?=.*\d).*$', password)):
+                response_data['status'] = -2
+                response_data['ret_val'] = '密碼格式錯誤!'
+        # 檢查兩次密碼輸入是否一致
+        if response_data['status'] == 0:
+            if confirm_password != password:
+                response_data['status'] = -3
+                response_data['ret_val'] = '兩次密碼輸入不一致!'
+        # 更新會員密碼
+        if response_data['status'] == 0:
+            user.password = make_password(password)
+            user.save()
+    return JsonResponse(response_data)
 # 使用者商店列表
 def getUserShopListProcess(request, id):
     # 回傳資料
