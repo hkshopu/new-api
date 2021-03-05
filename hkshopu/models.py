@@ -13,7 +13,7 @@ class User(models.Model):
     last_name = models.CharField(max_length=50, null=True)
     phone = models.CharField(max_length=20, null=True)
     gender = models.CharField(max_length=1, null=True)
-    birthday = models.DateField(null=True)
+    birthday = models.CharField(max_length=20, null=True)
     address = models.CharField(max_length=100, null=True)
     forget_password_token = models.CharField(max_length=20, null=True)
     activated = models.CharField(max_length=1, default='N')
