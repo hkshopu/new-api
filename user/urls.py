@@ -8,7 +8,7 @@ urlpatterns = [
     path('socialLoginProcess/', views.socialLoginProcess),
     path('forgetPasswordProcess/', views.forgetPasswordProcess),
     path('<id>/shop/', views.getUserShopListProcess),
-    path('<id>/generateAndSendValidationCodeProcess/', views.generateAndSendValidationCodeProcess),
+    path('generateAndSendValidationCodeProcess/', views.generateAndSendValidationCodeProcess),
     path('validateEmailProcess/', views.validateEmailProcess), 
     path('resetPasswordProcess/', views.resetPasswordProcess)
 ]
