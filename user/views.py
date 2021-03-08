@@ -92,7 +92,7 @@ def registerProcess(request):
 
         if responseData['status'] == 0:
             if address:
-                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{10,95}$', address)):
+                if not(re.match('^[A-Za-z0-9\u4e00-\u9fa5]{10,95}$', address)):
                     responseData['status'] = -10
                     responseData['ret_val'] = '居住地址格式錯誤!'
         # 判斷使用者是否使用相同電子郵件重複註冊
