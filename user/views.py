@@ -156,14 +156,17 @@ def generateAndSendValidationCodeProcess(request):
         'ret_val': ''
     }
     if request.method == 'POST':
+        # 欄位資料
+        email = request.POST.get('email', '')
         # 檢查使用者是否登入
         if response_data['status'] == 0:
-            if not('user' in request.session):
+            try:
+                user = models.User.objects.get(email=email)
+            except:
                 response_data['status'] = -1
-                response_data['ret_val'] = '您尚未登入!'
+                response_data['ret_val'] = '該電子郵件未被使用!'
 
         if response_data['status'] == 0:
-            user_session = request.session['user']
             # 產生帳號註冊驗證碼
             rand_str = ''
             needle = '0123456789'
@@ -171,21 +174,21 @@ def generateAndSendValidationCodeProcess(request):
                 rand_str += random.choice(needle)
             # 判斷資料表中是否已有使用者電子郵件和驗證碼，若沒有則新增，若有則更新
             try:
-                user_validation = models.Email_Validation.objects.get(email=user_session['email'])
+                user_validation = models.Email_Validation.objects.get(email=email)
                 user_validation.validation_code = rand_str
                 user_validation.save()
             except:
                 models.Email_Validation.objects.create(
-                    user_id=user_session['id'], 
-                    email=user_session['email'], 
+                    user_id=user.id, 
+                    email=user.email, 
                     validation_code=rand_str
                 )
             # 發送電子郵件，告知帳號註冊驗證碼
             subject = ''
-            html_message = render_to_string('validation_mail.html', {'account_name': user_session['account_name'], 'validation_code': rand_str})
+            html_message = render_to_string('validation_mail.html', {'account_name': user.account_name, 'validation_code': rand_str})
             message = strip_tags(html_message)
             from_email = 'HKShopU'
-            recipient_list = [user_session['email'], ]
+            recipient_list = [user.email, ]
             mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
             response_data['ret_val'] = '已寄出驗證碼!'
     return JsonResponse(response_data)
