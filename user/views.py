@@ -18,6 +18,25 @@ def register(request):
     template = get_template('register.html')
     html = template.render()
     return HttpResponse(html)
+# 檢查電子郵件是否已存在
+def checkEmailExistsProcess(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        email = request.POST.get('email', '')
+
+        if response_data['status'] == 0:
+            users = models.User.objects.filter(email=email)
+            if len(users) > 0:
+                response_data['status'] = -1
+                response_data['ret_val'] = '該電子郵件已存在!'
+
+        if response_data['status'] == 0:
+            response_data['ret_val'] = '該電子郵件沒有重複使用!'
+    return JsonResponse(response_data)
 # 會員註冊
 def registerProcess(request):
     # 回傳資料
