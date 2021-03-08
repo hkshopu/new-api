@@ -198,7 +198,7 @@ def validateEmailProcess(request):
         if response_data['status'] == 0:
             now = datetime.datetime.now()
             updated_at = user_validation.updated_at
-            if (now - updated_at).min > 10:
+            if (now - updated_at).min > datetime.timedelta(minutes=10):
                 response_data['status'] = -3
                 response_data['ret_val'] = '驗證碼已過期，請重新產生!'
 
