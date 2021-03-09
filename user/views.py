@@ -117,7 +117,7 @@ def registerProcess(request):
 
         if responseData['status'] == 0:
             if address:
-                if not(re.match('^[A-Za-z0-9\u4e00-\u9fa5]{10,95}$', address)):
+                if not(re.match('^[A-Za-z0-9\u4e00-\u9fa5]{1,95}$', address)):
                     responseData['status'] = -10
                     responseData['ret_val'] = '居住地址格式錯誤!'
 
@@ -152,9 +152,10 @@ def registerProcess(request):
                     responseData['ret_val'] = '樓層格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^[0-9\u4e00-\u9fa5]{1,45}$', room)):
-                responseData['status'] = -16
-                responseData['ret_val'] = '室格式錯誤!'
+            if room:
+                if not(re.match('^[0-9\u4e00-\u9fa5]{1,45}$', room)):
+                    responseData['status'] = -16
+                    responseData['ret_val'] = '室格式錯誤!'
         # 判斷使用者是否使用相同電子郵件重複註冊
         if responseData['status'] == 0:
             try:
