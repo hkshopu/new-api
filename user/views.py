@@ -56,6 +56,12 @@ def registerProcess(request):
         gender = request.POST.get('gender', '')
         birthday = request.POST.get('birthday', '')
         address = request.POST.get('address', '')
+        region = request.POST.get('region', '')
+        district = request.POST.get('district', '')
+        street_name = request.POST.get('street_name', '')
+        street_no = request.POST.get('street_no', '')
+        floor = request.POST.get('floor', '')
+        room = request.POST.get('room', '')
         # 判斷欄位資料是否符合要求格式
         if responseData['status'] == 0:
             if accountName:
@@ -114,11 +120,46 @@ def registerProcess(request):
                 if not(re.match('^[A-Za-z0-9\u4e00-\u9fa5]{10,95}$', address)):
                     responseData['status'] = -10
                     responseData['ret_val'] = '居住地址格式錯誤!'
+
+        if responseData['status'] == 0:
+            if region:
+                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', region)):
+                    responseData['status'] = -11
+                    responseData['ret_val'] = '地域格式錯誤!'
+
+        if responseData['status'] == 0:
+            if district:
+                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', district)):
+                    responseData['status'] = -12
+                    responseData['ret_val'] = '地區格式錯誤!'
+
+        if responseData['status'] == 0:
+            if street_name:
+                if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', street_name)):
+                    responseData['status'] = -13
+                    responseData['ret_val'] = '街道名稱格式錯誤!'
+
+        if responseData['status'] == 0:
+            if street_no:
+                if not(re.match('^[0-9\u4e00-\u9fa5]{1,45}$', street_no)):
+                    responseData['status'] = -14
+                    responseData['ret_val'] = '街道門牌格式錯誤!'
+
+        if responseData['status'] == 0:
+            if floor:
+                if not(re.match('^[0-9\u4e00-\u9fa5]{1,45}$', floor)):
+                    responseData['status'] = -15
+                    responseData['ret_val'] = '樓層格式錯誤!'
+
+        if responseData['status'] == 0:
+            if not(re.match('^[0-9\u4e00-\u9fa5]{1,45}$', room)):
+                responseData['status'] = -16
+                responseData['ret_val'] = '室格式錯誤!'
         # 判斷使用者是否使用相同電子郵件重複註冊
         if responseData['status'] == 0:
             try:
                 user = models.User.objects.get(email=email)
-                responseData['status'] = -11
+                responseData['status'] = -17
                 responseData['ret_val'] = '該電子郵件已被使用!'
             except:
                 pass
@@ -133,7 +174,13 @@ def registerProcess(request):
                 phone=phone, 
                 gender=gender, 
                 birthday=birthday, 
-                address=address
+                address=address, 
+                region=region, 
+                district=district, 
+                street_name=street_name, 
+                street_no=street_no, 
+                floor=floor, 
+                room=room
             )
             try:
                 user = models.User.objects.get(email=email)
