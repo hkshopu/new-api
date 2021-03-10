@@ -302,8 +302,13 @@ def loginProcess(request):
                 responseData['ret_val'] = '電子郵件錯誤!'
 
         if responseData['status'] == 0:
-            if not(django_pbkdf2_sha256.verify(password, user.password)):
+            if not(user.password):
                 responseData['status'] = -3
+                responseData['ret_val'] = '此電子郵件僅透過社群帳號註冊使用，請選擇社群登入!'
+
+        if responseData['status'] == 0:
+            if not(django_pbkdf2_sha256.verify(password, user.password)):
+                responseData['status'] = -4
                 responseData['ret_val'] = '密碼錯誤!'
 
         if responseData['status'] == 0:
