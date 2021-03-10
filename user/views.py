@@ -457,6 +457,7 @@ def resetPasswordProcess(request):
         if response_data['status'] == 0:
             user.password = make_password(password)
             user.save()
+            response_data['ret_val'] = '密碼修改成功!'
     return JsonResponse(response_data)
 # 使用者商店列表
 def getUserShopListProcess(request, id):
