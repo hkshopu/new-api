@@ -363,20 +363,25 @@ def socialLoginProcess(request):
                     responseData['status'] = -2
 
         if responseData['status'] == 0:
-            if appleAccount and email:
+            if appleAccount:
                 try:
-                    user = models.User.objects.get(email=email)
-                    user.apple_account = appleAccount
-                    user.save()
+                    user = models.User.objects.get(apple_account=appleAccount)
                     responseData['ret_val'] = '已使用 Apple 帳戶登入!'
                     responseData['status'] = 3
                 except:
-                    models.User.objects.create(
-                        apple_account=appleAccount, 
-                        email=email
-                    )
-                    responseData['ret_val'] = '已使用 Apple 帳戶註冊!'
-                    responseData['status'] = -3
+                    try:
+                        user = models.User.objects.get(email=email)
+                        user.apple_account = appleAccount
+                        user.save()
+                        responseData['ret_val'] = '已使用 Apple 帳戶登入!'
+                        responseData['status'] = 3
+                    except:
+                        models.User.objects.create(
+                            apple_account=appleAccount, 
+                            email=email
+                        )
+                        responseData['ret_val'] = '已使用 Apple 帳戶註冊!'
+                        responseData['status'] = -3
     return JsonResponse(responseData)
 # 忘記密碼
 def forgetPasswordProcess(request):
