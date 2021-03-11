@@ -37,6 +37,31 @@ def checkEmailExistsProcess(request):
         if response_data['status'] == 0:
             response_data['ret_val'] = '該電子郵件沒有重複使用!'
     return JsonResponse(response_data)
+# 確認電子郵件是否透過社群登入
+def checkEmailIsAllowedLogin(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        email = request.POST.get('email', '')
+
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(email=email)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '該電子郵件未被使用!'
+
+        if response_data['status'] == 0:
+            if not(user.password):
+                response_data['status'] = -2
+                response_data['ret_val'] = '該電子郵件只可透過社群登入!'
+
+        if response_data['status'] == 0:
+            response_data['ret_val'] = '該電子郵件可正常登入!'
+    return JsonResponse(response_data)
 # 會員註冊
 def registerProcess(request):
     # 回傳資料
