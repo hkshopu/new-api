@@ -509,30 +509,75 @@ def getUserShopListProcess(request, id):
             if len(shops) == 0:
                 responseData['status'] = 1
                 responseData['ret_val'] = '您尚未建立任何商店!'
-            else:
-                for shop in shops:
-                    shopInfo = {
-                        'id': shop.id, 
-                        'user_id': shop.user_id, 
-                        'shop_category_id': shop.shop_category_id, 
-                        'shop_title': shop.shop_title, 
-                        'shop_icon': shop.shop_icon, 
-                        'shop_pic': shop.shop_pic, 
-                        'shop_description': shop.shop_description, 
-                        'paypal': shop.paypal, 
-                        'visa': shop.visa, 
-                        'master': shop.master, 
-                        'apple': shop.apple, 
-                        'android': shop.android, 
-                        'is_ship_free': shop.is_ship_free, 
-                        'ship_by_product': shop.ship_by_product, 
-                        'ship_free_quota': shop.ship_free_quota, 
-                        'fix_ship_fee': shop.fix_ship_fee, 
-                        'fix_ship_fee_from': shop.fix_ship_fee_from, 
-                        'fix_ship_fee_to': shop.fix_ship_fee_to, 
-                        'created_at': shop.created_at, 
-                        'updated_at': shop.updated_at
-                    }
-                    responseData['shop_list'].append(shopInfo)
-                responseData['ret_val'] = '已取得您的商店清單!'
+        
+        if responseData['status'] == 0:
+            for shop in shops:
+                shopInfo = {
+                    'id': shop.id, 
+                    'user_id': shop.user_id, 
+                    'shop_category_id': shop.shop_category_id, 
+                    'shop_title': shop.shop_title, 
+                    'shop_icon': shop.shop_icon, 
+                    'shop_pic': shop.shop_pic, 
+                    'shop_description': shop.shop_description, 
+                    'paypal': shop.paypal, 
+                    'visa': shop.visa, 
+                    'master': shop.master, 
+                    'apple': shop.apple, 
+                    'android': shop.android, 
+                    'is_ship_free': shop.is_ship_free, 
+                    'ship_by_product': shop.ship_by_product, 
+                    'ship_free_quota': shop.ship_free_quota, 
+                    'fix_ship_fee': shop.fix_ship_fee, 
+                    'fix_ship_fee_from': shop.fix_ship_fee_from, 
+                    'fix_ship_fee_to': shop.fix_ship_fee_to, 
+                    'created_at': shop.created_at, 
+                    'updated_at': shop.updated_at
+                }
+                responseData['shop_list'].append(shopInfo)
+            responseData['ret_val'] = '已取得您的商店清單!'
     return JsonResponse(responseData)
+# 取得會員資料
+def getUserListProcess(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'user_list': []
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            users = models.User.objects.all()
+            if len(users) == 0:
+                response_data['status'] = 1
+                response_data['ret_val'] = '目前尚未存在任何會員!'
+            
+        if response_data['status'] == 0:
+            for user in users:
+                user_info = {
+                    'id': user.id, 
+                    'account_name': user.account_name, 
+                    'google_account': user.google_account, 
+                    'facebook_account': user.facebook_account, 
+                    'apple_account': user.apple_account, 
+                    'email': user.email, 
+                    'password': user.password, 
+                    'first_name': user.first_name, 
+                    'last_name': user.last_name, 
+                    'phone': user.phone, 
+                    'gender': user.gender, 
+                    'birthday': user.birthday, 
+                    'address': user.address, 
+                    'region': user.region, 
+                    'district': user.district, 
+                    'street_name': user.street_name, 
+                    'street_no': user.street_no, 
+                    'floor': user.floor, 
+                    'room': user.room, 
+                    'forget_password_token': user.forget_password_token, 
+                    'activated': user.activated, 
+                    'created_at': user.created_at, 
+                    'updated_at': user.updated_at
+                }
+                response_data['user_list'].append(user_info)
+            response_data['ret_val'] = '取得會員資料成功!'
+    return JsonResponse(response_data)

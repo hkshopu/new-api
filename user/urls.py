@@ -12,5 +12,6 @@ urlpatterns = [
     path('generateAndSendValidationCodeProcess/', views.generateAndSendValidationCodeProcess),
     path('validateEmailProcess/', views.validateEmailProcess), 
     path('resetPasswordProcess/', views.resetPasswordProcess), 
-    path('checkEmailIsAllowedLogin/', views.checkEmailIsAllowedLogin)
+    path('checkEmailIsAllowedLogin/', views.checkEmailIsAllowedLogin), 
+    path('getUserListProcess/', views.getUserListProcess)
 ]
