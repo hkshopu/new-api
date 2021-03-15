@@ -454,3 +454,22 @@ def show(request, id):
                 responseData['status'] = 1
                 responseData['ret_val'] = '找不到此商店編號的商店!'
     return JsonResponse(responseData)
+# 確認商店名稱是否重複
+def checkShopNameIsExistsProcess(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'GET':
+        # 欄位資料
+        shop_title = request.GET.get('shop_title', '')
+
+        if response_data['status'] == 0:
+            shops = models.Shop.objects.filter(shop_title=shop_title)
+            if len(shops) > 0:
+                response_data['status'] = -1
+                response_data['ret_val'] = '已存在相同名稱的商店!'
+
+        if response_data['status'] == 0:
+            response_data['ret_val'] = '商店名稱未重複!'
+    return JsonResponse(response_data)

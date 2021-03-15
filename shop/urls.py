@@ -6,4 +6,5 @@ urlpatterns = [
     path('save/', views.save), 
     path('<id>/update/', views.update), 
     path('<id>/show/', views.show), 
+    path('checkShopNameIsExistsProcess', view.checkShopNameIsExistsProcess)
 ]

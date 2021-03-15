@@ -136,7 +136,7 @@ def registerProcess(request):
 
         if responseData['status'] == 0:
             if birthday:
-                if not(re.match('^[0-9]{4}-[0-9]{2}-[0-9]{2}$', birthday)):
+                if not(re.match('^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$', birthday)):
                     responseData['status'] = -9
                     responseData['ret_val'] = '出生日期格式錯誤!'
 
