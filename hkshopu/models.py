@@ -52,6 +52,15 @@ class Shop(models.Model):
 class Shop_Category(models.Model):
     c_shop_category = models.CharField(max_length=50)
     e_shop_category = models.CharField(max_length=50)
+    shop_category_icon = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Shop_Sub_Category(models.Model):
+    shop_category_id = models.PositiveIntegerField()
+    c_shop_sub_category = models.CharField(max_length=50)
+    e_shop_sub_category = models.CharField(max_length=50)
+    shop_sub_category_icon = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

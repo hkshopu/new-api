@@ -38,7 +38,7 @@ def checkEmailExistsProcess(request):
             response_data['ret_val'] = '該電子郵件沒有重複使用!'
     return JsonResponse(response_data)
 # 確認電子郵件是否透過社群登入
-def checkEmailIsAllowedLogin(request):
+def checkEmailIsAllowedLoginProcess(request):
     response_data = {
         'status': 0, 
         'ret_val': ''

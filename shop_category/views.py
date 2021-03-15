@@ -28,6 +28,7 @@ def index(request):
                         'id': shopCategory.id, 
                         'c_shop_category': shopCategory.c_shop_category, 
                         'e_shop_category': shopCategory.e_shop_category, 
+                        'shop_category_icon': shopCategory.shop_category_icon, 
                         'created_at': shopCategory.created_at, 
                         'updated_at': shopCategory.updated_at
                     }

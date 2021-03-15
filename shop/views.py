@@ -460,9 +460,9 @@ def checkShopNameIsExistsProcess(request):
         'status': 0, 
         'ret_val': ''
     }
-    if request.method == 'GET':
+    if request.method == 'POST':
         # 欄位資料
-        shop_title = request.GET.get('shop_title', '')
+        shop_title = request.POST.get('shop_title', '')
 
         if response_data['status'] == 0:
             shops = models.Shop.objects.filter(shop_title=shop_title)
