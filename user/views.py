@@ -581,3 +581,42 @@ def getUserListProcess(request):
                 response_data['user_list'].append(user_info)
             response_data['ret_val'] = '取得會員資料成功!'
     return JsonResponse(response_data)
+# 取得單一用戶資料
+def show(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'user_data': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此使用者編號的資料!'
+
+        if response_data['status'] == 0:
+            response_data['user_data']['id'] = user.id
+            response_data['user_data']['account_name'] = user.account_name
+            response_data['user_data']['google_account'] = user.google_account
+            response_data['user_data']['facebook_account'] = user.facebook_account
+            response_data['user_data']['apple_account'] = user.apple_account
+            response_data['user_data']['email'] = user.email
+            response_data['user_data']['first_name'] = user.first_name
+            response_data['user_data']['last_name'] = user.last_name
+            response_data['user_data']['phone'] = user.phone
+            response_data['user_data']['gender'] = user.gender
+            response_data['user_data']['birthday'] = user.birthday
+            response_data['user_data']['address'] = user.address
+            response_data['user_data']['region'] = user.region
+            response_data['user_data']['district'] = user.district
+            response_data['user_data']['street_name'] = user.street_name
+            response_data['user_data']['street_no'] = user.street_no
+            response_data['user_data']['floor'] = user.floor
+            response_data['user_data']['room'] = user.room
+            response_data['user_data']['activated'] = user.activated
+            response_data['user_data']['created_at'] = user.created_at
+            response_data['user_data']['updated_at'] = user.updated_at
+            response_data['ret_val'] = '已取得使用者資料!'
+    return JsonResponse(response_data)

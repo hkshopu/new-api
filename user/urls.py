@@ -13,5 +13,6 @@ urlpatterns = [
     path('validateEmailProcess/', views.validateEmailProcess), 
     path('resetPasswordProcess/', views.resetPasswordProcess), 
     path('checkEmailIsAllowedLoginProcess/', views.checkEmailIsAllowedLoginProcess), 
-    path('getUserListProcess/', views.getUserListProcess)
+    path('getUserListProcess/', views.getUserListProcess), 
+    path('<id>/show/', views.show)
 ]
