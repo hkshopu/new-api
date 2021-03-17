@@ -45,8 +45,5 @@ def save(request):
         'ret_val': ''
     }
     if request.method == 'POST':
-        # 欄位資料
-        
-        # 檢查欄位是否填寫及格式是否正確
-        
+        pass
     return JsonResponse(response_data)
