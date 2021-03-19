@@ -31,4 +31,5 @@ urlpatterns = [
     path('selected_product_color/', include('selected_product_color.urls')), 
     path('selected_product_size/', include('selected_product_size.urls')), 
     path('selected_product_pic/', include('selected_product_pic.urls')), 
+    path('selected_shop_category/', include('selected_shop_category.urls'))
 ]

@@ -28,7 +28,7 @@ def save(request):
         # 欄位資料
         shopIcon = request.FILES.get('shop_icon', '')
         shopTitle = request.POST.get('shop_title', '')
-        shopCategoryId = request.POST.get('shop_category_id', 0)
+        shopCategoryId = request.POST.getlist('shop_category_id', [])
         shopPic = request.FILES.get('shop_pic', '')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
@@ -37,13 +37,13 @@ def save(request):
         apple = request.POST.get('apple', '')
         android = request.POST.get('android', '')
         isShipFree = request.POST.get('is_ship_free', '')
-        shipFreeQuota = request.POST.get('ship_free_quota', 0)
-        fixShipFee = request.POST.get('fix_ship_fee', 0)
-        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', 0)
-        fixShipFeeTo = request.POST.get('fix_ship_fee_to', 0)
+        shipFreeQuota = request.POST.get('ship_free_quota', '')
+        fixShipFee = request.POST.get('fix_ship_fee', '')
+        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', '')
+        fixShipFeeTo = request.POST.get('fix_ship_fee_to', '')
         shipByProduct = request.POST.get('ship_by_product', '')
-        discountByPercent = request.POST.get('discount_by_percent', 0)
-        discountByAmount = request.POST.get('discount_by_amount', 0)
+        discountByPercent = request.POST.get('discount_by_percent', '')
+        discountByAmount = request.POST.get('discount_by_amount', '')
         # 檢查使用者是否登入
         if responseData['status'] == 0:
             if not('user' in request.session):
@@ -81,9 +81,11 @@ def save(request):
                 responseData['ret_val'] = '商店小圖格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(re.match('^\d+$', shopCategoryId)):
-                responseData['status'] = -8
-                responseData['ret_val'] = '商店分類格式錯誤!'
+            for value in shopCategoryId:
+                if not(re.match('^\d+$', value)):
+                    responseData['status'] = -8
+                    responseData['ret_val'] = '商店分類格式錯誤!'
+                    break
 
         if responseData['status'] == 0:
             if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
@@ -195,8 +197,7 @@ def save(request):
             fs.save(name=shopPicFullName, content=shopPic)
             # 新增商店
             models.Shop.objects.create(
-                user_id=request.session['user']['id'], 
-                shop_category_id=shopCategoryId, 
+                user_id=request.session['user']['id'],  
                 shop_title=shopTitle, 
                 shop_icon=shopIconFullName, 
                 shop_pic=shopPicFullName, 
@@ -215,6 +216,19 @@ def save(request):
                 discount_by_percent=discountByPercent, 
                 discount_by_amount=discountByAmount
             )
+
+            shops = models.Shop.objects.order_by('-updated_at')
+            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id).exclude(shop_category_id__in=shopCategoryId)
+            if len(to_delete_selected_shop_categories) > 0:
+                to_delete_selected_shop_categories.delete()
+
+            for value in shopCategoryId:
+                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id, shop_category_id=value)
+                if len(selected_shop_categories) == 0:
+                    models.Selected_Shop_Category.objects.create(
+                        shop_id=shops[0].id, 
+                        shop_category_id=value
+                    )
             responseData['ret_val'] = '商店新增成功!'
     return JsonResponse(responseData)
 # 更新商店

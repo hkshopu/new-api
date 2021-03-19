@@ -54,7 +54,10 @@ class Shop_Category(models.Model):
     e_shop_category = models.CharField(max_length=50)
     unselected_shop_category_icon = models.CharField(max_length=255)
     selected_shop_category_icon = models.CharField(max_length=255)
+    c_shop_category_icon = models.CharField(max_length=255)
+    e_shop_category_icon = models.CharField(max_length=255)
     shop_category_seq = models.PositiveIntegerField()
+    is_delete = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
