@@ -28,7 +28,6 @@ def save(request):
         # 欄位資料
         shopIcon = request.FILES.get('shop_icon', '')
         shopTitle = request.POST.get('shop_title', '')
-        shopCategoryId = request.POST.getlist('shop_category_id', [])
         shopPic = request.FILES.get('shop_pic', '')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
@@ -61,11 +60,6 @@ def save(request):
                 responseData['ret_val'] = '未填寫商店標題!'
 
         if responseData['status'] == 0:
-            if not(shopCategoryId):
-                responseData['status'] = -4
-                responseData['ret_val'] = '未選擇商店類別!'
-
-        if responseData['status'] == 0:
             if not(shopPic):
                 responseData['status'] = -5
                 responseData['ret_val'] = '未上傳商店主圖!'
@@ -79,13 +73,6 @@ def save(request):
             if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopIcon.name))):
                 responseData['status'] = -7
                 responseData['ret_val'] = '商店小圖格式錯誤!'
-
-        if responseData['status'] == 0:
-            for value in shopCategoryId:
-                if not(re.match('^\d+$', value)):
-                    responseData['status'] = -8
-                    responseData['ret_val'] = '商店分類格式錯誤!'
-                    break
 
         if responseData['status'] == 0:
             if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
@@ -242,7 +229,6 @@ def update(request, id):
         # 欄位資料
         shopIcon = request.FILES.get('shop_icon', '')
         shopTitle = request.POST.get('shop_title', '')
-        shopCategoryId = request.POST.get('shop_category_id', 0)
         shopPic = request.FILES.get('shop_pic', '')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
@@ -251,13 +237,13 @@ def update(request, id):
         apple = request.POST.get('apple', '')
         android = request.POST.get('android', '')
         isShipFree = request.POST.get('is_ship_free', '')
-        shipFreeQuota = request.POST.get('ship_free_quota', 0)
-        fixShipFee = request.POST.get('fix_ship_fee', 0)
-        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', 0)
-        fixShipFeeTo = request.POST.get('fix_ship_fee_to', 0)
+        shipFreeQuota = request.POST.get('ship_free_quota', '')
+        fixShipFee = request.POST.get('fix_ship_fee', '')
+        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', '')
+        fixShipFeeTo = request.POST.get('fix_ship_fee_to', '')
         shipByProduct = request.POST.get('ship_by_product', '')
-        discountByPercent = request.POST.get('discount_by_percent', 0)
-        discountByAmount = request.POST.get('discount_by_amount', 0)
+        discountByPercent = request.POST.get('discount_by_percent', '')
+        discountByAmount = request.POST.get('discount_by_amount', '')
         # 現在時間
         now = datetime.datetime.now()
         # FileSystemStorage
@@ -281,19 +267,9 @@ def update(request, id):
                 responseData['ret_val'] = '未填寫商店標題!'
 
         if responseData['status'] == 0:
-            if not(shopCategoryId):
-                responseData['status'] = -4
-                responseData['ret_val'] = '未選擇商店類別!'
-
-        if responseData['status'] == 0:
             if not(shopDesc):
                 responseData['status'] = -5
                 responseData['ret_val'] = '未填寫商店描述!'
-
-        if responseData['status'] == 0:
-            if not(re.match('^\d+$', shopCategoryId)):
-                responseData['status'] = -6
-                responseData['ret_val'] = '商店分類格式錯誤!'
         # 選填欄位若有填寫，則判斷其格式是否正確
         if responseData['status'] == 0:
             if shopIcon:
@@ -413,7 +389,6 @@ def update(request, id):
         # 更新商店
         if responseData['status'] == 0:
             shop.shop_title = shopTitle
-            shop.shop_category_id = shopCategoryId
             shop.shop_description = shopDesc
             shop.paypal = paypal
             shop.visa = visa
@@ -445,7 +420,6 @@ def show(request, id):
                 shop = models.Shop.objects.get(id=id)
                 responseData['shop']['id'] = shop.id
                 responseData['shop']['user_id'] = shop.user_id
-                responseData['shop']['shop_category_id'] = shop.shop_category_id
                 responseData['shop']['shop_title'] = shop.shop_title
                 responseData['shop']['shop_icon'] = shop.shop_icon
                 responseData['shop']['shop_pic'] = shop.shop_pic

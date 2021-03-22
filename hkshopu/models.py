@@ -28,7 +28,6 @@ class User(models.Model):
 
 class Shop(models.Model):
     user_id = models.PositiveIntegerField()
-    shop_category_id = models.PositiveIntegerField()
     shop_title = models.CharField(max_length=50)
     shop_icon = models.CharField(max_length=255)
     shop_pic = models.CharField(max_length=255)
