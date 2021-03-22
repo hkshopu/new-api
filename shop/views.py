@@ -21,7 +21,8 @@ def save(request):
     # 回傳資料
     responseData = {
         'status': 0, 
-        'ret_val': ''
+        'ret_val': '', 
+        'shop_id': ''
     }
 
     if request.method == 'POST':
@@ -205,17 +206,7 @@ def save(request):
             )
 
             shops = models.Shop.objects.order_by('-updated_at')
-            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id).exclude(shop_category_id__in=shopCategoryId)
-            if len(to_delete_selected_shop_categories) > 0:
-                to_delete_selected_shop_categories.delete()
-
-            for value in shopCategoryId:
-                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id, shop_category_id=value)
-                if len(selected_shop_categories) == 0:
-                    models.Selected_Shop_Category.objects.create(
-                        shop_id=shops[0].id, 
-                        shop_category_id=value
-                    )
+            responseData['shop_id'] = shops[0].id
             responseData['ret_val'] = '商店新增成功!'
     return JsonResponse(responseData)
 # 更新商店
