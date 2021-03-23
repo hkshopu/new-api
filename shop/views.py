@@ -16,7 +16,7 @@ def create(request):
     html = template.render()
     return HttpResponse(html)
 
-# 新增商店
+# 新增商店並新增選擇商店分類
 def save(request):
     # 回傳資料
     responseData = {
