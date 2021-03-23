@@ -234,7 +234,7 @@ def update(id, request):
                 rand_str = ''.join(rand_str_list)
                 new_unselected_shop_category_icon_name = now.strftime('%Y%m%d%H%M%S') + '_' + rand_str + '_' + unselected_shop_category_icon.name
             else:
-                new_unselected_shop_category_icon_name = ''
+                new_unselected_shop_category_icon_name = shop_category.unselected_shop_category_icon
 
             if selected_shop_category_icon:
                 rand_str_list = []
@@ -243,7 +243,7 @@ def update(id, request):
                 rand_str = ''.join(rand_str_list)
                 new_selected_shop_category_icon_name = now.strftime('%Y%m%d%H%M%S') + '_' + rand_str + '_' + selected_shop_category_icon.name
             else:
-                new_selected_shop_category_icon_name = ''
+                new_selected_shop_category_icon_name = shop_category.selected_shop_category_icon
 
             shop_category.c_shop_category = c_shop_category
             shop_category.e_shop_category = e_shop_category
