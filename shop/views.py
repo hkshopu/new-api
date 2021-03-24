@@ -29,6 +29,7 @@ def save(request):
         # 欄位資料
         shopIcon = request.FILES.get('shop_icon', '')
         shopTitle = request.POST.get('shop_title', '')
+        shopCategoryId = request.POST.getlist('shop_category_id', [])
         shopPic = request.FILES.get('shop_pic', '')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
@@ -61,6 +62,11 @@ def save(request):
                 responseData['ret_val'] = '未填寫商店標題!'
 
         if responseData['status'] == 0:
+            if not(shopCategoryId):
+                responseData['status'] = -4
+                responseData['ret_val'] = '未填寫商店分類編號!'
+
+        if responseData['status'] == 0:
             if not(shopPic):
                 responseData['status'] = -5
                 responseData['ret_val'] = '未上傳商店主圖!'
@@ -74,6 +80,13 @@ def save(request):
             if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopIcon.name))):
                 responseData['status'] = -7
                 responseData['ret_val'] = '商店小圖格式錯誤!'
+
+        if responseData['status'] == 0:
+            for value in shopCategoryId:
+                if not(re.match('^\d+$', value)):
+                    responseData['status'] = -8
+                    responseData['ret_val'] = '商店分類格式錯誤!'
+                    break
 
         if responseData['status'] == 0:
             if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
@@ -204,10 +217,22 @@ def save(request):
                 discount_by_percent=discountByPercent, 
                 discount_by_amount=discountByAmount
             )
-
+            # 取得當前商店編號
             shops = models.Shop.objects.order_by('-updated_at')
             responseData['shop_id'] = shops[0].id
-            responseData['ret_val'] = '商店新增成功!'
+            # 新增選擇商店分類
+            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id).exclude(shop_category_id__in=shopCategoryId)
+            if len(to_delete_selected_shop_categories) > 0:
+                to_delete_selected_shop_categories.delete()
+
+            for value in shopCategoryId:
+                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id, shop_category_id=value)
+                if len(selected_shop_categories) == 0:
+                    models.Selected_Shop_Category.objects.create(
+                        shop_id=shops[0].id, 
+                        shop_category_id=value
+                    )
+            responseData['ret_val'] = '商店與選擇商店分類新增成功!'
     return JsonResponse(responseData)
 # 更新商店
 def update(request, id):

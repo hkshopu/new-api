@@ -68,6 +68,7 @@ def registerProcess(request):
     responseData = {
         'status': 0, 
         'ret_val': '', 
+        'user_id': ''
     }
     if request.method == 'POST':
         # 取得欄位資料
@@ -210,6 +211,7 @@ def registerProcess(request):
             )
             try:
                 user = models.User.objects.get(email=email)
+                responseData['user_id'] = user.id
                 # 預設將使用者登入
                 request.session['user'] = {
                     'id': user.id, 
@@ -307,7 +309,8 @@ def loginProcess(request):
     # 回傳資料
     responseData = {
         'status': 0, 
-        'ret_val': ''
+        'ret_val': '', 
+        'user_id': ''
     }
     if request.method == 'POST':
         # 取得欄位資料
@@ -344,6 +347,7 @@ def loginProcess(request):
                 'first_name': user.first_name, 
                 'last_name': user.last_name
             }
+            responseData['user_id'] = user.id
             responseData['ret_val'] = '登入成功!'
     return JsonResponse(responseData)
 # 社群登入
@@ -351,7 +355,8 @@ def socialLoginProcess(request):
     # 回傳資料
     responseData = {
         'status': 0, 
-        'ret_val': ''
+        'ret_val': '', 
+        'user_id': ''
     }
     if request.method == 'POST':
         # 欄位資料
@@ -366,6 +371,7 @@ def socialLoginProcess(request):
                     user = models.User.objects.get(email=email)
                     user.google_account = googleAccount
                     user.save()
+                    responseData['user_id'] = user.id
                     responseData['ret_val'] = '已使用 Google 帳戶登入!'
                     responseData['status'] = 1
                 except:
@@ -373,6 +379,7 @@ def socialLoginProcess(request):
                         google_account=googleAccount, 
                         email=email
                     )
+                    responseData['user_id'] = models.User.objects.order_by('-updated_at')[0].id
                     responseData['ret_val'] = '已使用 Google 帳戶註冊!'
                     responseData['status'] = -1
 
@@ -382,6 +389,7 @@ def socialLoginProcess(request):
                     user = models.User.objects.get(email=email)
                     user.facebook_account = facebookAccount
                     user.save()
+                    responseData['user_id'] = user.id
                     responseData['ret_val'] = '已使用 Facebook 帳戶登入!'
                     responseData['status'] = 2
                 except:
@@ -389,6 +397,7 @@ def socialLoginProcess(request):
                         facebook_account=facebookAccount, 
                         email=email
                     )
+                    responseData['user_id'] = models.User.objects.order_by('-updated_at')[0].id
                     responseData['ret_val'] = '已使用 Facebook 帳戶註冊!'
                     responseData['status'] = -2
 
@@ -396,6 +405,7 @@ def socialLoginProcess(request):
             if appleAccount:
                 try:
                     user = models.User.objects.get(apple_account=appleAccount)
+                    responseData['user_id'] = user.id
                     responseData['ret_val'] = '已使用 Apple 帳戶登入!'
                     responseData['status'] = 3
                 except:
@@ -403,6 +413,7 @@ def socialLoginProcess(request):
                         user = models.User.objects.get(email=email)
                         user.apple_account = appleAccount
                         user.save()
+                        responseData['user_id'] = user.id
                         responseData['ret_val'] = '已使用 Apple 帳戶登入!'
                         responseData['status'] = 3
                     except:
@@ -410,6 +421,7 @@ def socialLoginProcess(request):
                             apple_account=appleAccount, 
                             email=email
                         )
+                        responseData['user_id'] = models.User.objects.order_by('-updated_at')[0].id
                         responseData['ret_val'] = '已使用 Apple 帳戶註冊!'
                         responseData['status'] = -3
     return JsonResponse(responseData)
