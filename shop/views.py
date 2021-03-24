@@ -152,19 +152,16 @@ def save(request):
                     responseData['ret_val'] = '運費由商品設定格式錯誤!'
 
         if responseData['status'] == 0:
-            if not(discountByPercent) and not(discountByAmount):
-                responseData['status'] = -21
-                responseData['ret_val'] = '折扣欄位必須擇一填寫!'
-            else:
-                if discountByPercent:
-                    if not(re.match('^\d+$', discountByPercent)):
-                        responseData['status'] = -22
-                        responseData['ret_val'] = '百分比折扣格式錯誤!'
+            if discountByPercent:
+                if not(re.match('^\d+$', discountByPercent)):
+                    responseData['status'] = -22
+                    responseData['ret_val'] = '百分比折扣格式錯誤!'
 
-                if discountByAmount:
-                    if not(re.match('^\d+$', discountByAmount)):
-                        responseData['status'] = -23
-                        responseData['ret_val'] = '價格折扣格式錯誤!'
+        if responseData['status'] == 0:
+            if discountByAmount:
+                if not(re.match('^\d+$', discountByAmount)):
+                    responseData['status'] = -23
+                    responseData['ret_val'] = '價格折扣格式錯誤!'
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
             try:
