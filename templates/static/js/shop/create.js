@@ -1,7 +1,7 @@
 $('#create-form').on('submit', function(e) {
     e.preventDefault();
     $.ajax({
-        url: $(this).attr('action'), 
+        url: '/shop/save/', 
         method: 'POST', 
         data: new FormData(this), 
         cache: false, 
