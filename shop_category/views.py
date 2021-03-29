@@ -34,7 +34,8 @@ def index(request):
                         'unselected_shop_category_icon': shopCategory.unselected_shop_category_icon,
                         'selected_shop_category_icon': shopCategory.selected_shop_category_icon, 
                         'shop_category_background_color': shopCategory.shop_category_background_color, 
-                        'shop_category_seq': shopCategory.shop_category_seq,  
+                        'shop_category_seq': shopCategory.shop_category_seq, 
+                        'is_delete': shopCategory.is_delete, 
                         'created_at': shopCategory.created_at, 
                         'updated_at': shopCategory.updated_at
                     }

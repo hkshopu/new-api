@@ -92,6 +92,10 @@ class Product(models.Model):
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)
     e_product_category = models.CharField(max_length=50)
+    unselected_product_category_icon = models.CharField(max_length=255)
+    selected_product_category_icon = models.CharField(max_length=255)
+    product_category_background_color = models.CharField(max_length=6)
+    is_delete = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -99,6 +103,10 @@ class Product_Sub_Category(models.Model):
     product_category_id = models.PositiveIntegerField()
     c_product_category = models.CharField(max_length=50)
     e_product_category = models.CharField(max_length=50)
+    unselected_product_sub_category_icon = models.CharField(max_length=255)
+    selected_product_sub_category_icon = models.CharField(max_length=255)
+    product_sub_category_background_color = models.CharField(max_length=6)
+    is_delete = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

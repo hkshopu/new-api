@@ -29,6 +29,10 @@ def index(request):
                     'id': product_sub_category.id, 
                     'c_product_category': product_sub_category.c_product_category, 
                     'e_product_category': product_sub_category.e_product_category, 
+                    'unselected_product_sub_category_icon': product_sub_category.unselected_product_sub_category_icon, 
+                    'selected_product_sub_category_icon': product_sub_category.selected_product_sub_category_icon, 
+                    'product_sub_category_background_color': product_sub_category.product_sub_category_background_color, 
+                    'is_delete': product_sub_category.is_delete, 
                     'created_at': product_sub_category.created_at, 
                     'updated_at': product_sub_category.updated_at
                 }
