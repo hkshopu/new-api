@@ -129,7 +129,7 @@ def save(request):
                 file_rand_str_list.append(rand_num)
             new_unselected_shop_category_icon_name = now.strftime('%Y%m%d%H%M%S') + '_' + file_rand_str_list[0] + '_' + unselected_shop_category_icon.name
             new_selected_shop_category_icon_name = now.strftime('%Y%m%d%H%M%S') + '_' + file_rand_str_list[1] + '_' + selected_shop_category_icon.name
-            fs = FileSystemStorage(location='templates/static/images/')
+            fs = FileSystemStorage(location='templates/static/images/shop_category/')
             fs.save(name=new_unselected_shop_category_icon_name, content=unselected_shop_category_icon)
             fs.save(name=new_selected_shop_category_icon_name, content=selected_shop_category_icon)
             # 寫入資料庫

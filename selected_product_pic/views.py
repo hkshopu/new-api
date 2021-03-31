@@ -60,7 +60,7 @@ def save(request):
                 product_pic_extension = str(product_pic.name).split('.')[1]
                 product_pic_fullname = product_pic_name + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + product_pic_extension
                 # 上傳圖片檔案
-                fs = FileSystemStorage(location='templates/static/images/')
+                fs = FileSystemStorage(location='templates/static/images/selected_product_pic/')
                 fs.save(name=product_pic_fullname, content=product_pic)
                 # 寫入資料庫
                 models.Selected_Product_Pic.objects.create(

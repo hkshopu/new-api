@@ -28,10 +28,10 @@ def save(request):
     if request.method == 'POST':
         # 欄位資料
         userId = request.POST.get('user_id', '')
-        shopIcon = request.FILES.get('shop_icon', '')
+        shopIcon = request.FILES.get('shop_icon')
         shopTitle = request.POST.get('shop_title', '')
-        shopCategoryId = request.POST.getlist('shop_category_id', [])
-        shopPic = request.FILES.get('shop_pic', '')
+        shopCategoryId = request.POST.getlist('shop_category_id', '')
+        shopPic = request.FILES.get('shop_pic')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
         visa = request.POST.get('visa', '')
@@ -48,7 +48,7 @@ def save(request):
         discountByAmount = request.POST.get('discount_by_amount', '')
         # 檢查使用者是否登入
         if responseData['status'] == 0:
-            if not('user' in request.session) or not(userId):
+            if not(userId):
                 responseData['status'] = -1
                 responseData['ret_val'] = '請先登入會員!'
         # 判斷必填欄位是否填寫及欄位格式是否正確
@@ -68,7 +68,7 @@ def save(request):
                 responseData['ret_val'] = '未填寫商店分類編號!'
 
         if responseData['status'] == 0:
-            if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopIcon.name))):
+            if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shopIcon.name))):
                 responseData['status'] = -7
                 responseData['ret_val'] = '商店小圖格式錯誤!'
 
@@ -81,7 +81,7 @@ def save(request):
         # 選填欄位若有填寫，則判斷其格式是否正確
         if responseData['status'] == 0:
             if shopPic:
-                if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
                     responseData['status'] = -9
                     responseData['ret_val'] = '商店主圖格式錯誤!'
 
@@ -172,7 +172,7 @@ def save(request):
                 pass
         # 新增商店並移動圖檔到指定路徑
         if responseData['status'] == 0:
-            fs = FileSystemStorage(location='templates/static/images/')
+            fs = FileSystemStorage(location='templates/static/images/shop/')
             now = datetime.datetime.now()
             # shop_icon
             shopIconName = str(shopIcon.name).split('.')[0]

@@ -32,6 +32,7 @@ def index(request):
                     'unselected_product_category_icon': product_category.unselected_product_category_icon, 
                     'selected_product_category_icon': product_category.selected_product_category_icon, 
                     'product_category_background_color': product_category.product_category_background_color, 
+                    'product_category_seq': product_category.product_category_seq, 
                     'is_delete': product_category.is_delete, 
                     'created_at': product_category.created_at, 
                     'updated_at': product_category.updated_at
