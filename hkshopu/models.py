@@ -102,8 +102,8 @@ class Product_Category(models.Model):
 
 class Product_Sub_Category(models.Model):
     product_category_id = models.PositiveIntegerField()
-    c_product_category = models.CharField(max_length=50)
-    e_product_category = models.CharField(max_length=50)
+    c_product_sub_category = models.CharField(max_length=50)
+    e_product_sub_category = models.CharField(max_length=50)
     unselected_product_sub_category_icon = models.CharField(max_length=255)
     selected_product_sub_category_icon = models.CharField(max_length=255)
     product_sub_category_background_color = models.CharField(max_length=6)

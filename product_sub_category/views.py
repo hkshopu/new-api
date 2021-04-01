@@ -27,8 +27,9 @@ def index(request):
             for product_sub_category in product_sub_category_list:
                 product_sub_category_info = {
                     'id': product_sub_category.id, 
-                    'c_product_category': product_sub_category.c_product_category, 
-                    'e_product_category': product_sub_category.e_product_category, 
+                    'product_category_id': product_sub_category.product_category_id, 
+                    'c_product_sub_category': product_sub_category.c_product_sub_category, 
+                    'e_product_sub_category': product_sub_category.e_product_sub_category, 
                     'unselected_product_sub_category_icon': product_sub_category.unselected_product_sub_category_icon, 
                     'selected_product_sub_category_icon': product_sub_category.selected_product_sub_category_icon, 
                     'product_sub_category_background_color': product_sub_category.product_sub_category_background_color, 
