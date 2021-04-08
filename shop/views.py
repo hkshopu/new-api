@@ -31,7 +31,7 @@ def save(request):
         userId = request.POST.get('user_id', '')
         shopIcon = request.FILES.get('shop_icon')
         shopTitle = request.POST.get('shop_title', '')
-        shopCategoryId = request.POST.getlist('shop_category_id[]', '')
+        shopCategoryId = request.POST.getlist('shop_category_id', '')
         shopPic = request.FILES.get('shop_pic')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
