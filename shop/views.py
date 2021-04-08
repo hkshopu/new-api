@@ -7,6 +7,7 @@ from hkshopu import models
 import re
 import datetime
 import math
+import uuid
 
 # Create your views here.
 
@@ -30,7 +31,7 @@ def save(request):
         userId = request.POST.get('user_id', '')
         shopIcon = request.FILES.get('shop_icon')
         shopTitle = request.POST.get('shop_title', '')
-        shopCategoryId = request.POST.getlist('shop_category_id', '')
+        shopCategoryId = request.POST.getlist('shop_category_id[]', '')
         shopPic = request.FILES.get('shop_pic')
         shopDesc = request.POST.get('shop_desc', '')
         paypal = request.POST.get('paypal', '')
@@ -46,6 +47,22 @@ def save(request):
         shipByProduct = request.POST.get('ship_by_product', '')
         discountByPercent = request.POST.get('discount_by_percent', '')
         discountByAmount = request.POST.get('discount_by_amount', '')
+        # 新增 log
+        shopCategoryIdParam = ''
+        if shopCategoryId:
+            shopCategoryIdList = []
+            for value in shopCategoryId:
+                shopCategoryIdList.append('shop_category_id=' + value)
+            shopCategoryIdParam += '&'.join(shopCategoryIdList)
+        else:
+            shopCategoryIdParam += 'shop_category_id='
+        models.Audit_Log.objects.create(
+            id=uuid.uuid4(), 
+            user_id=userId, 
+            action='Create New Shop', 
+            parameter_in='user_id=' + userId + '&shop_icon=' + str(shopIcon) + '&shop_title=' + shopTitle + '&' + shopCategoryIdParam, 
+            parameter_out=''
+        )
         # 檢查使用者是否登入
         if responseData['status'] == 0:
             if not(userId):

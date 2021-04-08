@@ -154,3 +154,12 @@ class Email_Validation(models.Model):
     validation_code = models.CharField(max_length=4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Audit_Log(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id = models.IntegerField()
+    action = models.CharField(max_length=100)
+    parameter_in = models.TextField()
+    parameter_out = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
