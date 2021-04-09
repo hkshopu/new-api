@@ -8,6 +8,7 @@ import re
 import datetime
 import math
 import uuid
+import os
 
 # Create your views here.
 
@@ -189,7 +190,10 @@ def save(request):
                 pass
         # 新增商店並移動圖檔到指定路徑
         if responseData['status'] == 0:
-            fs = FileSystemStorage(location='templates/static/images/shop/')
+            destination_path = 'templates/static/images/shop/'
+            if not(os.path.exists(destination_path)):
+                os.makedirs(destination_path)
+            fs = FileSystemStorage(location=destination_path)
             now = datetime.datetime.now()
             # shop_icon
             shopIconName = str(shopIcon.name).split('.')[0]
