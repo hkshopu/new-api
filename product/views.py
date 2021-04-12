@@ -27,6 +27,7 @@ def save(request):
         product_price = request.POST.get('product_price', 0)
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
+        longterm_stock_up = request.POST.get('longterm_stock_up', 'N')
         # 檢查各欄位是否填寫
         if response_data['status'] == 0:
             if not(shop_id):
@@ -115,6 +116,7 @@ def save(request):
                 if not(re.match('^\d+$', weight)):
                     response_data['status'] = -17
                     response_data['ret_val'] = '產品重量格式錯誤!'
+
         # 檢查商店編號是否存在
         if response_data['status'] == 0:
             try:
@@ -138,6 +140,12 @@ def save(request):
                 response_data['ret_val'] = '產品子分類編號不存在!'
 
         if response_data['status'] == 0:
+            if longterm_stock_up:
+                if not(re.match('[Y|N]', longterm_stock_up)):
+                    response_data['status'] = -21
+                    response_data['ret_val'] = '較長備貨格式錯誤'
+
+        if response_data['status'] == 0:
             models.Product.objects.create(
                 shop_id=shop_id, 
                 product_category_id=product_category_id, 
@@ -148,7 +156,8 @@ def save(request):
                 product_country_code=product_country_code, 
                 product_price=product_price, 
                 shipping_fee=shipping_fee, 
-                weight=weight
+                weight=weight,
+                longterm_stock_up=longterm_stock_up
             )
             response_data['ret_val'] = '產品新增成功!'
     return JsonResponse(response_data)

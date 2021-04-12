@@ -86,6 +86,7 @@ class Product(models.Model):
     product_price = models.PositiveIntegerField()
     shipping_fee = models.PositiveIntegerField(null=True)
     weight = models.PositiveIntegerField(null=True)
+    longterm_stock_up = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
