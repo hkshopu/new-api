@@ -5,6 +5,11 @@ import sys
 
 
 def main():
+    # Add vendor directory to module search path
+    parent_dir = os.path.abspath(os.path.dirname(__file__))
+    vendor_dir = os.path.join(parent_dir, 'vendor')
+    sys.path.append(vendor_dir)
+    
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'store.settings')
     try:
