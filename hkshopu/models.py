@@ -82,13 +82,14 @@ class Product(models.Model):
     product_title = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField()
     product_description = models.TextField()
-    product_country_code = models.CharField(max_length=5)
+    # product_country_code = models.CharField(max_length=5)
     product_price = models.PositiveIntegerField()
     shipping_fee = models.PositiveIntegerField(null=True)
     weight = models.PositiveIntegerField(null=True)
-    longterm_stock_up = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    new_secondhand= models.CharField(max_length=50)
+    longterm_stock_up= models.CharField(max_length=1)
 
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)
@@ -162,5 +163,14 @@ class Audit_Log(models.Model):
     action = models.CharField(max_length=100)
     parameter_in = models.TextField()
     parameter_out = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Shop_Score(models.Model):
+    user_id = models.PositiveIntegerField()
+    shop_id = models.PositiveIntegerField()
+    # from shop table
+    score = models.FloatField() #or models.FloatField(**options)
+    comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
