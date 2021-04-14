@@ -9,7 +9,7 @@ import datetime
 import math
 import uuid
 import os
-
+from utils.upload_tools import upload_file
 # Create your views here.
 
 # 新增商店頁面
@@ -41,7 +41,7 @@ def save(request):
         apple = request.POST.get('apple', '')
         android = request.POST.get('android', '')
         isShipFree = request.POST.get('is_ship_free', '')
-        shipFreeQuota = request.POST.get('ship_free_quota', '')
+        shipFreeQuota = request.POST.get('ship_free_quota', None)
         fixShipFee = request.POST.get('fix_ship_fee', '')
         fixShipFeeFr = request.POST.get('fix_ship_fee_fr', '')
         fixShipFeeTo = request.POST.get('fix_ship_fee_to', '')
@@ -190,30 +190,16 @@ def save(request):
                 pass
         # 新增商店並移動圖檔到指定路徑
         if responseData['status'] == 0:
-            destination_path = 'templates/static/images/shop/'
-            if not(os.path.exists(destination_path)):
-                os.makedirs(destination_path)
-            fs = FileSystemStorage(location=destination_path)
-            now = datetime.datetime.now()
-            # shop_icon
-            shopIconName = str(shopIcon.name).split('.')[0]
-            shopIconExtension = str(shopIcon.name).split('.')[1]
-            shopIconFullName = shopIconName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopIconExtension
-            fs.save(name=shopIconFullName, content=shopIcon)
-            # shop_pic
-            if shopPic:
-                shopPicName = str(shopPic.name).split('.')[0]
-                shopPicExtension = str(shopPic.name).split('.')[1]
-                shopPicFullName = shopPicName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopPicExtension
-                fs.save(name=shopPicFullName, content=shopPic)
-            else:
-                shopPicFullName = ''
+            # 上傳圖片
+            destination_path = 'images/shop/'
+            shopIconURL = upload_file(FILE=shopIcon,destination_path=destination_path,suffix='icon')
+            shopPicURL = upload_file(FILE=shopPic,destination_path=destination_path,suffix='pic')
             # 新增商店
             models.Shop.objects.create(
                 user_id=userId,  
                 shop_title=shopTitle, 
-                shop_icon=shopIconFullName, 
-                shop_pic=shopPicFullName, 
+                shop_icon=shopIconURL, 
+                shop_pic=shopPicURL, 
                 shop_description=shopDesc, 
                 paypal=paypal, 
                 visa=visa, 
