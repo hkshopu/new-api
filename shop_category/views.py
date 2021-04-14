@@ -6,8 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from hkshopu import models
 import re
 import datetime
-import random
-
+from utils.upload_tools import upload_file
 # Create your views here.
 
 # 取得商店分類清單
@@ -119,28 +118,19 @@ def save(request):
             
         if response_data['status'] == 0:
             # 上傳圖片
-            now = datetime.datetime.now()
-            file_rand_str_list = []
-            for i in range(2):
-                rand_num_list = []
-                for j in range(12):
-                    rand_num_list.append(random.choice('0123456789'))
-                rand_num = ''.join(rand_num_list)
-                file_rand_str_list.append(rand_num)
-            new_unselected_shop_category_icon_name = now.strftime('%Y%m%d%H%M%S') + '_' + file_rand_str_list[0] + '_' + unselected_shop_category_icon.name
-            new_selected_shop_category_icon_name = now.strftime('%Y%m%d%H%M%S') + '_' + file_rand_str_list[1] + '_' + selected_shop_category_icon.name
-            fs = FileSystemStorage(location='templates/static/images/shop_category/')
-            fs.save(name=new_unselected_shop_category_icon_name, content=unselected_shop_category_icon)
-            fs.save(name=new_selected_shop_category_icon_name, content=selected_shop_category_icon)
+            destination_path = 'images/shop_category/'
+            new_unselected_shop_category_icon_url = upload_file(FILE=unselected_shop_category_icon,destination_path=destination_path,suffix='unselected')
+            new_selected_shop_category_icon_url = upload_file(FILE=selected_shop_category_icon,destination_path=destination_path,suffix='selected')
             # 寫入資料庫
             models.Shop_Category.objects.create(
                 c_shop_category=c_shop_category, 
                 e_shop_category=e_shop_category, 
-                unselected_shop_category_icon=new_unselected_shop_category_icon_name, 
-                selected_shop_category_icon=new_selected_shop_category_icon_name, 
+                unselected_shop_category_icon=new_unselected_shop_category_icon_url, 
+                selected_shop_category_icon=new_selected_shop_category_icon_url, 
                 shop_category_background_color=shop_category_background_color,  
                 shop_category_seq=shop_category_seq
             )
+            response_data['ret_val'] = '商店分類新增成功!'
     return JsonResponse(response_data)
 # 更新商店分類
 def update(id, request):
