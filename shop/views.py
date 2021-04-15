@@ -29,7 +29,7 @@ def save(request):
 
     if request.method == 'POST':
         # 欄位資料
-        userId = request.POST.get('user_id', '')
+        userId = request.POST.get('user_id', None)
         shopIcon = request.FILES.get('shop_icon')
         shopTitle = request.POST.get('shop_title', '')
         shopCategoryId = request.POST.getlist('shop_category_id', '')
@@ -42,12 +42,12 @@ def save(request):
         android = request.POST.get('android', '')
         isShipFree = request.POST.get('is_ship_free', '')
         shipFreeQuota = request.POST.get('ship_free_quota', None)
-        fixShipFee = request.POST.get('fix_ship_fee', '')
-        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', '')
-        fixShipFeeTo = request.POST.get('fix_ship_fee_to', '')
+        fixShipFee = request.POST.get('fix_ship_fee', None)
+        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', None)
+        fixShipFeeTo = request.POST.get('fix_ship_fee_to', None)
         shipByProduct = request.POST.get('ship_by_product', '')
-        discountByPercent = request.POST.get('discount_by_percent', '')
-        discountByAmount = request.POST.get('discount_by_amount', '')
+        discountByPercent = request.POST.get('discount_by_percent', None)
+        discountByAmount = request.POST.get('discount_by_amount', None)
         # 新增 log
         shopCategoryIdParam = ''
         if shopCategoryId:
