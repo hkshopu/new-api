@@ -7,6 +7,7 @@ import re
 import datetime
 import math
 from django.core.files.storage import FileSystemStorage
+from utils.upload_tools import upload_file
 # Create your views here.
 # 取得商品清單
 def index(request):
@@ -48,7 +49,8 @@ def save(request):
     # 回傳資料
     response_data = {
         'status': 0, 
-        'ret_val': ''
+        'ret_val': '',
+        'pic_upload':''
     }
 
     if request.method == 'POST':
@@ -67,7 +69,7 @@ def save(request):
 
         #商品圖片
         product_id = request.POST.get('product_id', '')
-        product_pic_list = request.FILES.getlist('product_pic', [])
+        product_pic_list = request.FILES.getlist('product_pic_list', [])
 
         # 檢查各欄位是否填寫
         if response_data['status'] == 0:
@@ -200,12 +202,12 @@ def save(request):
                 response_data['status'] = -24
                 response_data['ret_val'] = '產品編號格式錯誤!'
 
-        if response_data['status'] == 0:
-            for product_pic in product_pic_list:
-                if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(product_pic))):
-                    response_data['status'] = -25
-                    response_data['ret_val'] = '產品圖片格式錯誤!'
-                    break
+        # if response_data['status'] == 0:
+        #     for product_pic in product_pic_list:
+        #         if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(product_pic_list))):
+        #             response_data['status'] = -25
+        #             response_data['ret_val'] = '產品圖片格式錯誤!'
+        #             break
 
         if response_data['status'] == 0:
             try:
@@ -213,8 +215,18 @@ def save(request):
             except:
                 response_data['status'] = -26
                 response_data['ret_val'] = '該產品編號錯誤或不存在!'
-        #------------
+        #-----------
+        #圖片上傳功能
+        productPicURL=[]
         if response_data['status'] == 0:
+            for product_pic in product_pic_list:
+
+                # upload_file(product_pic,'images/product/',suffix="img")
+                productPicURL.append(upload_file(product_pic,'images/product/',suffix="img"))
+                # response_data['status'] = -100
+                # response_data['pic_upload'] = 'success'
+                #return url需參數
+            # return JsonResponse(response_data)
             models.Product.objects.create(
                 shop_id=shop_id, 
                 product_category_id=product_category_id, 
@@ -229,20 +241,53 @@ def save(request):
                 new_secondhand=new_secondhand
             )
             #圖片上傳DB
-            for product_pic in product_pic_list:
+            for product_pic_url in productPicURL:
                 # 自訂圖片檔名
-                now = datetime.datetime.now()
-                product_pic_name = str(product_pic.name).split('.')[0]
-                product_pic_extension = str(product_pic.name).split('.')[1]
-                product_pic_fullname = product_pic_name + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + product_pic_extension
-                # 上傳圖片檔案
-                fs = FileSystemStorage(location='templates/static/images/selected_product_pic/')
-                fs.save(name=product_pic_fullname, content=product_pic)
+                # now = datetime.datetime.now()
+                # product_pic_name = str(product_pic.name).split('.')[0]
+                # product_pic_extension = str(product_pic.name).split('.')[1]
+                # product_pic_fullname = product_pic_name + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + product_pic_extension
+                # # 上傳圖片檔案
+                # fs = FileSystemStorage(location='templates/static/images/selected_product_pic/')
+                # fs.save(name=product_pic_fullname, content=product_pic)
                 # 寫入資料庫
                 models.Selected_Product_Pic.objects.create(
                     product_id=product_id, 
-                    product_pic=product_pic_fullname
+                    product_pic=product_pic_url
                 )
             response_data['ret_val'] = '產品新增成功!'
+            response_data['status'] = -200
+            response_data['pic_upload'] = 'success'
+        #------------
+        # if response_data['status'] == 0:
+        #     models.Product.objects.create(
+        #         shop_id=shop_id, 
+        #         product_category_id=product_category_id, 
+        #         product_sub_category_id=product_sub_category_id, 
+        #         product_title=product_title, 
+        #         quantity=quantity, 
+        #         product_description=product_description, 
+        #         # product_country_code=product_country_code, 
+        #         product_price=product_price, 
+        #         shipping_fee=shipping_fee, 
+        #         weight=weight,
+        #         new_secondhand=new_secondhand
+        #     )
+        #     #圖片上傳DB
+        #     for product_pic in product_pic_list:
+        #         # 自訂圖片檔名
+        #         # now = datetime.datetime.now()
+        #         # product_pic_name = str(product_pic.name).split('.')[0]
+        #         # product_pic_extension = str(product_pic.name).split('.')[1]
+        #         # product_pic_fullname = product_pic_name + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + product_pic_extension
+        #         # # 上傳圖片檔案
+        #         # fs = FileSystemStorage(location='templates/static/images/selected_product_pic/')
+        #         # fs.save(name=product_pic_fullname, content=product_pic)
+        #         # 寫入資料庫
+        #         models.Selected_Product_Pic.objects.create(
+        #             product_id=product_id, 
+        #             product_pic=product_pic
+        #         )
+        #     response_data['ret_val'] = '產品新增成功!'
 
     return JsonResponse(response_data)
