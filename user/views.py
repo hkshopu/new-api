@@ -527,7 +527,7 @@ def getUserShopListProcess(request, id):
                 shopInfo = {
                     'id': shop.id, 
                     'user_id': shop.user_id, 
-                    'shop_category_id': shop.shop_category_id, 
+                    #'shop_category_id': shop.shop_category_id, 
                     'shop_title': shop.shop_title, 
                     'shop_icon': shop.shop_icon, 
                     'shop_pic': shop.shop_pic, 
