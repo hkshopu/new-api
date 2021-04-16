@@ -29,7 +29,7 @@ def save(request):
 
     if request.method == 'POST':
         # 欄位資料
-        userId = request.POST.get('user_id', None)
+        userId = request.POST.get('user_id', '')
         shopIcon = request.FILES.get('shop_icon')
         shopTitle = request.POST.get('shop_title', '')
         shopCategoryId = request.POST.getlist('shop_category_id', '')
@@ -41,13 +41,13 @@ def save(request):
         apple = request.POST.get('apple', '')
         android = request.POST.get('android', '')
         isShipFree = request.POST.get('is_ship_free', '')
-        shipFreeQuota = request.POST.get('ship_free_quota', None)
-        fixShipFee = request.POST.get('fix_ship_fee', None)
-        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', None)
-        fixShipFeeTo = request.POST.get('fix_ship_fee_to', None)
+        shipFreeQuota = request.POST.get('ship_free_quota', '')
+        fixShipFee = request.POST.get('fix_ship_fee', '')
+        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', '')
+        fixShipFeeTo = request.POST.get('fix_ship_fee_to', '')
         shipByProduct = request.POST.get('ship_by_product', '')
-        discountByPercent = request.POST.get('discount_by_percent', None)
-        discountByAmount = request.POST.get('discount_by_amount', None)
+        discountByPercent = request.POST.get('discount_by_percent', '')
+        discountByAmount = request.POST.get('discount_by_amount', '')
         # 新增 log
         shopCategoryIdParam = ''
         if shopCategoryId:
@@ -102,84 +102,111 @@ def save(request):
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
                     responseData['status'] = -9
                     responseData['ret_val'] = '商店主圖格式錯誤!'
+            elif (shopPic==''):
+                shopPic = None
 
         if responseData['status'] == 0:
             if paypal:
                 if not(re.match('^\w+$', paypal)):
                     responseData['status'] = -10
                     responseData['ret_val'] = 'PayPal 格式錯誤!'
+            elif (paypal==''):
+                paypal = None
 
         if responseData['status'] == 0:
             if visa:
                 if not(re.match('^\w+$', visa)):
                     responseData['status'] = -11
                     responseData['ret_val'] = 'Visa 卡格式錯誤!'
+            elif (visa==''):
+                visa = None
 
         if responseData['status'] == 0:
             if master:
                 if not(re.match('^\w+$', master)):
                     responseData['status'] = -12
                     responseData['ret_val'] = 'Master 卡格式錯誤!'
+            elif (master==''):
+                master = None
 
         if responseData['status'] == 0:
             if apple:
                 if not(re.match('^\w+$', apple)):
                     responseData['status'] = -13
                     responseData['ret_val'] = 'Apple 格式錯誤!'
+            elif (apple==''):
+                apple = None
 
         if responseData['status'] == 0:
             if android:
                 if not(re.match('^\w+$', android)):
                     responseData['status'] = -14
                     responseData['ret_val'] = 'Android 格式錯誤!'
+            elif (shipByProduct==''):
+                shipByProduct = None
 
         if responseData['status'] == 0:
             if isShipFree:
                 if not(re.match('^\w+$', isShipFree)):
                     responseData['status'] = -15
                     responseData['ret_val'] = '是否免運費格式錯誤!'
+            elif (isShipFree==''):
+                isShipFree = None
 
         if responseData['status'] == 0:
             if shipFreeQuota:
                 if not(re.match('^\d+$', shipFreeQuota)):
                     responseData['status'] = -16
                     responseData['ret_val'] = '免運費訂單價格格式錯誤!'
-
+            elif (shipFreeQuota==''):
+                shipFreeQuota = None
         if responseData['status'] == 0:
             if fixShipFee:
                 if not(re.match('^\d+$', fixShipFee)):
                     responseData['status'] = -17
                     responseData['ret_val'] = '運費訂價格式錯誤!'
+            elif (fixShipFee==''):
+                fixShipFee = None
 
         if responseData['status'] == 0:
             if fixShipFeeFr:
                 if not(re.match('^\d+$', fixShipFeeFr)):
                     responseData['status'] = -18
                     responseData['ret_val'] = '訂單價格由格式錯誤!'
+            elif (fixShipFeeFr==''):
+                fixShipFeeFr = None
 
         if responseData['status'] == 0:
             if fixShipFeeTo:
                 if not(re.match('^\d+$', fixShipFeeTo)):
                     responseData['status'] = -19
                     responseData['ret_val'] = '訂單價格至格式錯誤!'
+            elif (fixShipFeeTo==''):
+                fixShipFeeTo = None
 
         if responseData['status'] == 0:
             if shipByProduct:
                 if not(re.match('^\w+$', shipByProduct)):
                     responseData['status'] = -20
                     responseData['ret_val'] = '運費由商品設定格式錯誤!'
+            elif (shipByProduct==''):
+                shipByProduct = None
 
         if responseData['status'] == 0:
             if discountByPercent:
                 if not(re.match('^\d+$', discountByPercent)):
                     responseData['status'] = -22
                     responseData['ret_val'] = '百分比折扣格式錯誤!'
+            elif (discountByPercent==''):
+                discountByPercent = None
 
         if responseData['status'] == 0:
             if discountByAmount:
                 if not(re.match('^\d+$', discountByAmount)):
                     responseData['status'] = -23
                     responseData['ret_val'] = '價格折扣格式錯誤!'
+            elif (discountByAmount==''):
+                discountByAmount = None
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
             try:
