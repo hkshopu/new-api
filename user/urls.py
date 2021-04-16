@@ -14,5 +14,6 @@ urlpatterns = [
     path('resetPasswordProcess/', views.resetPasswordProcess), 
     path('checkEmailIsAllowedLoginProcess/', views.checkEmailIsAllowedLoginProcess), 
     path('getUserListProcess/', views.getUserListProcess), 
-    path('<id>/show/', views.show)
+    path('<id>/show/', views.show),
+    path('<id>/shopCount/', views.getUserShopCount)
 ]

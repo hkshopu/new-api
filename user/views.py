@@ -524,27 +524,17 @@ def getUserShopListProcess(request, id):
         
         if responseData['status'] == 0:
             for shop in shops:
+                products = models.Product.objects.filter(shop_id=shop.id)
                 shopInfo = {
                     'id': shop.id, 
-                    'user_id': shop.user_id, 
-                    #'shop_category_id': shop.shop_category_id, 
                     'shop_title': shop.shop_title, 
                     'shop_icon': shop.shop_icon, 
                     'shop_pic': shop.shop_pic, 
-                    'shop_description': shop.shop_description, 
-                    'paypal': shop.paypal, 
-                    'visa': shop.visa, 
-                    'master': shop.master, 
-                    'apple': shop.apple, 
-                    'android': shop.android, 
-                    'is_ship_free': shop.is_ship_free, 
-                    'ship_by_product': shop.ship_by_product, 
-                    'ship_free_quota': shop.ship_free_quota, 
-                    'fix_ship_fee': shop.fix_ship_fee, 
-                    'fix_ship_fee_from': shop.fix_ship_fee_from, 
-                    'fix_ship_fee_to': shop.fix_ship_fee_to, 
-                    'created_at': shop.created_at, 
-                    'updated_at': shop.updated_at
+                    'product_count': len(products)
+                    #'product_count': len(products),
+                    #'rating': tbc,
+                    #'follower': tbc,
+                    #'income': tbc
                 }
                 responseData['shop_list'].append(shopInfo)
             responseData['ret_val'] = '已取得您的商店清單!'
@@ -632,3 +622,21 @@ def show(request, id):
             response_data['user_data']['updated_at'] = user.updated_at
             response_data['ret_val'] = '已取得使用者資料!'
     return JsonResponse(response_data)
+# 取得使用者商店總數
+def getUserShopCount(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+
+    if request.method == 'GET':        
+        if responseData['status'] == 0:
+            shops = models.Shop.objects.filter(user_id=id)
+            shopInfo = {
+                'shop_count': len(shops)
+            }
+            responseData['data'].append(shopInfo)
+            responseData['ret_val'] = '已取得您的商店總數!'
+    return JsonResponse(responseData)
