@@ -512,7 +512,7 @@ def getUserShopListProcess(request, id):
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'shop_list': []
+        'data': []
     }
 
     if request.method == 'GET':
@@ -536,7 +536,7 @@ def getUserShopListProcess(request, id):
                     #'follower': tbc,
                     #'income': tbc
                 }
-                responseData['shop_list'].append(shopInfo)
+                responseData['data'].append(shopInfo)
             responseData['ret_val'] = '已取得您的商店清單!'
     return JsonResponse(responseData)
 # 取得會員資料
