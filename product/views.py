@@ -8,6 +8,7 @@ import datetime
 import math
 from django.core.files.storage import FileSystemStorage
 from utils.upload_tools import upload_file
+import json
 # Create your views here.
 # 取得商品清單
 def index(request):
@@ -68,8 +69,18 @@ def save(request):
         new_secondhand = request.POST.get('new_secondhand', '')
 
         #商品圖片
-        product_id = request.POST.get('product_id', '')
+        product_id = request.POST.get('product_id',0)
         product_pic_list = request.FILES.getlist('product_pic_list', [])
+        # # 商品規格
+        product_spec_list=json.loads(request.POST.get('product_spec_list'))
+        print(product_spec_list["product_spec_list"])
+        print("====================")
+        print(product_spec_list["product_spec_list"][3]["price"])
+        print(len(product_spec_list["product_spec_list"]))
+
+
+        # for i in range(len(product_spec_list)):
+        #     response_data['status'] = -88
 
         # 檢查各欄位是否填寫
         if response_data['status'] == 0:
@@ -255,39 +266,78 @@ def save(request):
                     product_id=product_id, 
                     product_pic=product_pic_url
                 )
+           
+            # 寫入資料庫(規格)
+            for i in range(len(product_spec_list["product_spec_list"])):
+                # models.Product_Spec.objects.create(
+                #     product_id=product_spec_list[i][0],
+                #     spec_name=product_spec_list[i][1],
+                #     price=product_spec_list[i][2],
+                #     quantity=product_spec_list[i][3],
+                #     size=product_spec_list[i][4]
+                # )
+                models.Product_Spec.objects.create(
+                    product_id=product_spec_list["product_spec_list"][i]["product_id"],
+                    spec_name=product_spec_list["product_spec_list"][i]["spec_name"],
+                    price=product_spec_list["product_spec_list"][i]["price"],
+                    quantity=product_spec_list["product_spec_list"][i]["quantity"],
+                    size=product_spec_list["product_spec_list"][i]["size"]
+                )
             response_data['ret_val'] = '產品新增成功!'
-            response_data['status'] = -200
+            response_data['status'] = -1000
             response_data['pic_upload'] = 'success'
         #------------
-        # if response_data['status'] == 0:
-        #     models.Product.objects.create(
-        #         shop_id=shop_id, 
-        #         product_category_id=product_category_id, 
-        #         product_sub_category_id=product_sub_category_id, 
-        #         product_title=product_title, 
-        #         quantity=quantity, 
-        #         product_description=product_description, 
-        #         # product_country_code=product_country_code, 
-        #         product_price=product_price, 
-        #         shipping_fee=shipping_fee, 
-        #         weight=weight,
-        #         new_secondhand=new_secondhand
-        #     )
-        #     #圖片上傳DB
-        #     for product_pic in product_pic_list:
-        #         # 自訂圖片檔名
-        #         # now = datetime.datetime.now()
-        #         # product_pic_name = str(product_pic.name).split('.')[0]
-        #         # product_pic_extension = str(product_pic.name).split('.')[1]
-        #         # product_pic_fullname = product_pic_name + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + product_pic_extension
-        #         # # 上傳圖片檔案
-        #         # fs = FileSystemStorage(location='templates/static/images/selected_product_pic/')
-        #         # fs.save(name=product_pic_fullname, content=product_pic)
-        #         # 寫入資料庫
-        #         models.Selected_Product_Pic.objects.create(
-        #             product_id=product_id, 
-        #             product_pic=product_pic
-        #         )
-        #     response_data['ret_val'] = '產品新增成功!'
+    return JsonResponse(response_data)
+# 新增商店子分類
+# from querystring_parser import parser
+
+def spec_test(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '',
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        product_spec_list=json.loads(request.POST.get('product_spec_list'))
+        print(product_spec_list["product_spec_list"])
+        print("====================")
+        print(product_spec_list["product_spec_list"][3]["price"])
+        print(len(product_spec_list["product_spec_list"]))
+
+        # 檢查欄位是否填寫 
+        if response_data['status'] == 0:
+            # for product_spec_list02 in product_spec_list:
+            # 寫入資料庫
+            for i in range(len(product_spec_list["product_spec_list"])):
+                # models.Product_Spec.objects.create(
+                #     product_id=product_spec_list[i][0],
+                #     spec_name=product_spec_list[i][1],
+                #     price=product_spec_list[i][2],
+                #     quantity=product_spec_list[i][3],
+                #     size=product_spec_list[i][4]
+                # )
+                models.Product_Spec.objects.create(
+                    product_id=product_spec_list["product_spec_list"][i]["product_id"],
+                    spec_name=product_spec_list["product_spec_list"][i]["spec_name"],
+                    price=product_spec_list["product_spec_list"][i]["price"],
+                    quantity=product_spec_list["product_spec_list"][i]["quantity"],
+                    size=product_spec_list["product_spec_list"][i]["size"]
+                )
+            # print(product_spec_list)
+
+            # for product_spec in product_spec_list:
+            #     models.Product_Spec.objects.create(
+            #             product_id=product_spec['product_id'],
+            #             spec_name=product_spec['spec_name'],
+            #             price=product_spec['price'],
+            #             quantity=product_spec['quantity'],
+            #             size=product_spec['size']
+            #     )
+            #     response_data['test']=product_spec.product_id
+
+            response_data['status'] = -1000
+            response_data['ret_val'] = '成功!'
+            # response_data['test'].append(product_spec_list)
+            
 
     return JsonResponse(response_data)
