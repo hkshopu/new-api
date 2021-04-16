@@ -141,8 +141,8 @@ EMAIL_USE_TLS = True
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
-    'https://admin-dot-hkshopu-20700.df.r.appspot.com/',
-    'http://127.0.0.1:8000/',
+    'https://admin-dot-hkshopu-20700.df.r.appspot.com',
+    'http://127.0.0.1:8000',
 ]
 CORS_ALLOW_HEADERS = [
     'x-csrf-token',
