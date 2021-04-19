@@ -90,6 +90,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     new_secondhand= models.CharField(max_length=50)
     longterm_stock_up= models.CharField(max_length=1)
+    user_id=models.PositiveIntegerField()
 
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)
@@ -174,3 +175,12 @@ class Shop_Score(models.Model):
     comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Spec(models.Model):
+    product_id = models.PositiveIntegerField()
+    spec_desc_1 = models.CharField(max_length=255)
+    spec_desc_2 = models.CharField(max_length=255)
+    spec_dec_1_items= models.CharField(max_length=255)
+    spec_dec_2_items= models.CharField(max_length=255)
+    price=models.PositiveIntegerField()
+    quantity= models.PositiveIntegerField()
