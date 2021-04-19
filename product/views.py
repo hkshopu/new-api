@@ -68,7 +68,7 @@ def save(request):
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
         new_secondhand = request.POST.get('new_secondhand', '')
-
+        user_id = request.POST.get('user_id', '')
         #商品圖片
         # product_id = request.POST.get('product_id',0)
         product_pic_list = request.FILES.getlist('product_pic_list', [])
@@ -250,7 +250,8 @@ def save(request):
                 product_price=product_price, 
                 shipping_fee=shipping_fee, 
                 weight=weight,
-                new_secondhand=new_secondhand
+                new_secondhand=new_secondhand,
+                user_id=user_id
             )
             #傳回product_id
             products=models.Product.objects.filter(
