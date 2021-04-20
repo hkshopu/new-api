@@ -246,7 +246,7 @@ def update(id, request):
             response_data['ret_val'] = '商店分類更新成功!'
     return JsonResponse(response_data)
 # 刪除商店分類
-def destroy(id, request):
+def destroy(request, id):
     response_data = {
         'status': 0, 
         'ret_val': ''
@@ -261,5 +261,6 @@ def destroy(id, request):
 
         if response_data['status'] == 0:
             shop_category.is_delete = 'Y'
+            shop_category.save()
             response_data['ret_val'] = '已刪除該商店分類!'
     return JsonResponse(response_data)
