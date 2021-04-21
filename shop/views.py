@@ -493,6 +493,10 @@ def show(request, id):
                     responseData['shop']['fix_ship_fee_from'] = shop.fix_ship_fee_from
                 if (hasattr(shop, 'fix_ship_fee_to')):
                     responseData['shop']['fix_ship_fee_to'] = shop.fix_ship_fee_to
+                if (hasattr(shop, 'transaction_method')):
+                    responseData['shop']['transaction_method'] = shop.transaction_method
+                if (hasattr(shop, 'transport_setting')):
+                    responseData['shop']['transport_setting'] = shop.transport_setting
                 if (hasattr(shop, 'created_at')):
                     responseData['shop']['created_at'] = shop.created_at
                 if (hasattr(shop, 'updated_at')):

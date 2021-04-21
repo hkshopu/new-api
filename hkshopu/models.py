@@ -45,6 +45,8 @@ class Shop(models.Model):
     fix_ship_fee_to = models.PositiveIntegerField(null=True)
     discount_by_percent = models.PositiveIntegerField(null=True)
     discount_by_amount = models.PositiveIntegerField(null=True)
+    transaction_method = models.CharField(max_length=50, null=True)
+    transport_setting = models.CharField(max_length=50, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
