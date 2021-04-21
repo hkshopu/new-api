@@ -91,6 +91,9 @@ class Product(models.Model):
     new_secondhand= models.CharField(max_length=50)
     longterm_stock_up= models.CharField(max_length=1)
     user_id=models.PositiveIntegerField()
+    length = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
 
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)

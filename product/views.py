@@ -69,6 +69,9 @@ def save(request):
         weight = request.POST.get('weight', 0)
         new_secondhand = request.POST.get('new_secondhand', '')
         user_id = request.POST.get('user_id', '')
+        length = request.POST.get('length', 0)
+        width = request.POST.get('width', 0)
+        height = request.POST.get('height', 0)
         #商品圖片
         # product_id = request.POST.get('product_id',0)
         product_pic_list = request.FILES.getlist('product_pic_list', [])
@@ -209,6 +212,24 @@ def save(request):
                 response_data['status'] = -23
                 response_data['ret_val'] = '未上傳產品圖片!'
 
+        if response_data['status'] == 0:
+            if length:
+                if not(re.match('^\d+$', length)):
+                    response_data['status'] = -27
+                    response_data['ret_val'] = '產品長度格式錯誤!'
+
+        if response_data['status'] == 0:
+            if width:
+                if not(re.match('^\d+$', width)):
+                    response_data['status'] = -28
+                    response_data['ret_val'] = '產品寬度格式錯誤!'
+
+        if response_data['status'] == 0:
+            if height:
+                if not(re.match('^\d+$', height)):
+                    response_data['status'] = -29
+                    response_data['ret_val'] = '產品高度格式錯誤!'
+
         # if response_data['status'] == 0:
         #     if not(re.match('^\d+$', product_id)):
         #         response_data['status'] = -24
@@ -251,7 +272,10 @@ def save(request):
                 shipping_fee=shipping_fee, 
                 weight=weight,
                 new_secondhand=new_secondhand,
-                user_id=user_id
+                user_id=user_id, 
+                length=length, 
+                width=width, 
+                height=height
             )
             #傳回product_id
             products=models.Product.objects.filter(
