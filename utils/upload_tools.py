@@ -19,7 +19,7 @@ def upload_file(FILE,destination_path,suffix=""):
         suffix = "_" + suffix
     now = datetime.datetime.now()
     rand_num = get_random_num()
-    bucket_name = "hkshopu-20700.appspot.com"
+    bucket_name = "hkshopu.appspot.com"
     
     if FILE:
         splited = str(FILE.name).split('.')
@@ -29,8 +29,8 @@ def upload_file(FILE,destination_path,suffix=""):
         fileExtension = splited[len(splited)-1]
         fileFullName = destination_path + fileName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + "_" + rand_num + suffix + '.' + fileExtension
 
-        credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-20700-c554636b943d.json')
-        client = storage.Client(project="HKShopU",credentials=credentials)
+        credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-0a48a2bd9045.json')
+        client = storage.Client(project="hkshopu",credentials=credentials)
         bucket = client.get_bucket(bucket_name)
         while (Blob(fileFullName, bucket).exists()):
             now = datetime.datetime.now()

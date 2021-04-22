@@ -48,6 +48,19 @@ def save(request):
         shipByProduct = request.POST.get('ship_by_product', '')
         discountByPercent = request.POST.get('discount_by_percent', '')
         discountByAmount = request.POST.get('discount_by_amount', '')
+        bankCode = request.POST.get('bank_code', '')
+        bankName = request.POST.get('bank_name', '')
+        bankAccount = request.POST.get('bank_account', '')
+        bankAccountName = request.POST.get('bank_account_name', '')
+        addressName = request.POST.get('address_name', '')
+        addressPhone = request.POST.get('address_phone', '')
+        addressArea = request.POST.get('address_area', '')
+        addressDistrict = request.POST.get('address_district', '')
+        addressRoad = request.POST.get('address_road', '')
+        addressNumber = request.POST.get('address_number', '')
+        addressOther = request.POST.get('address_other', '')
+        addressFloor = request.POST.get('address_floor', '')
+        addressRoom = request.POST.get('address_room', '')
         # 新增 log
         shopCategoryIdParam = ''
         if shopCategoryId:
@@ -96,6 +109,7 @@ def save(request):
                     responseData['status'] = -8
                     responseData['ret_val'] = '商店分類格式錯誤!'
                     break
+
         # 選填欄位若有填寫，則判斷其格式是否正確
         if responseData['status'] == 0:
             if shopPic:
@@ -195,7 +209,7 @@ def save(request):
         if responseData['status'] == 0:
             if discountByPercent:
                 if not(re.match('^\d+$', discountByPercent)):
-                    responseData['status'] = -22
+                    responseData['status'] = -21
                     responseData['ret_val'] = '百分比折扣格式錯誤!'
             elif (discountByPercent==''):
                 discountByPercent = None
@@ -203,15 +217,121 @@ def save(request):
         if responseData['status'] == 0:
             if discountByAmount:
                 if not(re.match('^\d+$', discountByAmount)):
-                    responseData['status'] = -23
+                    responseData['status'] = -22
                     responseData['ret_val'] = '價格折扣格式錯誤!'
             elif (discountByAmount==''):
                 discountByAmount = None
+        
+        if responseData['status'] == 0:
+            if bankCode:
+                if not(re.match('^\d+$', bankCode)):
+                    responseData['status'] = -23
+                    responseData['ret_val'] = '銀行代碼格式錯誤!'
+            elif (bankCode==''):
+                bankCode = None
+        
+        if responseData['status'] == 0:
+            if bankName:
+                if not(re.match('^\w+$', bankName)):
+                    responseData['status'] = -24
+                    responseData['ret_val'] = '銀行名稱格式錯誤!'
+            elif (bankName==''):
+                bankName = None
+        
+        if responseData['status'] == 0:
+            if bankAccountName:
+                if not(re.match('^\w+$', bankAccountName)):
+                    responseData['status'] = -25
+                    responseData['ret_val'] = '銀行戶名格式錯誤!'
+            elif (bankAccountName==''):
+                bankAccountName = None
+        
+        if responseData['status'] == 0:
+            if bankAccount:
+                if not(re.match('^\d+$', bankAccount)):
+                    responseData['status'] = -26
+                    responseData['ret_val'] = '銀行帳號格式錯誤!'
+            elif (bankAccount==''):
+                bankAccount = None
+        
+        if responseData['status'] == 0:
+            if addressName:
+                if not(re.match('^\w+$', addressName)):
+                    responseData['status'] = -27
+                    responseData['ret_val'] = '姓名/公司名稱格式錯誤!'
+            elif (addressName==''):
+                addressName = None
+        
+        if responseData['status'] == 0:
+            if addressPhone:
+                if not(re.match('^\+\d+\s\d+$', addressPhone)):
+                    responseData['status'] = -28
+                    responseData['ret_val'] = '電話號碼格式錯誤!'
+            elif (addressPhone==''):
+                addressPhone = None
+        
+        if responseData['status'] == 0:
+            if addressArea:
+                if not(re.match('^\w+$', addressArea)):
+                    responseData['status'] = -29
+                    responseData['ret_val'] = '地域格式錯誤!'
+            elif (addressArea==''):
+                addressArea = None
+        
+        if responseData['status'] == 0:
+            if addressDistrict:
+                if not(re.match('^\w+$', addressDistrict)):
+                    responseData['status'] = -30
+                    responseData['ret_val'] = '地區格式錯誤!'
+            elif (addressDistrict==''):
+                addressDistrict = None
+        
+        if responseData['status'] == 0:
+            if addressRoad:
+                if not(re.match('^\w+$', addressRoad)):
+                    responseData['status'] = -31
+                    responseData['ret_val'] = '街道名稱格式錯誤!'
+            elif (addressRoad==''):
+                addressRoad = None
+        
+        if responseData['status'] == 0:
+            if addressNumber:
+                if not(re.match('^\w+$', addressNumber)):
+                    responseData['status'] = -32
+                    responseData['ret_val'] = '街道門牌格式錯誤!'
+            elif (addressNumber==''):
+                addressNumber = None
+        
+        if responseData['status'] == 0:
+            if addressOther:
+                if not(re.match('^\w+$', addressOther)):
+                    responseData['status'] = -33
+                    responseData['ret_val'] = '其他地址格式錯誤!'
+            elif (addressOther==''):
+                addressOther = None
+        
+        if responseData['status'] == 0:
+            if addressFloor:
+                if not(re.match('^\w+$', addressFloor)):
+                    responseData['status'] = -34
+                    responseData['ret_val'] = '樓層格式錯誤!'
+            elif (addressFloor==''):
+                addressFloor = None
+        
+        if responseData['status'] == 0:
+            if addressRoom:
+                if not(re.match('^\w+$', addressRoom)):
+                    responseData['status'] = -35
+                    responseData['ret_val'] = '房(室)名稱格式錯誤!'
+            elif (addressRoom==''):
+                addressRoom = None
+
+        
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
             try:
                 shop = models.Shop.objects.get(shop_title=shopTitle)
-                responseData['status'] = -24
+                responseData['status'] = -36
                 responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
             except:
                 pass
@@ -240,7 +360,20 @@ def save(request):
                 fix_ship_fee_from=fixShipFeeFr, 
                 fix_ship_fee_to=fixShipFeeTo, 
                 discount_by_percent=discountByPercent, 
-                discount_by_amount=discountByAmount
+                discount_by_amount=discountByAmount,
+                bank_code=bankCode,
+                bank_name=bankName,
+                bank_account=bankAccount,
+                bank_account_name=bankAccountName,
+                address_name=addressName,
+                address_phone=addressPhone,
+                address_area=addressArea,
+                address_district=addressDistrict,
+                address_road=addressRoad,
+                address_number=addressNumber,
+                address_other=addressOther,
+                address_floor=addressFloor,
+                address_room=addressRoom
             )
             # 取得當前商店編號
             shops = models.Shop.objects.order_by('-updated_at')
