@@ -79,7 +79,7 @@ def save(request):
         )
         # 檢查使用者是否登入
         if responseData['status'] == 0:
-            if not(userId):
+            if (not(userId) or userId==''):
                 responseData['status'] = -1
                 responseData['ret_val'] = '請先登入會員!'
         # 判斷必填欄位是否填寫及欄位格式是否正確
@@ -89,12 +89,12 @@ def save(request):
                 responseData['ret_val'] = '未上傳商店小圖!'
 
         if responseData['status'] == 0:
-            if not(shopTitle):
+            if (not(shopTitle) or shopTitle==''):
                 responseData['status'] = -3
                 responseData['ret_val'] = '未填寫商店標題!'
 
         if responseData['status'] == 0:
-            if not(shopCategoryId):
+            if (not(shopCategoryId) or shopCategoryId==''):
                 responseData['status'] = -4
                 responseData['ret_val'] = '未填寫商店分類編號!'
 
