@@ -330,7 +330,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressCountryCode:
-                if not(re.match('^\w+$', addressCountryCode)):
+                if not(re.match('^[\+\d]+$', addressCountryCode)):
                     responseData['status'] = -36
                     responseData['ret_val'] = '國碼格式錯誤!'
             elif (addressCountryCode==''):
