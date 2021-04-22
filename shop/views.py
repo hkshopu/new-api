@@ -234,7 +234,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if bankName:
-                if not(re.match('^[\w\s]+$', bankName)):
+                if not(re.match('^[()\w\s]+$', bankName)):
                     responseData['status'] = -24
                     responseData['ret_val'] = '銀行名稱格式錯誤!'
             elif (bankName==''):
@@ -242,7 +242,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if bankAccountName:
-                if not(re.match('^\w+$', bankAccountName)):
+                if not(re.match('^[\w\s]+$', bankAccountName)):
                     responseData['status'] = -25
                     responseData['ret_val'] = '銀行戶名格式錯誤!'
             elif (bankAccountName==''):
@@ -258,7 +258,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressName:
-                if not(re.match('^[\w\s]+$', addressName)):
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', addressName)):
                     responseData['status'] = -27
                     responseData['ret_val'] = '姓名/公司名稱格式錯誤!'
             elif (addressName==''):
@@ -274,7 +274,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressArea:
-                if not(re.match('^\w+$', addressArea)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressArea)):
                     responseData['status'] = -29
                     responseData['ret_val'] = '地域格式錯誤!'
             elif (addressArea==''):
@@ -282,7 +282,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressDistrict:
-                if not(re.match('^\w+$', addressDistrict)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressDistrict)):
                     responseData['status'] = -30
                     responseData['ret_val'] = '地區格式錯誤!'
             elif (addressDistrict==''):
@@ -290,7 +290,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressRoad:
-                if not(re.match('^[\w\s+]+$', addressRoad)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressRoad)):
                     responseData['status'] = -31
                     responseData['ret_val'] = '街道名稱格式錯誤!'
             elif (addressRoad==''):
@@ -298,7 +298,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressNumber:
-                if not(re.match('^\w+$', addressNumber)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressNumber)):
                     responseData['status'] = -32
                     responseData['ret_val'] = '街道門牌格式錯誤!'
             elif (addressNumber==''):
@@ -306,7 +306,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressOther:
-                if not(re.match('^[\w\s]+$', addressOther)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressOther)):
                     responseData['status'] = -33
                     responseData['ret_val'] = '其他地址格式錯誤!'
             elif (addressOther==''):
@@ -314,7 +314,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressFloor:
-                if not(re.match('^\w+$', addressFloor)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressFloor)):
                     responseData['status'] = -34
                     responseData['ret_val'] = '樓層格式錯誤!'
             elif (addressFloor==''):
@@ -322,7 +322,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressRoom:
-                if not(re.match('^\w+$', addressRoom)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressRoom)):
                     responseData['status'] = -35
                     responseData['ret_val'] = '房(室)名稱格式錯誤!'
             elif (addressRoom==''):
