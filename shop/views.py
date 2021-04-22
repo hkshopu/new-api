@@ -55,6 +55,7 @@ def save(request):
         addressName = request.POST.get('address_name', '')
         addressCountryCode = request.POST.get('address_country_code', '')
         addressPhone = request.POST.get('address_phone', '')
+        addressIsPhoneShow = request.POST.get('address_is_phone_show', '')
         addressArea = request.POST.get('address_area', '')
         addressDistrict = request.POST.get('address_district', '')
         addressRoad = request.POST.get('address_road', '')
@@ -334,6 +335,14 @@ def save(request):
                     responseData['ret_val'] = '國碼格式錯誤!'
             elif (addressCountryCode==''):
                 addressCountryCode = None
+
+        if responseData['status'] == 0:
+            if addressIsPhoneShow:
+                if not(re.match('^\w+$', addressIsPhoneShow)):
+                    responseData['status'] = -37
+                    responseData['ret_val'] = '顯示在店鋪簡介格式錯誤!'
+            elif (addressIsPhoneShow==''):
+                addressIsPhoneShow = None
 
         
         # 檢查同一人是否重複新增同名的商店

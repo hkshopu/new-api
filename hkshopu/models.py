@@ -54,6 +54,7 @@ class Shop(models.Model):
     address_name = models.CharField(max_length=50, null=True)
     address_country_code = models.CharField(max_length=50, null=True)
     address_phone = models.CharField(max_length=50, null=True)
+    address_is_phone_show= models.CharField(max_length=1, null=True, default='Y')
     address_area = models.CharField(max_length=50, null=True)
     address_district = models.CharField(max_length=50, null=True)
     address_road = models.CharField(max_length=50, null=True)
