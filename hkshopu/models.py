@@ -202,3 +202,10 @@ class Product_Spec(models.Model):
     spec_dec_2_items= models.CharField(max_length=255)
     price=models.PositiveIntegerField()
     quantity= models.PositiveIntegerField()
+
+class Product_Shipment_Method(models.Model):
+    product_id = models.PositiveIntegerField()
+    shipment_desc = models.CharField(max_length=255)
+    price = models.PositiveIntegerField()
+    onoff = models.CharField(max_length=50)
+    shop_id=models.PositiveIntegerField()

@@ -81,7 +81,8 @@ def save(request):
         print("====================")
         print(product_spec_list["product_spec_list"][3]["price"])
         print(len(product_spec_list["product_spec_list"]))
-
+        # 商品運送方式
+        shipment_method=json.loads(request.POST.get('shipment_method'))
 
         # for i in range(len(product_spec_list)):
         #     response_data['status'] = -88
@@ -212,24 +213,6 @@ def save(request):
                 response_data['status'] = -23
                 response_data['ret_val'] = '未上傳產品圖片!'
 
-        if response_data['status'] == 0:
-            if length:
-                if not(re.match('^\d+$', length)):
-                    response_data['status'] = -27
-                    response_data['ret_val'] = '產品長度格式錯誤!'
-
-        if response_data['status'] == 0:
-            if width:
-                if not(re.match('^\d+$', width)):
-                    response_data['status'] = -28
-                    response_data['ret_val'] = '產品寬度格式錯誤!'
-
-        if response_data['status'] == 0:
-            if height:
-                if not(re.match('^\d+$', height)):
-                    response_data['status'] = -29
-                    response_data['ret_val'] = '產品高度格式錯誤!'
-
         # if response_data['status'] == 0:
         #     if not(re.match('^\d+$', product_id)):
         #         response_data['status'] = -24
@@ -272,7 +255,7 @@ def save(request):
                 shipping_fee=shipping_fee, 
                 weight=weight,
                 new_secondhand=new_secondhand,
-                user_id=user_id, 
+                user_id=user_id,
                 length=length, 
                 width=width, 
                 height=height
@@ -318,15 +301,6 @@ def save(request):
             
             # 寫入資料庫(規格)
             for i in range(len(product_spec_list["product_spec_list"])):
-                # models.Product_Spec.objects.create(
-                #     product_id=product_spec_list[i][0],
-                #     spec_name=product_spec_list[i][1],
-                #     price=product_spec_list[i][2],
-                #     quantity=product_spec_list[i][3],
-                #     size=product_spec_list[i][4]
-                # )
-                
-
                 models.Product_Spec.objects.create(
                     product_id=getProductID[0]['id'],
                     spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
@@ -336,17 +310,21 @@ def save(request):
                     price=product_spec_list["product_spec_list"][i]["price"],
                     quantity=product_spec_list["product_spec_list"][i]["quantity"],
                 )
+            
+
+            for i in range(len(shipment_method)):
+                models.Product_Shipment_Method.objects.create(
+                    product_id=getProductID[0]['id'],
+                    shipment_desc=shipment_method[i]["shipment_desc"],
+                    price=shipment_method[i]["price"],
+                    onoff=shipment_method[i]["onoff"],
+                    shop_id=shipment_method[i]["shop_id"]
+                )
+
             response_data['ret_val'] = '產品新增成功!'
             response_data['status'] = -1000
             response_data['pic_upload'] = 'success'
-
-            
-            # for product in products:
-            #     productInfo = {
-            #         'id': product.id,
-            #     }
-            #     response_data['product_id'].append(productInfo)
-            # print(products.id)
+          
         #------------
     return JsonResponse(response_data)
 # 更新商品
