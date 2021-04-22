@@ -52,6 +52,7 @@ class Shop(models.Model):
     bank_account = models.CharField(max_length=50, null=True)
     bank_account_name = models.CharField(max_length=50, null=True)
     address_name = models.CharField(max_length=50, null=True)
+    address_country_code = models.CharField(max_length=50, null=True)
     address_phone = models.CharField(max_length=50, null=True)
     address_area = models.CharField(max_length=50, null=True)
     address_district = models.CharField(max_length=50, null=True)

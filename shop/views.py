@@ -53,6 +53,7 @@ def save(request):
         bankAccount = request.POST.get('bank_account', '')
         bankAccountName = request.POST.get('bank_account_name', '')
         addressName = request.POST.get('address_name', '')
+        addressCountryCode = request.POST.get('address_country_code', '')
         addressPhone = request.POST.get('address_phone', '')
         addressArea = request.POST.get('address_area', '')
         addressDistrict = request.POST.get('address_district', '')
@@ -264,7 +265,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if addressPhone:
-                if not(re.match('^\+\d+\s\d+$', addressPhone)):
+                if not(re.match('^\d+$', addressPhone)):
                     responseData['status'] = -28
                     responseData['ret_val'] = '電話號碼格式錯誤!'
             elif (addressPhone==''):
@@ -325,13 +326,21 @@ def save(request):
                     responseData['ret_val'] = '房(室)名稱格式錯誤!'
             elif (addressRoom==''):
                 addressRoom = None
+        
+        if responseData['status'] == 0:
+            if addressCountryCode:
+                if not(re.match('^\w+$', addressCountryCode)):
+                    responseData['status'] = -36
+                    responseData['ret_val'] = '國碼格式錯誤!'
+            elif (addressCountryCode==''):
+                addressCountryCode = None
 
         
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
             try:
                 shop = models.Shop.objects.get(shop_title=shopTitle)
-                responseData['status'] = -36
+                responseData['status'] = -99
                 responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
             except:
                 pass
@@ -366,6 +375,7 @@ def save(request):
                 bank_account=bankAccount,
                 bank_account_name=bankAccountName,
                 address_name=addressName,
+                address_country_code=addressCountryCode,
                 address_phone=addressPhone,
                 address_area=addressArea,
                 address_district=addressDistrict,
