@@ -679,7 +679,16 @@ def checkShopNameIsExistsProcess(request):
     if request.method == 'POST':
         # 欄位資料
         shop_title = request.POST.get('shop_title', '')
-
+        shop_title = shop_title.replace('"','')
+        shop_title = shop_title.replace("'",'')
+        # 新增 log
+        models.Audit_Log.objects.create(
+            id=uuid.uuid4(), 
+            user_id=0, 
+            action='Check Shop Name', 
+            parameter_in='shop_title=' + shop_title, 
+            parameter_out=''
+        )
         if response_data['status'] == 0:
             shops = models.Shop.objects.filter(shop_title=shop_title)
             if len(shops) > 0:
