@@ -603,7 +603,7 @@ def show(request, id):
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'shop': {}
+        'data': {}
     }
 
     if request.method == 'GET':
@@ -653,12 +653,18 @@ def show(request, id):
                     ]
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
-                        responseData['shop'][attr] = getattr(shop, attr)
-
+                        responseData['data'][attr] = getattr(shop, attr)
+                products = models.Product.objects.filter(shop_id=shop.id)
+                responseData['data']['product_count'] = len(products)
+                # dummy data
+                responseData['data']['rating'] = 0
+                responseData['data']['follower'] = 0
+                responseData['data']['income'] = 0
+                # ----------
                 shop_category_id = models.Selected_Shop_Category.objects.filter(shop_id=id)
-                responseData['shop']['shop_category_id'] = []
+                responseData['data']['shop_category_id'] = []
                 for obj in shop_category_id:
-                    responseData['shop']['shop_category_id'].append(getattr(obj,'shop_category_id'))
+                    responseData['data']['shop_category_id'].append(getattr(obj,'shop_category_id'))
                 responseData['ret_val'] = '已找到商店資料!'
             except:
                 responseData['status'] = 1
