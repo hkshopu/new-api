@@ -50,9 +50,7 @@ def save(request):
     # 回傳資料
     response_data = {
         'status': 0, 
-        'ret_val': '',
-        'pic_upload':'',
-        'product_id':[]
+        'ret_val': ''
     }
 
     if request.method == 'POST':
@@ -68,18 +66,22 @@ def save(request):
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
         new_secondhand = request.POST.get('new_secondhand', '')
-        user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', 0)
         length = request.POST.get('length', 0)
         width = request.POST.get('width', 0)
         height = request.POST.get('height', 0)
         #商品圖片
         # product_id = request.POST.get('product_id',0)
-        product_pic_list = request.FILES.getlist('product_pic_list', [])
+        # product_pic_list = request.FILES
+        for filename, product_pic_list in request.FILES.lists():
+            print(filename,product_pic_list)
+        name = request.FILES[filename].name
+        print(name)
         # # 商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
         print(product_spec_list["product_spec_list"])
         print("====================")
-        print(product_spec_list["product_spec_list"][3]["price"])
+        # print(product_spec_list["product_spec_list"][3]["price"])
         print(len(product_spec_list["product_spec_list"]))
         # 商品運送方式
         shipment_method=json.loads(request.POST.get('shipment_method'))
@@ -233,14 +235,19 @@ def save(request):
         #         response_data['ret_val'] = '該產品編號錯誤或不存在!'
         #-----------
         #圖片上傳功能
+        # for filename, files in request.FILES.lists():
+        #     print(filename,files)
+        # name = request.FILES[filename].name
+        # print(name)
+        # for f in files:
+        #     print(f,f.name,f.content_type)
         productPicURL=[]
+        print(product_pic_list)
         if response_data['status'] == 0:
             for product_pic in product_pic_list:
 
                 # upload_file(product_pic,'images/product/',suffix="img")
                 productPicURL.append(upload_file(product_pic,'images/product/',suffix="img"))
-                # response_data['status'] = -100
-                # response_data['pic_upload'] = 'success'
                 #return url需參數
             # return JsonResponse(response_data)
             models.Product.objects.create(
@@ -278,20 +285,11 @@ def save(request):
                     productInfo = {
                     'id': product.id,
                 }
-            response_data['product_id'].append(productInfo)
             getProductID=[]
             getProductID.append(productInfo)
             print(getProductID)
             #圖片上傳DB
             for product_pic_url in productPicURL:
-                # 自訂圖片檔名
-                # now = datetime.datetime.now()
-                # product_pic_name = str(product_pic.name).split('.')[0]
-                # product_pic_extension = str(product_pic.name).split('.')[1]
-                # product_pic_fullname = product_pic_name + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + product_pic_extension
-                # # 上傳圖片檔案
-                # fs = FileSystemStorage(location='templates/static/images/selected_product_pic/')
-                # fs.save(name=product_pic_fullname, content=product_pic)
                 # 寫入資料庫
                 models.Selected_Product_Pic.objects.create(
                     product_id=getProductID[0]['id'], 
@@ -323,7 +321,7 @@ def save(request):
 
             response_data['ret_val'] = '產品新增成功!'
             response_data['status'] = -1000
-            response_data['pic_upload'] = 'success'
+            # response_data['pic_upload'] = 'success'
           
         #------------
     return JsonResponse(response_data)
