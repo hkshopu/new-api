@@ -611,48 +611,49 @@ def show(request, id):
         if responseData['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=id)
-                if (hasattr(shop, 'id')):
-                    responseData['shop']['id'] = shop.id
-                if (hasattr(shop, 'user_id')):
-                    responseData['shop']['user_id'] = shop.user_id
-                if (hasattr(shop, 'shop_title')):
-                    responseData['shop']['shop_title'] = shop.shop_title
-                if (hasattr(shop, 'shop_icon')):
-                    responseData['shop']['shop_icon'] = shop.shop_icon
-                if (hasattr(shop, 'shop_pic')):
-                    responseData['shop']['shop_pic'] = shop.shop_pic
-                if (hasattr(shop, 'shop_description')):
-                    responseData['shop']['shop_description'] = shop.shop_description
-                if (hasattr(shop, 'paypal')):
-                    responseData['shop']['paypal'] = shop.paypal
-                if (hasattr(shop, 'visa')):
-                    responseData['shop']['visa'] = shop.visa
-                if (hasattr(shop, 'master')):
-                    responseData['shop']['master'] = shop.master
-                if (hasattr(shop, 'apple')):
-                    responseData['shop']['apple'] = shop.apple
-                if (hasattr(shop, 'android')):
-                    responseData['shop']['android'] = shop.android
-                if (hasattr(shop, 'is_ship_free')):
-                    responseData['shop']['is_ship_free'] = shop.is_ship_free
-                if (hasattr(shop, 'ship_by_product')):
-                    responseData['shop']['ship_by_product'] = shop.ship_by_product
-                if (hasattr(shop, 'ship_free_quota')):
-                    responseData['shop']['ship_free_quota'] = shop.ship_free_quota
-                if (hasattr(shop, 'fix_ship_fee')):
-                    responseData['shop']['fix_ship_fee'] = shop.fix_ship_fee
-                if (hasattr(shop, 'fix_ship_fee_from')):
-                    responseData['shop']['fix_ship_fee_from'] = shop.fix_ship_fee_from
-                if (hasattr(shop, 'fix_ship_fee_to')):
-                    responseData['shop']['fix_ship_fee_to'] = shop.fix_ship_fee_to
-                if (hasattr(shop, 'transaction_method')):
-                    responseData['shop']['transaction_method'] = shop.transaction_method
-                if (hasattr(shop, 'transport_setting')):
-                    responseData['shop']['transport_setting'] = shop.transport_setting
-                if (hasattr(shop, 'created_at')):
-                    responseData['shop']['created_at'] = shop.created_at
-                if (hasattr(shop, 'updated_at')):
-                    responseData['shop']['updated_at'] = shop.updated_at
+                shop_attr = [
+                    'id',
+                    'user_id',
+                    'shop_title',
+                    'shop_icon',
+                    'shop_pic',
+                    'shop_description',
+                    'paypal',
+                    'visa',
+                    'master',
+                    'apple',
+                    'android',
+                    'is_ship_free',
+                    'ship_by_product',
+                    'ship_free_quota',
+                    'fix_ship_fee',
+                    'fix_ship_fee_from',
+                    'fix_ship_fee_to',
+                    'transaction_method',
+                    'transport_setting',
+                    'discount_by_amount',
+                    'discount_by_percent',
+                    'bank_code',
+                    'bank_name',
+                    'bank_account',
+                    'bank_account_name',
+                    'address_name',
+                    'address_country_code',
+                    'address_phone',
+                    'address_is_phone_show',
+                    'address_area',
+                    'address_district',
+                    'address_road',
+                    'address_number',
+                    'address_other',
+                    'address_floor',
+                    'address_room',
+                    'created_at',
+                    'updated_at'
+                    ]
+                for attr in shop_attr:
+                    if(hasattr(shop, attr)):
+                        responseData['shop'][attr] = getattr(shop, attr)
                 responseData['ret_val'] = '已找到商店資料!'
             except:
                 responseData['status'] = 1
