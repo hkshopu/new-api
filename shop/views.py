@@ -242,7 +242,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if bankAccountName:
-                if not(re.match('^[\w\s]+$', bankAccountName)):
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', bankAccountName)):
                     responseData['status'] = -25
                     responseData['ret_val'] = '銀行戶名格式錯誤!'
             elif (bankAccountName==''):
@@ -250,7 +250,7 @@ def save(request):
         
         if responseData['status'] == 0:
             if bankAccount:
-                if not(re.match('^\d+$', bankAccount)):
+                if not(re.match('^[\-\d]+$', bankAccount)):
                     responseData['status'] = -26
                     responseData['ret_val'] = '銀行帳號格式錯誤!'
             elif (bankAccount==''):
