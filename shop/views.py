@@ -404,7 +404,7 @@ def save(request):
 
             for value in shopCategoryId:
                 selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id, shop_category_id=value)
-                if len(selected_shop_categories) == 0:
+                if (len(selected_shop_categories) == 0 and value != 0):
                     models.Selected_Shop_Category.objects.create(
                         shop_id=shops[0].id, 
                         shop_category_id=value
