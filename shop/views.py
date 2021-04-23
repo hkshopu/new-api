@@ -654,6 +654,11 @@ def show(request, id):
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
                         responseData['shop'][attr] = getattr(shop, attr)
+
+                shop_category_id = models.Selected_Shop_Category.objects.filter(shop_id=id)
+                responseData['shop']['shop_category_id'] = []
+                for obj in shop_category_id:
+                    responseData['shop']['shop_category_id'].append(getattr(obj,'shop_category_id'))
                 responseData['ret_val'] = '已找到商店資料!'
             except:
                 responseData['status'] = 1
