@@ -414,189 +414,319 @@ def save(request):
 # 更新商店
 def update(request, id):
     # 回傳資料
-    responseData = {
+    response_data = {
         'status': 0, 
         'ret_val': ''
     }
     if request.method == 'POST':
         # 欄位資料
-        shopIcon = request.FILES.get('shop_icon', '')
-        shopTitle = request.POST.get('shop_title', '')
-        shopPic = request.FILES.get('shop_pic', '')
-        shopDesc = request.POST.get('shop_desc', '')
+        user_id = request.POST.get('user_id', 0)
+        shop_icon = request.FILES.get('shop_icon', '')
+        shop_title = request.POST.get('shop_title', '')
+        shop_category_id = request.POST.getlist('shop_category_id', [])
+        shop_pic = request.FILES.get('shop_pic', '')
+        shop_description = request.POST.get('shop_description', '')
         paypal = request.POST.get('paypal', '')
         visa = request.POST.get('visa', '')
         master = request.POST.get('master', '')
         apple = request.POST.get('apple', '')
         android = request.POST.get('android', '')
-        isShipFree = request.POST.get('is_ship_free', '')
-        shipFreeQuota = request.POST.get('ship_free_quota', '')
-        fixShipFee = request.POST.get('fix_ship_fee', '')
-        fixShipFeeFr = request.POST.get('fix_ship_fee_fr', '')
-        fixShipFeeTo = request.POST.get('fix_ship_fee_to', '')
-        shipByProduct = request.POST.get('ship_by_product', '')
-        discountByPercent = request.POST.get('discount_by_percent', '')
-        discountByAmount = request.POST.get('discount_by_amount', '')
-        # 現在時間
-        now = datetime.datetime.now()
-        # FileSystemStorage
-        fs = FileSystemStorage(location='templates/static/images/')
-        # 檢查商店編號是否正確
-        if responseData['status'] == 0:
+        is_ship_free = request.POST.get('is_ship_free', '')
+        ship_by_product = request.POST.get('ship_by_product', '')
+        ship_free_quota = request.POST.get('ship_free_quota', 0)
+        fix_ship_fee = request.POST.get('fix_ship_fee', 0)
+        fix_ship_fee_from = request.POST.get('fix_ship_fee_from', 0)
+        fix_ship_fee_to = request.POST.get('fix_ship_fee_to', 0)
+        transaction_method = request.POST.get('transaction_method', '')
+        transport_setting = request.POST.get('transport_setting', '')
+        discount_by_amount = request.POST.get('discount_by_amount', 0)
+        discount_by_percent = request.POST.get('discount_by_percent', 0)
+        bank_code = request.POST.get('bank_code', '')
+        bank_name = request.POST.get('bank_name', '')
+        bank_account = request.POST.get('bank_account', '')
+        bank_account_name = request.POST.get('bank_account_name', '')
+        address_name = request.POST.get('address_name', '')
+        address_country_code = request.POST.get('address_country_code', '')
+        address_phone = request.POST.get('address_phone', '')
+        address_is_phone_show = request.POST.get('address_is_phone_show', '')
+        address_area = request.POST.get('address_area', '')
+        address_district = request.POST.get('address_district', '')
+        address_road = request.POST.get('address_road', '')
+        address_number = request.POST.get('address_number', '')
+        address_other = request.POST.get('address_other', '')
+        address_floor = request.POST.get('address_floor', '')
+        address_room = request.POST.get('address_room', '')
+
+        if response_data['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=id)
             except:
-                responseData['status'] = -1
-                responseData['ret_val'] = '找不到此商店編號的商店!'
-        # 檢查使用者是否登入
-        if responseData['status'] == 0:
-            if not('user' in request.session):
-                responseData['status'] = -2
-                responseData['ret_val'] = '請先登入會員!'
-        # 判斷必填欄位是否填寫及欄位格式是否正確
-        if responseData['status'] == 0:
-            if not(shopTitle):
-                responseData['status'] = -3
-                responseData['ret_val'] = '未填寫商店標題!'
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
 
-        if responseData['status'] == 0:
-            if not(shopDesc):
-                responseData['status'] = -5
-                responseData['ret_val'] = '未填寫商店描述!'
-        # 選填欄位若有填寫，則判斷其格式是否正確
-        if responseData['status'] == 0:
-            if shopIcon:
-                if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopIcon.name))):
-                    responseData['status'] = -7
-                    responseData['ret_val'] = '商店小圖格式錯誤!'
-                else:
-                    shopIconName = str(shopIcon.name).split('.')[0]
-                    shopIconExtension = str(shopIcon.name).split('.')[1]
-                    shopIconFullName = shopIconName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopIconExtension
-                    fs.save(name=shopIconFullName, content=shopIcon)
-                    shop.shop_icon = shopIconFullName
-                    shop.save()
+        if response_data['status'] == 0:
+            if not(user_id):
+                response_data['status'] = -2
+                response_data['ret_val'] = '請先登入帳戶!'
 
-        if responseData['status'] == 0:
-            if shopPic:
-                if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
-                    responseData['status'] = -8
-                    responseData['ret_val'] = '商店主圖格式錯誤!'
-                else:
-                    shopPicName = str(shopPic.name).split('.')[0]
-                    shopPicExtension = str(shopPic.name).split('.')[1]
-                    shopPicFullName = shopPicName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + '.' + shopPicExtension
-                    fs.save(name=shopPicFullName, content=shopPic)
-                    shop.shop_pic = shopPicFullName
-                    shop.save()
+        if response_data['status'] == 0:
+            if not(shop.shop_icon) and not(shop_icon):
+                response_data['status'] = -3
+                response_data['ret_val'] = '未上傳商店小圖!'
 
-        if responseData['status'] == 0:
+        if response_data['status'] == 0:
+            if not(shop_title):
+                response_data['status'] = -4
+                response_data['ret_val'] = '未填寫商店標題!'
+
+        if response_data['status'] == 0:
+            if not(shop_category_id):
+                response_data['status'] = -5
+                response_data['ret_val'] = '未填寫商店分類編號!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^\d+$', user_id)):
+                response_data['status'] = -6
+                response_data['ret_val'] = '會員編號格式錯誤!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_icon.name))):
+                response_data['status'] = -7
+                response_data['ret_val'] = '商店小圖格式錯誤!'
+
+        if response_data['status'] == 0:
+            for value in shop_category_id:
+                if not(re.match('^\d+$', value)):
+                    response_data['status'] = -8
+                    response_data['ret_val'] = '商店分類編號格式錯誤!'
+                    break
+
+        if response_data['status'] == 0:
+            if shop_pic:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_pic.name))):
+                    response_data['status'] = -9
+                    response_data['ret_val'] = '商店主圖格式錯誤!'
+
+        if response_data['status'] == 0:
             if paypal:
                 if not(re.match('^\w+$', paypal)):
-                    responseData['status'] = -9
-                    responseData['ret_val'] = 'PayPal 格式錯誤!'
+                    response_data['status'] = -10
+                    response_data['ret_val'] = 'PayPal 格式錯誤!'
 
-        if responseData['status'] == 0:
+        if response_data['status'] == 0:
             if visa:
                 if not(re.match('^\w+$', visa)):
-                    responseData['status'] = -10
-                    responseData['ret_val'] = 'Visa 卡格式錯誤!'
+                    response_data['status'] = -11
+                    response_data['ret_val'] = 'Visa 格式錯誤!'
 
-        if responseData['status'] == 0:
+        if response_data['status'] == 0:
             if master:
                 if not(re.match('^\w+$', master)):
-                    responseData['status'] = -11
-                    responseData['ret_val'] = 'Master 卡格式錯誤!'
+                    response_data['status'] = -12
+                    response_data['ret_val'] = 'Master 格式錯誤!'
 
-        if responseData['status'] == 0:
+        if response_data['status'] == 0:
             if apple:
                 if not(re.match('^\w+$', apple)):
-                    responseData['status'] = -12
-                    responseData['ret_val'] = 'Apple 格式錯誤!'
+                    response_data['status'] = -13
+                    response_data['ret_val'] = 'Apple 格式錯誤!'
 
-        if responseData['status'] == 0:
+        if response_data['status'] == 0:
             if android:
                 if not(re.match('^\w+$', android)):
-                    responseData['status'] = -13
-                    responseData['ret_val'] = 'Android 格式錯誤!'
+                    response_data['status'] = -14
+                    response_data['ret_val'] = 'Android 格式錯誤!'
 
-        if responseData['status'] == 0:
-            if isShipFree:
-                if not(re.match('^\w+$', isShipFree)):
-                    responseData['status'] = -14
-                    responseData['ret_val'] = '是否免運費格式錯誤!'
+        if response_data['status'] == 0:
+            if is_ship_free:
+                if not(re.match('^(Y|N)$', is_ship_free)):
+                    response_data['status'] = -15
+                    response_data['ret_val'] = '是否免運費格式錯誤!'
 
-        if responseData['status'] == 0:
-            if shipFreeQuota:
-                if not(re.match('^\d+$', shipFreeQuota)):
-                    responseData['status'] = -15
-                    responseData['ret_val'] = '免運費訂單價格格式錯誤!'
+        if response_data['status'] == 0:
+            if ship_by_product:
+                if not(re.match('^(Y|N)$', ship_by_product)):
+                    response_data['status'] = -16
+                    response_data['ret_val'] = '運費由商品設定格式錯誤!'
 
-        if responseData['status'] == 0:
-            if fixShipFee:
-                if not(re.match('^\d+$', fixShipFee)):
-                    responseData['status'] = -16
-                    responseData['ret_val'] = '運費訂價格式錯誤!'
+        if response_data['status'] == 0:
+            if ship_free_quota:
+                if not(re.match('^\d+$', ship_free_quota)):
+                    response_data['status'] = -17
+                    response_data['ret_val'] = '免運費訂單價格格式錯誤!'
 
-        if responseData['status'] == 0:
-            if fixShipFeeFr:
-                if not(re.match('^\d+$', fixShipFeeFr)):
-                    responseData['status'] = -17
-                    responseData['ret_val'] = '訂單價格由格式錯誤!'
+        if response_data['status'] == 0:
+            if fix_ship_fee:
+                if not(re.match('^\d+$', fix_ship_fee)):
+                    response_data['status'] = -18
+                    response_data['ret_val'] = '運費訂價格式錯誤!'
 
-        if responseData['status'] == 0:
-            if fixShipFeeTo:
-                if not(re.match('^\d+$', fixShipFeeTo)):
-                    responseData['status'] = -18
-                    responseData['ret_val'] = '訂單價格至格式錯誤!'
+        if response_data['status'] == 0:
+            if fix_ship_fee_from:
+                if not(re.match('^\d+$', fix_ship_fee_from)):
+                    response_data['status'] = -19
+                    response_data['ret_val'] = '訂單價格由格式錯誤!'
 
-        if responseData['status'] == 0:
-            if shipByProduct:
-                if not(re.match('^\w+$', shipByProduct)):
-                    responseData['status'] = -19
-                    responseData['ret_val'] = '運費由商品設定格式錯誤!'
-        
-        if responseData['status'] == 0:
-            if not(discountByPercent) and not(discountByAmount):
-                responseData['status'] = -20
-                responseData['ret_val'] = '折扣欄位必須擇一填寫!'
-            else:
-                if discountByPercent:
-                    if not(re.match('^\d+$', discountByPercent)):
-                        responseData['status'] = -21
-                        responseData['ret_val'] = '百分比折扣格式錯誤!'
+        if response_data['status'] == 0:
+            if fix_ship_fee_to:
+                if not(re.match('^\d+$', fix_ship_fee_to)):
+                    response_data['status'] = -20
+                    response_data['ret_val'] = '訂單價格至格式錯誤!'
 
-                if discountByAmount:
-                    if not(re.match('^\d+$', discountByAmount)):
-                        responseData['status'] = -22
-                        responseData['ret_val'] = '價格折扣格式錯誤!'
-        # 先檢查使用者是否更改商店名稱，若有更改，則檢查是否更改名稱為其他同名的商店
-        if responseData['status'] == 0:
-            try:
-                oldShop = models.Shop.objects.get(id=id, shop_title=shopTitle)
-            except:
-                sameNameShops = models.Shop.objects.filter(shop_title=shopTitle)
-                if len(sameNameShops) > 0:
-                    responseData['status'] = -23
-                    responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
-        # 更新商店
-        if responseData['status'] == 0:
-            shop.shop_title = shopTitle
-            shop.shop_description = shopDesc
+        if response_data['status'] == 0:
+            if discount_by_amount:
+                if not(re.match('^\d+$', discount_by_amount)):
+                    response_data['status'] = -21
+                    response_data['ret_val'] = '價格折扣格式錯誤!'
+
+        if response_data['status'] == 0:
+            if discount_by_percent:
+                if not(re.match('^\d+$', discount_by_percent)):
+                    response_data['status'] = -22
+                    response_data['ret_val'] = '百分比折扣格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_code:
+                if not(re.match('^\d+$', bank_code)):
+                    response_data['status'] = -23
+                    response_data['ret_val'] = '銀行代碼格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_name:
+                if not(re.match('^[()\w\s]+$', bank_name)):
+                    response_data['status'] = -24
+                    response_data['ret_val'] = '銀行名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_account:
+                if not(re.match('^[\-\d]+$', bank_account)):
+                    response_data['status'] = -25
+                    response_data['ret_val'] = '銀行帳號格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_account_name:
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', bank_account_name)):
+                    response_data['status'] = -26
+                    response_data['ret_val'] = '銀行戶名格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_name:
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', address_name)):
+                    response_data['status'] = -27
+                    response_data['ret_val'] = '姓名/公司名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_country_code:
+                if not(re.match('^[\+\d]+$', address_country_code)):
+                    response_data['status'] = -28
+                    response_data['ret_val'] = '國碼格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_phone:
+                if not(re.match('^\d+$', address_phone)):
+                    response_data['status'] = -29
+                    response_data['ret_val'] = '電話號碼格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_is_phone_show:
+                if not(re.match('^\w+$', address_is_phone_show)):
+                    response_data['status'] = -30
+                    response_data['ret_val'] = '顯示在店鋪簡介格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_area:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_area)):
+                    response_data['status'] = -31
+                    response_data['ret_val'] = '地域格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_district:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_district)):
+                    response_data['status'] = -32
+                    response_data['ret_val'] = '地區格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_road:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_road)):
+                    response_data['status'] = -33
+                    response_data['ret_val'] = '街道名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_number:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_number)):
+                    response_data['status'] = -34
+                    response_data['ret_val'] = '街道門牌格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_other:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_other)):
+                    response_data['status'] = -35
+                    response_data['ret_val'] = '其他地址格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_floor:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_floor)):
+                    response_data['status'] = -36
+                    response_data['ret_val'] = '樓層格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_room:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_room)):
+                    response_data['status'] = -37
+                    response_data['ret_val'] = '房(室)名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            shops = models.Shop.objects.filter(shop_title=shop_title)
+            if len(shops) > 0:
+                response_data['status'] = -38
+                response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
+
+        if response_data['status'] == 0:
+            # 上傳圖檔
+            destination_path = 'images/shop/'
+            shop_icon_url = ''
+            shop_pic_url = ''
+            if shop_icon:
+                shop_icon_url += upload_file(FILE=shop_icon, destination_path=destination_path, suffix='icon')
+            if shop_pic:
+                shop_pic_url += upload_file(FILE=shop_pic, destination_path=destination_path, suffix='pic')
+            # 更新商店
+            shop.shop_title = shop_title
+            shop.shop_icon = shop_icon_url
+            shop.shop_pic = shop_pic_url
+            shop.shop_description = shop_description
             shop.paypal = paypal
             shop.visa = visa
             shop.master = master
             shop.apple = apple
             shop.android = android
-            shop.is_ship_free = isShipFree
-            shop.ship_by_product = shipByProduct
-            shop.ship_free_quota = shipFreeQuota
-            shop.fix_ship_fee = fixShipFee
-            shop.fix_ship_fee_from = fixShipFeeFr
-            shop.fix_ship_fee_to = fixShipFeeTo
+            shop.is_ship_free = is_ship_free
+            shop.ship_by_product = ship_by_product
+            shop.ship_free_quota = ship_free_quota
+            shop.fix_ship_fee = fix_ship_fee
+            shop.fix_ship_fee_from = fix_ship_fee_from
+            shop.fix_ship_fee_to = fix_ship_fee_to
+            shop.transaction_method = transaction_method
+            shop.transport_setting = transport_setting
+            shop.discount_by_amount = discount_by_amount
+            shop.discount_by_percent = discount_by_percent
+            shop.bank_code = bank_code
+            shop.bank_name = bank_name
+            shop.bank_account = bank_account
+            shop.bank_account_name = bank_account_name
+            shop.address_name = address_name
+            shop.address_country_code = address_country_code
+            shop.address_phone = address_phone
+            shop.address_is_phone_show = address_is_phone_show
+            shop.address_area = address_area
+            shop.address_district = address_district
+            shop.address_road = address_road
+            shop.address_number = address_number
+            shop.address_other = address_other
+            shop.address_floor = address_floor
+            shop.address_room = address_room
             shop.save()
-            responseData['ret_val'] = '商店更新成功!'
-    return JsonResponse(responseData)
+    return JsonResponse(response_data)
 # 單一商店
 def show(request, id):
     # 回傳資料
