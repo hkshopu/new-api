@@ -10,6 +10,7 @@ import math
 import uuid
 import os
 from utils.upload_tools import upload_file
+import json
 # Create your views here.
 
 # 新增商店頁面
@@ -678,19 +679,11 @@ def checkShopNameIsExistsProcess(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        shop_title = request.POST.get('shop_title', '')
-        shop_title = shop_title.replace('"','')
-        shop_title = shop_title.replace("'",'')
-        # 新增 log
-        models.Audit_Log.objects.create(
-            id=uuid.uuid4(), 
-            user_id=0, 
-            action='Check Shop Name', 
-            parameter_in='shop_title=' + shop_title, 
-            parameter_out=''
-        )
+        shopTitle = request.POST.get('shop_title', '')
+        shopTitle = shopTitle.replace('"','')
+        shopTitle = shopTitle.replace("'",'')
         if response_data['status'] == 0:
-            shops = models.Shop.objects.filter(shop_title=shop_title)
+            shops = models.Shop.objects.filter(shop_title=shopTitle)
             if len(shops) > 0:
                 response_data['status'] = -1
                 response_data['ret_val'] = '已存在相同名稱的商店!'
@@ -707,3 +700,42 @@ def checkShopNameIsExistsProcess(request):
             parameter_out=''
         )
     return JsonResponse(response_data)
+
+# 運輸設定
+def shipmentSettings(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        if responseData['status'] == 0:
+            shop = models.Shop.objects.filter(id=id)
+            if len(shop)!=1:
+                responseData['status'] = -1
+                responseData['ret_val'] = '無此商店!'
+
+        if responseData['status'] == 0:
+            try:
+                shipment_settings = json.loads(request.POST.get('shipment_settings'))
+                # 檢查格式
+                for setting in shipment_settings:
+                    shipmentDesc = setting['shipment_desc']
+                    onOff = setting['onoff']
+            except:
+                responseData['status'] = -2
+                responseData['ret_val'] = '運輸設定格式錯誤!'
+                
+        if responseData['status'] == 0:
+            settings = models.Shop_Shipment_Setting.objects.filter(shop_id=id)
+            if(len(settings)>0):
+                settings.delete()
+            # 建立資料
+            for setting in shipment_settings:
+                models.Shop_Shipment_Setting.objects.create(
+                    shop_id=id,
+                    shipment_desc=setting['shipment_desc'],
+                    onoff=setting['onoff']
+                )
+            responseData['ret_val'] = '運輸設定更新成功!'
+    return JsonResponse(responseData)

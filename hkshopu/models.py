@@ -92,6 +92,15 @@ class Selected_Shop_Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Shop_Shipment_Setting(models.Model):
+    shop_id = models.PositiveIntegerField()
+    shipment_desc = models.CharField(max_length=255)
+    onoff = models.CharField(max_length=50)
+
+class Shipment_default_method(models.Model):
+    shipment_default_desc = models.CharField(max_length=255)
+    onoff = models.CharField(max_length=50)
+
 class Product(models.Model):
     shop_id = models.PositiveIntegerField()
     product_category_id = models.PositiveIntegerField()
