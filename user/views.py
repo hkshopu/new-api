@@ -529,12 +529,11 @@ def getUserShopListProcess(request, id):
                     'id': shop.id, 
                     'shop_title': shop.shop_title, 
                     'shop_icon': shop.shop_icon, 
-                    'shop_pic': shop.shop_pic, 
-                    'product_count': len(products)
-                    #'product_count': len(products),
-                    #'rating': tbc,
-                    #'follower': tbc,
-                    #'income': tbc
+                    'shop_pic': shop.shop_pic,
+                    'product_count': len(products),
+                    'rating': 0,
+                    'follower': 0,
+                    'income': 0
                 }
                 responseData['data'].append(shopInfo)
             responseData['ret_val'] = '已取得您的商店清單!'

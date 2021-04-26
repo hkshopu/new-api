@@ -10,6 +10,7 @@ import math
 import uuid
 import os
 from utils.upload_tools import upload_file
+import json
 # Create your views here.
 
 # 新增商店頁面
@@ -404,7 +405,7 @@ def save(request):
 
             for value in shopCategoryId:
                 selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id, shop_category_id=value)
-                if len(selected_shop_categories) == 0:
+                if (len(selected_shop_categories) == 0 and value != 0):
                     models.Selected_Shop_Category.objects.create(
                         shop_id=shops[0].id, 
                         shop_category_id=value
@@ -733,7 +734,7 @@ def show(request, id):
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'shop': {}
+        'data': {}
     }
 
     if request.method == 'GET':
@@ -741,48 +742,60 @@ def show(request, id):
         if responseData['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=id)
-                if (hasattr(shop, 'id')):
-                    responseData['shop']['id'] = shop.id
-                if (hasattr(shop, 'user_id')):
-                    responseData['shop']['user_id'] = shop.user_id
-                if (hasattr(shop, 'shop_title')):
-                    responseData['shop']['shop_title'] = shop.shop_title
-                if (hasattr(shop, 'shop_icon')):
-                    responseData['shop']['shop_icon'] = shop.shop_icon
-                if (hasattr(shop, 'shop_pic')):
-                    responseData['shop']['shop_pic'] = shop.shop_pic
-                if (hasattr(shop, 'shop_description')):
-                    responseData['shop']['shop_description'] = shop.shop_description
-                if (hasattr(shop, 'paypal')):
-                    responseData['shop']['paypal'] = shop.paypal
-                if (hasattr(shop, 'visa')):
-                    responseData['shop']['visa'] = shop.visa
-                if (hasattr(shop, 'master')):
-                    responseData['shop']['master'] = shop.master
-                if (hasattr(shop, 'apple')):
-                    responseData['shop']['apple'] = shop.apple
-                if (hasattr(shop, 'android')):
-                    responseData['shop']['android'] = shop.android
-                if (hasattr(shop, 'is_ship_free')):
-                    responseData['shop']['is_ship_free'] = shop.is_ship_free
-                if (hasattr(shop, 'ship_by_product')):
-                    responseData['shop']['ship_by_product'] = shop.ship_by_product
-                if (hasattr(shop, 'ship_free_quota')):
-                    responseData['shop']['ship_free_quota'] = shop.ship_free_quota
-                if (hasattr(shop, 'fix_ship_fee')):
-                    responseData['shop']['fix_ship_fee'] = shop.fix_ship_fee
-                if (hasattr(shop, 'fix_ship_fee_from')):
-                    responseData['shop']['fix_ship_fee_from'] = shop.fix_ship_fee_from
-                if (hasattr(shop, 'fix_ship_fee_to')):
-                    responseData['shop']['fix_ship_fee_to'] = shop.fix_ship_fee_to
-                if (hasattr(shop, 'transaction_method')):
-                    responseData['shop']['transaction_method'] = shop.transaction_method
-                if (hasattr(shop, 'transport_setting')):
-                    responseData['shop']['transport_setting'] = shop.transport_setting
-                if (hasattr(shop, 'created_at')):
-                    responseData['shop']['created_at'] = shop.created_at
-                if (hasattr(shop, 'updated_at')):
-                    responseData['shop']['updated_at'] = shop.updated_at
+                shop_attr = [
+                    'id',
+                    'user_id',
+                    'shop_title',
+                    'shop_icon',
+                    'shop_pic',
+                    'shop_description',
+                    'paypal',
+                    'visa',
+                    'master',
+                    'apple',
+                    'android',
+                    'is_ship_free',
+                    'ship_by_product',
+                    'ship_free_quota',
+                    'fix_ship_fee',
+                    'fix_ship_fee_from',
+                    'fix_ship_fee_to',
+                    'transaction_method',
+                    'transport_setting',
+                    'discount_by_amount',
+                    'discount_by_percent',
+                    'bank_code',
+                    'bank_name',
+                    'bank_account',
+                    'bank_account_name',
+                    'address_name',
+                    'address_country_code',
+                    'address_phone',
+                    'address_is_phone_show',
+                    'address_area',
+                    'address_district',
+                    'address_road',
+                    'address_number',
+                    'address_other',
+                    'address_floor',
+                    'address_room',
+                    'created_at',
+                    'updated_at'
+                    ]
+                for attr in shop_attr:
+                    if(hasattr(shop, attr)):
+                        responseData['data'][attr] = getattr(shop, attr)
+                products = models.Product.objects.filter(shop_id=shop.id)
+                responseData['data']['product_count'] = len(products)
+                # dummy data
+                responseData['data']['rating'] = 0
+                responseData['data']['follower'] = 0
+                responseData['data']['income'] = 0
+                # ----------
+                shop_category_id = models.Selected_Shop_Category.objects.filter(shop_id=id)
+                responseData['data']['shop_category_id'] = []
+                for obj in shop_category_id:
+                    responseData['data']['shop_category_id'].append(getattr(obj,'shop_category_id'))
                 responseData['ret_val'] = '已找到商店資料!'
             except:
                 responseData['status'] = 1
@@ -796,14 +809,63 @@ def checkShopNameIsExistsProcess(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        shop_title = request.POST.get('shop_title', '')
-
+        shopTitle = request.POST.get('shop_title', '')
+        shopTitle = shopTitle.replace('"','')
+        shopTitle = shopTitle.replace("'",'')
         if response_data['status'] == 0:
-            shops = models.Shop.objects.filter(shop_title=shop_title)
+            shops = models.Shop.objects.filter(shop_title=shopTitle)
             if len(shops) > 0:
                 response_data['status'] = -1
                 response_data['ret_val'] = '已存在相同名稱的商店!'
 
         if response_data['status'] == 0:
             response_data['ret_val'] = '商店名稱未重複!'
+            
+        # 新增 log
+        models.Audit_Log.objects.create(
+            id=uuid.uuid4(), 
+            user_id=0, 
+            action='Check Shop Name', 
+            parameter_in='shop_title=' + shop_title + '&response_data[ret_val]=' + response_data['ret_val'] , 
+            parameter_out=''
+        )
     return JsonResponse(response_data)
+
+# 運輸設定
+def shipmentSettings(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        if responseData['status'] == 0:
+            shop = models.Shop.objects.filter(id=id)
+            if len(shop)!=1:
+                responseData['status'] = -1
+                responseData['ret_val'] = '無此商店!'
+
+        if responseData['status'] == 0:
+            try:
+                shipment_settings = json.loads(request.POST.get('shipment_settings'))
+                # 檢查格式
+                for setting in shipment_settings:
+                    shipmentDesc = setting['shipment_desc']
+                    onOff = setting['onoff']
+            except:
+                responseData['status'] = -2
+                responseData['ret_val'] = '運輸設定格式錯誤!'
+                
+        if responseData['status'] == 0:
+            settings = models.Shop_Shipment_Setting.objects.filter(shop_id=id)
+            if(len(settings)>0):
+                settings.delete()
+            # 建立資料
+            for setting in shipment_settings:
+                models.Shop_Shipment_Setting.objects.create(
+                    shop_id=id,
+                    shipment_desc=setting['shipment_desc'],
+                    onoff=setting['onoff']
+                )
+            responseData['ret_val'] = '運輸設定更新成功!'
+    return JsonResponse(responseData)
