@@ -73,10 +73,10 @@ def save(request):
         #商品圖片
         # product_id = request.POST.get('product_id',0)
         # product_pic_list = request.FILES
-        for filename, product_pic_list in request.FILES.lists():
-            print(filename,product_pic_list)
-        name = request.FILES[filename].name
-        print(name)
+        # for filename, product_pic_list in request.FILES.lists():
+        #     print(filename,product_pic_list)
+        # name = request.FILES[filename].name
+        # print(name)
         # # 商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
         print(product_spec_list["product_spec_list"])
@@ -210,10 +210,10 @@ def save(request):
         #         response_data['status'] = -22
         #         response_data['ret_val'] = '未填寫產品編號!'
 
-        if response_data['status'] == 0:
-            if not(product_pic_list):
-                response_data['status'] = -23
-                response_data['ret_val'] = '未上傳產品圖片!'
+        # if response_data['status'] == 0:
+        #     if not(product_pic_list):
+        #         response_data['status'] = -23
+        #         response_data['ret_val'] = '未上傳產品圖片!'
 
         # if response_data['status'] == 0:
         #     if not(re.match('^\d+$', product_id)):
@@ -242,12 +242,17 @@ def save(request):
         # for f in files:
         #     print(f,f.name,f.content_type)
         productPicURL=[]
-        print(product_pic_list)
+        
         if response_data['status'] == 0:
-            for product_pic in product_pic_list:
+            for filename, product_pic_list in request.FILES.lists():
+                print(filename,product_pic_list)
+                name = request.FILES[filename].name
+                print(name)
+                for f in product_pic_list:
 
-                # upload_file(product_pic,'images/product/',suffix="img")
-                productPicURL.append(upload_file(product_pic,'images/product/',suffix="img"))
+                    # upload_file(product_pic,'images/product/',suffix="img")
+                    productPicURL.append(upload_file(f,'images/product_test/',suffix="img"))
+                
                 #return url需參數
             # return JsonResponse(response_data)
             models.Product.objects.create(
@@ -325,177 +330,6 @@ def save(request):
           
         #------------
     return JsonResponse(response_data)
-# 更新商品
-# def update(request, id): #id是product_id
-#     # 回傳資料
-#     responseData = {
-#         'status': 0, 
-#         'ret_val': ''
-#     }
-#     if request.method == 'POST':
-#         # 欄位資料
-#         shop_id = request.POST.get('shop_id', '')
-#         product_category_id = request.POST.get('product_category_id', '')
-#         product_sub_category_id = request.POST.get('product_sub_category_id', '')
-#         product_title = request.POST.get('product_title', '')
-#         quantity = request.POST.get('quantity', 0)
-#         product_description = request.POST.get('product_description', '')
-#         # product_country_code = request.POST.get('product_country_code', '') UI無此column
-#         product_price = request.POST.get('product_price', 0)
-#         shipping_fee = request.POST.get('shipping_fee', 0)
-#         weight = request.POST.get('weight', 0)
-#         new_secondhand = request.POST.get('new_secondhand', '')
-
-#         #商品圖片
-#         product_id = request.POST.get('product_id',0)
-#         product_pic_list = request.FILES.getlist('product_pic_list', [])
-#         # # 商品規格
-#         product_spec_list=json.loads(request.POST.get('product_spec_list'))
-#         print(product_spec_list["product_spec_list"])
-#         print("====================")
-#         print(product_spec_list["product_spec_list"][3]["price"])
-#         print(len(product_spec_list["product_spec_list"]))
-#         # 檢查商店編號是否正確
-#         if responseData['status'] == 0:
-#             try:
-#                 product = models.Product.objects.get(id=id)
-#             except:
-#                 responseData['status'] = -1
-#                 responseData['ret_val'] = '找不到此商品編號的商品!'
-#         # 檢查使用者是否登入
-#         if responseData['status'] == 0:
-#             if not('user' in request.session):
-#                 responseData['status'] = -2
-#                 responseData['ret_val'] = '請先登入會員!'
-#         # 判斷必填欄位是否填寫及欄位格式是否正確
-#         if responseData['status'] == 0:
-#             if not(product_category_id):
-#                 responseData['status'] = -3
-#                 responseData['ret_val'] = '未填寫商品分類編號!'
-
-#         if responseData['status'] == 0:
-#             if not(product_sub_category_id):
-#                 responseData['status'] = -5
-#                 responseData['ret_val'] = '未填寫商品子分類編號!'
-#         if responseData['status'] == 0:
-#             if not(product_title):
-#                 responseData['status'] = -5
-#                 responseData['ret_val'] = '未填寫商品名稱!'
-#         if responseData['status'] == 0:
-#             if not(quantity):
-#                 responseData['status'] = -5
-#                 responseData['ret_val'] = '未填寫數量!'
-#         # 選填欄位若有填寫，則判斷其格式是否正確
-
-
-#         if responseData['status'] == 0:
-#             if paypal:
-#                 if not(re.match('^\w+$', paypal)):
-#                     responseData['status'] = -9
-#                     responseData['ret_val'] = 'PayPal 格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if visa:
-#                 if not(re.match('^\w+$', visa)):
-#                     responseData['status'] = -10
-#                     responseData['ret_val'] = 'Visa 卡格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if master:
-#                 if not(re.match('^\w+$', master)):
-#                     responseData['status'] = -11
-#                     responseData['ret_val'] = 'Master 卡格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if apple:
-#                 if not(re.match('^\w+$', apple)):
-#                     responseData['status'] = -12
-#                     responseData['ret_val'] = 'Apple 格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if android:
-#                 if not(re.match('^\w+$', android)):
-#                     responseData['status'] = -13
-#                     responseData['ret_val'] = 'Android 格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if isShipFree:
-#                 if not(re.match('^\w+$', isShipFree)):
-#                     responseData['status'] = -14
-#                     responseData['ret_val'] = '是否免運費格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if shipFreeQuota:
-#                 if not(re.match('^\d+$', shipFreeQuota)):
-#                     responseData['status'] = -15
-#                     responseData['ret_val'] = '免運費訂單價格格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if fixShipFee:
-#                 if not(re.match('^\d+$', fixShipFee)):
-#                     responseData['status'] = -16
-#                     responseData['ret_val'] = '運費訂價格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if fixShipFeeFr:
-#                 if not(re.match('^\d+$', fixShipFeeFr)):
-#                     responseData['status'] = -17
-#                     responseData['ret_val'] = '訂單價格由格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if fixShipFeeTo:
-#                 if not(re.match('^\d+$', fixShipFeeTo)):
-#                     responseData['status'] = -18
-#                     responseData['ret_val'] = '訂單價格至格式錯誤!'
-
-#         if responseData['status'] == 0:
-#             if shipByProduct:
-#                 if not(re.match('^\w+$', shipByProduct)):
-#                     responseData['status'] = -19
-#                     responseData['ret_val'] = '運費由商品設定格式錯誤!'
-        
-#         if responseData['status'] == 0:
-#             if not(discountByPercent) and not(discountByAmount):
-#                 responseData['status'] = -20
-#                 responseData['ret_val'] = '折扣欄位必須擇一填寫!'
-#             else:
-#                 if discountByPercent:
-#                     if not(re.match('^\d+$', discountByPercent)):
-#                         responseData['status'] = -21
-#                         responseData['ret_val'] = '百分比折扣格式錯誤!'
-
-#                 if discountByAmount:
-#                     if not(re.match('^\d+$', discountByAmount)):
-#                         responseData['status'] = -22
-#                         responseData['ret_val'] = '價格折扣格式錯誤!'
-#         # 先檢查使用者是否更改商店名稱，若有更改，則檢查是否更改名稱為其他同名的商店
-#         if responseData['status'] == 0:
-#             try:
-#                 oldShop = models.Shop.objects.get(id=id, shop_title=shopTitle)
-#             except:
-#                 sameNameShops = models.Shop.objects.filter(shop_title=shopTitle)
-#                 if len(sameNameShops) > 0:
-#                     responseData['status'] = -23
-#                     responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
-#         # 更新商店
-#         if responseData['status'] == 0:
-#             shop.shop_title = shopTitle
-#             shop.shop_description = shopDesc
-#             shop.paypal = paypal
-#             shop.visa = visa
-#             shop.master = master
-#             shop.apple = apple
-#             shop.android = android
-#             shop.is_ship_free = isShipFree
-#             shop.ship_by_product = shipByProduct
-#             shop.ship_free_quota = shipFreeQuota
-#             shop.fix_ship_fee = fixShipFee
-#             shop.fix_ship_fee_from = fixShipFeeFr
-#             shop.fix_ship_fee_to = fixShipFeeTo
-#             shop.save()
-#             responseData['ret_val'] = '商店更新成功!'
-#     return JsonResponse(responseData)
-
 #=================
 def spec_test(request):
     response_data = {
