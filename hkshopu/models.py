@@ -120,6 +120,9 @@ class Product(models.Model):
     length = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
+    like = models.PositiveIntegerField()
+    seen = models.PositiveIntegerField()
+    sold_quantity = models.PositiveIntegerField()
 
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)

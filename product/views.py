@@ -44,6 +44,69 @@ def index(request):
                     responseData['product_list'].append(productInfo)
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
+# 取得單一商片的商品清單
+def shop_product(request,id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            # shop=models.Shop.objects.get(id=id)
+            products = models.Product.objects.filter(shop_id=id)
+            print(products)
+            # if len(products) == 0:
+            #     responseData['status'] = 1
+            #     responseData['ret_val'] = '未建立任何商品'
+            # if len(shop)==0:
+            #     responseData['status'] = 1
+            #     responseData['ret_val'] = '未建立任何商品!'
+
+            for product in products:
+                productInfo = {
+                    'id': product.id,
+                    'product_category_id': product.product_category_id, 
+                    'product_title': product.product_title,
+                    'quantity': product.quantity, 
+                    'product_description': product.product_description, 
+                    'product_price': product.product_price, 
+                    'shipping_fee': product.shipping_fee, 
+                    'created_at': product.created_at, 
+                    'updated_at': product.updated_at,
+                    'weight':product.weight,
+                    'longterm_stock_up':product.longterm_stock_up,
+                    'new_secondhand':product.new_secondhand,
+                    'length':product.length,
+                    'width':product.width,
+                    'height':product.height,
+                    'like':product.like,
+                    'seen':product.seen,
+                    'sold_quantity':product.sold_quantity
+                }
+            responseData['data'].append(productInfo)  
+
+            for product in products:
+                productIdInfo = {
+                'id': product.id
+                }
+            getProductID=[]
+            getProductID.append(productIdInfo)
+            print(getProductID)
+
+            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0]['id'])
+            
+            for productPic in productPics : 
+                productPicInfo={
+                'pic_path':productPic.product_pic
+                }
+                responseData['data'].append(productPicInfo)
+               
+                
+            responseData['ret_val'] = '已取得商品清單!'
+    return JsonResponse(responseData)
 
 # 新增商品
 def save(request):
