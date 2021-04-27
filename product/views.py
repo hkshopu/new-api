@@ -57,53 +57,38 @@ def shop_product(request,id):
         if responseData['status'] == 0:
             # shop=models.Shop.objects.get(id=id)
             products = models.Product.objects.filter(shop_id=id)
-            print(products)
-            # if len(products) == 0:
-            #     responseData['status'] = 1
-            #     responseData['ret_val'] = '未建立任何商品'
-            # if len(shop)==0:
-            #     responseData['status'] = 1
-            #     responseData['ret_val'] = '未建立任何商品!'
-
-            for product in products:
-                productInfo = {
-                    'id': product.id,
-                    'product_category_id': product.product_category_id, 
-                    'product_title': product.product_title,
-                    'quantity': product.quantity, 
-                    'product_description': product.product_description, 
-                    'product_price': product.product_price, 
-                    'shipping_fee': product.shipping_fee, 
-                    'created_at': product.created_at, 
-                    'updated_at': product.updated_at,
-                    'weight':product.weight,
-                    'longterm_stock_up':product.longterm_stock_up,
-                    'new_secondhand':product.new_secondhand,
-                    'length':product.length,
-                    'width':product.width,
-                    'height':product.height,
-                    'like':product.like,
-                    'seen':product.seen,
-                    'sold_quantity':product.sold_quantity
-                }
-            responseData['data'].append(productInfo)  
-
-            for product in products:
-                productIdInfo = {
-                'id': product.id
-                }
             getProductID=[]
-            getProductID.append(productIdInfo)
-            print(getProductID)
-
-            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0]['id'])
-            
-            for productPic in productPics : 
-                productPicInfo={
-                'pic_path':productPic.product_pic
-                }
-                responseData['data'].append(productPicInfo)
+            for product in products:
+                getProductID.append(product.id)
                
+            print(getProductID)
+            productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')
+        
+            for product in products:   
+                for productPic in productPics:  
+                    if product.id==productPic.product_id:
+                        productInfo = {
+                            'id': product.id,
+                            'product_category_id': product.product_category_id, 
+                            'product_title': product.product_title,
+                            'quantity': product.quantity, 
+                            'product_description': product.product_description, 
+                            'product_price': product.product_price, 
+                            'shipping_fee': product.shipping_fee, 
+                            'created_at': product.created_at, 
+                            'updated_at': product.updated_at,
+                            'weight':product.weight,
+                            'longterm_stock_up':product.longterm_stock_up,
+                            'new_secondhand':product.new_secondhand,
+                            'length':product.length,
+                            'width':product.width,
+                            'height':product.height,
+                            'like':product.like,
+                            'seen':product.seen,
+                            'sold_quantity':product.sold_quantity,
+                            'pic_path':productPic.product_pic
+                        }
+                        responseData['data'].append(productInfo)                  
                 
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
@@ -304,6 +289,16 @@ def save(request):
         # print(name)
         # for f in files:
         #     print(f,f.name,f.content_type)
+
+        if response_data['status']==0:
+            if product_spec_list["product_spec_list"][0]["spec_desc_1"]=="" and product_spec_list["product_spec_list"][0]["spec_desc_2"]=="" and product_spec_list["product_spec_list"][0]["price"]==0 and product_spec_list["product_spec_list"][0]["quantity"]==0:
+                response_data['status'] = -87
+                response_data['ret_val'] = '未傳送商品規格!'
+        if response_data['status']==0:
+            if shipment_method[0]["price"]==0 and shipment_method[0]["shop_id"]==0 and shipment_method[0]["shipment_desc"]=="" and shipment_method[0]["onoff"]=="on":
+                response_data['status'] = -88
+                response_data['ret_val'] = '未傳送商品運輸方式!'
+
         productPicURL=[]
         
         if response_data['status'] == 0:
