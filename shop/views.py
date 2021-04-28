@@ -81,150 +81,49 @@ def save(request):
             parameter_out=''
         )
         # 檢查使用者是否登入
-        if responseData['status'] == 0:
-            if (not(userId) or userId==''):
-                responseData['status'] = -1
-                responseData['ret_val'] = '請先登入會員!'
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('user_id',-1,userId)
         # 判斷必填欄位是否填寫及欄位格式是否正確
-        if responseData['status'] == 0:
-            if not(shopIcon):
-                responseData['status'] = -2
-                responseData['ret_val'] = '未上傳商店小圖!'
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_icon',-2,shopIcon)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_title',-3,shopTitle)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id',-4,shopCategoryId)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_icon_format',-7,shopIcon)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_format',-8,shopCategoryId)
 
-        if responseData['status'] == 0:
-            if (not(shopTitle) or shopTitle==''):
-                responseData['status'] = -3
-                responseData['ret_val'] = '未填寫商店標題!'
-
-        if responseData['status'] == 0:
-            if (not(shopCategoryId) or shopCategoryId==''):
-                responseData['status'] = -4
-                responseData['ret_val'] = '未填寫商店分類編號!'
-
-        if responseData['status'] == 0:
-            if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shopIcon.name))):
-                responseData['status'] = -7
-                responseData['ret_val'] = '商店小圖格式錯誤!'
-
-        if responseData['status'] == 0:
-            for value in shopCategoryId:
-                if not(re.match('^\d+$', value)):
-                    responseData['status'] = -8
-                    responseData['ret_val'] = '商店分類格式錯誤!'
-                    break
-
-        # 選填欄位若有填寫，則判斷其格式是否正確
-        if responseData['status'] == 0:
-            if shopPic:
-                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shopPic.name))):
-                    responseData['status'] = -9
-                    responseData['ret_val'] = '商店主圖格式錯誤!'
-            elif (shopPic==''):
-                shopPic = None
-
-        if responseData['status'] == 0:
-            if paypal:
-                if not(re.match('^\w+$', paypal)):
-                    responseData['status'] = -10
-                    responseData['ret_val'] = 'PayPal 格式錯誤!'
-            elif (paypal==''):
-                paypal = None
-
-        if responseData['status'] == 0:
-            if visa:
-                if not(re.match('^\w+$', visa)):
-                    responseData['status'] = -11
-                    responseData['ret_val'] = 'Visa 卡格式錯誤!'
-            elif (visa==''):
-                visa = None
-
-        if responseData['status'] == 0:
-            if master:
-                if not(re.match('^\w+$', master)):
-                    responseData['status'] = -12
-                    responseData['ret_val'] = 'Master 卡格式錯誤!'
-            elif (master==''):
-                master = None
-
-        if responseData['status'] == 0:
-            if apple:
-                if not(re.match('^\w+$', apple)):
-                    responseData['status'] = -13
-                    responseData['ret_val'] = 'Apple 格式錯誤!'
-            elif (apple==''):
-                apple = None
-
-        if responseData['status'] == 0:
-            if android:
-                if not(re.match('^\w+$', android)):
-                    responseData['status'] = -14
-                    responseData['ret_val'] = 'Android 格式錯誤!'
-            elif (shipByProduct==''):
-                shipByProduct = None
-
-        if responseData['status'] == 0:
-            if isShipFree:
-                if not(re.match('^\w+$', isShipFree)):
-                    responseData['status'] = -15
-                    responseData['ret_val'] = '是否免運費格式錯誤!'
-            elif (isShipFree==''):
-                isShipFree = None
-
-        if responseData['status'] == 0:
-            if shipFreeQuota:
-                if not(re.match('^\d+$', shipFreeQuota)):
-                    responseData['status'] = -16
-                    responseData['ret_val'] = '免運費訂單價格格式錯誤!'
-            elif (shipFreeQuota==''):
-                shipFreeQuota = None
-        if responseData['status'] == 0:
-            if fixShipFee:
-                if not(re.match('^\d+$', fixShipFee)):
-                    responseData['status'] = -17
-                    responseData['ret_val'] = '運費訂價格式錯誤!'
-            elif (fixShipFee==''):
-                fixShipFee = None
-
-        if responseData['status'] == 0:
-            if fixShipFeeFr:
-                if not(re.match('^\d+$', fixShipFeeFr)):
-                    responseData['status'] = -18
-                    responseData['ret_val'] = '訂單價格由格式錯誤!'
-            elif (fixShipFeeFr==''):
-                fixShipFeeFr = None
-
-        if responseData['status'] == 0:
-            if fixShipFeeTo:
-                if not(re.match('^\d+$', fixShipFeeTo)):
-                    responseData['status'] = -19
-                    responseData['ret_val'] = '訂單價格至格式錯誤!'
-            elif (fixShipFeeTo==''):
-                fixShipFeeTo = None
-
-        if responseData['status'] == 0:
-            if shipByProduct:
-                if not(re.match('^\w+$', shipByProduct)):
-                    responseData['status'] = -20
-                    responseData['ret_val'] = '運費由商品設定格式錯誤!'
-            elif (shipByProduct==''):
-                shipByProduct = None
-
-        if responseData['status'] == 0:
-            if discountByPercent:
-                if not(re.match('^\d+$', discountByPercent)):
-                    responseData['status'] = -21
-                    responseData['ret_val'] = '百分比折扣格式錯誤!'
-            elif (discountByPercent==''):
-                discountByPercent = None
-
-        if responseData['status'] == 0:
-            if discountByAmount:
-                if not(re.match('^\d+$', discountByAmount)):
-                    responseData['status'] = -22
-                    responseData['ret_val'] = '價格折扣格式錯誤!'
-            elif (discountByAmount==''):
-                discountByAmount = None
-        
+        # 選填欄位若有填寫，則判斷其格式是否正確        
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_pic',-9,shopPic)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('paypal',-10,paypal)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('visa',-11,visa)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('master',-12,master)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('apple',-13,apple)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('android',-14,android)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('is_ship_free',-15,isShipFree)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('ship_free_quota',-16,shipFreeQuota)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('fix_ship_fee',-17,fixShipFee)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('fix_ship_fee_from',-18,fixShipFeeFr)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('fix_ship_fee_to',-19,fixShipFeeTo)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('ship_by_product',-20,shipByProduct)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('discount_by_percent',-21,discountByPercent)
+        if responseData['status'] == 0: 
+            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('discount_by_amount',-22,discountByAmount)
         if responseData['status'] == 0:
             if bankCode:
                 if not(re.match('^\d+$', bankCode)):

@@ -8,4 +8,5 @@ urlpatterns = [
     path('<id>/show/', views.show), 
     path('checkShopNameIsExistsProcess/', views.checkShopNameIsExistsProcess),
     path('<id>/shipmentSettings', views.shipmentSettings)
+    path('<id>/shipmentSettings/', views.shipmentSettings),
 ]
