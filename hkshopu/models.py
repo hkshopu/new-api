@@ -203,7 +203,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     new_secondhand= models.CharField(max_length=50)
-    longterm_stock_up= models.CharField(max_length=1)
+    longterm_stock_up= models.PositiveIntegerField()
     user_id=models.PositiveIntegerField()
     length = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
