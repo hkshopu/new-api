@@ -320,7 +320,6 @@ def update(request, id):
     }
     if request.method == 'POST':
         # 欄位資料
-        user_id = request.POST.get('user_id', 0)
         shop_icon = request.FILES.get('shop_icon', '')
         shop_title = request.POST.get('shop_title', '')
         shop_category_id = request.POST.getlist('shop_category_id', [])
@@ -365,41 +364,34 @@ def update(request, id):
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
         if response_data['status'] == 0:
-            if not(user_id):
-                response_data['status'] = -2
-                response_data['ret_val'] = '請先登入會員!'
-
-        if response_data['status'] == 0:
             if not(shop.shop_icon) and not(shop_icon):
                 response_data['status'] = -3
                 response_data['ret_val'] = '未上傳商店小圖!'
 
         if response_data['status'] == 0:
-            if not(shop_title):
+            if not(shop.shop_title) and not(shop_title):
                 response_data['status'] = -4
                 response_data['ret_val'] = '未填寫商店標題!'
 
         if response_data['status'] == 0:
-            if not(shop_category_id):
+            selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+            if len(selected_shop_categories) == 0 and not(shop_category_id):
                 response_data['status'] = -5
                 response_data['ret_val'] = '未填寫商店分類編號!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', user_id)):
-                response_data['status'] = -6
-                response_data['ret_val'] = '會員編號格式錯誤!'
+            if shop_icon:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_icon.name))):
+                    response_data['status'] = -7
+                    response_data['ret_val'] = '商店小圖格式錯誤!'
 
         if response_data['status'] == 0:
-            if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_icon.name))):
-                response_data['status'] = -7
-                response_data['ret_val'] = '商店小圖格式錯誤!'
-
-        if response_data['status'] == 0:
-            for value in shop_category_id:
-                if not(re.match('^\d+$', value)):
-                    response_data['status'] = -8
-                    response_data['ret_val'] = '商店分類編號格式錯誤!'
-                    break
+            if shop_category_id:
+                for value in shop_category_id:
+                    if not(re.match('^\d+$', value)):
+                        response_data['status'] = -8
+                        response_data['ret_val'] = '商店分類編號格式錯誤!'
+                        break
 
         if response_data['status'] == 0:
             if shop_pic:
