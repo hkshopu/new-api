@@ -464,12 +464,20 @@ def save(request):
                 #         product_pic=product_pic_url,
                 #         cover='n'
                 #     )
-            for product_pic_url in productPicURL:
+            for index,product_pic_url in enumerate(productPicURL):      
                 # 寫入資料庫
-                models.Selected_Product_Pic.objects.create(
-                    product_id=getProductID[0]['id'], 
-                    product_pic=product_pic_url
-                )
+                if index==0:
+                    models.Selected_Product_Pic.objects.create(
+                        product_id=getProductID[0]['id'], 
+                        product_pic=product_pic_url,
+                        cover="y"
+                    )
+                else :
+                    models.Selected_Product_Pic.objects.create(
+                        product_id=getProductID[0]['id'], 
+                        product_pic=product_pic_url,
+                        cover="n"
+                    )
            #----------------
             
             # 寫入資料庫(規格)
