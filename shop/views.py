@@ -367,7 +367,7 @@ def update(request, id):
         if response_data['status'] == 0:
             if not(user_id):
                 response_data['status'] = -2
-                response_data['ret_val'] = '請先登入帳戶!'
+                response_data['ret_val'] = '請先登入會員!'
 
         if response_data['status'] == 0:
             if not(shop.shop_icon) and not(shop_icon):
@@ -626,6 +626,7 @@ def update(request, id):
             shop.address_floor = address_floor
             shop.address_room = address_room
             shop.save()
+            response_data['ret_val'] = '商店更新成功!'
     return JsonResponse(response_data)
 # 單一商店
 def show(request, id):
