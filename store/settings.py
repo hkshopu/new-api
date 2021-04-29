@@ -85,6 +85,9 @@ DATABASES = {
         'PASSWORD': '1@3$qWeR',
         'HOST': '/cloudsql/hkshopu:asia-east2:hkshopu',
         'PORT': '3306',
+        'OPTIONS': {
+                    'charset': 'utf8mb4',
+                    'use_unicode': True, }
     }
 }
 

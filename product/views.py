@@ -79,6 +79,7 @@ def shop_product(request,id):
                                 'updated_at': product.updated_at,
                                 'weight':product.weight,
                                 'longterm_stock_up':product.longterm_stock_up,
+                                'product_status':product.product_status,
                                 'new_secondhand':product.new_secondhand,
                                 'length':product.length,
                                 'width':product.width,
@@ -211,6 +212,7 @@ def save(request):
         width = request.POST.get('width', 0)
         height = request.POST.get('height', 0)
         longterm_stock_up = request.POST.get('longterm_stock_up', 0)
+        product_status=request.POST.get('product_status', '')
         #商品圖片
         # product_id = request.POST.get('product_id',0)
         # product_pic_list = request.FILES
@@ -281,10 +283,10 @@ def save(request):
                 response_data['status'] = -10
                 response_data['ret_val'] = '產品子分類編號格式錯誤!'
 
-        if response_data['status'] == 0:
-            if not(re.match('^\w+$', product_title)):
-                response_data['status'] = -11
-                response_data['ret_val'] = '產品標題格式錯誤!'
+        # if response_data['status'] == 0:
+        #     if not(re.match('^\w+$', product_title)):
+        #         response_data['status'] = -11
+        #         response_data['ret_val'] = '產品標題格式錯誤!'
 
         if response_data['status'] == 0:
             if quantity:
@@ -292,10 +294,10 @@ def save(request):
                     response_data['status'] = -12
                     response_data['ret_val'] = '產品庫存數量格式錯誤!'
 
-        if response_data['status'] == 0:
-            if not(re.match('^\w+$', product_description)):
-                response_data['status'] = -13
-                response_data['ret_val'] = '產品描述格式錯誤!'
+        # if response_data['status'] == 0:
+        #     if not(re.match('^\w+$', product_description)):
+        #         response_data['status'] = -13
+        #         response_data['ret_val'] = '產品描述格式錯誤!'
 
         # if response_data['status'] == 0:
         #     if product_country_code:
@@ -422,7 +424,8 @@ def save(request):
                 length=length, 
                 width=width, 
                 height=height,
-                longterm_stock_up=longterm_stock_up
+                longterm_stock_up=longterm_stock_up,
+                product_status=product_status
             )
             #傳回product_id
             products=models.Product.objects.filter(
