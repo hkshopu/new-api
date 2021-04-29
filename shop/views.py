@@ -90,10 +90,10 @@ def save(request):
             responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_title',-3,shopTitle)
         if responseData['status'] == 0: 
             responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id',-4,shopCategoryId)
-        if responseData['status'] == 0: 
-            responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_icon_format',-7,shopIcon)
-        if responseData['status'] == 0: 
-            responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_format',-8,shopCategoryId)
+        # if responseData['status'] == 0: 
+        #     responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_icon_format',-7,shopIcon)
+        # if responseData['status'] == 0: 
+        #     responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_format',-8,shopCategoryId)
 
         # 選填欄位若有填寫，則判斷其格式是否正確        
         if responseData['status'] == 0: 
@@ -726,7 +726,7 @@ def checkShopNameIsExistsProcess(request):
             id=uuid.uuid4(), 
             user_id=0, 
             action='Check Shop Name', 
-            parameter_in='shop_title=' + shop_title + '&response_data[ret_val]=' + response_data['ret_val'] , 
+            parameter_in='shop_title=' + shopTitle + '&response_data[ret_val]=' + response_data['ret_val'] , 
             parameter_out=''
         )
     return JsonResponse(response_data)
