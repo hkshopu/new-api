@@ -114,78 +114,92 @@ def shop_product(request,id):
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
 # 單一商品
-# def product_info(request,id): #給product_id
-#     # 回傳資料
-#     responseData = {
-#         'status': 0, 
-#         'ret_val': '', 
-#         'data': []
-#     }
+def product_info(request,id): #給product_id
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
 
-#     if request.method == 'GET':
-#         if responseData['status'] == 0:
-#             # shop=models.Shop.objects.get(id=id)
-#             products = models.Product.objects.filter(id=id)
-#             getProductID=[]
-#             for product in products:
-#                 getProductID.append(product.id)
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            # shop=models.Shop.objects.get(id=id)
+            products = models.Product.objects.filter(id=id)
+            getProductID=[]
+            for product in products:
+                getProductID.append(product.id)
                
-#             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-#             productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
-#             productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0])
-#             for product in products:   
-#                 for productPic in productPics:
-#                     for productSpec in productSpecs:    
-#                         if product.id==productPic.product_id and product.id==productSpec.product_id : 
-#                             productInfo = {
-#                                 'id': product.id,
-#                                 'product_category_id': product.product_category_id, 
-#                                 'product_title': product.product_title,
-#                                 'quantity': product.quantity, 
-#                                 'product_description': product.product_description, 
-#                                 'product_price': product.product_price, 
-#                                 'shipping_fee': product.shipping_fee, 
-#                                 'created_at': product.created_at, 
-#                                 'updated_at': product.updated_at,
-#                                 'weight':product.weight,
-#                                 'longterm_stock_up':product.longterm_stock_up,
-#                                 'new_secondhand':product.new_secondhand,
-#                                 'length':product.length,
-#                                 'width':product.width,
-#                                 'height':product.height,
-#                                 'like':product.like,
-#                                 'seen':product.seen,
-#                                 'sold_quantity':product.sold_quantity,
-#                                 'pic_path':productPic.product_pic,
-#                                 'spec_desc_1':productSpec.spec_desc_1,
-#                                 'spec_desc_2':productSpec.spec_desc_2,
-#                                 'spec_dec_1_items':productSpec.spec_dec_1_items,
-#                                 'spec_dec_2_items':productSpec.spec_dec_2_items,
-#                                 # 'price' : productSpec.price
-#                             }
-#                             #responseData['data'].append(productInfo)    
-#                             # responseData['data']['price'] = {}
-#                             v = []
-#                             # object_methods = [method_name for method_name in dir(responseData['data'])
-#                             #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-#                             for obj in productSpecs:
-#                                 # if product.id==productSpecs.product.id:
-#                                 # responseData['data'].update({'price':obj.price})
-#                                 v.append(getattr(obj,'price'))
-#                             productInfo.update({'price':v})   
-#                             responseData['data'].append(productInfo)                 
-#             # for product in products:   
-#             #     for productPic in productPics:  
-#             #         for productSpec in productSpecs:  
-#             #              if product.id==productPic.product_id and product.id==productSpec.product_id:
-#             #                 productPriceInfo = {
-#             #                     'id': product.id,
-#             #                     'price' : productSpec.price
-#             #                 }
-#             #                 responseData['data'].append(productPriceInfo)  
+            # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
+            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
+            productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0])
+            for product in products:       
+                productInfo = {
+                    'id': product.id,
+                    'product_category_id': product.product_category_id, 
+                    'product_title': product.product_title,
+                    'quantity': product.quantity, 
+                    'product_description': product.product_description, 
+                    'product_price': product.product_price, 
+                    'shipping_fee': product.shipping_fee, 
+                    'created_at': product.created_at, 
+                    'updated_at': product.updated_at,
+                    'weight':product.weight,
+                    'longterm_stock_up':product.longterm_stock_up,
+                    'new_secondhand':product.new_secondhand,
+                    'length':product.length,
+                    'width':product.width,
+                    'height':product.height,
+                    'like':product.like,
+                    'seen':product.seen,
+                    'sold_quantity':product.sold_quantity,
+                    # 'pic_path':productPic.product_pic,
+                    # 'spec_desc_1':productSpec.spec_desc_1,
+                    # 'spec_desc_2':productSpec.spec_desc_2,
+                    # 'spec_dec_1_items':productSpec.spec_dec_1_items,
+                    # 'spec_dec_2_items':productSpec.spec_dec_2_items,
+                    # 'price' : productSpec.price
+                }
+                #responseData['data'].append(productInfo)    
+                # responseData['data']['price'] = {}
+                v = []
+                spec_desc_1=[]
+                spec_desc_2=[]
+                spec_dec_1_items=[]
+                spec_dec_2_items=[]
+                v2=[]
+                # object_methods = [method_name for method_name in dir(responseData['data'])
+                #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
+                for obj in productSpecs:
+                    # if product.id==productSpecs.product.id:
+                    # responseData['data'].update({'price':obj.price})
+                    v.append(getattr(obj,'price'))
+                    spec_desc_1.append(getattr(obj,'spec_desc_1'))
+                    spec_desc_2.append(getattr(obj,'spec_desc_2'))
+                    spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
+                    spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
+                for picObj in productPics:
+                    v2.append(getattr(picObj,'product_pic'))
 
-#             responseData['ret_val'] = '已取得商品清單!'
-#     return JsonResponse(responseData)
+                productInfo.update({'price':v})
+                productInfo.update({'spec_desc_1':spec_desc_1})
+                productInfo.update({'spec_desc_2':spec_desc_2})
+                productInfo.update({'spec_dec_1_items':spec_dec_1_items})
+                productInfo.update({'spec_dec_2_items':spec_dec_2_items})
+                productInfo.update({'pic_path':v2})   
+                responseData['data'].append(productInfo)                 
+            # for product in products:   
+            #     for productPic in productPics:  
+            #         for productSpec in productSpecs:  
+            #              if product.id==productPic.product_id and product.id==productSpec.product_id:
+            #                 productPriceInfo = {
+            #                     'id': product.id,
+            #                     'price' : productSpec.price
+            #                 }
+            #                 responseData['data'].append(productPriceInfo)  
+
+            responseData['ret_val'] = '已取得商品清單!'
+    return JsonResponse(responseData)
 # 新增商品
 def save(request):
     # 回傳資料
