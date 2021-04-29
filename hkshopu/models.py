@@ -184,6 +184,36 @@ class Shop_Shipment_Setting(models.Model):
     shipment_desc = models.CharField(max_length=255)
     onoff = models.CharField(max_length=50)
 
+class Shop_Address(models.Model):
+    shop_id = models.PositiveIntegerField()
+    name = models.CharField(max_length=50)
+    country_code = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50)
+    is_phone_show = models.CharField(max_length=50)
+    area = models.CharField(max_length=50)
+    district = models.CharField(max_length=50)
+    road = models.CharField(max_length=50)
+    number = models.CharField(max_length=50)
+    other = models.CharField(max_length=50)
+    floor = models.CharField(max_length=50)
+    room = models.CharField(max_length=50)
+
+class Shop_Bank_Account(models.Model):
+    shop_id = models.PositiveIntegerField()
+    code = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    account = models.CharField(max_length=50)
+    account_name = models.CharField(max_length=50)
+    isDefault = models.CharField(max_length=1)
+
+class Shop_Rate(models.Model):
+    shop_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
+    rating = models.FloatField()
+    comment = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Shipment_default_method(models.Model):
     shipment_default_desc = models.CharField(max_length=255)
     onoff = models.CharField(max_length=50)
