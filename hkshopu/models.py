@@ -400,6 +400,7 @@ class Product(models.Model):
     like = models.PositiveIntegerField()
     seen = models.PositiveIntegerField()
     sold_quantity = models.PositiveIntegerField()
+    product_status= models.CharField(max_length=50)
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
