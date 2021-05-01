@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
 from django.db.models import Q
+from django.db import transaction
 from django.core.files.storage import FileSystemStorage
 from hkshopu import models
 import re
@@ -90,10 +91,6 @@ def save(request):
             responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_title',-3,shopTitle)
         if responseData['status'] == 0: 
             responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id',-4,shopCategoryId)
-        # if responseData['status'] == 0: 
-        #     responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_icon_format',-7,shopIcon)
-        # if responseData['status'] == 0: 
-        #     responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_format',-8,shopCategoryId)
 
         # 選填欄位若有填寫，則判斷其格式是否正確        
         if responseData['status'] == 0: 
@@ -255,60 +252,99 @@ def save(request):
                 pass
         # 新增商店並移動圖檔到指定路徑
         if responseData['status'] == 0:
+            # 將空字串轉換成數值
+            if shipFreeQuota is '':
+                shipFreeQuota = 0
+            if fixShipFee is '':
+                fixShipFee = 0
+            if fixShipFeeFr is '':
+                fixShipFeeFr = 0
+            if fixShipFeeTo is '':
+                fixShipFeeTo = 0
+            if discountByPercent is '':
+                discountByPercent = 0
+            if discountByAmount is '':
+                discountByAmount = 0
             # 上傳圖片
             destination_path = 'images/shop/'
             shopIconURL = upload_file(FILE=shopIcon,destination_path=destination_path,suffix='icon')
             shopPicURL = upload_file(FILE=shopPic,destination_path=destination_path,suffix='pic')
-            # 新增商店
-            models.Shop.objects.create(
-                user_id=userId,  
-                shop_title=shopTitle, 
-                shop_icon=shopIconURL, 
-                shop_pic=shopPicURL, 
-                shop_description=shopDesc, 
-                paypal=paypal, 
-                visa=visa, 
-                master=master, 
-                apple=apple, 
-                android=android, 
-                is_ship_free=isShipFree, 
-                ship_by_product=shipByProduct, 
-                ship_free_quota=shipFreeQuota, 
-                fix_ship_fee=fixShipFee, 
-                fix_ship_fee_from=fixShipFeeFr, 
-                fix_ship_fee_to=fixShipFeeTo, 
-                discount_by_percent=discountByPercent, 
-                discount_by_amount=discountByAmount,
-                bank_code=bankCode,
-                bank_name=bankName,
-                bank_account=bankAccount,
-                bank_account_name=bankAccountName,
-                address_name=addressName,
-                address_country_code=addressCountryCode,
-                address_phone=addressPhone,
-                address_area=addressArea,
-                address_district=addressDistrict,
-                address_road=addressRoad,
-                address_number=addressNumber,
-                address_other=addressOther,
-                address_floor=addressFloor,
-                address_room=addressRoom
-            )
-            # 取得當前商店編號
-            shops = models.Shop.objects.order_by('-updated_at')
-            responseData['shop_id'] = shops[0].id
-            # 新增選擇商店分類
-            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id).exclude(shop_category_id__in=shopCategoryId)
-            if len(to_delete_selected_shop_categories) > 0:
-                to_delete_selected_shop_categories.delete()
+            with transaction.atomic():
+                # This code executes inside a transaction.
+                # 新增商店
+                new_shop = models.Shop.objects.create(
+                    user_id=userId,  
+                    shop_title=shopTitle, 
+                    shop_icon=shopIconURL, 
+                    shop_pic=shopPicURL, 
+                    shop_description=shopDesc, 
+                    paypal=paypal, 
+                    visa=visa, 
+                    master=master, 
+                    apple=apple, 
+                    android=android, 
+                    is_ship_free=isShipFree, 
+                    ship_by_product=shipByProduct, 
+                    ship_free_quota=shipFreeQuota, 
+                    fix_ship_fee=fixShipFee, 
+                    fix_ship_fee_from=fixShipFeeFr, 
+                    fix_ship_fee_to=fixShipFeeTo, 
+                    discount_by_percent=discountByPercent, 
+                    discount_by_amount=discountByAmount,
+                    bank_code=bankCode,
+                    bank_name=bankName,
+                    bank_account=bankAccount,
+                    bank_account_name=bankAccountName,
+                    address_name=addressName,
+                    address_country_code=addressCountryCode,
+                    address_phone=addressPhone,
+                    address_area=addressArea,
+                    address_district=addressDistrict,
+                    address_road=addressRoad,
+                    address_number=addressNumber,
+                    address_other=addressOther,
+                    address_floor=addressFloor,
+                    address_room=addressRoom
+                )
+                # 新增商店地址
+                models.Shop_Address.objects.create(
+                    id = uuid.uuid4(),
+                    shop_id = new_shop.id,
+                    name = addressName,
+                    country_code = addressCountryCode,
+                    phone = addressPhone,
+                    is_phone_show = addressIsPhoneShow,
+                    area = addressArea,
+                    district = addressDistrict,
+                    road = addressRoad,
+                    number = addressNumber,
+                    other = addressOther,
+                    floor = addressFloor,
+                    room = addressRoom
+                )
+                # 新增商店銀行帳號
+                models.Shop_Bank_Account.objects.create(
+                    id = uuid.uuid4(),
+                    shop_id = new_shop.id,
+                    code = bankCode,
+                    name = bankName,
+                    account = bankAccount,
+                    account_name = bankAccountName
+                )
+                # 取得當前商店編號
+                responseData['shop_id'] = new_shop.id
+                # 新增選擇商店分類
+                to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=new_shop.id).exclude(shop_category_id__in=shopCategoryId)
+                if len(to_delete_selected_shop_categories) > 0:
+                    to_delete_selected_shop_categories.delete()
 
-            for value in shopCategoryId:
-                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shops[0].id, shop_category_id=value)
-                if (len(selected_shop_categories) == 0 and value != 0):
-                    models.Selected_Shop_Category.objects.create(
-                        shop_id=shops[0].id, 
-                        shop_category_id=value
-                    )
+                for value in shopCategoryId:
+                    selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=new_shop.id, shop_category_id=value)
+                    if (len(selected_shop_categories) == 0 and value != 0):
+                        models.Selected_Shop_Category.objects.create(
+                            shop_id=new_shop.id,
+                            shop_category_id=value
+                        )
             responseData['ret_val'] = '商店與選擇商店分類新增成功!'
     return JsonResponse(responseData)
 # 更新商店
@@ -641,6 +677,8 @@ def show(request, id):
         if responseData['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=id)
+                shop_bank_account = models.Shop_Bank_Account.objects.filter(shop_id=shop.id)
+                shop_address = models.Shop_Address.objects.filter(shop_id=shop.id)
                 shop_attr = [
                     'id',
                     'user_id',
@@ -663,27 +701,39 @@ def show(request, id):
                     'transport_setting',
                     'discount_by_amount',
                     'discount_by_percent',
-                    'bank_code',
-                    'bank_name',
-                    'bank_account',
-                    'bank_account_name',
-                    'address_name',
-                    'address_country_code',
-                    'address_phone',
-                    'address_is_phone_show',
-                    'address_area',
-                    'address_district',
-                    'address_road',
-                    'address_number',
-                    'address_other',
-                    'address_floor',
-                    'address_room',
-                    'created_at',
-                    'updated_at'
+                    'shop_bank_account',
+                    'shop_address'
                     ]
+                shop_bank_account_attr = [
+                    'code',
+                    'name',
+                    'account',
+                    'account_name'
+                ]
+                shop_address_attr = [
+                    'name',
+                    'country_code',
+                    'phone',
+                    'is_phone_show',
+                    'area',
+                    'district',
+                    'road',
+                    'number',
+                    'other',
+                    'floor',
+                    'room'
+                ]
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
                         responseData['data'][attr] = getattr(shop, attr)
+                    elif attr is 'shop_bank_account':
+                        responseData['data'][attr] = []
+                        for item in shop_bank_account.values():
+                            responseData['data'][attr].append(item)
+                    elif attr is 'shop_address':
+                        responseData['data'][attr] = []
+                        for item in shop_address.values():
+                            responseData['data'][attr].append(item)
                 products = models.Product.objects.filter(shop_id=shop.id)
                 responseData['data']['product_count'] = len(products)
                 # dummy data
@@ -767,4 +817,21 @@ def shipmentSettings(request, id):
                     onoff=setting['onoff']
                 )
             responseData['ret_val'] = '運輸設定更新成功!'
+    return JsonResponse(responseData)
+
+def testAPI(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+
+    object_methods = [method_name for method_name in dir(models.Product.objects)
+                  if (callable(getattr(models.Product.objects, method_name)) and not method_name.startswith('_'))]
+    print(object_methods)
+    print(models.Shop.objects.check())
+    
+    # for key, value in request.POST.lists():
+    #     print(key, value)
+    #     print(request.POST.get(key))
     return JsonResponse(responseData)
