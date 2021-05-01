@@ -1,5 +1,6 @@
 # _*_ encoding: utf-8 _*_
 from django.db import models
+import re
 
 # Create your models here.
 class User(models.Model):
@@ -64,6 +65,81 @@ class Shop(models.Model):
     address_room = models.CharField(max_length=50, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+        if column_name=='user_id':
+            if not(param):
+                ret_code, ret_description = err_code, '請先登入會員!'
+        elif column_name=='shop_title':
+            if not(param):
+                ret_code, ret_description = err_code, '未填寫商店標題!'
+        elif column_name=='shop_icon':
+            if not(param):
+                ret_code, ret_description = err_code, '未上傳商店小圖!'
+            elif not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(param.name))):
+                ret_code, ret_description = err_code, '商店小圖格式錯誤!'
+        elif column_name=='shop_pic':
+            if param:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(param.name))):
+                    ret_code, ret_description = err_code, '商店主圖格式錯誤!'
+        elif column_name=='shop_description':
+            pass
+        elif column_name=='paypal':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, 'PayPal 格式錯誤!'
+        elif column_name=='visa':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, 'Visa 格式錯誤!'
+        elif column_name=='master':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, 'Master 格式錯誤!'
+        elif column_name=='apple':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, 'Apple 格式錯誤!'
+        elif column_name=='android':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, 'Android 格式錯誤!'
+        elif column_name=='is_ship_free':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, '是否免運費格式錯誤!'
+        elif column_name=='ship_by_product':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, '運費由商品設定格式錯誤!'
+        elif column_name=='ship_free_quota':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '免運費訂單價格格式錯誤!'
+        elif column_name=='fix_ship_fee':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '運費訂價格式錯誤!'
+        elif column_name=='fix_ship_fee_from':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '訂單價格由格式錯誤!'
+        elif column_name=='fix_ship_fee_to':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '訂單價格至格式錯誤!'
+        elif column_name=='discount_by_percent':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '價格折扣格式錯誤!'
+        elif column_name=='discount_by_amount':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '百分比折扣格式錯誤!'
+        
+        return ret_code, ret_description
+
 
 class Shop_Category(models.Model):
     c_shop_category = models.CharField(max_length=50)
@@ -148,7 +224,7 @@ class Shop_Category(models.Model):
                 if not(re.match('^\d+$', param)):
                     ret_code, ret_description = err_code, '百分比折扣格式錯誤!'
         
-        return ret_code, ret_description
+        return prarm,ret_code, ret_description
 
 class Shop_Sub_Category(models.Model):
     shop_category_id = models.PositiveIntegerField()
@@ -185,6 +261,7 @@ class Shop_Shipment_Setting(models.Model):
     onoff = models.CharField(max_length=50)
 
 class Shop_Address(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
     name = models.CharField(max_length=50)
     country_code = models.CharField(max_length=50)
@@ -197,14 +274,81 @@ class Shop_Address(models.Model):
     other = models.CharField(max_length=50)
     floor = models.CharField(max_length=50)
     room = models.CharField(max_length=50)
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+        if param is 'name':
+            if param:
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '姓名/公司名稱格式錯誤!'
+        elif param is 'country_code':
+            if param:
+                if not(re.match('^[\+\d]+$', param)):
+                    ret_code, ret_description = err_code, '國碼格式錯誤!'
+        elif param is 'phone':
+            if param:
+                if not(re.match('^\d+$', param)):
+                    ret_code, ret_description = err_code, '電話號碼格式錯誤!'
+        elif param is 'is_phone_show':
+            if param:
+                if not(re.match('^\w+$', param)):
+                    ret_code, ret_description = err_code, '顯示在店鋪簡介格式錯誤!'
+        elif param is 'area':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '地域格式錯誤!'
+        elif param is 'district':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '地區格式錯誤!'
+        elif param is 'road':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '街道名稱格式錯誤!'
+        elif param is 'number':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '街道門牌格式錯誤!'
+        elif param is 'other':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '其他地址格式錯誤!'
+        elif param is 'floor':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '樓層格式錯誤!'
+        elif param is 'room':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                    ret_code, ret_description = err_code, '房(室)名稱格式錯誤!'
+        return  ret_code, ret_description
+
 
 class Shop_Bank_Account(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
     code = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     account = models.CharField(max_length=50)
     account_name = models.CharField(max_length=50)
     isDefault = models.CharField(max_length=1)
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+        if param is 'code':
+            if not(re.match('^\d+$', bankCode)):
+                ret_code, ret_desciprtion = err_code, '銀行代碼格式錯誤!'
+        elif param is 'name':
+            if not(re.match('^[()\w\s]+$', bankName)):
+                ret_code, ret_desciprtion = err_code, '銀行名稱格式錯誤!'
+        elif param is 'account':
+            if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', bankAccountName)):
+                ret_code, ret_desciprtion = err_code, '銀行戶名格式錯誤!'
+        elif param is 'account_name':
+            if not(re.match('^[\-\d]+$', bankAccount)):
+                ret_code, ret_desciprtion = err_code, '銀行帳號格式錯誤!'
+        return ret_code, ret_description
+        
 
 class Shop_Rate(models.Model):
     shop_id = models.PositiveIntegerField()
@@ -213,6 +357,23 @@ class Shop_Rate(models.Model):
     comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+        if param is 'shop_id':
+            pass
+        elif param is 'user_id':
+            pass
+        elif param is 'rating':
+            pass
+            if not(re.match('^\d+$', param)):
+                ret_code, ret_desciprtion = err_code, '格式錯誤!'
+        elif param is 'comment':
+            pass
+            if not(re.match('^[()\w\s]+$', param)):
+                ret_code, ret_desciprtion = err_code, '格式錯誤!'
+        return ret_code, ret_description
+
 
 class Shipment_default_method(models.Model):
     shipment_default_desc = models.CharField(max_length=255)
