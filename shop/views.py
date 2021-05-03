@@ -701,7 +701,7 @@ def updateBankAccount(request, id):
 
     return JsonResponse(response_data)
 # 新增銀行帳號
-def addBankAccount(request):
+def createBankAccount(request, id):
     # 回傳資料
     response_data = {
         'status': 0, 
@@ -715,16 +715,19 @@ def addBankAccount(request):
         account_name = request.POST.get('account_name','')
         # 檢查欄位是否正確
         if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -1, code)
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
         if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -2, name)
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -2, code)
         if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -3, account)
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -3, name)
         if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -4, account_name)
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -4, account)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -5, account_name)
         if response_data['status'] == 0:
             shop_bank_account = models.Shop_Bank_Account.objects.create(
                 id=uuid.uuid4(), 
+                shop_id = id,
                 code=code,
                 name=name,
                 account=account,
@@ -739,8 +742,7 @@ def delBankAccount(request, id):
     # 回傳資料
     response_data = {
         'status': 0, 
-        'ret_val': '',
-        'id':''
+        'ret_val': ''
     }
     if request.method == 'GET':
         # 檢查欄位是否正確
@@ -751,14 +753,7 @@ def delBankAccount(request, id):
                 response_data['ret_val'] = '無此商店銀行帳號!'
 
         if response_data['status'] == 0:
-            shop_bank_account = models.Shop_Bank_Account.objects.create(
-                id=uuid.uuid4(), 
-                code=code,
-                name=name,
-                account=account,
-                account_name=account_name
-            )
-            response_data['id'] = shop_bank_account.id
+            shop_bank_account.delete()
             response_data['ret_val'] = '商店銀行帳號刪除成功!'
 
     return JsonResponse(response_data)
