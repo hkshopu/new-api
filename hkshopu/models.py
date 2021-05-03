@@ -67,6 +67,13 @@ class Shop(models.Model):
     address_other = models.CharField(max_length=50)
     address_floor = models.CharField(max_length=50)
     address_room = models.CharField(max_length=50)
+    shop_name_updated_at = models.DateTimeField(auto_now=True, null=True)
+    background_pic = models.CharField(max_length=255, null=True)
+    shop_email = models.CharField(max_length=50, null=True)
+    email_on = models.CharField(max_length=1, null=True)
+    long_description = models.TextField(null=True)
+    facebook_on = models.CharField(max_length=1, null=True)
+    instagram_on = models.CharField(max_length=1, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def validate_column(column_name, err_code, param):
@@ -566,6 +573,21 @@ class Audit_Log(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Shop_Follower(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    follower_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Shop_Product_Rating(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    product_id = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 class Shop_Score(models.Model):
     user_id = models.PositiveIntegerField()
     shop_id = models.PositiveIntegerField()
