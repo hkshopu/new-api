@@ -320,7 +320,7 @@ def save(request):
         quantity = request.POST.get('quantity', 0)
         product_description = request.POST.get('product_description', '')
         # product_country_code = request.POST.get('product_country_code', '') UI無此column
-        product_price = request.POST.get('product_price', 0)
+        # product_price = request.POST.get('product_price', 0)
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
         new_secondhand = request.POST.get('new_secondhand', '')
@@ -375,10 +375,10 @@ def save(request):
                 response_data['status'] = -5
                 response_data['ret_val'] = '未填寫產品描述!'
 
-        if response_data['status'] == 0:
-            if not(product_price):
-                response_data['status'] = -6
-                response_data['ret_val'] = '未填寫產品單價!'
+        # if response_data['status'] == 0:
+        #     if not(product_price):
+        #         response_data['status'] = -6
+        #         response_data['ret_val'] = '未填寫產品單價!'
 
         if response_data['status'] == 0:
             if not(shipping_fee):
@@ -422,10 +422,10 @@ def save(request):
         #             response_data['status'] = -14
         #             response_data['ret_val'] = '產品產地代碼格式錯誤!'
 
-        if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_price)):
-                response_data['status'] = -15
-                response_data['ret_val'] = '產品價格格式錯誤!'
+        # if response_data['status'] == 0:
+        #     if not(re.match('^\d+$', product_price)):
+        #         response_data['status'] = -15
+        #         response_data['ret_val'] = '產品價格格式錯誤!'
 
         if response_data['status'] == 0:
             if not(re.match('^\d+$', shipping_fee)):
@@ -533,7 +533,7 @@ def save(request):
                 quantity=quantity, 
                 product_description=product_description, 
                 # product_country_code=product_country_code, 
-                product_price=product_price, 
+                # product_price=product_price, 
                 shipping_fee=shipping_fee, 
                 weight=weight,
                 new_secondhand=new_secondhand,
@@ -553,7 +553,7 @@ def save(request):
                 quantity=quantity, 
                 product_description=product_description, 
                 # product_country_code=product_country_code, 
-                product_price=product_price, 
+                # product_price=product_price, 
                 shipping_fee=shipping_fee, 
                 weight=weight,
                 new_secondhand=new_secondhand
