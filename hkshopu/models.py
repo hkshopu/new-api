@@ -2,6 +2,10 @@
 from django.db import models
 import re
 
+# validator
+def validate_empty_value_to_default(value):
+    if value is '':
+        return None
 # Create your models here.
 class User(models.Model):
     account_name = models.CharField(max_length=50, null=True)
@@ -31,38 +35,38 @@ class Shop(models.Model):
     user_id = models.PositiveIntegerField()
     shop_title = models.CharField(max_length=50)
     shop_icon = models.CharField(max_length=255)
-    shop_pic = models.CharField(max_length=255, null=True)
-    shop_description = models.TextField(null=True)
-    paypal = models.CharField(max_length=50, null=True)
-    visa = models.CharField(max_length=50, null=True)
-    master = models.CharField(max_length=50, null=True)
-    apple = models.CharField(max_length=50, null=True)
-    android = models.CharField(max_length=50, null=True)
-    is_ship_free = models.CharField(max_length=1, null=True, default='N')
-    ship_by_product = models.CharField(max_length=1, null=True, default='N')
-    ship_free_quota = models.PositiveIntegerField(null=True)
-    fix_ship_fee = models.PositiveIntegerField(null=True)
-    fix_ship_fee_from = models.PositiveIntegerField(null=True)
-    fix_ship_fee_to = models.PositiveIntegerField(null=True)
-    discount_by_percent = models.PositiveIntegerField(null=True)
-    discount_by_amount = models.PositiveIntegerField(null=True)
-    transaction_method = models.CharField(max_length=50, null=True)
-    transport_setting = models.CharField(max_length=50, null=True)
-    bank_code = models.CharField(max_length=50, null=True)
-    bank_name = models.CharField(max_length=50, null=True)
-    bank_account = models.CharField(max_length=50, null=True)
-    bank_account_name = models.CharField(max_length=50, null=True)
-    address_name = models.CharField(max_length=50, null=True)
-    address_country_code = models.CharField(max_length=50, null=True)
-    address_phone = models.CharField(max_length=50, null=True)
+    shop_pic = models.CharField(max_length=255)
+    shop_description = models.TextField()
+    paypal = models.CharField(max_length=50)
+    visa = models.CharField(max_length=50)
+    master = models.CharField(max_length=50)
+    apple = models.CharField(max_length=50)
+    android = models.CharField(max_length=50)
+    is_ship_free = models.CharField(max_length=1, null=True, validators = [validate_empty_value_to_default], default = 'Y')
+    ship_by_product = models.CharField(max_length=1, null=True, validators = [validate_empty_value_to_default], default = 'Y')
+    ship_free_quota = models.PositiveIntegerField(null=True, validators = [validate_empty_value_to_default], default = 0)
+    fix_ship_fee = models.PositiveIntegerField(null=True, validators = [validate_empty_value_to_default], default = 0)
+    fix_ship_fee_from = models.PositiveIntegerField(null=True, validators = [validate_empty_value_to_default], default = 0)
+    fix_ship_fee_to = models.PositiveIntegerField(null=True, validators = [validate_empty_value_to_default], default = 0)
+    discount_by_percent = models.PositiveIntegerField(null=True, validators = [validate_empty_value_to_default], default = 0)
+    discount_by_amount = models.PositiveIntegerField(null=True, validators = [validate_empty_value_to_default], default = 0)
+    transaction_method = models.CharField(max_length=50)
+    transport_setting = models.CharField(max_length=50)
+    bank_code = models.CharField(max_length=50)
+    bank_name = models.CharField(max_length=50)
+    bank_account = models.CharField(max_length=50)
+    bank_account_name = models.CharField(max_length=50)
+    address_name = models.CharField(max_length=50)
+    address_country_code = models.CharField(max_length=50)
+    address_phone = models.CharField(max_length=50)
     address_is_phone_show= models.CharField(max_length=1, null=True, default='Y')
-    address_area = models.CharField(max_length=50, null=True)
-    address_district = models.CharField(max_length=50, null=True)
-    address_road = models.CharField(max_length=50, null=True)
-    address_number = models.CharField(max_length=50, null=True)
-    address_other = models.CharField(max_length=50, null=True)
-    address_floor = models.CharField(max_length=50, null=True)
-    address_room = models.CharField(max_length=50, null=True)
+    address_area = models.CharField(max_length=50)
+    address_district = models.CharField(max_length=50)
+    address_road = models.CharField(max_length=50)
+    address_number = models.CharField(max_length=50)
+    address_other = models.CharField(max_length=50)
+    address_floor = models.CharField(max_length=50)
+    address_room = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def validate_column(column_name, err_code, param):
@@ -266,7 +270,7 @@ class Shop_Address(models.Model):
     name = models.CharField(max_length=50)
     country_code = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
-    is_phone_show = models.CharField(max_length=50)
+    is_phone_show = models.CharField(max_length=50, null=True, validators = [validate_empty_value_to_default], default = 'Y')
     area = models.CharField(max_length=50)
     district = models.CharField(max_length=50)
     road = models.CharField(max_length=50)
@@ -277,7 +281,12 @@ class Shop_Address(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if param is 'name':
+        if param is 'shop_id':
+            try:
+                Shop.objects.get(id=id)
+            except:
+                ret_code, ret_description = err_code, '找不到此商店編號的商店!'                
+        elif param is 'name':
             if param:
                 if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)):
                     ret_code, ret_description = err_code, '姓名/公司名稱格式錯誤!'
@@ -334,7 +343,12 @@ class Shop_Bank_Account(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if param is 'code':
+        if param is 'shop_id':
+            try:
+                Shop.objects.get(id=param)
+            except:
+                ret_code, ret_description = err_code, '找不到此商店編號的商店!'
+        elif param is 'code':
             if not(re.match('^\d+$', bankCode)):
                 ret_code, ret_desciprtion = err_code, '銀行代碼格式錯誤!'
         elif param is 'name':
