@@ -287,6 +287,12 @@ def update(request, id):
         address_other = request.POST.get('address_other', '')
         address_floor = request.POST.get('address_floor', '')
         address_room = request.POST.get('address_room', '')
+        background_pic = request.FILES.get('background_pic', '')
+        shop_email = request.POST.get('shop_email', '')
+        email_on = request.POST.get('email_on', 'N')
+        long_description = request.POST.get('long_description', '')
+        facebook_on = request.POST.get('facebook_on', '')
+        instagram_on = request.POST.get('instagram_on', '')
 
         if response_data['status'] == 0:
             try:
@@ -500,9 +506,46 @@ def update(request, id):
                     response_data['ret_val'] = '房(室)名稱格式錯誤!'
 
         if response_data['status'] == 0:
+            if background_pic:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(background_pic.name))):
+                    response_data['status'] = -38
+                    response_data['ret_val'] = '背景圖片格式錯誤!'
+
+        if response_data['status'] == 0:
+            if shop_email:
+                if not(re.match('[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+', shop_email)):
+                    response_data['status'] = -39
+                    response_data['ret_val'] = '商店電子郵件格式錯誤!'
+
+        if response_data['status'] == 0:
+            if email_on:
+                if not(re.match('^(Y|N)$', email_on)):
+                    response_data['status'] = -40
+                    response_data['ret_val'] = '電子郵件開啟設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if facebook_on:
+                if not(re.match('^(Y|N)$', facebook_on)):
+                    response_data['status'] = -41
+                    response_data['ret_val'] = 'Facebook 開啟設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if instagram_on:
+                if not(re.match('^(Y|N)$', instagram_on)):
+                    response_data['status'] = -42
+                    response_data['ret_val'] = 'Instagram 開啟設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if shop.shop_name_updated_at:
+                now = datetime.datetime.now()
+                if (now - shop.shop_name_updated_at).min > datetime.timedelta(minutes=0):
+                    response_data['status'] = -43
+                    response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
+
+        if response_data['status'] == 0:
             shops = models.Shop.objects.filter(shop_title=shop_title)
             if len(shops) > 0:
-                response_data['status'] = -38
+                response_data['status'] = -44
                 response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
 
         if response_data['status'] == 0:
@@ -510,10 +553,13 @@ def update(request, id):
             destination_path = 'images/shop/'
             shop_icon_url = ''
             shop_pic_url = ''
+            background_pic_url = ''
             if shop_icon:
                 shop_icon_url += upload_file(FILE=shop_icon, destination_path=destination_path, suffix='icon')
             if shop_pic:
                 shop_pic_url += upload_file(FILE=shop_pic, destination_path=destination_path, suffix='pic')
+            if background_pic:
+                background_pic_url += upload_file(FILE=background_pic, destination_path=destination_path, suffix='background_pic')
             # 更新商店
             shop.shop_title = shop_title
             shop.shop_icon = shop_icon_url
@@ -549,6 +595,12 @@ def update(request, id):
             shop.address_other = address_other
             shop.address_floor = address_floor
             shop.address_room = address_room
+            shop.background_pic = background_pic_url
+            shop.shop_email = shop_email
+            shop.email_on = email_on
+            shop.long_description = long_description
+            shop.facebook_on = facebook_on
+            shop.instagram_on = instagram_on
             shop.save()
             response_data['ret_val'] = '商店更新成功!'
     return JsonResponse(response_data)
