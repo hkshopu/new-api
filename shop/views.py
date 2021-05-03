@@ -160,6 +160,19 @@ def save(request):
                 responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
             except:
                 pass
+        # 將空字串轉成0
+        if shipFreeQuota is '':
+            shipFreeQuota = 0
+        if fixShipFee is '':
+            fixShipFee = 0
+        if fixShipFeeFr is '':
+            fixShipFeeFr = 0
+        if fixShipFeeTo is '':
+            fixShipFeeTo = 0
+        if discountByPercent is '':
+            discountByPercent = 0
+        if discountByAmount is '':
+            discountByAmount = 0
         # 新增商店並移動圖檔到指定路徑
         if responseData['status'] == 0:
             # 上傳圖片
