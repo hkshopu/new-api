@@ -122,125 +122,35 @@ def save(request):
         if responseData['status'] == 0: 
             responseData['status'],responseData['ret_val'] = models.Shop.validate_column('discount_by_amount',-22,discountByAmount)
         if responseData['status'] == 0:
-            if bankCode:
-                if not(re.match('^\d+$', bankCode)):
-                    responseData['status'] = -23
-                    responseData['ret_val'] = '銀行代碼格式錯誤!'
-            elif (bankCode==''):
-                bankCode = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Bank_Account.validate_column('code',-23,bankCode)        
         if responseData['status'] == 0:
-            if bankName:
-                if not(re.match('^[()\w\s]+$', bankName)):
-                    responseData['status'] = -24
-                    responseData['ret_val'] = '銀行名稱格式錯誤!'
-            elif (bankName==''):
-                bankName = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Bank_Account.validate_column('name',-24,bankName)        
         if responseData['status'] == 0:
-            if bankAccountName:
-                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', bankAccountName)):
-                    responseData['status'] = -25
-                    responseData['ret_val'] = '銀行戶名格式錯誤!'
-            elif (bankAccountName==''):
-                bankAccountName = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Bank_Account.validate_column('account_name',-25,bankAccountName)        
         if responseData['status'] == 0:
-            if bankAccount:
-                if not(re.match('^[\-\d]+$', bankAccount)):
-                    responseData['status'] = -26
-                    responseData['ret_val'] = '銀行帳號格式錯誤!'
-            elif (bankAccount==''):
-                bankAccount = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Bank_Account.validate_column('account',-26,bankAccount)        
         if responseData['status'] == 0:
-            if addressName:
-                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', addressName)):
-                    responseData['status'] = -27
-                    responseData['ret_val'] = '姓名/公司名稱格式錯誤!'
-            elif (addressName==''):
-                addressName = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('name',-27,addressName)        
         if responseData['status'] == 0:
-            if addressPhone:
-                if not(re.match('^\d+$', addressPhone)):
-                    responseData['status'] = -28
-                    responseData['ret_val'] = '電話號碼格式錯誤!'
-            elif (addressPhone==''):
-                addressPhone = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('phone',-28,addressPhone)        
         if responseData['status'] == 0:
-            if addressArea:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressArea)):
-                    responseData['status'] = -29
-                    responseData['ret_val'] = '地域格式錯誤!'
-            elif (addressArea==''):
-                addressArea = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('area',-29,addressArea)        
         if responseData['status'] == 0:
-            if addressDistrict:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressDistrict)):
-                    responseData['status'] = -30
-                    responseData['ret_val'] = '地區格式錯誤!'
-            elif (addressDistrict==''):
-                addressDistrict = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('district',-30,addressDistrict)        
         if responseData['status'] == 0:
-            if addressRoad:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressRoad)):
-                    responseData['status'] = -31
-                    responseData['ret_val'] = '街道名稱格式錯誤!'
-            elif (addressRoad==''):
-                addressRoad = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('road',-31,addressRoad)        
         if responseData['status'] == 0:
-            if addressNumber:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressNumber)):
-                    responseData['status'] = -32
-                    responseData['ret_val'] = '街道門牌格式錯誤!'
-            elif (addressNumber==''):
-                addressNumber = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('number',-32,addressNumber)        
         if responseData['status'] == 0:
-            if addressOther:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressOther)):
-                    responseData['status'] = -33
-                    responseData['ret_val'] = '其他地址格式錯誤!'
-            elif (addressOther==''):
-                addressOther = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('other',-33,addressOther)        
         if responseData['status'] == 0:
-            if addressFloor:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressFloor)):
-                    responseData['status'] = -34
-                    responseData['ret_val'] = '樓層格式錯誤!'
-            elif (addressFloor==''):
-                addressFloor = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('floor',-34,addressFloor)        
         if responseData['status'] == 0:
-            if addressRoom:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', addressRoom)):
-                    responseData['status'] = -35
-                    responseData['ret_val'] = '房(室)名稱格式錯誤!'
-            elif (addressRoom==''):
-                addressRoom = None
-        
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('room',-35,addressRoom)        
         if responseData['status'] == 0:
-            if addressCountryCode:
-                if not(re.match('^[\+\d]+$', addressCountryCode)):
-                    responseData['status'] = -36
-                    responseData['ret_val'] = '國碼格式錯誤!'
-            elif (addressCountryCode==''):
-                addressCountryCode = None
-
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('country_code',-36,addressCountryCode)
         if responseData['status'] == 0:
-            if addressIsPhoneShow:
-                if not(re.match('^\w+$', addressIsPhoneShow)):
-                    responseData['status'] = -37
-                    responseData['ret_val'] = '顯示在店鋪簡介格式錯誤!'
-            elif (addressIsPhoneShow==''):
-                addressIsPhoneShow = None
-
+            responseData['status'],responseData['ret_val'] = models.Shop_Address.validate_column('is_phone_show',-37,addressIsPhoneShow)
         
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
@@ -252,19 +162,6 @@ def save(request):
                 pass
         # 新增商店並移動圖檔到指定路徑
         if responseData['status'] == 0:
-            # 將空字串轉換成數值
-            if shipFreeQuota is '':
-                shipFreeQuota = 0
-            if fixShipFee is '':
-                fixShipFee = 0
-            if fixShipFeeFr is '':
-                fixShipFeeFr = 0
-            if fixShipFeeTo is '':
-                fixShipFeeTo = 0
-            if discountByPercent is '':
-                discountByPercent = 0
-            if discountByAmount is '':
-                discountByAmount = 0
             # 上傳圖片
             destination_path = 'images/shop/'
             shopIconURL = upload_file(FILE=shopIcon,destination_path=destination_path,suffix='icon')
@@ -290,21 +187,7 @@ def save(request):
                     fix_ship_fee_from=fixShipFeeFr, 
                     fix_ship_fee_to=fixShipFeeTo, 
                     discount_by_percent=discountByPercent, 
-                    discount_by_amount=discountByAmount,
-                    bank_code=bankCode,
-                    bank_name=bankName,
-                    bank_account=bankAccount,
-                    bank_account_name=bankAccountName,
-                    address_name=addressName,
-                    address_country_code=addressCountryCode,
-                    address_phone=addressPhone,
-                    address_area=addressArea,
-                    address_district=addressDistrict,
-                    address_road=addressRoad,
-                    address_number=addressNumber,
-                    address_other=addressOther,
-                    address_floor=addressFloor,
-                    address_room=addressRoom
+                    discount_by_amount=discountByAmount
                 )
                 # 新增商店地址
                 models.Shop_Address.objects.create(
@@ -698,12 +581,14 @@ def show(request, id):
                     'shop_address'
                     ]
                 shop_bank_account_attr = [
+                    'id'
                     'code',
                     'name',
                     'account',
                     'account_name'
                 ]
                 shop_address_attr = [
+                    'id',
                     'name',
                     'country_code',
                     'phone',
@@ -772,7 +657,111 @@ def checkShopNameIsExistsProcess(request):
             parameter_out=''
         )
     return JsonResponse(response_data)
+# 更新選擇商店分類
+def updateSelectedShopCategory(request,id):
+    pass
+# 新增店鋪地址
+def addShopAddress(request):
+    pass
+# 更新店鋪地址
+def updateShopAddress(request, id):
+    pass
+# 刪除店鋪地址
+def delShopAddress(request, id):
+    pass
+# 更新銀行帳號
+def updateBankAccount(request, id):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        code = request.POST.get('code','')
+        name = request.POST.get('name','')
+        account = request.POST.get('account','')
+        account_name = request.POST.get('account_name','')
+        # 檢查欄位是否正確
+        if response_data['status'] == 0:
+            shop_bank_account = models.Shop_Bank_Account.objects.filter(id=id)
+            if len(shop_bank_account) is 0:
+                response_data['status'] = -1
+                response_data['ret_val'] = '無此商店銀行帳號!'
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -2, code)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -3, name)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -4, account)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -5, account_name)
+        if response_data['status'] == 0:
+            shop_bank_account.update(code=code, name=name, account=account, account_name=account_name)
+            response_data['ret_val'] = '商店銀行帳號更新成功!'
 
+    return JsonResponse(response_data)
+# 新增銀行帳號
+def addBankAccount(request):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': '',
+        'id':''
+    }
+    if request.method == 'POST':
+        code = request.POST.get('code','')
+        name = request.POST.get('name','')
+        account = request.POST.get('account','')
+        account_name = request.POST.get('account_name','')
+        # 檢查欄位是否正確
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -1, code)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -2, name)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -3, account)
+        if response_data['status'] == 0:
+            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -4, account_name)
+        if response_data['status'] == 0:
+            shop_bank_account = models.Shop_Bank_Account.objects.create(
+                id=uuid.uuid4(), 
+                code=code,
+                name=name,
+                account=account,
+                account_name=account_name
+            )
+            response_data['id'] = shop_bank_account.id
+            response_data['ret_val'] = '商店銀行帳號新增成功!'
+
+    return JsonResponse(response_data)
+# 刪除銀行帳號
+def delBankAccount(request, id):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': '',
+        'id':''
+    }
+    if request.method == 'GET':
+        # 檢查欄位是否正確
+        if response_data['status'] == 0:
+            shop_bank_account = models.Shop_Bank_Account.objects.filter(id=id)
+            if len(shop_bank_account) is 0:
+                response_data['status'] = -1
+                response_data['ret_val'] = '無此商店銀行帳號!'
+
+        if response_data['status'] == 0:
+            shop_bank_account = models.Shop_Bank_Account.objects.create(
+                id=uuid.uuid4(), 
+                code=code,
+                name=name,
+                account=account,
+                account_name=account_name
+            )
+            response_data['id'] = shop_bank_account.id
+            response_data['ret_val'] = '商店銀行帳號刪除成功!'
+
+    return JsonResponse(response_data)
 # 運輸設定
 def shipmentSettings(request, id):
     # 回傳資料
@@ -811,6 +800,14 @@ def shipmentSettings(request, id):
                 )
             responseData['ret_val'] = '運輸設定更新成功!'
     return JsonResponse(responseData)
+# 新增運輸設定
+def addShipmentSetting(request):
+    pass
+def 更新運輸設定(request, id):
+    pass
+# 刪除運輸設定
+def delShipmentSetting(request, id):
+    pass
 
 def testAPI(request):
     # 回傳資料
