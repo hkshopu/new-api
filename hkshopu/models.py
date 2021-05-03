@@ -270,7 +270,7 @@ class Shop_Address(models.Model):
     name = models.CharField(max_length=50)
     country_code = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
-    is_phone_show = models.CharField(max_length=50, null=True, validators = [validate_empty_value_to_default], default = 'Y')
+    is_phone_show = models.CharField(max_length=50, null=True, validators = [validate_empty_value_to_default], default = 'N')
     area = models.CharField(max_length=50)
     district = models.CharField(max_length=50)
     road = models.CharField(max_length=50)
