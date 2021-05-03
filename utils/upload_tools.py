@@ -47,7 +47,21 @@ def upload_file(FILE,destination_path,suffix=""):
 
 def upload_multiple_files(FILES, destination_path=""):
     pass
-
+def delete_file(db_file_path):
+    """
+    * 傳入值:
+    *   db_file_path            =>      資料庫的DB路徑
+    """
+    DNS = 'https://storage.googleapis.com/'
+    bucket_name = 'hkshopu.appspot.com'
+    file_path = db_file_path.replace(DNS+bucket_name+'/','')
+    credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-0a48a2bd9045.json')
+    client = storage.Client(project="hkshopu",credentials=credentials)
+    bucket = client.get_bucket(bucket_name)
+    try:
+        Blob(file_path, bucket).delete()
+    except:
+        pass
 def get_random_num():
     """
     * 回傳值:
