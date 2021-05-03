@@ -578,7 +578,14 @@ def show(request, id):
                     'discount_by_amount',
                     'discount_by_percent',
                     'shop_bank_account',
-                    'shop_address'
+                    'shop_address',
+                    'shop_name_updated_at',
+                    'background_pic',
+                    'shop_email',
+                    'email_on',
+                    'long_description',
+                    'facebook_on',
+                    'instagram_on'
                     ]
                 shop_bank_account_attr = [
                     'id'
