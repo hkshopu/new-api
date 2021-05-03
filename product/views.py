@@ -7,7 +7,7 @@ import re
 import datetime
 import math
 from django.core.files.storage import FileSystemStorage
-from utils.upload_tools import upload_file
+from utils.upload_tools import upload_file , delete_file
 import json
 # Create your views here.
 # 取得商品清單
@@ -240,7 +240,7 @@ def update(request,id): #product_id
         print(len(product_spec_list["product_spec_list"]))
         # 商品運送方式
         shipment_method=json.loads(request.POST.get('shipment_method'))
-
+        print(id)
         if response_data['status'] == 0:
             try:
                 product = models.Product.objects.get(id=id)
@@ -248,13 +248,9 @@ def update(request,id): #product_id
                 productShipment= models.Product_Shipment_Method.objects.filter(product_id=id)
             except:
                 response_data['status'] = -1
-                response_data['ret_val'] = '找不到此商店編號的商店!'
+                response_data['ret_val'] = '找不到此編號的商品!'
         if response_data['status'] == 0:
             product = models.Product.objects.get(id=id)
-            #productSpec= models.Product_Spec.objects.filter(product_id=id)
-            #productShipment= models.Product_Shipment_Method.objects.filter(product_id=id)
-            # print(productSpec[0].spec_desc_1)
-            # print(productSpec[1].spec_desc_2)
             product.product_category_id = product_category_id
             product.product_sub_category_id = product_sub_category_id
             product.product_title = product_title
@@ -268,15 +264,38 @@ def update(request,id): #product_id
             product.longterm_stock_up=longterm_stock_up
             product.product_status=product_status
             product.save()
-            
-            # 寫入資料庫(規格)
-                # productSpec.update(spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"])
-                # productSpec.update(spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"])
-                # productSpec.update(spec_dec_1_items=product_spec_list["product_spec_list"][i]["spec_dec_1_items"])
-                # productSpec.update(spec_dec_2_items=product_spec_list["product_spec_list"][i]["spec_dec_2_items"])
-                # productSpec.update(price=product_spec_list["product_spec_list"][i]["price"])
-                # productSpec.update(quantity=product_spec_list["product_spec_list"][i]["quantity"])
 
+            productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+            for product_pic_del in productPics:
+               delete_file(product_pic_del.product_pic)
+
+            productPicURL=[]
+            for filename, product_pic_list in request.FILES.lists():
+                print(filename,product_pic_list)
+                name = request.FILES[filename].name
+                print(name)
+                for f in product_pic_list:
+
+                    # upload_file(product_pic,'images/product/',suffix="img")
+                    productPicURL.append(upload_file(f,'images/product_test/',suffix="img"))
+            
+            models.Selected_Product_Pic.objects.filter(product_id=id).delete()
+            #處理圖片&cover
+            for index,product_pic_url in enumerate(productPicURL):            
+                # 寫入資料庫
+                if index==0:
+                    models.Selected_Product_Pic.objects.create(
+                        product_id=id, 
+                        product_pic=product_pic_url,
+                        cover="y"
+                    )
+                else :
+                    models.Selected_Product_Pic.objects.create(
+                        product_id=id, 
+                        product_pic=product_pic_url,
+                        cover="n"
+                    )
+                
             models.Product_Spec.objects.filter(product_id=id).delete()
             models.Product_Shipment_Method.objects.filter(product_id=id).delete()
                 # 寫入資料庫(規格)
@@ -330,24 +349,16 @@ def save(request):
         height = request.POST.get('height', 0)
         longterm_stock_up = request.POST.get('longterm_stock_up', 0)
         product_status=request.POST.get('product_status', '')
-        #商品圖片
-        # product_id = request.POST.get('product_id',0)
-        # product_pic_list = request.FILES
-        # for filename, product_pic_list in request.FILES.lists():
-        #     print(filename,product_pic_list)
-        # name = request.FILES[filename].name
-        # print(name)
-        # # 商品規格
+        product_spec_on=request.POST.get('product_spec_on', '')
+        
+        #商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
-        print(product_spec_list["product_spec_list"])
-        print("====================")
+        # print(product_spec_list["product_spec_list"])
+        # print("====================")
         # print(product_spec_list["product_spec_list"][3]["price"])
-        print(len(product_spec_list["product_spec_list"]))
+        # print(len(product_spec_list["product_spec_list"]))
         # 商品運送方式
         shipment_method=json.loads(request.POST.get('shipment_method'))
-
-        # for i in range(len(product_spec_list)):
-        #     response_data['status'] = -88
 
         # 檢查各欄位是否填寫
         if response_data['status'] == 0:
@@ -412,17 +423,6 @@ def save(request):
                     response_data['ret_val'] = '產品庫存數量格式錯誤!'
 
         # if response_data['status'] == 0:
-            # if not(re.match('^\w+$', product_description)):
-                # response_data['status'] = -13
-                # response_data['ret_val'] = '產品描述格式錯誤!'
-
-        # if response_data['status'] == 0:
-        #     if product_country_code:
-        #         if not(re.match('^\d+$', product_country_code)):
-        #             response_data['status'] = -14
-        #             response_data['ret_val'] = '產品產地代碼格式錯誤!'
-
-        # if response_data['status'] == 0:
         #     if not(re.match('^\d+$', product_price)):
         #         response_data['status'] = -15
         #         response_data['ret_val'] = '產品價格格式錯誤!'
@@ -463,44 +463,7 @@ def save(request):
             except:
                 response_data['status'] = -21
                 response_data['ret_val'] = '產品子分類編號不存在!'
-        #商品圖片檢查
 
-        # if response_data['status'] == 0:
-        #     if not(product_id):
-        #         response_data['status'] = -22
-        #         response_data['ret_val'] = '未填寫產品編號!'
-
-        # if response_data['status'] == 0:
-        #     if not(product_pic_list):
-        #         response_data['status'] = -23
-        #         response_data['ret_val'] = '未上傳產品圖片!'
-
-        # if response_data['status'] == 0:
-        #     if not(re.match('^\d+$', product_id)):
-        #         response_data['status'] = -24
-        #         response_data['ret_val'] = '產品編號格式錯誤!'
-
-        # if response_data['status'] == 0:
-        #     for product_pic in product_pic_list:
-        #         if not(re.match('^\w+\.(gif|png|jpg|jpeg)$', str(product_pic_list))):
-        #             response_data['status'] = -25
-        #             response_data['ret_val'] = '產品圖片格式錯誤!'
-        #             break
-
-        # if response_data['status'] == 0:
-        #     try:
-        #         product = models.Product.objects.get(id=product_id)
-        #     except:
-        #         response_data['status'] = -26
-        #         response_data['ret_val'] = '該產品編號錯誤或不存在!'
-        #-----------
-        #圖片上傳功能
-        # for filename, files in request.FILES.lists():
-        #     print(filename,files)
-        # name = request.FILES[filename].name
-        # print(name)
-        # for f in files:
-        #     print(f,f.name,f.content_type)
 
         if response_data['status']==0:
             if product_spec_list["product_spec_list"][0]["spec_desc_1"]=="" and product_spec_list["product_spec_list"][0]["spec_desc_2"]=="" and product_spec_list["product_spec_list"][0]["price"]==0 and product_spec_list["product_spec_list"][0]["quantity"]==0:
@@ -542,7 +505,8 @@ def save(request):
                 width=width, 
                 height=height,
                 longterm_stock_up=longterm_stock_up,
-                product_status=product_status
+                product_status=product_status,
+                product_spec_on=product_spec_on
             )
             #傳回product_id
             products=models.Product.objects.filter(
@@ -551,8 +515,7 @@ def save(request):
                 product_sub_category_id=product_sub_category_id, 
                 product_title=product_title, 
                 quantity=quantity, 
-                product_description=product_description, 
-                # product_country_code=product_country_code, 
+                product_description=product_description,  
                 # product_price=product_price, 
                 shipping_fee=shipping_fee, 
                 weight=weight,
@@ -566,22 +529,7 @@ def save(request):
             getProductID.append(productInfo)
             print(getProductID)
             #圖片上傳DB
-            #處理cover的事情 
-            # for i in range(len(productPicURL)):
-                # if i==0 :
-                # # 寫入資料庫
-                #     models.Selected_Product_Pic.objects.create(
-                #         product_id=getProductID[0]['id'], 
-                #         product_pic=product_pic_url,
-                #         cover='y'
-                #     )
-                # else:
-                #     models.Selected_Product_Pic.objects.create(
-                #         product_id=getProductID[0]['id'], 
-                #         product_pic=product_pic_url,
-                #         cover='n'
-                #     )
-            #for product_pic_url in productPicURL:
+            #處理cover
             for index,product_pic_url in enumerate(productPicURL):
             
                 # 寫入資料庫
@@ -622,7 +570,7 @@ def save(request):
                 )
 
             response_data['ret_val'] = '產品新增成功!'
-            response_data['status'] = -1000
+            response_data['status'] = 0
             # response_data['pic_upload'] = 'success'
           
         #------------
