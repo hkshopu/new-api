@@ -842,24 +842,13 @@ def shipmentSettings(request, id):
         'ret_val': ''
     }
     if request.method == 'POST':
+        shipment_settings = request.POST.get('shipment_settings')
         if responseData['status'] == 0:
-            shop = models.Shop.objects.filter(id=id)
-            if len(shop)!=1:
-                responseData['status'] = -1
-                responseData['ret_val'] = '無此商店!'
-
+            responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shop_id', -1, id)
         if responseData['status'] == 0:
-            try:
-                shipment_settings = json.loads(request.POST.get('shipment_settings'))
-                # 檢查格式
-                for setting in shipment_settings:
-                    shipmentDesc = setting['shipment_desc']
-                    onOff = setting['onoff']
-            except:
-                responseData['status'] = -2
-                responseData['ret_val'] = '運輸設定格式錯誤!'
-                
+            responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shipment_settings', -2, shipment_settings)
         if responseData['status'] == 0:
+            shipment_settings = json.loads(shipment_settings)
             settings = models.Shop_Shipment_Setting.objects.filter(shop_id=id)
             if(len(settings)>0):
                 settings.delete()
@@ -932,7 +921,40 @@ def getShipmentSettings(request, id):
                 responseData['data'].append(tempSetting)\
             
     return JsonResponse(responseData)
-    
+# 設定運輸設定
+def setShipmnetSettings(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        shipment_settings = request.POST.get('shipment_settings')
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shipment_settings', -2, shipment_settings)
+        if responseData['status'] == 0:
+            shipment_settings = json.loads(shipment_settings)
+            shop_shipment_settings_delete = models.Shop_Shipment_Setting.objects.filter(shop_id=id)
+            with transaction.atomic():
+                for setting in shipment_settings:
+                    shop_shipment_settings = models.Shop_Shipment_Setting.objects.filter(shop_id=id).filter(shipment_desc=setting['shipment_desc'])
+                    row_count = len(shop_shipment_settings)
+                    if row_count is 0: # insert
+                        models.Shop_Shipment_Setting.objects.create(
+                            shop_id=id,
+                            shipment_desc=setting['shipment_desc'],
+                            onoff=setting['onoff']
+                        )
+                    elif row_count is 1: # update
+                        shop_shipment_settings.update(onoff=setting['onoff'])
+                    shop_shipment_settings_delete = shop_shipment_settings_delete.filter(~Q(shipment_desc=setting['shipment_desc']))
+                if len(shop_shipment_settings_delete) > 0: # delete
+                    shop_shipment_settings_delete.delete()
+            responseData['ret_val'] = '運輸設定設定成功'
+    return JsonResponse(responseData)
+
 def testAPI(request):
     # 回傳資料
     responseData = {
