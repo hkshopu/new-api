@@ -55,7 +55,7 @@ def delete_file(db_file_path):
     DNS = 'https://storage.googleapis.com/'
     bucket_name = 'hkshopu.appspot.com'
     file_path = db_file_path.replace(DNS+bucket_name+'/','')
-    credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-0a48a2bd9045.json')
+    credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-1ef39fa54ea8.json')
     client = storage.Client(project="hkshopu",credentials=credentials)
     bucket = client.get_bucket(bucket_name)
     try:
