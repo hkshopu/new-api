@@ -13,5 +13,6 @@ urlpatterns = [
     path('bankAccount/<id>/delete/', views.delBankAccount),
     path('<id>/shipmentSettings/get', views.getShipmentSettings),
     path('test/', views.testAPI), 
-    path('<id>/get_product_quantity_of_specific_shop/', views.get_product_quantity_of_specific_shop)
+    path('<id>/get_product_quantity_of_specific_shop/', views.get_product_quantity_of_specific_shop), 
+    path('<id>/get_follower_quantity_of_specific_shop/', views.get_follower_quantity_of_specific_shop)
 ]

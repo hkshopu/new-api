@@ -949,7 +949,7 @@ def testAPI(request):
     #     print(key, value)
     #     print(request.POST.get(key))
     return JsonResponse(responseData)
-# 取得商店產品數量
+# 取得單一商店產品數量
 def get_product_quantity_of_specific_shop(request, id):
     response_data = {
         'status': 0, 
@@ -961,5 +961,18 @@ def get_product_quantity_of_specific_shop(request, id):
             products = models.Product.objects.filter(shop_id=id)
             response_data['product_quantity'] = len(products)
             response_data['ret_val'] = '已取得該商店產品數量!'
+    return JsonResponse(response_data)
+# 取得單一商店追蹤者數量
+def get_follower_quantity_of_specific_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'follower_quantity': 0
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            followers = models.Shop_Follower.objects.filter(shop_id=id)
+            response_data['follower_quantity'] = len(followers)
+            response_data['ret_val'] = '已取得該商店追蹤者數量!'
     return JsonResponse(response_data)
     return JsonResponse(response_data)
