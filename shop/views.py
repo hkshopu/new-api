@@ -1037,7 +1037,7 @@ def get_product_average_rating_of_specific_shop(request, id):
             response_data['ret_val'] = '已取得該商店產品平均評價!'
     return JsonResponse(response_data)
 # 取得單一商店訂單金額總和
-def get_order_amount_of_specific_shop(request):
+def get_order_amount_of_specific_shop(request, id):
     response_data = {
         'status': 0, 
         'ret_val': '', 
