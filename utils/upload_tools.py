@@ -29,7 +29,7 @@ def upload_file(FILE,destination_path,suffix=""):
         fileExtension = splited[len(splited)-1]
         fileFullName = destination_path + fileName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + "_" + rand_num + suffix + '.' + fileExtension
 
-        credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-0a48a2bd9045.json')
+        credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-1ef39fa54ea8.json')
         client = storage.Client(project="hkshopu",credentials=credentials)
         bucket = client.get_bucket(bucket_name)
         while (Blob(fileFullName, bucket).exists()):
