@@ -957,3 +957,26 @@ def get_product_average_rating_of_specific_shop(request, id):
             response_data['average_rating'] = round(sum_of_rating / len(shop_product_ratings))
             response_data['ret_val'] = '已取得該商店產品平均評價!'
     return JsonResponse(response_data)
+# 取得單一商店訂單金額總和
+def get_order_amount_of_specific_shop(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'order_amount': 0
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
+            order_amount = 0
+            shop_orders = models.Shop_Order.objects.filter(shop_id=id)
+            for shop_order in shop_orders:
+                order_amount += shop_order.amount
+            response_data['order_amount'] = order_amount
+            response_data['ret_val'] = '已取得該商店訂單金額總和!'
+    return JsonResponse(response_data)

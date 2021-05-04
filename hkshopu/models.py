@@ -613,3 +613,10 @@ class Product_Shipment_Method(models.Model):
     price = models.PositiveIntegerField()
     onoff = models.CharField(max_length=50)
     shop_id=models.PositiveIntegerField()
+
+class Shop_Order(models.Model):
+    shop_id = models.PositiveIntegerField()
+    product_id = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
