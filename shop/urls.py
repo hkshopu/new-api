@@ -11,5 +11,6 @@ urlpatterns = [
     path('<id>/bankAccount/create/', views.createBankAccount),
     path('bankAccount/<id>/update/', views.updateBankAccount),
     path('bankAccount/<id>/delete/', views.delBankAccount),
-    path('test/', views.testAPI)
+    path('test/', views.testAPI), 
+    path('<id>/get_product_quantity_of_specific_shop/', views.get_product_quantity_of_specific_shop)
 ]
