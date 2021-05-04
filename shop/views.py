@@ -11,6 +11,7 @@ import math
 import uuid
 import os
 from utils.upload_tools import upload_file
+from utils.upload_tools import delete_file
 import json
 # Create your views here.
 
@@ -160,7 +161,13 @@ def save(request):
                 responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
             except:
                 pass
-        # 將空字串轉成0
+        # 將空字串轉成0或預設值
+        if isShipFree is '':
+            isShipFree = None
+        if shipByProduct is '':
+            shipByProduct = None
+        if addressIsPhoneShow is '':
+            addressIsPhoneShow = None
         if shipFreeQuota is '':
             shipFreeQuota = 0
         if fixShipFee is '':
@@ -816,27 +823,49 @@ def shipmentSettings(request, id):
             responseData['ret_val'] = '運輸設定更新成功!'
     return JsonResponse(responseData)
 # 新增運輸設定
-def addShipmentSetting(request):
-    pass
-def 更新運輸設定(request, id):
+def createShipmentSetting(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        shipmentDesc = request.POST.get('shipment_desc')
+        onOff = request.POST.get('onoff')
+
+        if responseData['status'] == 0:
+            try:
+                models.Shop.objects.get(id=id)
+            except:
+                responseData['status'] = -1
+                responseData['ret_val'] = '無此商店!'
+                
+        if responseData['status'] == 0:
+            # 建立資料
+            for setting in shipment_settings:
+                models.Shop_Shipment_Setting.objects.create(
+                    shop_id=id,
+                    shipment_desc=setting['shipment_desc'],
+                    onoff=setting['onoff']
+                )
+            responseData['ret_val'] = '運輸設定更新成功!'
+    return JsonResponse(responseData)
+# 更新運輸設定
+def updateShipmentSetting(request, id):
     pass
 # 刪除運輸設定
 def delShipmentSetting(request, id):
     pass
-
 def testAPI(request):
     # 回傳資料
     responseData = {
         'status': 0, 
         'ret_val': ''
     }
-
-    object_methods = [method_name for method_name in dir(models.Product.objects)
-                  if (callable(getattr(models.Product.objects, method_name)) and not method_name.startswith('_'))]
-    print(object_methods)
-    print(models.Shop.objects.check())
-    
-    # for key, value in request.POST.lists():
-    #     print(key, value)
-    #     print(request.POST.get(key))
+    path = request.POST.get('path')
+    # object_methods = [method_name for method_name in dir(models.Product.objects)
+    #               if (callable(getattr(models.Product.objects, method_name)) and not method_name.startswith('_'))]
+    # print(object_methods)
+    a = delete_file(path)
+    responseData['ret_val'] = a
     return JsonResponse(responseData)
