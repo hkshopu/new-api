@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
 from django.db.models import Q
+from django.db.models import Avg
+from django.db.models import Sum
 from django.db import transaction
 from django.core.files.storage import FileSystemStorage
 from hkshopu import models
@@ -980,6 +982,13 @@ def get_product_quantity_of_specific_shop(request, id):
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
             products = models.Product.objects.filter(shop_id=id)
             response_data['product_quantity'] = len(products)
             response_data['ret_val'] = '已取得該商店產品數量!'
@@ -993,8 +1002,38 @@ def get_follower_quantity_of_specific_shop(request, id):
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
             followers = models.Shop_Follower.objects.filter(shop_id=id)
             response_data['follower_quantity'] = len(followers)
             response_data['ret_val'] = '已取得該商店追蹤者數量!'
+    return JsonResponse(response_data)
+# 取得單一商店產品平均評價
+def get_product_average_rating_of_specific_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'average_rating': 0
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
+            sum_of_rating = 0
+            shop_product_ratings = models.Shop_Product_Rating.objects.filter(shop_id=id)
+            for shop_product_rating in shop_product_ratings:
+                sum_of_rating += shop_product_rating.rating
+            response_data['average_rating'] = round(sum_of_rating / len(shop_product_ratings))
+            response_data['ret_val'] = '已取得該商店產品平均評價!'
     return JsonResponse(response_data)
     return JsonResponse(response_data)

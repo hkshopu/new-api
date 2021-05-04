@@ -15,5 +15,6 @@ urlpatterns = [
     path('<id>/shipmentSettings/set', views.setShipmnetSettings),
     path('test/', views.testAPI), 
     path('<id>/get_product_quantity_of_specific_shop/', views.get_product_quantity_of_specific_shop), 
-    path('<id>/get_follower_quantity_of_specific_shop/', views.get_follower_quantity_of_specific_shop)
+    path('<id>/get_follower_quantity_of_specific_shop/', views.get_follower_quantity_of_specific_shop), 
+    path('<id>/get_product_average_rating_of_specific_shop/', views.get_product_average_rating_of_specific_shop)
 ]
