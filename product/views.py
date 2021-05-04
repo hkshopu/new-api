@@ -89,8 +89,6 @@ def shop_product(request,id):
                                 'pic_path':productPic.product_pic,
                                 # 'price' : productSpec.price
                             }
-                            #responseData['data'].append(productInfo)    
-                            # responseData['data']['price'] = {}
                             v = []
                             # object_methods = [method_name for method_name in dir(responseData['data'])
                             #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
@@ -100,15 +98,6 @@ def shop_product(request,id):
                                 v.append(getattr(obj,'price'))
                             productInfo.update({'price':v})   
                             responseData['data'].append(productInfo)                 
-            # for product in products:   
-            #     for productPic in productPics:  
-            #         for productSpec in productSpecs:  
-            #              if product.id==productPic.product_id and product.id==productSpec.product_id:
-            #                 productPriceInfo = {
-            #                     'id': product.id,
-            #                     'price' : productSpec.price
-            #                 }
-            #                 responseData['data'].append(productPriceInfo)  
 
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
@@ -135,7 +124,8 @@ def product_info(request,id): #給product_id
             for product in products:       
                 productInfo = {
                     'id': product.id,
-                    'product_category_id': product.product_category_id, 
+                    'product_category_id': product.product_category_id,
+                    'product_sub_category_id': product.product_sub_category_id,  
                     'product_title': product.product_title,
                     'quantity': product.quantity, 
                     'product_description': product.product_description, 
@@ -146,37 +136,31 @@ def product_info(request,id): #給product_id
                     'weight':product.weight,
                     'longterm_stock_up':product.longterm_stock_up,
                     'new_secondhand':product.new_secondhand,
+                    'product_status':product.product_status,
                     'length':product.length,
                     'width':product.width,
                     'height':product.height,
                     'like':product.like,
                     'seen':product.seen,
                     'sold_quantity':product.sold_quantity,
-                    # 'pic_path':productPic.product_pic,
-                    # 'spec_desc_1':productSpec.spec_desc_1,
-                    # 'spec_desc_2':productSpec.spec_desc_2,
-                    # 'spec_dec_1_items':productSpec.spec_dec_1_items,
-                    # 'spec_dec_2_items':productSpec.spec_dec_2_items,
-                    # 'price' : productSpec.price
+                    'product_spec_on':product.product_spec_on
                 }
-                #responseData['data'].append(productInfo)    
-                # responseData['data']['price'] = {}
+
                 v = []
                 spec_desc_1=[]
                 spec_desc_2=[]
                 spec_dec_1_items=[]
                 spec_dec_2_items=[]
+                quantity=[]
                 v2=[]
-                # object_methods = [method_name for method_name in dir(responseData['data'])
-                #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
+              
                 for obj in productSpecs:
-                    # if product.id==productSpecs.product.id:
-                    # responseData['data'].update({'price':obj.price})
                     v.append(getattr(obj,'price'))
                     spec_desc_1.append(getattr(obj,'spec_desc_1'))
                     spec_desc_2.append(getattr(obj,'spec_desc_2'))
                     spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
                     spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
+                    quantity.append(getattr(obj,'quantity'))
                 for picObj in productPics:
                     v2.append(getattr(picObj,'product_pic'))
 
@@ -185,17 +169,9 @@ def product_info(request,id): #給product_id
                 productInfo.update({'spec_desc_2':spec_desc_2})
                 productInfo.update({'spec_dec_1_items':spec_dec_1_items})
                 productInfo.update({'spec_dec_2_items':spec_dec_2_items})
+                productInfo.update({'quantity':quantity})
                 productInfo.update({'pic_path':v2})   
-                responseData['data'].append(productInfo)                 
-            # for product in products:   
-            #     for productPic in productPics:  
-            #         for productSpec in productSpecs:  
-            #              if product.id==productPic.product_id and product.id==productSpec.product_id:
-            #                 productPriceInfo = {
-            #                     'id': product.id,
-            #                     'price' : productSpec.price
-            #                 }
-            #                 responseData['data'].append(productPriceInfo)  
+                responseData['data'].append(productInfo)
 
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
@@ -214,7 +190,6 @@ def update(request,id): #product_id
         product_title = request.POST.get('product_title', '')
         # quantity = request.POST.get('quantity', 0)
         product_description = request.POST.get('product_description', '')
-        # product_country_code = request.POST.get('product_country_code', '') UI無此column
         # product_price = request.POST.get('product_price', 0)
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
@@ -225,14 +200,7 @@ def update(request,id): #product_id
         height = request.POST.get('height', 0)
         longterm_stock_up = request.POST.get('longterm_stock_up', 0)
         product_status=request.POST.get('product_status', '')
-        #商品圖片
-        # product_id = request.POST.get('product_id',0)
-        # product_pic_list = request.FILES
-        # for filename, product_pic_list in request.FILES.lists():
-        #     print(filename,product_pic_list)
-        # name = request.FILES[filename].name
-        # print(name)
-        # # 商品規格
+        # 商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
         print(product_spec_list["product_spec_list"])
         print("====================")
