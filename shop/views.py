@@ -664,8 +664,7 @@ def show(request, id):
                     'code',
                     'name',
                     'account',
-                    'account_name'
-                ]
+                    'account_name']
                 shop_address_attr = [
                     'id',
                     'name',
@@ -678,8 +677,7 @@ def show(request, id):
                     'number',
                     'other',
                     'floor',
-                    'room'
-                ]
+                    'room']
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
                         responseData['data'][attr] = getattr(shop, attr)
@@ -908,6 +906,33 @@ def updateShipmentSetting(request, id):
 # 刪除運輸設定
 def delShipmentSetting(request, id):
     pass
+# 取得運輸設定
+def getShipmentSettings(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '',
+        'data': []
+    }
+    if request.method == 'GET':
+        responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            shop_shipment_settings = models.Shop_Shipment_Setting.objects.filter(shop_id=id)
+            shop_shipment_settings_attr = [
+                'id',
+                'shop_id',
+                'shipment_desc',
+                'onoff'
+            ]
+            for setting in shop_shipment_settings:
+                tempSetting = {}
+                for attr in shop_shipment_settings_attr:
+                    if(hasattr(setting, attr)):
+                        tempSetting[attr] = getattr(setting, attr)
+                responseData['data'].append(tempSetting)\
+            
+    return JsonResponse(responseData)
+    
 def testAPI(request):
     # 回傳資料
     responseData = {
