@@ -579,6 +579,29 @@ def delBankAccount(request, id):
             response_data['ret_val'] = '商店銀行帳號刪除成功!'
 
     return JsonResponse(response_data)
+# 預設銀行帳號
+def defaultBankAccount(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'GET':
+        try:
+            default_account = models.Shop_Bank_Account.objects.get(id=id)
+        except:
+            responseData['status'] = -1
+            responseData['ret_val'] = '無此商店銀行帳號'
+
+        if responseData['status'] == 0:
+            default_account.is_default = 'Y'
+            default_account.save()
+            other_account = models.Shop_Bank_Account.objects.filter(shop_id=default_account.shop_id).filter(~Q(id=id))
+            other_account.update(is_default='N')
+            
+            responseData['ret_val'] = '預設商店銀行帳號更新成功'
+
+    return JsonResponse(responseData)
 # 運輸設定
 def shipmentSettings(request, id):
     # 回傳資料

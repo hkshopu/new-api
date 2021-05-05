@@ -374,6 +374,23 @@ class Shop_Bank_Account(models.Model):
                 Shop.objects.get(id=param)
             except:
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'
+        elif param is 'bank_account_settings':
+            try:
+                json
+            except:
+                import json
+            try:
+                bank_account_settings = json.loads(param)
+                for setting in bank_account_settings:
+                    if hasattr(setting, 'id') and setting['id'] is not '':
+                        pass
+                    else:
+                        code = setting['code']
+                        name = setting['name']
+                        account = setting['account']
+                        account_name = setting['account_name']
+            except:
+                ret_code, ret_description = err_code, '商店銀行設定格式錯誤!'
         elif param is 'code':
             if not(re.match('^\d+$', bankCode)):
                 ret_code, ret_desciprtion = err_code, '銀行代碼格式錯誤!'

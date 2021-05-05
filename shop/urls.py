@@ -11,6 +11,7 @@ urlpatterns = [
     path('<id>/bankAccount/create/', views.createBankAccount),
     path('bankAccount/<id>/update/', views.updateBankAccount),
     path('bankAccount/<id>/delete/', views.delBankAccount),
+    path('bankAccount/<id>/default', views.defaultBankAccount),
     path('<id>/shipmentSettings/get', views.getShipmentSettings),
     path('<id>/shipmentSettings/set', views.setShipmnetSettings),
     path('test/', views.testAPI), 
