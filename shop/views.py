@@ -597,13 +597,14 @@ def get_shop_address(request,id):
                 responseData['ret_val'] = '已取得商店地址!'
     return JsonResponse(responseData)
 # 更新店鋪地址
-def updateShopAddress(request, id):
+def updateShopAddress(request):
     # 回傳資料
     responseData = {
         'status': 0, 
         'ret_val': ''
     }
     if request.method == 'POST':
+        addressID=request.POST.get('address_ID', '')
         addressName= request.POST.get('address_name', '')
         addressCountry_code= request.POST.get('address_country_code', '')
         addressPhone= request.POST.get('address_phone', '')
@@ -616,7 +617,7 @@ def updateShopAddress(request, id):
         addressFloor= request.POST.get('address_floor', '')
         addressRoom= request.POST.get('address_room', '')
 
-        shop_address=models.Shop_Address.objects.get(id=id)
+        shop_address=models.Shop_Address.objects.get(id=addressID)
         shop_address.name=addressName
         shop_address.country_code=addressCountry_code
         shop_address.phone=addressPhone
