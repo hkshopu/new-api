@@ -497,30 +497,33 @@ def updateBankAccount(request, id):
         'ret_val': ''
     }
     if request.method == 'POST':
-        shipment_settings = request.POST.get('bank_account')
+        bank_account_settings = request.POST.get('bank_account_settings')
         if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shop_id', -1, id)
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
         if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shipment_settings', -2, shipment_settings)
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('bank_account_settings', -2, bank_account_settings)
         if responseData['status'] == 0:
-            shipment_settings = json.loads(shipment_settings)
-            shop_shipment_settings_delete = models.Shop_Shipment_Setting.objects.filter(shop_id=id)
+            bank_account_settings = json.loads(bank_account_settings)
+            shop_bank_account_settings_delete = models.Shop_Bank_Account.objects.filter(shop_id=id)
             with transaction.atomic():
-                for setting in shipment_settings:
-                    shop_shipment_settings = models.Shop_Shipment_Setting.objects.filter(shop_id=id).filter(shipment_desc=setting['shipment_desc'])
-                    row_count = len(shop_shipment_settings)
-                    if row_count is 0: # insert
-                        models.Shop_Shipment_Setting.objects.create(
+                for setting in bank_account_settings:
+                    if not(hasattr(setting, 'is_default')) or setting['is_default'] is '':
+                        setting['is_default'] = None
+                    if hasattr(setting, 'id') and setting['id'] is not '':
+                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=setting['id']))                     
+                    else: # insert
+                        models.Shop_Bank_Account.objects.create(
+                            id=uuid.uuid4(),
                             shop_id=id,
-                            shipment_desc=setting['shipment_desc'],
-                            onoff=setting['onoff']
+                            code=setting['code'],
+                            name=setting['name'],
+                            account=setting['account'],
+                            account_name=setting['account_name'],
+                            is_default=setting['is_default']
                         )
-                    elif row_count is 1: # update
-                        shop_shipment_settings.update(onoff=setting['onoff'])
-                    shop_shipment_settings_delete = shop_shipment_settings_delete.filter(~Q(shipment_desc=setting['shipment_desc']))
-                if len(shop_shipment_settings_delete) > 0: # delete
-                    shop_shipment_settings_delete.delete()
-            responseData['ret_val'] = '運輸設定設定成功'
+                if len(shop_bank_account_settings_delete) > 0: # delete
+                    shop_bank_account_settings_delete.delete()
+            responseData['ret_val'] = '商店銀行設定設定成功'
     return JsonResponse(responseData)
 # 新增銀行帳號
 def createBankAccount(request, id):
