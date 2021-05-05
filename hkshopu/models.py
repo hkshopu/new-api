@@ -270,6 +270,25 @@ class Shop_Shipment_Setting(models.Model):
     shop_id = models.PositiveIntegerField()
     shipment_desc = models.CharField(max_length=255)
     onoff = models.CharField(max_length=50)
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+        if column_name is 'shop_id':
+            try:
+                Shop.objects.get(id=param)
+            except:
+                ret_code, ret_description = err_code, '無此商店'
+        if column_name is 'shipment_settings':
+            import json
+            try:
+                shipment_settings = json.loads(param)
+                for setting in shipment_settings:
+                    shipmentDesc = setting['shipment_desc']
+                    onOff = setting['onoff']
+            except:
+                ret_code, ret_description = err_code, '運輸設定格式錯誤!'
+        return ret_code, ret_description
+                    
 
 class Shop_Address(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
