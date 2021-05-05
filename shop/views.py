@@ -534,7 +534,7 @@ def updateShopAddress_isDefault(request): #id : uuid(column)
         shop_address_default.save()
 
         responseData['status'] =0
-        responseData['ret_val'] = '預設商店地址更新成功!'
+        responseData['ret_val'] = '預設商店地址設定成功!'
 
     return JsonResponse(responseData)
     # pass
@@ -608,7 +608,7 @@ def updateShopAddress(request, id):
         shop_address.save()
 
         responseData['status'] =0
-        responseData['ret_val'] = '預設商店地址更新成功!'
+        responseData['ret_val'] = '商店地址更新成功!'
 
     return JsonResponse(responseData)
     # pass
