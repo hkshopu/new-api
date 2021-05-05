@@ -254,99 +254,457 @@ def save(request):
     return JsonResponse(responseData)
 # 更新商店
 def update(request, id):
-    """
-    This API is able to update the shop details according to the selected shop id and update the following information individually:
-
-    Scenarios:
-
-    update the shop_icon
-
-    update the background_pic
-
-    update shop_name and shop_name_update_at if now > shop_name_update_at + 30d
-
-    update shop_long_description
-
-    update address_phone and address_is_phone_show
-
-    update shop_email and email_on
-
-    update facebook_on and instagram_on
-    """
     # 回傳資料
-    responseData = {
+    response_data = {
         'status': 0, 
         'ret_val': ''
     }
     if request.method == 'POST':
-        shopIcon = request.FILES.get('shop_icon', None)
-        backgroundPic = request.FILES.get('background_pic', None)
-        shopName = request.POST.get('shop_name', None)
-        longDescription = request.POST.get('long_description', None)
-        addressPhone = request.POST.get('address_phone', None)
-        addressIsPhoneShow = request.POST.get('address_is_phone_show', None)
-        userEmail = request.POST.get('user_email', None)
-        emailOn = request.POST.get('email_on')
-        facebookOn = request.POST.get('facebook_on')
-        instagramOn = request.POST.get('instagram_on')
+        # 欄位資料
+        shop_icon = request.FILES.get('shop_icon', None)
+        shop_title = request.POST.get('shop_title', None)
+        shop_category_id = request.POST.getlist('shop_category_id', None)
+        shop_pic = request.FILES.get('shop_pic', None)
+        shop_description = request.POST.get('shop_description', None)
+        paypal = request.POST.get('paypal', None)
+        visa = request.POST.get('visa', None)
+        master = request.POST.get('master', None)
+        apple = request.POST.get('apple', None)
+        android = request.POST.get('android', None)
+        is_ship_free = request.POST.get('is_ship_free', None)
+        ship_by_product = request.POST.get('ship_by_product', None)
+        ship_free_quota = request.POST.get('ship_free_quota', None)
+        fix_ship_fee = request.POST.get('fix_ship_fee', None)
+        fix_ship_fee_from = request.POST.get('fix_ship_fee_from', None)
+        fix_ship_fee_to = request.POST.get('fix_ship_fee_to', None)
+        transaction_method = request.POST.get('transaction_method', None)
+        transport_setting = request.POST.get('transport_setting', None)
+        discount_by_amount = request.POST.get('discount_by_amount', None)
+        discount_by_percent = request.POST.get('discount_by_percent', None)
+        bank_code = request.POST.get('bank_code', None)
+        bank_name = request.POST.get('bank_name', None)
+        bank_account = request.POST.get('bank_account', None)
+        bank_account_name = request.POST.get('bank_account_name', None)
+        address_name = request.POST.get('address_name', None)
+        address_country_code = request.POST.get('address_country_code', None)
+        address_phone = request.POST.get('address_phone', None)
+        address_is_phone_show = request.POST.get('address_is_phone_show', None)
+        address_area = request.POST.get('address_area', None)
+        address_district = request.POST.get('address_district', None)
+        address_road = request.POST.get('address_road', None)
+        address_number = request.POST.get('address_number', None)
+        address_other = request.POST.get('address_other', None)
+        address_floor = request.POST.get('address_floor', None)
+        address_room = request.POST.get('address_room', None)
+        background_pic = request.FILES.get('background_pic', None)
+        shop_email = request.POST.get('shop_email', None)
+        email_on = request.POST.get('email_on', None)
+        long_description = request.POST.get('long_description', None)
+        facebook_on = request.POST.get('facebook_on', None)
+        instagram_on = request.POST.get('instagram_on', None)
 
-        if responseData['status'] == 0:
+        if response_data['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=id)
             except:
-                responseData['status'] = -1
-                responseData['ret_val'] = '無此商店'
-        
-        if responseData['status'] == 0:
-            destination_path = 'images/shop/'
-            if shopIcon:
-                db_icon_path = shop.shop_icon
-                delete_file(db_icon_path)
-                new_icon_path = upload_file(FILE=shopIcon, destination_path=destination_path, suffix="icon")
-                shop.shop_icon = new_icon_path
-                shop.save()
-                responseData['ret_val'] = '商店小圖更新成功!'
-            elif backgroundPic:
-                db_icon_path = shop.background_pic
-                delete_file(db_icon_path)
-                new_icon_path = upload_file(FILE=backgroundPic, destination_path=destination_path, suffix="icon")
-                shop.background_pic = new_icon_path
-                shop.save()
-                responseData['ret_val'] = '商店背景更新成功!'                
-            elif shopName:
-                now = datetime.datetime.now()
-                sub = now-shop.shop_name_updated_at
-                if sub.days<=30:
-                    responseData['status'] = -2
-                    responseData['ret_val'] = '商店名稱更新後30天內不得再次更改'
-                if responseData['status'] == 0:
-                    responseData['status'], responseData['ret_val'] = models.Shop.validate_column('shop_title', -3, shopName)
-                if responseData['status'] == 0:
-                    shop.shop_title = shopName
-                    shop.shop_name_updated_at = now
-                    shop.save()
-                    responseData['ret_val'] = '商店名稱更新成功!'
-            elif longDescription or longDescription is '':
-                shop.long_description = longDescription
-                shop.save()
-                responseData['ret_val'] = '商店描述更新成功!'
-            elif not(addressPhone is None) and addressIsPhoneShow:
-                pass
-            elif userEmail and userEmail is not '' and emailOn and emailOn is not '':
-                user = models.User.objects.get(id=shop.user_id)
-                if responseData['status'] == 0:
-                    user.email = userEmail
-                    user.save()
-                    shop.email_on = emailOn
-                    shop.save()
-                    responseData['ret_val'] = '商店電子郵件更新成功'
-            elif facebookOn and facebookOn is not '' and instagramOn and instagramOn is not '':
-                shop.facebook_on = facebookOn
-                shop.instagram_on = instagramOn
-                shop.save()
-                responseData['ret_val'] = '社群帳號設定更新成功'
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
 
-    return JsonResponse(responseData)
+        if response_data['status'] == 0:
+            if not(shop.shop_icon) and not(shop_icon):
+                response_data['status'] = -3
+                response_data['ret_val'] = '未上傳商店小圖!'
+
+        if response_data['status'] == 0:
+            if not(shop.shop_title) and not(shop_title):
+                response_data['status'] = -4
+                response_data['ret_val'] = '未填寫商店標題!'
+
+        if response_data['status'] == 0:
+            selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+            if len(selected_shop_categories) == 0 and not(shop_category_id):
+                response_data['status'] = -5
+                response_data['ret_val'] = '未填寫商店分類編號!'
+
+        if response_data['status'] == 0:
+            if shop_icon:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_icon.name))):
+                    response_data['status'] = -7
+                    response_data['ret_val'] = '商店小圖格式錯誤!'
+
+        if response_data['status'] == 0:
+            if shop_category_id:
+                for value in shop_category_id:
+                    if not(re.match('^\d+$', value)):
+                        response_data['status'] = -8
+                        response_data['ret_val'] = '商店分類編號格式錯誤!'
+                        break
+
+        if response_data['status'] == 0:
+            if shop_pic:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_pic.name))):
+                    response_data['status'] = -9
+                    response_data['ret_val'] = '商店主圖格式錯誤!'
+
+        if response_data['status'] == 0:
+            if paypal:
+                if not(re.match('^\w+$', paypal)):
+                    response_data['status'] = -10
+                    response_data['ret_val'] = 'PayPal 格式錯誤!'
+
+        if response_data['status'] == 0:
+            if visa:
+                if not(re.match('^\w+$', visa)):
+                    response_data['status'] = -11
+                    response_data['ret_val'] = 'Visa 格式錯誤!'
+
+        if response_data['status'] == 0:
+            if master:
+                if not(re.match('^\w+$', master)):
+                    response_data['status'] = -12
+                    response_data['ret_val'] = 'Master 格式錯誤!'
+
+        if response_data['status'] == 0:
+            if apple:
+                if not(re.match('^\w+$', apple)):
+                    response_data['status'] = -13
+                    response_data['ret_val'] = 'Apple 格式錯誤!'
+
+        if response_data['status'] == 0:
+            if android:
+                if not(re.match('^\w+$', android)):
+                    response_data['status'] = -14
+                    response_data['ret_val'] = 'Android 格式錯誤!'
+
+        if response_data['status'] == 0:
+            if is_ship_free:
+                if not(re.match('^(Y|N)$', is_ship_free)):
+                    response_data['status'] = -15
+                    response_data['ret_val'] = '是否免運費格式錯誤!'
+
+        if response_data['status'] == 0:
+            if ship_by_product:
+                if not(re.match('^(Y|N)$', ship_by_product)):
+                    response_data['status'] = -16
+                    response_data['ret_val'] = '運費由商品設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if ship_free_quota:
+                if not(re.match('^\d+$', ship_free_quota)):
+                    response_data['status'] = -17
+                    response_data['ret_val'] = '免運費訂單價格格式錯誤!'
+
+        if response_data['status'] == 0:
+            if fix_ship_fee:
+                if not(re.match('^\d+$', fix_ship_fee)):
+                    response_data['status'] = -18
+                    response_data['ret_val'] = '運費訂價格式錯誤!'
+
+        if response_data['status'] == 0:
+            if fix_ship_fee_from:
+                if not(re.match('^\d+$', fix_ship_fee_from)):
+                    response_data['status'] = -19
+                    response_data['ret_val'] = '訂單價格由格式錯誤!'
+
+        if response_data['status'] == 0:
+            if fix_ship_fee_to:
+                if not(re.match('^\d+$', fix_ship_fee_to)):
+                    response_data['status'] = -20
+                    response_data['ret_val'] = '訂單價格至格式錯誤!'
+
+        if response_data['status'] == 0:
+            if discount_by_amount:
+                if not(re.match('^\d+$', discount_by_amount)):
+                    response_data['status'] = -21
+                    response_data['ret_val'] = '價格折扣格式錯誤!'
+
+        if response_data['status'] == 0:
+            if discount_by_percent:
+                if not(re.match('^\d+$', discount_by_percent)):
+                    response_data['status'] = -22
+                    response_data['ret_val'] = '百分比折扣格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_code:
+                if not(re.match('^\d+$', bank_code)):
+                    response_data['status'] = -23
+                    response_data['ret_val'] = '銀行代碼格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_name:
+                if not(re.match('^[()\w\s]+$', bank_name)):
+                    response_data['status'] = -24
+                    response_data['ret_val'] = '銀行名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_account:
+                if not(re.match('^[\-\d]+$', bank_account)):
+                    response_data['status'] = -25
+                    response_data['ret_val'] = '銀行帳號格式錯誤!'
+
+        if response_data['status'] == 0:
+            if bank_account_name:
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', bank_account_name)):
+                    response_data['status'] = -26
+                    response_data['ret_val'] = '銀行戶名格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_name:
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', address_name)):
+                    response_data['status'] = -27
+                    response_data['ret_val'] = '姓名/公司名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_country_code:
+                if not(re.match('^[\+\d]+$', address_country_code)):
+                    response_data['status'] = -28
+                    response_data['ret_val'] = '國碼格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_phone:
+                if not(re.match('^\d+$', address_phone)):
+                    response_data['status'] = -29
+                    response_data['ret_val'] = '電話號碼格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_is_phone_show:
+                if not(re.match('^\w+$', address_is_phone_show)):
+                    response_data['status'] = -30
+                    response_data['ret_val'] = '顯示在店鋪簡介格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_area:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_area)):
+                    response_data['status'] = -31
+                    response_data['ret_val'] = '地域格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_district:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_district)):
+                    response_data['status'] = -32
+                    response_data['ret_val'] = '地區格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_road:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_road)):
+                    response_data['status'] = -33
+                    response_data['ret_val'] = '街道名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_number:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_number)):
+                    response_data['status'] = -34
+                    response_data['ret_val'] = '街道門牌格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_other:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_other)):
+                    response_data['status'] = -35
+                    response_data['ret_val'] = '其他地址格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_floor:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_floor)):
+                    response_data['status'] = -36
+                    response_data['ret_val'] = '樓層格式錯誤!'
+
+        if response_data['status'] == 0:
+            if address_room:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_room)):
+                    response_data['status'] = -37
+                    response_data['ret_val'] = '房(室)名稱格式錯誤!'
+
+        if response_data['status'] == 0:
+            if background_pic:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(background_pic.name))):
+                    response_data['status'] = -38
+                    response_data['ret_val'] = '背景圖片格式錯誤!'
+
+        if response_data['status'] == 0:
+            if shop_email:
+                if not(re.match('[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+', shop_email)):
+                    response_data['status'] = -39
+                    response_data['ret_val'] = '商店電子郵件格式錯誤!'
+
+        if response_data['status'] == 0:
+            if email_on:
+                if not(re.match('^(Y|N)$', email_on)):
+                    response_data['status'] = -40
+                    response_data['ret_val'] = '電子郵件開啟設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if facebook_on:
+                if not(re.match('^(Y|N)$', facebook_on)):
+                    response_data['status'] = -41
+                    response_data['ret_val'] = 'Facebook 開啟設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if instagram_on:
+                if not(re.match('^(Y|N)$', instagram_on)):
+                    response_data['status'] = -42
+                    response_data['ret_val'] = 'Instagram 開啟設定格式錯誤!'
+
+        if response_data['status'] == 0:
+            if shop.shop_name_updated_at:
+                now = datetime.datetime.now()
+                if (now - shop.shop_name_updated_at).min > datetime.timedelta(minutes=0):
+                    response_data['status'] = -43
+                    response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
+
+        if response_data['status'] == 0:
+            shops = models.Shop.objects.filter(shop_title=shop_title)
+            if len(shops) > 0:
+                response_data['status'] = -44
+                response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
+
+        if response_data['status'] == 0:
+            # 上傳圖檔
+            destination_path = 'images/shop/'
+            shop_icon_url = ''
+            shop_pic_url = ''
+            background_pic_url = ''
+            if shop_icon:
+                shop_icon_url += upload_file(FILE=shop_icon, destination_path=destination_path, suffix='icon')
+            if shop_pic:
+                shop_pic_url += upload_file(FILE=shop_pic, destination_path=destination_path, suffix='pic')
+            if background_pic:
+                background_pic_url += upload_file(FILE=background_pic, destination_path=destination_path, suffix='background_pic')
+            # 更新商店
+            if shop_title is not None:
+                if shop_title != shop.shop_title:
+                    shop.shop_title = shop_title
+            if shop_icon is not None:
+                if shop_icon_url != shop.shop_icon:
+                    shop.shop_icon = shop_icon_url
+            if shop_pic is not None:
+                if shop_pic_url != shop.shop_pic:
+                    shop.shop_pic = shop_pic_url
+            if shop_description is not None:
+                if shop_description != shop.shop_description:
+                    shop.shop_description = shop_description
+            if paypal is not None:
+                if paypal != shop.paypal:
+                    shop.paypal = paypal
+            if visa is not None:
+                if visa != shop.visa:
+                    shop.visa = visa
+            if master is not None:
+                if master != shop.master:
+                    shop.master = master
+            if apple is not None:
+                if apple != shop.apple:
+                    shop.apple = apple
+            if android is not None:
+                if android != shop.android:
+                    shop.android = android
+            if is_ship_free is not None:
+                if is_ship_free != shop.is_ship_free:
+                    shop.is_ship_free = is_ship_free
+            if ship_by_product is not None:
+                if ship_by_product != shop.ship_by_product:
+                    shop.ship_by_product = ship_by_product
+            if ship_free_quota is not None:
+                if ship_free_quota != shop.ship_free_quota:
+                    shop.ship_free_quota = ship_free_quota
+            if fix_ship_fee is not None:
+                if fix_ship_fee != shop.fix_ship_fee:
+                    shop.fix_ship_fee = fix_ship_fee
+            if fix_ship_fee_from is not None:
+                if fix_ship_fee_from != shop.fix_ship_fee_from:
+                    shop.fix_ship_fee_from = fix_ship_fee_from
+            if fix_ship_fee_to is not None:
+                if fix_ship_fee_to != shop.fix_ship_fee_to:
+                    shop.fix_ship_fee_to = fix_ship_fee_to
+            if transaction_method is not None:
+                if transaction_method != shop.transaction_method:
+                    shop.transaction_method = transaction_method
+            if transport_setting is not None:
+                if transport_setting != shop.transport_setting:
+                    shop.transport_setting = transport_setting
+            if discount_by_amount is not None:
+                if discount_by_amount != shop.discount_by_amount:
+                    shop.discount_by_amount = discount_by_amount
+            if discount_by_percent is not None:
+                if discount_by_percent != shop.discount_by_percent:
+                    shop.discount_by_percent = discount_by_percent
+            if bank_code is not None:
+                if bank_code != shop.bank_code:
+                    shop.bank_code = bank_code
+            if bank_name is not None:
+                if bank_name != shop.bank_name:
+                    shop.bank_name = bank_name
+            if bank_account is not None:
+                if bank_account != shop.bank_account:
+                    shop.bank_account = bank_account
+            if bank_account_name is not None:
+                if bank_account_name != shop.bank_account_name:
+                    shop.bank_account_name = bank_account_name
+            if address_name is not None:
+                if address_name != shop.address_name:
+                    shop.address_name = address_name
+            if address_country_code is not None:
+                if address_country_code != shop.address_country_code:
+                    shop.address_country_code = address_country_code
+            if address_phone is not None:
+                if address_phone != shop.address_phone:
+                    shop.address_phone = address_phone
+            if address_is_phone_show is not None:
+                if address_is_phone_show != shop.address_is_phone_show:
+                    shop.address_is_phone_show = address_is_phone_show
+            if address_area is not None:
+                if address_area != shop.address_area:
+                    shop.address_area = address_area
+            if address_district is not None:
+                if address_district != shop.address_district:
+                    shop.address_district = address_district
+            if address_road is not None:
+                if address_road != shop.address_road:
+                    shop.address_road = address_road
+            if address_number is not None:
+                if address_number != shop.address_number:
+                    shop.address_number = address_number
+            if address_other is not None:
+                if address_other != shop.address_other:
+                    shop.address_other = address_other
+            if address_floor is not None:
+                if address_floor != shop.address_floor:
+                    shop.address_floor = address_floor
+            if address_room is not None:
+                if address_room != shop.address_room:
+                    shop.address_room = address_room
+            if background_pic is not None:
+                if background_pic_url != shop.background_pic:
+                    shop.background_pic = background_pic_url
+            if shop_email is not None:
+                if shop_email != shop.shop_email:
+                    shop.shop_email = shop_email
+            if email_on is not None:
+                if email_on != shop.email_on:
+                    shop.email_on = email_on
+            if long_description is not None:
+                if long_description != shop.long_description:
+                    shop.long_description = long_description
+            if facebook_on is not None:
+                if facebook_on != shop.facebook_on:
+                    shop.facebook_on = facebook_on
+            if instagram_on is not None:
+                if instagram_on != shop.instagram_on:
+                    shop.instagram_on = instagram_on
+            shop.save()
+            # 更新選擇商店分類
+            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id).exclude(shop_category_id__in=shop_category_id)
+            if len(to_delete_selected_shop_categories) > 0:
+                to_delete_selected_shop_categories.delete()
+
+            for value in shop_category_id:
+                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id, shop_category_id=value)
+                if (len(selected_shop_categories) == 0 and value != 0):
+                    models.Selected_Shop_Category.objects.create(
+                        shop_id=id,
+                        shop_category_id=value
+                    )
+            response_data['ret_val'] = '商店更新成功!'
+    return JsonResponse(response_data)
 # 單一商店
 def show(request, id):
     # 回傳資料
@@ -484,15 +842,8 @@ def delShopAddress(request, id):
     pass
 # 更新銀行帳號
 def updateBankAccount(request, id):
-    """
-    update the API to set the is_default = “Y” if empty value is passed from UI
-
-    insert the record if no existing records in db where shop_id = selected shop id
-
-    delete the records in db if shop id = selected shop but not exits in the bank account dataset from UI
-    """
     # 回傳資料
-    responseData = {
+    response_data = {
         'status': 0, 
         'ret_val': ''
     }
@@ -751,6 +1102,7 @@ def setShipmnetSettings(request, id):
                     shop_shipment_settings_delete.delete()
             responseData['ret_val'] = '運輸設定設定成功'
     return JsonResponse(responseData)
+
 def testAPI(request):
     # 回傳資料
     responseData = {
@@ -852,4 +1204,26 @@ def get_order_amount_of_specific_shop(request, id):
                 order_amount += shop_order.amount
             response_data['order_amount'] = order_amount
             response_data['ret_val'] = '已取得該商店訂單金額總和!'
+    return JsonResponse(response_data)
+# 取得單一商店通知設定
+def get_notification_setting_of_specific_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'notification_setting': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.values_list('marketing_notification', 'follower_notification', 'rating_notification', 'system_upgrade_notification', 'hkshopu_event_notification', flat=True).filter(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
+            response_data['notification_setting']['marketing_notification'] = shop.marketing_notification
+            response_data['notification_setting']['follower_notification'] = shop.follower_notification
+            response_data['notification_setting']['rating_notification'] = shop.rating_notification
+            response_data['notification_setting']['system_upgrade_notification'] = shop.system_upgrade_notification
+            response_data['notification_setting']['hkshopu_event_notification'] = shop.hkshopu_event_notification
     return JsonResponse(response_data)

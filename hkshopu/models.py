@@ -74,6 +74,11 @@ class Shop(models.Model):
     long_description = models.TextField(null=True)
     facebook_on = models.CharField(max_length=1, null=True)
     instagram_on = models.CharField(max_length=1, null=True)
+    marketing_notification = models.CharField(max_length=1, null=True, default='Y')
+    follower_notification = models.CharField(max_length=1, null=True, default='Y')
+    rating_notification = models.CharField(max_length=1, null=True, default='Y')
+    system_upgrade_notification = models.CharField(max_length=1, null=True, default='Y')
+    hkshopu_event_notification = models.CharField(max_length=1, null=True, default='Y')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def validate_column(column_name, err_code, param):
@@ -307,6 +312,8 @@ class Shop_Address(models.Model):
     other = models.CharField(max_length=50)
     floor = models.CharField(max_length=50)
     room = models.CharField(max_length=50)
+    is_address_show=models.CharField(max_length=1)
+    is_default=models.CharField(max_length=1)
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
