@@ -579,6 +579,32 @@ def delBankAccount(request, id):
             response_data['ret_val'] = '商店銀行帳號刪除成功!'
 
     return JsonResponse(response_data)
+# 取得銀行帳號
+def getBankAccount(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '',
+        'data': []
+    }
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shop_bank_account_attr = [
+                'id',
+                'code',
+                'name',
+                'account',
+                'account_name']
+            shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id)
+            for account in shop_bank_accounts:
+                tempAccount = {}
+                for attr in shop_bank_account_attr:
+                    print(attr)
+                    if(hasattr(account, attr)):
+                        tempAccount[attr] = getattr(account, attr)
+                responseData['data'].append(tempAccount)
+
+    return JsonResponse(responseData)
 # 預設銀行帳號
 def defaultBankAccount(request, id):
     # 回傳資料
@@ -686,7 +712,7 @@ def getShipmentSettings(request, id):
                 for attr in shop_shipment_settings_attr:
                     if(hasattr(setting, attr)):
                         tempSetting[attr] = getattr(setting, attr)
-                responseData['data'].append(tempSetting)\
+                responseData['data'].append(tempSetting)
             
     return JsonResponse(responseData)
 # 設定運輸設定
