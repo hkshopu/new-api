@@ -556,7 +556,7 @@ def updateShopAddress_isAddressShow(request): #id : uuid(column)
             shop_address_isAddressShow.save()
 
         responseData['status'] =0
-        responseData['ret_val'] = '預設商店地址設定成功!'
+        responseData['ret_val'] = '設定顯示預設店鋪地址成功!'
 
     return JsonResponse(responseData)
     # pass
