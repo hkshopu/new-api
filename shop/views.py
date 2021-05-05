@@ -474,8 +474,70 @@ def checkShopNameIsExistsProcess(request):
 def updateSelectedShopCategory(request,id):
     pass
 # 新增店鋪地址
-def addShopAddress(request):
-    pass
+def createShopAddress(request,id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        addressName = request.POST.get('address_name', '')
+        addressCountryCode = request.POST.get('address_country_code', '')
+        addressPhone = request.POST.get('address_phone', '')
+        addressIsPhoneShow = request.POST.get('address_is_phone_show', '')
+        addressArea = request.POST.get('address_area', '')
+        addressDistrict = request.POST.get('address_district', '')
+        addressRoad = request.POST.get('address_road', '')
+        addressNumber = request.POST.get('address_number', '')
+        addressOther = request.POST.get('address_other', '')
+        addressFloor = request.POST.get('address_floor', '')
+        addressRoom = request.POST.get('address_room', '')
+        # 新增商店地址
+        models.Shop_Address.objects.create(
+            id = uuid.uuid4(),
+            shop_id = id,
+            name = addressName,
+            country_code = addressCountryCode,
+            phone = addressPhone,
+            is_phone_show = addressIsPhoneShow,
+            area = addressArea,
+            district = addressDistrict,
+            road = addressRoad,
+            number = addressNumber,
+            other = addressOther,
+            floor = addressFloor,
+            room = addressRoom
+        )
+        responseData['status'] =0
+        responseData['ret_val'] = '商店地址新增成功!'
+
+    return JsonResponse(responseData)
+        # pass
+# 更新預設店鋪地址 is_default
+def updateShopAddress_isDefault(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        shop_id= request.POST.get('shop_id', '')
+        shop_address_id = request.POST.get('shop_address_id', '')
+
+        shop_address_default_olds=models.Shop_Address.objects.filter(shop_id=shop_id)
+        for shop_address_default_old in shop_address_default_olds:
+            shop_address_default_old.is_default='n'
+            shop_address_default_old.save()
+
+        shop_address_default=models.Shop_Address.objects.get(id=shop_address_id)
+        shop_address_default.is_default='y'
+        shop_address_default.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '預設商店地址更新成功!'
+
+    return JsonResponse(responseData)
+    # pass
 # 更新店鋪地址
 def updateShopAddress(request, id):
     pass
