@@ -369,6 +369,7 @@ class Shop_Bank_Account(models.Model):
     name = models.CharField(max_length=50)
     account = models.CharField(max_length=50)
     account_name = models.CharField(max_length=50)
+    is_default = models.CharField(max_length=1, default='Y')
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
