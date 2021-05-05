@@ -261,47 +261,47 @@ def update(request, id):
     }
     if request.method == 'POST':
         # 欄位資料
-        shop_icon = request.FILES.get('shop_icon', '')
-        shop_title = request.POST.get('shop_title', '')
-        shop_category_id = request.POST.getlist('shop_category_id', [])
-        shop_pic = request.FILES.get('shop_pic', '')
-        shop_description = request.POST.get('shop_description', '')
-        paypal = request.POST.get('paypal', '')
-        visa = request.POST.get('visa', '')
-        master = request.POST.get('master', '')
-        apple = request.POST.get('apple', '')
-        android = request.POST.get('android', '')
-        is_ship_free = request.POST.get('is_ship_free', '')
-        ship_by_product = request.POST.get('ship_by_product', '')
-        ship_free_quota = request.POST.get('ship_free_quota', 0)
-        fix_ship_fee = request.POST.get('fix_ship_fee', 0)
-        fix_ship_fee_from = request.POST.get('fix_ship_fee_from', 0)
-        fix_ship_fee_to = request.POST.get('fix_ship_fee_to', 0)
-        transaction_method = request.POST.get('transaction_method', '')
-        transport_setting = request.POST.get('transport_setting', '')
-        discount_by_amount = request.POST.get('discount_by_amount', 0)
-        discount_by_percent = request.POST.get('discount_by_percent', 0)
-        bank_code = request.POST.get('bank_code', '')
-        bank_name = request.POST.get('bank_name', '')
-        bank_account = request.POST.get('bank_account', '')
-        bank_account_name = request.POST.get('bank_account_name', '')
-        address_name = request.POST.get('address_name', '')
-        address_country_code = request.POST.get('address_country_code', '')
-        address_phone = request.POST.get('address_phone', '')
-        address_is_phone_show = request.POST.get('address_is_phone_show', '')
-        address_area = request.POST.get('address_area', '')
-        address_district = request.POST.get('address_district', '')
-        address_road = request.POST.get('address_road', '')
-        address_number = request.POST.get('address_number', '')
-        address_other = request.POST.get('address_other', '')
-        address_floor = request.POST.get('address_floor', '')
-        address_room = request.POST.get('address_room', '')
-        background_pic = request.FILES.get('background_pic', '')
-        shop_email = request.POST.get('shop_email', '')
-        email_on = request.POST.get('email_on', 'N')
-        long_description = request.POST.get('long_description', '')
-        facebook_on = request.POST.get('facebook_on', '')
-        instagram_on = request.POST.get('instagram_on', '')
+        shop_icon = request.FILES.get('shop_icon', None)
+        shop_title = request.POST.get('shop_title', None)
+        shop_category_id = request.POST.getlist('shop_category_id', None)
+        shop_pic = request.FILES.get('shop_pic', None)
+        shop_description = request.POST.get('shop_description', None)
+        paypal = request.POST.get('paypal', None)
+        visa = request.POST.get('visa', None)
+        master = request.POST.get('master', None)
+        apple = request.POST.get('apple', None)
+        android = request.POST.get('android', None)
+        is_ship_free = request.POST.get('is_ship_free', None)
+        ship_by_product = request.POST.get('ship_by_product', None)
+        ship_free_quota = request.POST.get('ship_free_quota', None)
+        fix_ship_fee = request.POST.get('fix_ship_fee', None)
+        fix_ship_fee_from = request.POST.get('fix_ship_fee_from', None)
+        fix_ship_fee_to = request.POST.get('fix_ship_fee_to', None)
+        transaction_method = request.POST.get('transaction_method', None)
+        transport_setting = request.POST.get('transport_setting', None)
+        discount_by_amount = request.POST.get('discount_by_amount', None)
+        discount_by_percent = request.POST.get('discount_by_percent', None)
+        bank_code = request.POST.get('bank_code', None)
+        bank_name = request.POST.get('bank_name', None)
+        bank_account = request.POST.get('bank_account', None)
+        bank_account_name = request.POST.get('bank_account_name', None)
+        address_name = request.POST.get('address_name', None)
+        address_country_code = request.POST.get('address_country_code', None)
+        address_phone = request.POST.get('address_phone', None)
+        address_is_phone_show = request.POST.get('address_is_phone_show', None)
+        address_area = request.POST.get('address_area', None)
+        address_district = request.POST.get('address_district', None)
+        address_road = request.POST.get('address_road', None)
+        address_number = request.POST.get('address_number', None)
+        address_other = request.POST.get('address_other', None)
+        address_floor = request.POST.get('address_floor', None)
+        address_room = request.POST.get('address_room', None)
+        background_pic = request.FILES.get('background_pic', None)
+        shop_email = request.POST.get('shop_email', None)
+        email_on = request.POST.get('email_on', None)
+        long_description = request.POST.get('long_description', None)
+        facebook_on = request.POST.get('facebook_on', None)
+        instagram_on = request.POST.get('instagram_on', None)
 
         if response_data['status'] == 0:
             try:
@@ -570,47 +570,139 @@ def update(request, id):
             if background_pic:
                 background_pic_url += upload_file(FILE=background_pic, destination_path=destination_path, suffix='background_pic')
             # 更新商店
-            shop.shop_title = shop_title
-            shop.shop_icon = shop_icon_url
-            shop.shop_pic = shop_pic_url
-            shop.shop_description = shop_description
-            shop.paypal = paypal
-            shop.visa = visa
-            shop.master = master
-            shop.apple = apple
-            shop.android = android
-            shop.is_ship_free = is_ship_free
-            shop.ship_by_product = ship_by_product
-            shop.ship_free_quota = ship_free_quota
-            shop.fix_ship_fee = fix_ship_fee
-            shop.fix_ship_fee_from = fix_ship_fee_from
-            shop.fix_ship_fee_to = fix_ship_fee_to
-            shop.transaction_method = transaction_method
-            shop.transport_setting = transport_setting
-            shop.discount_by_amount = discount_by_amount
-            shop.discount_by_percent = discount_by_percent
-            shop.bank_code = bank_code
-            shop.bank_name = bank_name
-            shop.bank_account = bank_account
-            shop.bank_account_name = bank_account_name
-            shop.address_name = address_name
-            shop.address_country_code = address_country_code
-            shop.address_phone = address_phone
-            shop.address_is_phone_show = address_is_phone_show
-            shop.address_area = address_area
-            shop.address_district = address_district
-            shop.address_road = address_road
-            shop.address_number = address_number
-            shop.address_other = address_other
-            shop.address_floor = address_floor
-            shop.address_room = address_room
-            shop.background_pic = background_pic_url
-            shop.shop_email = shop_email
-            shop.email_on = email_on
-            shop.long_description = long_description
-            shop.facebook_on = facebook_on
-            shop.instagram_on = instagram_on
+            if shop_title is not None:
+                if shop_title != shop.shop_title:
+                    shop.shop_title = shop_title
+            if shop_icon is not None:
+                if shop_icon_url != shop.shop_icon:
+                    shop.shop_icon = shop_icon_url
+            if shop_pic is not None:
+                if shop_pic_url != shop.shop_pic:
+                    shop.shop_pic = shop_pic_url
+            if shop_description is not None:
+                if shop_description != shop.shop_description:
+                    shop.shop_description = shop_description
+            if paypal is not None:
+                if paypal != shop.paypal:
+                    shop.paypal = paypal
+            if visa is not None:
+                if visa != shop.visa:
+                    shop.visa = visa
+            if master is not None:
+                if master != shop.master:
+                    shop.master = master
+            if apple is not None:
+                if apple != shop.apple:
+                    shop.apple = apple
+            if android is not None:
+                if android != shop.android:
+                    shop.android = android
+            if is_ship_free is not None:
+                if is_ship_free != shop.is_ship_free:
+                    shop.is_ship_free = is_ship_free
+            if ship_by_product is not None:
+                if ship_by_product != shop.ship_by_product:
+                    shop.ship_by_product = ship_by_product
+            if ship_free_quota is not None:
+                if ship_free_quota != shop.ship_free_quota:
+                    shop.ship_free_quota = ship_free_quota
+            if fix_ship_fee is not None:
+                if fix_ship_fee != shop.fix_ship_fee:
+                    shop.fix_ship_fee = fix_ship_fee
+            if fix_ship_fee_from is not None:
+                if fix_ship_fee_from != shop.fix_ship_fee_from:
+                    shop.fix_ship_fee_from = fix_ship_fee_from
+            if fix_ship_fee_to is not None:
+                if fix_ship_fee_to != shop.fix_ship_fee_to:
+                    shop.fix_ship_fee_to = fix_ship_fee_to
+            if transaction_method is not None:
+                if transaction_method != shop.transaction_method:
+                    shop.transaction_method = transaction_method
+            if transport_setting is not None:
+                if transport_setting != shop.transport_setting:
+                    shop.transport_setting = transport_setting
+            if discount_by_amount is not None:
+                if discount_by_amount != shop.discount_by_amount:
+                    shop.discount_by_amount = discount_by_amount
+            if discount_by_percent is not None:
+                if discount_by_percent != shop.discount_by_percent:
+                    shop.discount_by_percent = discount_by_percent
+            if bank_code is not None:
+                if bank_code != shop.bank_code:
+                    shop.bank_code = bank_code
+            if bank_name is not None:
+                if bank_name != shop.bank_name:
+                    shop.bank_name = bank_name
+            if bank_account is not None:
+                if bank_account != shop.bank_account:
+                    shop.bank_account = bank_account
+            if bank_account_name is not None:
+                if bank_account_name != shop.bank_account_name:
+                    shop.bank_account_name = bank_account_name
+            if address_name is not None:
+                if address_name != shop.address_name:
+                    shop.address_name = address_name
+            if address_country_code is not None:
+                if address_country_code != shop.address_country_code:
+                    shop.address_country_code = address_country_code
+            if address_phone is not None:
+                if address_phone != shop.address_phone:
+                    shop.address_phone = address_phone
+            if address_is_phone_show is not None:
+                if address_is_phone_show != shop.address_is_phone_show:
+                    shop.address_is_phone_show = address_is_phone_show
+            if address_area is not None:
+                if address_area != shop.address_area:
+                    shop.address_area = address_area
+            if address_district is not None:
+                if address_district != shop.address_district:
+                    shop.address_district = address_district
+            if address_road is not None:
+                if address_road != shop.address_road:
+                    shop.address_road = address_road
+            if address_number is not None:
+                if address_number != shop.address_number:
+                    shop.address_number = address_number
+            if address_other is not None:
+                if address_other != shop.address_other:
+                    shop.address_other = address_other
+            if address_floor is not None:
+                if address_floor != shop.address_floor:
+                    shop.address_floor = address_floor
+            if address_room is not None:
+                if address_room != shop.address_room:
+                    shop.address_room = address_room
+            if background_pic is not None:
+                if background_pic_url != shop.background_pic:
+                    shop.background_pic = background_pic_url
+            if shop_email is not None:
+                if shop_email != shop.shop_email:
+                    shop.shop_email = shop_email
+            if email_on is not None:
+                if email_on != shop.email_on:
+                    shop.email_on = email_on
+            if long_description is not None:
+                if long_description != shop.long_description:
+                    shop.long_description = long_description
+            if facebook_on is not None:
+                if facebook_on != shop.facebook_on:
+                    shop.facebook_on = facebook_on
+            if instagram_on is not None:
+                if instagram_on != shop.instagram_on:
+                    shop.instagram_on = instagram_on
             shop.save()
+            # 更新選擇商店分類
+            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id).exclude(shop_category_id__in=shop_category_id)
+            if len(to_delete_selected_shop_categories) > 0:
+                to_delete_selected_shop_categories.delete()
+
+            for value in shop_category_id:
+                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id, shop_category_id=value)
+                if (len(selected_shop_categories) == 0 and value != 0):
+                    models.Selected_Shop_Category.objects.create(
+                        shop_id=id,
+                        shop_category_id=value
+                    )
             response_data['ret_val'] = '商店更新成功!'
     return JsonResponse(response_data)
 # 單一商店
@@ -1058,4 +1150,26 @@ def get_order_amount_of_specific_shop(request, id):
                 order_amount += shop_order.amount
             response_data['order_amount'] = order_amount
             response_data['ret_val'] = '已取得該商店訂單金額總和!'
+    return JsonResponse(response_data)
+# 取得單一商店通知設定
+def get_notification_setting_of_specific_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'notification_setting': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.values_list('marketing_notification', 'follower_notification', 'rating_notification', 'system_upgrade_notification', 'hkshopu_event_notification', flat=True).filter(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
+            response_data['notification_setting']['marketing_notification'] = shop.marketing_notification
+            response_data['notification_setting']['follower_notification'] = shop.follower_notification
+            response_data['notification_setting']['rating_notification'] = shop.rating_notification
+            response_data['notification_setting']['system_upgrade_notification'] = shop.system_upgrade_notification
+            response_data['notification_setting']['hkshopu_event_notification'] = shop.hkshopu_event_notification
     return JsonResponse(response_data)
