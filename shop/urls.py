@@ -17,5 +17,9 @@ urlpatterns = [
     path('<id>/get_product_quantity_of_specific_shop/', views.get_product_quantity_of_specific_shop), 
     path('<id>/get_follower_quantity_of_specific_shop/', views.get_follower_quantity_of_specific_shop), 
     path('<id>/get_product_average_rating_of_specific_shop/', views.get_product_average_rating_of_specific_shop), 
-    path('<id>/get_order_amount_of_specific_shop/', views.get_order_amount_of_specific_shop)
+    path('<id>/get_order_amount_of_specific_shop/', views.get_order_amount_of_specific_shop),
+    path('<id>/get_shop_address/', views.get_shop_address),
+    path('<id>/createShopAddress/', views.createShopAddress),
+    path('updateShopAddress_isDefault/', views.updateShopAddress_isDefault),
+    path('<id>/updateShopAddress/', views.updateShopAddress),
 ]
