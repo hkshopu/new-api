@@ -436,6 +436,8 @@ def product_info(request,id): #product_id
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
             productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
             productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0])
+            productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
+            print(productShipments)
             for product in products:       
                 productInfo = {
                     'id': product.id,
@@ -467,6 +469,9 @@ def product_info(request,id): #product_id
                 spec_dec_1_items=[]
                 spec_dec_2_items=[]
                 quantity=[]
+                shipment_desc=[]
+                shipment_price=[]
+                onoff=[]
                 v2=[]
               
                 for obj in productSpecs:
@@ -476,6 +481,12 @@ def product_info(request,id): #product_id
                     spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
                     spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
                     quantity.append(getattr(obj,'quantity'))
+
+                for productShipment in productShipments:
+                    shipment_desc.append(getattr(productShipment,'shipment_desc'))
+                    shipment_price.append(getattr(productShipment,'price'))
+                    onoff.append(getattr(productShipment,'onoff'))
+
                 for picObj in productPics:
                     v2.append(getattr(picObj,'product_pic'))
 
@@ -485,6 +496,9 @@ def product_info(request,id): #product_id
                 productInfo.update({'spec_dec_1_items':spec_dec_1_items})
                 productInfo.update({'spec_dec_2_items':spec_dec_2_items})
                 productInfo.update({'quantity':quantity})
+                productInfo.update({'shipment_desc':shipment_desc})
+                productInfo.update({'shipment_price':shipment_price})
+                productInfo.update({'onoff':onoff})
                 productInfo.update({'pic_path':v2})   
                 responseData['data'].append(productInfo)
 
