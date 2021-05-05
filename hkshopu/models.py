@@ -279,7 +279,10 @@ class Shop_Shipment_Setting(models.Model):
             except:
                 ret_code, ret_description = err_code, '無此商店'
         if column_name is 'shipment_settings':
-            import json
+            try:
+                json
+            except:
+                import json
             try:
                 shipment_settings = json.loads(param)
                 for setting in shipment_settings:
