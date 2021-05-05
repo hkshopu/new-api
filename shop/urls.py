@@ -21,5 +21,6 @@ urlpatterns = [
     path('<id>/get_shop_address/', views.get_shop_address),
     path('<id>/createShopAddress/', views.createShopAddress),
     path('updateShopAddress_isDefault/', views.updateShopAddress_isDefault),
-    path('<id>/updateShopAddress/', views.updateShopAddress),
+    path('updateShopAddress/', views.updateShopAddress),
+    path('updateShopAddress_isAddressShow/', views.updateShopAddress_isAddressShow),
 ]

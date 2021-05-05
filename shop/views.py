@@ -538,6 +538,28 @@ def updateShopAddress_isDefault(request): #id : uuid(column)
 
     return JsonResponse(responseData)
     # pass
+# 更新顯示預設店鋪地址(按鈕功能) isAddressShow
+def updateShopAddress_isAddressShow(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        shop_id= request.POST.get('shop_id', '')
+        show_status= request.POST.get('show_status', '')
+        # shop_address_id = request.POST.get('shop_address_id', '')
+
+        shop_address_isAddressShows=models.Shop_Address.objects.filter(shop_id=shop_id)
+        for shop_address_isAddressShow in shop_address_isAddressShows:
+            shop_address_isAddressShow.is_address_show=show_status
+            shop_address_isAddressShow.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '預設商店地址設定成功!'
+
+    return JsonResponse(responseData)
+    # pass
 def get_shop_address(request,id): 
     # 回傳資料
     responseData = {
