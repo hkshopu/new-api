@@ -310,21 +310,26 @@ def update(request, id):
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
-        if response_data['status'] == 0:
-            if not(shop.shop_icon) and not(shop_icon):
-                response_data['status'] = -3
-                response_data['ret_val'] = '未上傳商店小圖!'
+        # if response_data['status'] == 0:
+        #     if not(shop.shop_icon) and not(shop_icon):
+        #         response_data['status'] = -3
+        #         response_data['ret_val'] = '未上傳商店小圖!'
+
+        # if response_data['status'] == 0:
+        #     if not(shop.shop_title) and not(shop_title):
+        #         response_data['status'] = -4
+        #         response_data['ret_val'] = '未填寫商店標題!'
+
+        # if response_data['status'] == 0:
+        #     selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+        #     if len(selected_shop_categories) == 0 and not(shop_category_id):
+        #         response_data['status'] = -5
+        #         response_data['ret_val'] = '未填寫商店分類編號!'
 
         if response_data['status'] == 0:
-            if not(shop.shop_title) and not(shop_title):
-                response_data['status'] = -4
-                response_data['ret_val'] = '未填寫商店標題!'
-
-        if response_data['status'] == 0:
-            selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
-            if len(selected_shop_categories) == 0 and not(shop_category_id):
-                response_data['status'] = -5
-                response_data['ret_val'] = '未填寫商店分類編號!'
+            if shop_title == '':
+                response_data['status'] = -6
+                response_data['ret_val'] = '商店標題不可為空!'
 
         if response_data['status'] == 0:
             if shop_icon:
@@ -547,7 +552,7 @@ def update(request, id):
         if response_data['status'] == 0:
             if shop.shop_name_updated_at:
                 now = datetime.datetime.now()
-                if (now - shop.shop_name_updated_at).min > datetime.timedelta(minutes=0):
+                if (now - shop.shop_name_updated_at).days < datetime.timedelta(days=30):
                     response_data['status'] = -43
                     response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
 
