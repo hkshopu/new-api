@@ -956,6 +956,42 @@ def updateShopAddress(request):
 
     return JsonResponse(responseData)
     # pass
+def get_shop_address(request,id): 
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shop_address = models.Shop_Address.objects.filter(shop_id=id)
+            if len(shop_address) == 0:
+                responseData['status'] = 1
+                responseData['ret_val'] = '未建立任何商店地址!'
+            else:
+                for shop_address_info in shop_address:
+                    shopAddressInfo = {
+                        'id':shop_address_info.id,
+                        'shop_id': shop_address_info.shop_id,
+                        'name': shop_address_info.name, 
+                        'country_code': shop_address_info.country_code,
+                        'phone': shop_address_info.phone, 
+                        'is_phone_show': shop_address_info.is_phone_show, 
+                        'area': shop_address_info.area, 
+                        'district': shop_address_info.district, 
+                        'road': shop_address_info.road,
+                        'number':shop_address_info.number,
+                        'other':shop_address_info.other,
+                        'floor':shop_address_info.floor,
+                        'room':shop_address_info.room,
+                        'is_address_show':shop_address_info.is_address_show,
+                        'is_default':shop_address_info.is_default
+                    }
+                    responseData['data'].append(shopAddressInfo)
+                responseData['ret_val'] = '已取得商店地址!'
+    return JsonResponse(responseData)
 # 刪除店鋪地址
 def delShopAddress(request, id):
     pass
