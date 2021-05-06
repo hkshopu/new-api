@@ -552,7 +552,7 @@ def update(request, id):
         if response_data['status'] == 0:
             if shop.shop_name_updated_at:
                 now = datetime.datetime.now()
-                if (now - shop.shop_name_updated_at).days < datetime.timedelta(days=30):
+                if (now - shop.shop_name_updated_at).days < 30:
                     response_data['status'] = -43
                     response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
 
