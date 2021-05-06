@@ -506,7 +506,7 @@ def product_info(request,id): #product_id
 
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
-# 單一商品
+# 單一商品for android
 def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
     # 回傳資料
     responseData = {
@@ -526,9 +526,10 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
             productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
             productSpecs=models.Product_Spec.objects.filter(product_id=id)
-
+            productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
             productCategorys=models.Product_Category.objects.filter(id=category_id)
             productSubCategorys=models.Product_Sub_Category.objects.filter(id=sub_category_id)
+            
             for product in products:       
                 productInfo = {
                     'id': product.id,
@@ -567,7 +568,8 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
             productInfo.update({'c_sub_product_category':sub_category_name}) 
 
             responseData['data'].append(productInfo)
-
+            # product_spec_list=['product_spec_list']
+            spec_dict={"product_spec_list":[]}
             for productSpec in productSpecs:
                 productSpecInfo = {
                     "spec_desc_1":productSpec.spec_desc_1,
@@ -577,33 +579,21 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
                     "quantity":productSpec.quantity,
                     "price":productSpec.price
                 }
-                responseData['data'].append(productSpecInfo)
-                # v = []
-                # spec_desc_1=[]
-                # spec_desc_2=[]
-                # spec_dec_1_items=[]
-                # spec_dec_2_items=[]
-                # quantity=[]
-                # v2=[]
-              
-                # for obj in productSpecs:
-                #     v.append(getattr(obj,'price'))
-                #     spec_desc_1.append(getattr(obj,'spec_desc_1'))
-                #     spec_desc_2.append(getattr(obj,'spec_desc_2'))
-                #     spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
-                #     spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
-                #     quantity.append(getattr(obj,'quantity'))
-                # for picObj in productPics:
-                #     v2.append(getattr(picObj,'product_pic'))
+                spec_dict["product_spec_list"].append(productSpecInfo)
+                # product_spec_list.append(productSpecInfo)
+            responseData['data'].append(spec_dict)
 
-                # productInfo.update({'price':v})
-                # productInfo.update({'spec_desc_1':spec_desc_1})
-                # productInfo.update({'spec_desc_2':spec_desc_2})
-                # productInfo.update({'spec_dec_1_items':spec_dec_1_items})
-                # productInfo.update({'spec_dec_2_items':spec_dec_2_items})
-                # productInfo.update({'quantity':quantity})
-                # productInfo.update({'pic_path':v2})   
-                # responseData['data'].append(productInfo)
+            shipment_list=[]
+            print(productShipments)
+            for productShipment in productShipments:
+                productShipmentInfo = {
+                    "shipment_desc":productShipment.shipment_desc,
+                    "price":productShipment.price,
+                    "onoff":productShipment.onoff,
+                }
+                shipment_list.append(productShipmentInfo)
+
+            responseData['data'].append(shipment_list)
 
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
