@@ -830,105 +830,294 @@ def checkShopNameIsExistsProcess(request):
     return JsonResponse(response_data)
 # 更新選擇商店分類
 def updateSelectedShopCategory(request,id):
-    pass
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        shop_category_ids = request.POST.get('shop_category_id', '') # json
+        
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_json', -2, shop_category_ids)
+
+        if responseData['status'] == 0:
+            selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+            shop_category_ids = json.loads(shop_category_ids)
+            with transaction.atomic():
+                for category_id in shop_category_ids:
+                    if len(models.Selected_Shop_Category.objects.filter(shop_id=id,shop_category_id=category_id)) is 0: # insert
+                        print('insert')
+                        models.Selected_Shop_Category.objects.create(
+                            shop_id=id,
+                            shop_category_id=category_id
+                        )
+                    selected_shop_categories=selected_shop_categories.filter(~Q(shop_category_id=category_id))
+                if len(selected_shop_categories)>0: # delete
+                    print('delete')
+                    selected_shop_categories.delete()
+            responseData['ret_val'] = '選擇商店分類更新成功!'
+
+    return JsonResponse(responseData)
 # 新增店鋪地址
-def addShopAddress(request):
-    pass
+def createShopAddress(request,id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        addressName = request.POST.get('address_name', '')
+        addressCountryCode = request.POST.get('address_country_code', '')
+        addressPhone = request.POST.get('address_phone', '')
+        addressIsPhoneShow = request.POST.get('address_is_phone_show', '')
+        addressArea = request.POST.get('address_area', '')
+        addressDistrict = request.POST.get('address_district', '')
+        addressRoad = request.POST.get('address_road', '')
+        addressNumber = request.POST.get('address_number', '')
+        addressOther = request.POST.get('address_other', '')
+        addressFloor = request.POST.get('address_floor', '')
+        addressRoom = request.POST.get('address_room', '')
+        # 新增商店地址
+        models.Shop_Address.objects.create(
+            id = uuid.uuid4(),
+            shop_id = id,
+            name = addressName,
+            country_code = addressCountryCode,
+            phone = addressPhone,
+            is_phone_show = addressIsPhoneShow,
+            area = addressArea,
+            district = addressDistrict,
+            road = addressRoad,
+            number = addressNumber,
+            other = addressOther,
+            floor = addressFloor,
+            room = addressRoom
+        )
+        responseData['status'] =0
+        responseData['ret_val'] = '商店地址新增成功!'
+
+    return JsonResponse(responseData)
+        # pass
+# 更新預設店鋪地址 is_default
+def updateShopAddress_isDefault(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        shop_id= request.POST.get('shop_id', '')
+        shop_address_id = request.POST.get('shop_address_id', '')
+
+        shop_address_default_olds=models.Shop_Address.objects.filter(shop_id=shop_id)
+        for shop_address_default_old in shop_address_default_olds:
+            shop_address_default_old.is_default='n'
+            shop_address_default_old.save()
+
+        shop_address_default=models.Shop_Address.objects.get(id=shop_address_id)
+        shop_address_default.is_default='y'
+        shop_address_default.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '預設商店地址設定成功!'
+
+    return JsonResponse(responseData)
+    # pass
+def updateShopAddress_isAddressShow(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        shop_id= request.POST.get('shop_id', '')
+        show_status= request.POST.get('show_status', '')
+        # shop_address_id = request.POST.get('shop_address_id', '')
+
+        shop_address_isAddressShows=models.Shop_Address.objects.filter(shop_id=shop_id)
+        for shop_address_isAddressShow in shop_address_isAddressShows:
+            shop_address_isAddressShow.is_address_show=show_status
+            shop_address_isAddressShow.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '設定顯示預設店鋪地址成功!'
+
+    return JsonResponse(responseData)
+    # pass
 # 更新店鋪地址
-def updateShopAddress(request, id):
-    pass
+def updateShopAddress(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        addressID=request.POST.get('address_ID', '')
+        addressName= request.POST.get('address_name', '')
+        addressCountry_code= request.POST.get('address_country_code', '')
+        addressPhone= request.POST.get('address_phone', '')
+        addressIs_phone_show= request.POST.get('address_is_phone_show', '')
+        addressArea= request.POST.get('address_area', '')
+        addressDistrict= request.POST.get('address_district', '')
+        addressRoad= request.POST.get('address_road', '')
+        addressNumber= request.POST.get('address_number', '')
+        addressOther= request.POST.get('address_other', '')
+        addressFloor= request.POST.get('address_floor', '')
+        addressRoom= request.POST.get('address_room', '')
+
+        shop_address=models.Shop_Address.objects.get(id=addressID)
+        shop_address.name=addressName
+        shop_address.country_code=addressCountry_code
+        shop_address.phone=addressPhone
+        shop_address.is_phone_show=addressIs_phone_show
+        shop_address.area=addressDistrict
+        shop_address.road=addressRoad
+        shop_address.number=addressNumber
+        shop_address.other=addressOther
+        shop_address.floor=addressFloor
+        shop_address.room=addressRoom
+        shop_address.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '商店地址更新成功!'
+
+    return JsonResponse(responseData)
+    # pass
+def get_shop_address(request,id): 
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shop_address = models.Shop_Address.objects.filter(shop_id=id)
+            if len(shop_address) == 0:
+                responseData['status'] = 1
+                responseData['ret_val'] = '未建立任何商店地址!'
+            else:
+                for shop_address_info in shop_address:
+                    shopAddressInfo = {
+                        'id':shop_address_info.id,
+                        'shop_id': shop_address_info.shop_id,
+                        'name': shop_address_info.name, 
+                        'country_code': shop_address_info.country_code,
+                        'phone': shop_address_info.phone, 
+                        'is_phone_show': shop_address_info.is_phone_show, 
+                        'area': shop_address_info.area, 
+                        'district': shop_address_info.district, 
+                        'road': shop_address_info.road,
+                        'number':shop_address_info.number,
+                        'other':shop_address_info.other,
+                        'floor':shop_address_info.floor,
+                        'room':shop_address_info.room,
+                        'is_address_show':shop_address_info.is_address_show,
+                        'is_default':shop_address_info.is_default
+                    }
+                    responseData['data'].append(shopAddressInfo)
+                responseData['ret_val'] = '已取得商店地址!'
+    return JsonResponse(responseData)
 # 刪除店鋪地址
 def delShopAddress(request, id):
     pass
 # 更新銀行帳號
 def updateBankAccount(request, id):
     # 回傳資料
-    response_data = {
+    responseData = {
         'status': 0, 
         'ret_val': ''
     }
     if request.method == 'POST':
-        code = request.POST.get('code','')
-        name = request.POST.get('name','')
-        account = request.POST.get('account','')
-        account_name = request.POST.get('account_name','')
-        # 檢查欄位是否正確
-        if response_data['status'] == 0:
-            shop_bank_account = models.Shop_Bank_Account.objects.filter(id=id)
-            if len(shop_bank_account) is 0:
-                response_data['status'] = -1
-                response_data['ret_val'] = '無此商店銀行帳號!'
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -2, code)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -3, name)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -4, account)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -5, account_name)
-        if response_data['status'] == 0:
-            shop_bank_account.update(code=code, name=name, account=account, account_name=account_name)
-            response_data['ret_val'] = '商店銀行帳號更新成功!'
-
-    return JsonResponse(response_data)
-# 新增銀行帳號
-def createBankAccount(request, id):
+        bank_account_settings = request.POST.get('bank_account_settings')
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('bank_account_settings', -2, bank_account_settings)
+        if responseData['status'] == 0:
+            bank_account_settings = json.loads(bank_account_settings)
+            shop_bank_account_settings_delete = models.Shop_Bank_Account.objects.filter(shop_id=id)
+            with transaction.atomic():
+                for setting in bank_account_settings:
+                    if 'is_default' not in setting or setting['is_default'] is '':
+                        setting['is_default'] = None
+                    if 'id' not in setting or setting['id'] is '': # insert
+                        print('insert')
+                        new = models.Shop_Bank_Account.objects.create(
+                            id=uuid.uuid4(),
+                            shop_id=id,
+                            code=setting['code'],
+                            name=setting['name'],
+                            account=setting['account'],
+                            account_name=setting['account_name'],
+                            is_default=setting['is_default']
+                        )
+                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=new.id))
+                    else:
+                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=setting['id']))
+                if len(shop_bank_account_settings_delete) > 0: # delete
+                    print('delete')
+                    shop_bank_account_settings_delete.delete()
+            responseData['ret_val'] = '商店銀行設定設定成功'
+    return JsonResponse(responseData)
+# 取得銀行帳號
+def getBankAccount(request, id):
     # 回傳資料
-    response_data = {
+    responseData = {
         'status': 0, 
         'ret_val': '',
-        'id':''
+        'data': []
     }
-    if request.method == 'POST':
-        code = request.POST.get('code','')
-        name = request.POST.get('name','')
-        account = request.POST.get('account','')
-        account_name = request.POST.get('account_name','')
-        # 檢查欄位是否正確
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -2, code)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -3, name)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -4, account)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -5, account_name)
-        if response_data['status'] == 0:
-            shop_bank_account = models.Shop_Bank_Account.objects.create(
-                id=uuid.uuid4(), 
-                shop_id = id,
-                code=code,
-                name=name,
-                account=account,
-                account_name=account_name
-            )
-            response_data['id'] = shop_bank_account.id
-            response_data['ret_val'] = '商店銀行帳號新增成功!'
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shop_bank_account_attr = [
+                'id',
+                'code',
+                'name',
+                'account',
+                'account_name',
+                'is_default']
+            shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id)
+            for account in shop_bank_accounts:
+                tempAccount = {}
+                for attr in shop_bank_account_attr:
+                    print(attr)
+                    if(hasattr(account, attr)):
+                        if attr is 'account':
+                            tempAccount[attr] = '*'+getattr(account, attr)[-4:]
+                        else:
+                            tempAccount[attr] = getattr(account, attr)
+                responseData['data'].append(tempAccount)
 
-    return JsonResponse(response_data)
-# 刪除銀行帳號
-def delBankAccount(request, id):
+    return JsonResponse(responseData)
+# 預設銀行帳號
+def defaultBankAccount(request, id):
     # 回傳資料
-    response_data = {
+    responseData = {
         'status': 0, 
         'ret_val': ''
     }
     if request.method == 'GET':
-        # 檢查欄位是否正確
-        if response_data['status'] == 0:
-            shop_bank_account = models.Shop_Bank_Account.objects.filter(id=id)
-            if len(shop_bank_account) is 0:
-                response_data['status'] = -1
-                response_data['ret_val'] = '無此商店銀行帳號!'
+        try:
+            default_account = models.Shop_Bank_Account.objects.get(id=id)
+        except:
+            responseData['status'] = -1
+            responseData['ret_val'] = '無此商店銀行帳號'
 
-        if response_data['status'] == 0:
-            shop_bank_account.delete()
-            response_data['ret_val'] = '商店銀行帳號刪除成功!'
+        if responseData['status'] == 0:
+            default_account.is_default = 'Y'
+            default_account.save()
+            other_account = models.Shop_Bank_Account.objects.filter(shop_id=default_account.shop_id).filter(~Q(id=id))
+            other_account.update(is_default='N')
+            
+            responseData['ret_val'] = '預設商店銀行帳號更新成功'
 
-    return JsonResponse(response_data)
-# 運輸設定
+    return JsonResponse(responseData)
+# 同步運輸設定
 def shipmentSettings(request, id):
     # 回傳資料
     responseData = {
@@ -955,40 +1144,6 @@ def shipmentSettings(request, id):
                 )
             responseData['ret_val'] = '運輸設定更新成功!'
     return JsonResponse(responseData)
-# 新增運輸設定
-def createShipmentSetting(request, id):
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': ''
-    }
-    if request.method == 'POST':
-        shipmentDesc = request.POST.get('shipment_desc')
-        onOff = request.POST.get('onoff')
-
-        if responseData['status'] == 0:
-            try:
-                models.Shop.objects.get(id=id)
-            except:
-                responseData['status'] = -1
-                responseData['ret_val'] = '無此商店!'
-                
-        if responseData['status'] == 0:
-            # 建立資料
-            for setting in shipment_settings:
-                models.Shop_Shipment_Setting.objects.create(
-                    shop_id=id,
-                    shipment_desc=setting['shipment_desc'],
-                    onoff=setting['onoff']
-                )
-            responseData['ret_val'] = '運輸設定更新成功!'
-    return JsonResponse(responseData)
-# 更新運輸設定
-def updateShipmentSetting(request, id):
-    pass
-# 刪除運輸設定
-def delShipmentSetting(request, id):
-    pass
 # 取得運輸設定
 def getShipmentSettings(request, id):
     # 回傳資料
@@ -1012,7 +1167,7 @@ def getShipmentSettings(request, id):
                 for attr in shop_shipment_settings_attr:
                     if(hasattr(setting, attr)):
                         tempSetting[attr] = getattr(setting, attr)
-                responseData['data'].append(tempSetting)\
+                responseData['data'].append(tempSetting)
             
     return JsonResponse(responseData)
 # 設定運輸設定

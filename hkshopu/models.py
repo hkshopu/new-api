@@ -260,14 +260,41 @@ class Selected_Shop_Category(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if column_name=='shop_category_id':
+        if column_name is 'shop_id':
+            try:
+                Shop.objects.get(id=param)
+            except:
+                ret_code, ret_description = err_code, '商店編號不存在'
+        elif column_name is 'shop_category_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫商店分類編號!'
             else:
                 for value in param:
                     if not(re.match('^\d+$', value)):
                         ret_code, ret_description = err_code, '商店分類格式錯誤!'
-                        break            
+                        break
+        elif column_name is 'shop_category_id_json':
+            if not(param):
+                ret_code, ret_description = err_code, '未填寫商店分類編號!'
+            else:
+                try:
+                    json
+                except:
+                    import json
+                try:
+                    json_list = json.loads(param)
+                    for item in json_list:
+                        try:
+                            int(item)
+                            Shop_Category.objects.get(id=item)
+                        except:
+                            ret_code, ret_description = err_code, '商店分類編號不存在!'
+                            break
+                except:
+                    ret_code, ret_description = err_code, '商店分類格式錯誤!'
+
+
+
             
         return ret_code, ret_description
 
@@ -284,7 +311,10 @@ class Shop_Shipment_Setting(models.Model):
             except:
                 ret_code, ret_description = err_code, '無此商店'
         if column_name is 'shipment_settings':
-            import json
+            try:
+                json
+            except:
+                import json
             try:
                 shipment_settings = json.loads(param)
                 for setting in shipment_settings:
@@ -373,6 +403,7 @@ class Shop_Bank_Account(models.Model):
     name = models.CharField(max_length=50)
     account = models.CharField(max_length=50)
     account_name = models.CharField(max_length=50)
+    is_default = models.CharField(max_length=1, default='Y')
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
@@ -381,6 +412,23 @@ class Shop_Bank_Account(models.Model):
                 Shop.objects.get(id=param)
             except:
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'
+        elif param is 'bank_account_settings':
+            try:
+                json
+            except:
+                import json
+            try:
+                bank_account_settings = json.loads(param)
+                for setting in bank_account_settings:
+                    if hasattr(setting, 'id') and setting['id'] is not '':
+                        pass
+                    else:
+                        code = setting['code']
+                        name = setting['name']
+                        account = setting['account']
+                        account_name = setting['account_name']
+            except:
+                ret_code, ret_description = err_code, '商店銀行設定格式錯誤!'
         elif param is 'code':
             if not(re.match('^\d+$', bankCode)):
                 ret_code, ret_desciprtion = err_code, '銀行代碼格式錯誤!'
