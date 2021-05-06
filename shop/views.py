@@ -844,20 +844,21 @@ def updateSelectedShopCategory(request,id):
             responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_json', -2, shop_category_ids)
 
         if responseData['status'] == 0:
+            selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+            shop_category_ids = json.loads(shop_category_ids)
             with transaction.atomic():
-                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
-                shop_category_ids = json.loads(shop_category_ids)
                 for category_id in shop_category_ids:
-                    try:
-                        selected_shop_categories.get(shop_category_id=category_id)
-                        selected_shop_categories.filter(~Q(shop_category_id=category_id))
-                    except: # insert
+                    if len(models.Selected_Shop_Category.objects.filter(shop_id=id,shop_category_id=category_id)) is 0: # insert
+                        print('insert')
                         models.Selected_Shop_Category.objects.create(
                             shop_id=id,
                             shop_category_id=category_id
                         )
+                    selected_shop_categories=selected_shop_categories.filter(~Q(shop_category_id=category_id))
                 if len(selected_shop_categories)>0: # delete
+                    print('delete')
                     selected_shop_categories.delete()
+            responseData['ret_val'] = '選擇商店分類更新成功!'
 
     return JsonResponse(responseData)
 # 新增店鋪地址

@@ -262,7 +262,7 @@ class Selected_Shop_Category(models.Model):
         ret_description = ''
         if column_name is 'shop_id':
             try:
-                Shop.objects.get(id=shop_id)
+                Shop.objects.get(id=param)
             except:
                 ret_code, ret_description = err_code, '商店編號不存在'
         elif column_name is 'shop_category_id':
@@ -278,11 +278,15 @@ class Selected_Shop_Category(models.Model):
                 ret_code, ret_description = err_code, '未填寫商店分類編號!'
             else:
                 try:
+                    json
+                except:
+                    import json
+                try:
                     json_list = json.loads(param)
-                    for value in param:
+                    for item in json_list:
                         try:
-                            int(value)
-                            Selected_Shop_Category.object.get(value)
+                            int(item)
+                            Shop_Category.objects.get(id=item)
                         except:
                             ret_code, ret_description = err_code, '商店分類編號不存在!'
                             break
