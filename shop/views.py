@@ -1076,6 +1076,7 @@ def getBankAccount(request, id):
         if responseData['status'] == 0:
             shop_bank_account_attr = [
                 'id',
+                'shop_id',
                 'code',
                 'name',
                 'account',
@@ -1092,7 +1093,7 @@ def getBankAccount(request, id):
                         else:
                             tempAccount[attr] = getattr(account, attr)
                 responseData['data'].append(tempAccount)
-
+            responseData['ret_val'] = '已找到銀行帳號資料!'
     return JsonResponse(responseData)
 # 預設銀行帳號
 def defaultBankAccount(request, id):
@@ -1168,6 +1169,7 @@ def getShipmentSettings(request, id):
                     if(hasattr(setting, attr)):
                         tempSetting[attr] = getattr(setting, attr)
                 responseData['data'].append(tempSetting)
+            responseData['ret_val'] = '已找到商店運輸設定資料!'
             
     return JsonResponse(responseData)
 # 設定運輸設定
