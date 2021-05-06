@@ -550,11 +550,12 @@ def update(request, id):
                     response_data['ret_val'] = 'Instagram 開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if shop.shop_name_updated_at:
-                now = datetime.datetime.now()
-                if (now - shop.shop_name_updated_at).days < 30:
-                    response_data['status'] = -43
-                    response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
+            if shop_title:
+                if shop.shop_name_updated_at:
+                    now = datetime.datetime.now()
+                    if (now - shop.shop_name_updated_at).days < 30:
+                        response_data['status'] = -43
+                        response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
 
         if response_data['status'] == 0:
             shops = models.Shop.objects.filter(shop_title=shop_title)
