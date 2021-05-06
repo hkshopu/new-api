@@ -8,15 +8,15 @@ urlpatterns = [
     path('<id>/show/', views.show), 
     path('checkShopNameIsExistsProcess/', views.checkShopNameIsExistsProcess),
     # 銀行帳號
-    path('<id>/bankAccount/get', views.getBankAccount),
+    path('<id>/bankAccount/get/', views.getBankAccount),
     path('<id>/bankAccount/update/', views.updateBankAccount),
-    path('bankAccount/<id>/default', views.defaultBankAccount),
+    path('bankAccount/<id>/default/', views.defaultBankAccount),
     # 運輸設定
     path('<id>/shipmentSettings/', views.shipmentSettings),
-    path('<id>/shipmentSettings/get', views.getShipmentSettings),
-    path('<id>/shipmentSettings/set', views.setShipmnetSettings),
-    
-    path('<id>/updateSelectedShopCategory', views.updateSelectedShopCategory),
+    path('<id>/shipmentSettings/get/', views.getShipmentSettings),
+    path('<id>/shipmentSettings/set/', views.setShipmnetSettings),
+
+    path('<id>/updateSelectedShopCategory/', views.updateSelectedShopCategory),
     path('test/', views.testAPI), 
     path('<id>/get_product_quantity_of_specific_shop/', views.get_product_quantity_of_specific_shop), 
     path('<id>/get_follower_quantity_of_specific_shop/', views.get_follower_quantity_of_specific_shop), 

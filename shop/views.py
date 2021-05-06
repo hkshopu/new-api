@@ -1028,7 +1028,7 @@ def delShopAddress(request, id):
 # 更新銀行帳號
 def updateBankAccount(request, id):
     # 回傳資料
-    response_data = {
+    responseData = {
         'status': 0, 
         'ret_val': ''
     }
@@ -1043,12 +1043,11 @@ def updateBankAccount(request, id):
             shop_bank_account_settings_delete = models.Shop_Bank_Account.objects.filter(shop_id=id)
             with transaction.atomic():
                 for setting in bank_account_settings:
-                    if not(hasattr(setting, 'is_default')) or setting['is_default'] is '':
+                    if 'is_default' not in setting or setting['is_default'] is '':
                         setting['is_default'] = None
-                    if hasattr(setting, 'id') and setting['id'] is not '':
-                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=setting['id']))                     
-                    else: # insert
-                        models.Shop_Bank_Account.objects.create(
+                    if 'id' not in setting or setting['id'] is '': # insert
+                        print('insert')
+                        new = models.Shop_Bank_Account.objects.create(
                             id=uuid.uuid4(),
                             shop_id=id,
                             code=setting['code'],
@@ -1057,7 +1056,11 @@ def updateBankAccount(request, id):
                             account_name=setting['account_name'],
                             is_default=setting['is_default']
                         )
+                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=new.id))
+                    else:
+                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=setting['id']))
                 if len(shop_bank_account_settings_delete) > 0: # delete
+                    print('delete')
                     shop_bank_account_settings_delete.delete()
             responseData['ret_val'] = '商店銀行設定設定成功'
     return JsonResponse(responseData)
@@ -1076,14 +1079,18 @@ def getBankAccount(request, id):
                 'code',
                 'name',
                 'account',
-                'account_name']
+                'account_name',
+                'is_default']
             shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id)
             for account in shop_bank_accounts:
                 tempAccount = {}
                 for attr in shop_bank_account_attr:
                     print(attr)
                     if(hasattr(account, attr)):
-                        tempAccount[attr] = getattr(account, attr)
+                        if attr is 'account':
+                            tempAccount[attr] = '*'+getattr(account, attr)[-4:]
+                        else:
+                            tempAccount[attr] = getattr(account, attr)
                 responseData['data'].append(tempAccount)
 
     return JsonResponse(responseData)
