@@ -830,7 +830,36 @@ def checkShopNameIsExistsProcess(request):
     return JsonResponse(response_data)
 # 更新選擇商店分類
 def updateSelectedShopCategory(request,id):
-    pass
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        shop_category_ids = request.POST.get('shop_category_id', '') # json
+        
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_json', -2, shop_category_ids)
+
+        if responseData['status'] == 0:
+            with transaction.atomic():
+                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+                shop_category_ids = json.loads(shop_category_ids)
+                for category_id in shop_category_ids:
+                    try:
+                        selected_shop_categories.get(shop_category_id=category_id)
+                        selected_shop_categories.filter(~Q(shop_category_id=category_id))
+                    except: # insert
+                        models.Selected_Shop_Category.objects.create(
+                            shop_id=id,
+                            shop_category_id=category_id
+                        )
+                if len(selected_shop_categories)>0: # delete
+                    selected_shop_categories.delete()
+
+    return JsonResponse(responseData)
 # 新增店鋪地址
 def createShopAddress(request,id):
     # 回傳資料
