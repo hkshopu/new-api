@@ -684,6 +684,7 @@ def update(request,id): #product_id
         height = request.POST.get('height', 0)
         longterm_stock_up = request.POST.get('longterm_stock_up', 0)
         product_status=request.POST.get('product_status', '')
+        product_spec_on=request.POST.get('product_spec_on', '')
         # 商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
         print(product_spec_list["product_spec_list"])
@@ -715,6 +716,7 @@ def update(request,id): #product_id
             product.height=height
             product.longterm_stock_up=longterm_stock_up
             product.product_status=product_status
+            product.product_spec_on=product_spec_on
             product.save()
 
             productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
