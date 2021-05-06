@@ -260,14 +260,37 @@ class Selected_Shop_Category(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if column_name=='shop_category_id':
+        if column_name is 'shop_id':
+            try:
+                Shop.objects.get(id=shop_id)
+            except:
+                ret_code, ret_description = err_code, '商店編號不存在'
+        elif column_name is 'shop_category_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫商店分類編號!'
             else:
                 for value in param:
                     if not(re.match('^\d+$', value)):
                         ret_code, ret_description = err_code, '商店分類格式錯誤!'
-                        break            
+                        break
+        elif column_name is 'shop_category_id_json':
+            if not(param):
+                ret_code, ret_description = err_code, '未填寫商店分類編號!'
+            else:
+                try:
+                    json_list = json.loads(param)
+                    for value in param:
+                        try:
+                            int(value)
+                            Selected_Shop_Category.object.get(value)
+                        except:
+                            ret_code, ret_description = err_code, '商店分類編號不存在!'
+                            break
+                except:
+                    ret_code, ret_description = err_code, '商店分類格式錯誤!'
+
+
+
             
         return ret_code, ret_description
 

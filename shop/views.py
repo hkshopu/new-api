@@ -830,16 +830,36 @@ def checkShopNameIsExistsProcess(request):
     return JsonResponse(response_data)
 # 更新選擇商店分類
 def updateSelectedShopCategory(request,id):
-    pass
-# 新增店鋪地址
-def addShopAddress(request):
-    pass
-# 更新店鋪地址
-def updateShopAddress(request, id):
-    pass
-# 刪除店鋪地址
-def delShopAddress(request, id):
-    pass
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        shop_category_ids = request.POST.get('shop_category_id', '') # json
+        
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id_json', -2, shop_category_ids)
+
+        if responseData['status'] == 0:
+            with transaction.atomic():
+                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+                shop_category_ids = json.loads(shop_category_ids)
+                for category_id in shop_category_ids:
+                    try:
+                        selected_shop_categories.get(shop_category_id=category_id)
+                        selected_shop_categories.filter(~Q(shop_category_id=category_id))
+                    except: # insert
+                        models.Selected_Shop_Category.objects.create(
+                            shop_id=id,
+                            shop_category_id=category_id
+                        )
+                if len(selected_shop_categories)>0: # delete
+                    selected_shop_categories.delete()
+
+    return JsonResponse(responseData)
 # 更新銀行帳號
 def updateBankAccount(request, id):
     # 回傳資料
@@ -876,63 +896,6 @@ def updateBankAccount(request, id):
                     shop_bank_account_settings_delete.delete()
             responseData['ret_val'] = '商店銀行設定設定成功'
     return JsonResponse(responseData)
-# 新增銀行帳號
-def createBankAccount(request, id):
-    # 回傳資料
-    response_data = {
-        'status': 0, 
-        'ret_val': '',
-        'id':''
-    }
-    if request.method == 'POST':
-        code = request.POST.get('code','')
-        name = request.POST.get('name','')
-        account = request.POST.get('account','')
-        account_name = request.POST.get('account_name','')
-        # 檢查欄位是否正確
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('code', -2, code)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('name', -3, name)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account', -4, account)
-        if response_data['status'] == 0:
-            response_data['status'],response_data['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -5, account_name)
-        if response_data['status'] == 0:
-            shop_bank_account = models.Shop_Bank_Account.objects.create(
-                id=uuid.uuid4(), 
-                shop_id = id,
-                code=code,
-                name=name,
-                account=account,
-                account_name=account_name
-            )
-            response_data['id'] = shop_bank_account.id
-            response_data['ret_val'] = '商店銀行帳號新增成功!'
-
-    return JsonResponse(response_data)
-# 刪除銀行帳號
-def delBankAccount(request, id):
-    # 回傳資料
-    response_data = {
-        'status': 0, 
-        'ret_val': ''
-    }
-    if request.method == 'GET':
-        # 檢查欄位是否正確
-        if response_data['status'] == 0:
-            shop_bank_account = models.Shop_Bank_Account.objects.filter(id=id)
-            if len(shop_bank_account) is 0:
-                response_data['status'] = -1
-                response_data['ret_val'] = '無此商店銀行帳號!'
-
-        if response_data['status'] == 0:
-            shop_bank_account.delete()
-            response_data['ret_val'] = '商店銀行帳號刪除成功!'
-
-    return JsonResponse(response_data)
 # 取得銀行帳號
 def getBankAccount(request, id):
     # 回傳資料
@@ -982,7 +945,7 @@ def defaultBankAccount(request, id):
             responseData['ret_val'] = '預設商店銀行帳號更新成功'
 
     return JsonResponse(responseData)
-# 運輸設定
+# 同步運輸設定
 def shipmentSettings(request, id):
     # 回傳資料
     responseData = {
@@ -1009,40 +972,6 @@ def shipmentSettings(request, id):
                 )
             responseData['ret_val'] = '運輸設定更新成功!'
     return JsonResponse(responseData)
-# 新增運輸設定
-def createShipmentSetting(request, id):
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': ''
-    }
-    if request.method == 'POST':
-        shipmentDesc = request.POST.get('shipment_desc')
-        onOff = request.POST.get('onoff')
-
-        if responseData['status'] == 0:
-            try:
-                models.Shop.objects.get(id=id)
-            except:
-                responseData['status'] = -1
-                responseData['ret_val'] = '無此商店!'
-                
-        if responseData['status'] == 0:
-            # 建立資料
-            for setting in shipment_settings:
-                models.Shop_Shipment_Setting.objects.create(
-                    shop_id=id,
-                    shipment_desc=setting['shipment_desc'],
-                    onoff=setting['onoff']
-                )
-            responseData['ret_val'] = '運輸設定更新成功!'
-    return JsonResponse(responseData)
-# 更新運輸設定
-def updateShipmentSetting(request, id):
-    pass
-# 刪除運輸設定
-def delShipmentSetting(request, id):
-    pass
 # 取得運輸設定
 def getShipmentSettings(request, id):
     # 回傳資料
