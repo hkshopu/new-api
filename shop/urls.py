@@ -29,4 +29,5 @@ urlpatterns = [
     path('updateShopAddress_isDefault/', views.updateShopAddress_isDefault),
     path('updateShopAddress/', views.updateShopAddress),
     path('updateShopAddress_isAddressShow/', views.updateShopAddress_isAddressShow),
+    path('<id>/update_notification_setting_of_specific_shop/', views.update_notification_setting_of_specific_shop)
 ]

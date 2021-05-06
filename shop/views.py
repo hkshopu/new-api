@@ -310,21 +310,26 @@ def update(request, id):
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
-        if response_data['status'] == 0:
-            if not(shop.shop_icon) and not(shop_icon):
-                response_data['status'] = -3
-                response_data['ret_val'] = '未上傳商店小圖!'
+        # if response_data['status'] == 0:
+        #     if not(shop.shop_icon) and not(shop_icon):
+        #         response_data['status'] = -3
+        #         response_data['ret_val'] = '未上傳商店小圖!'
+
+        # if response_data['status'] == 0:
+        #     if not(shop.shop_title) and not(shop_title):
+        #         response_data['status'] = -4
+        #         response_data['ret_val'] = '未填寫商店標題!'
+
+        # if response_data['status'] == 0:
+        #     selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
+        #     if len(selected_shop_categories) == 0 and not(shop_category_id):
+        #         response_data['status'] = -5
+        #         response_data['ret_val'] = '未填寫商店分類編號!'
 
         if response_data['status'] == 0:
-            if not(shop.shop_title) and not(shop_title):
-                response_data['status'] = -4
-                response_data['ret_val'] = '未填寫商店標題!'
-
-        if response_data['status'] == 0:
-            selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
-            if len(selected_shop_categories) == 0 and not(shop_category_id):
-                response_data['status'] = -5
-                response_data['ret_val'] = '未填寫商店分類編號!'
+            if shop_title == '':
+                response_data['status'] = -6
+                response_data['ret_val'] = '商店標題不可為空!'
 
         if response_data['status'] == 0:
             if shop_icon:
@@ -547,7 +552,7 @@ def update(request, id):
         if response_data['status'] == 0:
             if shop.shop_name_updated_at:
                 now = datetime.datetime.now()
-                if (now - shop.shop_name_updated_at).min > datetime.timedelta(minutes=0):
+                if (now - shop.shop_name_updated_at).days < datetime.timedelta(days=30):
                     response_data['status'] = -43
                     response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
 
@@ -1329,4 +1334,88 @@ def get_notification_setting_of_specific_shop(request, id):
             response_data['notification_setting']['rating_notification'] = shop.rating_notification
             response_data['notification_setting']['system_upgrade_notification'] = shop.system_upgrade_notification
             response_data['notification_setting']['hkshopu_event_notification'] = shop.hkshopu_event_notification
+    return JsonResponse(response_data)
+# 更新單一商店通知設定
+def update_notification_setting_of_specific_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        marketing_notification = request.POST.get('marketing_notification', '')
+        follower_notification = request.POST.get('follower_notification', '')
+        rating_notification = request.POST.get('rating_notification', '')
+        system_upgrade_notification = request.POST.get('system_upgrade_notification', '')
+        hkshopu_event_notification = request.POST.get('hkshopu_event_notification', '')
+
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
+            if not(marketing_notification):
+                response_data['status'] = -2
+                response_data['ret_val'] = '未填寫促銷通知!'
+
+        if response_data['status'] == 0:
+            if not(follower_notification):
+                response_data['status'] = -3
+                response_data['ret_val'] = '未填寫追蹤者通知!'
+
+        if response_data['status'] == 0:
+            if not(rating_notification):
+                response_data['status'] = -4
+                response_data['ret_val'] = '未填寫評價通知!'
+
+        if response_data['status'] == 0:
+            if not(system_upgrade_notification):
+                response_data['status'] = -5
+                response_data['ret_val'] = '未填寫系統升級通知!'
+
+        if response_data['status'] == 0:
+            if not(hkshopu_event_notification):
+                response_data['status'] = -6
+                response_data['ret_val'] = '未填寫 HKShopU 事件通知!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^(Y|N)$', marketing_notification)):
+                response_data['status'] = -7
+                response_data['ret_val'] = '促銷通知格式錯誤!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^(Y|N)$', follower_notification)):
+                response_data['status'] = -8
+                response_data['ret_val'] = '追蹤者通知格式錯誤!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^(Y|N)$', rating_notification)):
+                response_data['status'] = -9
+                response_data['ret_val'] = '評價通知格式錯誤!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^(Y|N)$', system_upgrade_notification)):
+                response_data['status'] = -10
+                response_data['ret_val'] = '系統升級通知格式錯誤!'
+
+        if response_data['status'] == 0:
+            if not(re.match('^(Y|N)$', hkshopu_event_notification)):
+                response_data['status'] = -11
+                response_data['ret_val'] = 'HKShopU 事件通知格式錯誤!'
+
+        if response_data['status'] == 0:
+            if marketing_notification != shop.marketing_notification:
+                shop.marketing_notification = marketing_notification
+            if follower_notification != shop.follower_notification:
+                shop.follower_notification = follower_notification
+            if rating_notification != shop.rating_notification:
+                shop.rating_notification = rating_notification
+            if system_upgrade_notification != shop.system_upgrade_notification:
+                shop.system_upgrade_notification = system_upgrade_notification
+            if hkshopu_event_notification != shop.hkshopu_event_notification:
+                shop.hkshopu_event_notification = hkshopu_event_notification
+            shop.save()
     return JsonResponse(response_data)
