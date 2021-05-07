@@ -1089,6 +1089,32 @@ def save(request):
           
         #------------
     return JsonResponse(response_data)
+
+# 上架/下架
+def update_product_status(request): 
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        id=request.POST.get('id')
+        status=request.POST.get('status')
+        products=models.Product.objects.filter(id=id)
+        if status=="draft":
+            for product in products:
+                product.product_status='active'
+                product.save()
+        elif status=="active":
+            for product in products:
+                product.product_status='draft'
+                product.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '上架/下架成功!'
+
+    return JsonResponse(responseData)
+    # pass
 #=================
 def spec_test(request):
     response_data = {
