@@ -7,7 +7,7 @@ urlpatterns = [
     # path('<id>/<keyword>/<product_status>/<quantity>/shop_product/', views.shop_product),
     path('<id>/shop_product/', views.shop_product),
     path('<id>/product_info/', views.product_info),
-    path('<id>/<category_id>/<sub_category_id>/product_info_forAndroid/', views.product_info_forAndroid),
+    path('<id>/product_info_forAndroid/', views.product_info_forAndroid),
     path('<id>/update/', views.update),  
     path('<id>/<keyword>/<product_status>/<quantity>/product_list/', views.product_list),
       
