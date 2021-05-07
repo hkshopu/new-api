@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template
-from django.db.models import Q
+from django.db.models import Q,Sum
 from hkshopu import models
 import re
 import datetime
@@ -125,7 +125,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
     if request.method == 'GET':
         if responseData['status'] == 0:
             print(quantity)
-            if product_status=="active" and int(quantity)>0: #架上商品
+            if product_status=="active" and int(quantity)==1: #架上商品
                 print("===架上商品===")
                 if keyword=="none":
                     print("為空值")
@@ -140,7 +140,11 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                         for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
+                                    print("spec_data")
+                                    print(len(productSpecs))
+                                    if(len(productSpecs)==0):
+                                        break
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -170,7 +174,10 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         # if product.id==productSpecs.product.id:
                                         # responseData['data'].update({'price':obj.price})
                                         v.append(getattr(obj,'price'))
-                                    productInfo.update({'price':v})   
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})   
                                     responseData['data'].append(productInfo)                 
 
                     responseData['ret_val'] = '已取得商品清單!'
@@ -188,7 +195,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                         for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
+                                    if(len(productSpecs)==0):
+                                        break
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -218,25 +227,38 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         # if product.id==productSpecs.product.id:
                                         # responseData['data'].update({'price':obj.price})
                                         v.append(getattr(obj,'price'))
-                                    productInfo.update({'price':v})   
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
             elif product_status=="active" and int(quantity)==0: #已售完
                 print("===已售完===")
                 print("=========")
                 print(keyword)
+                zero_status=[]
                 if keyword=="none":
                     print("為空值")
                     products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status)
                     getProductID=[]
+                    print(products)
                     for product in products:
                         getProductID.append(product.id)
-                    
-                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
+                                                        
+                    productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=getProductID).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
+                    productSpecsIDList=[]
+                    for i in range (len(productSpecs_tests)):
+                        productSpecsIDList.append(productSpecs_tests[i]['product_id'])
+
+
+                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')     
                     for product in products:   
                         for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
+
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -260,13 +282,17 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         # 'price' : productSpec.price
                                     }
                                     v = []
-                                    # object_methods = [method_name for method_name in dir(responseData['data'])
-                                    #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-                                    for obj in productSpecs:
+
+                                    productSpecs_final=models.Product_Spec.objects.filter(product_id=product.id) #.filter(quantity=0)
+                                    for obj in productSpecs_final:
                                         # if product.id==productSpecs.product.id:
                                         # responseData['data'].update({'price':obj.price})
                                         v.append(getattr(obj,'price'))
-                                    productInfo.update({'price':v})   
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
 
                     responseData['ret_val'] = '已取得商品清單!'
@@ -274,17 +300,23 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     print("不能為空值")
                     print("=========")
                     print(keyword)
-                    products = models.Product.objects.filter(shop_id=id).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
+                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
                     getProductID=[]
                     for product in products:
                         getProductID.append(product.id)
-                    
-                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
+
+                    productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=getProductID).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
+                    productSpecsIDList=[]
+                    for i in range (len(productSpecs_tests)):
+                        productSpecsIDList.append(productSpecs_tests[i]['product_id'])
+
+
+                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')
                     for product in products:   
                         for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -308,13 +340,17 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         # 'price' : productSpec.price
                                     }
                                     v = []
-                                    # object_methods = [method_name for method_name in dir(responseData['data'])
-                                    #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-                                    for obj in productSpecs:
+
+                                    productSpecs_final=models.Product_Spec.objects.filter(product_id=product.id) #.filter(quantity=0)
+                                    for obj in productSpecs_final:
                                         # if product.id==productSpecs.product.id:
                                         # responseData['data'].update({'price':obj.price})
                                         v.append(getattr(obj,'price'))
-                                    productInfo.update({'price':v})   
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             elif product_status=="draft": #未上架
@@ -334,6 +370,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    if(len(productSpecs)==0):
+                                        break
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -363,7 +401,11 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         # if product.id==productSpecs.product.id:
                                         # responseData['data'].update({'price':obj.price})
                                         v.append(getattr(obj,'price'))
-                                    productInfo.update({'price':v})   
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
 
                     responseData['ret_val'] = '已取得商品清單!'
@@ -371,7 +413,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     print("不能為空值")
                     print("=========")
                     print(keyword)
-                    products = models.Product.objects.filter(shop_id=id).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
+                    products = models.Product.objects.filter(shop_id=id).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword)).filter(product_status=product_status)
                     getProductID=[]
                     for product in products:
                         getProductID.append(product.id)
@@ -382,6 +424,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    if(len(productSpecs)==0):
+                                        break
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -411,7 +455,11 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         # if product.id==productSpecs.product.id:
                                         # responseData['data'].update({'price':obj.price})
                                         v.append(getattr(obj,'price'))
-                                    productInfo.update({'price':v})   
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             else :
@@ -570,6 +618,9 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
             responseData['data'].append(productInfo)
             # product_spec_list=['product_spec_list']
             spec_dict={"product_spec_list":[]}
+            spec_price_dict={"spec_price":[]}
+            spec_price=[]
+            
             for productSpec in productSpecs:
                 productSpecInfo = {
                     "spec_desc_1":productSpec.spec_desc_1,
@@ -577,13 +628,24 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
                     "spec_dec_1_items":productSpec.spec_dec_1_items,
                     "spec_dec_2_items":productSpec.spec_dec_2_items,
                     "quantity":productSpec.quantity,
-                    "price":productSpec.price
+                    # "price":productSpec.price
                 }
+                spec_price.append(productSpec.price)
                 spec_dict["product_spec_list"].append(productSpecInfo)
+            min_price=min(spec_price)
+            max_price=max(spec_price)
+            productSpecPriceInfo = {
+                "min_price":min_price,
+                "max_price":max_price
+            }
+            spec_price_dict["spec_price"].append(productSpecPriceInfo)
+
+            # spec_dict.update({"min_price":min_price})     
+            # spec_dict.update({"max_price":max_price}) 
                 # product_spec_list.append(productSpecInfo)
             responseData['data'].append(spec_dict)
-
-            shipment_list=[]
+            responseData['data'].append(spec_price_dict)
+            shipment_dict={"product_shipment_list":[]}
             print(productShipments)
             for productShipment in productShipments:
                 productShipmentInfo = {
@@ -591,9 +653,9 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
                     "price":productShipment.price,
                     "onoff":productShipment.onoff,
                 }
-                shipment_list.append(productShipmentInfo)
+                shipment_dict["product_shipment_list"].append(productShipmentInfo)
 
-            responseData['data'].append(shipment_list)
+            responseData['data'].append(shipment_dict)
 
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
@@ -622,6 +684,7 @@ def update(request,id): #product_id
         height = request.POST.get('height', 0)
         longterm_stock_up = request.POST.get('longterm_stock_up', 0)
         product_status=request.POST.get('product_status', '')
+        product_spec_on=request.POST.get('product_spec_on', '')
         # 商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
         print(product_spec_list["product_spec_list"])
@@ -653,6 +716,7 @@ def update(request,id): #product_id
             product.height=height
             product.longterm_stock_up=longterm_stock_up
             product.product_status=product_status
+            product.product_spec_on=product_spec_on
             product.save()
 
             productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
