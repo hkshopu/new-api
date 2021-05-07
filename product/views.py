@@ -555,7 +555,7 @@ def product_info(request,id): #product_id
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
 # 單一商品for android
-def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
+def product_info_forAndroid(request,id): #product_id
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -567,16 +567,18 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
         if responseData['status'] == 0:
             # shop=models.Shop.objects.get(id=id)
             products = models.Product.objects.filter(id=id)
-            # getProductID=[]
-            # for product in products:
-            #     getProductID.append(product.id)
-            
+            getCategoryID=[]
+            getSubCategoryID=[]
+            for product in products:
+                getCategoryID.append(product.product_category_id)
+                getSubCategoryID.append(product.product_sub_category_id)
+            print(getCategoryID)
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
             productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
             productSpecs=models.Product_Spec.objects.filter(product_id=id)
             productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
-            productCategorys=models.Product_Category.objects.filter(id=category_id)
-            productSubCategorys=models.Product_Sub_Category.objects.filter(id=sub_category_id)
+            productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
+            productSubCategorys=models.Product_Sub_Category.objects.filter(id=getSubCategoryID[0])
             
             for product in products:       
                 productInfo = {
@@ -659,6 +661,7 @@ def product_info_forAndroid(request,id,category_id,sub_category_id): #product_id
 
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
+
 
 # 更新商品
 def update(request,id): #product_id
