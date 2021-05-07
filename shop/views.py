@@ -263,7 +263,7 @@ def update(request, id):
         # 欄位資料
         shop_icon = request.FILES.get('shop_icon', None)
         shop_title = request.POST.get('shop_title', None)
-        shop_category_id = request.POST.getlist('shop_category_id', None)
+        # shop_category_id = request.POST.getlist('shop_category_id', None)
         shop_pic = request.FILES.get('shop_pic', None)
         shop_description = request.POST.get('shop_description', None)
         paypal = request.POST.get('paypal', None)
@@ -337,13 +337,13 @@ def update(request, id):
                     response_data['status'] = -7
                     response_data['ret_val'] = '商店小圖格式錯誤!'
 
-        if response_data['status'] == 0:
-            if shop_category_id:
-                for value in shop_category_id:
-                    if not(re.match('^\d+$', value)):
-                        response_data['status'] = -8
-                        response_data['ret_val'] = '商店分類編號格式錯誤!'
-                        break
+        # if response_data['status'] == 0:
+        #     if shop_category_id:
+        #         for value in shop_category_id:
+        #             if not(re.match('^\d+$', value)):
+        #                 response_data['status'] = -8
+        #                 response_data['ret_val'] = '商店分類編號格式錯誤!'
+        #                 break
 
         if response_data['status'] == 0:
             if shop_pic:
@@ -698,17 +698,17 @@ def update(request, id):
                     shop.instagram_on = instagram_on
             shop.save()
             # 更新選擇商店分類
-            to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id).exclude(shop_category_id__in=shop_category_id)
-            if len(to_delete_selected_shop_categories) > 0:
-                to_delete_selected_shop_categories.delete()
+            # to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id).exclude(shop_category_id__in=shop_category_id)
+            # if len(to_delete_selected_shop_categories) > 0:
+            #     to_delete_selected_shop_categories.delete()
 
-            for value in shop_category_id:
-                selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id, shop_category_id=value)
-                if (len(selected_shop_categories) == 0 and value != 0):
-                    models.Selected_Shop_Category.objects.create(
-                        shop_id=id,
-                        shop_category_id=value
-                    )
+            # for value in shop_category_id:
+            #     selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id, shop_category_id=value)
+            #     if len(selected_shop_categories) == 0:
+            #         models.Selected_Shop_Category.objects.create(
+            #             shop_id=id,
+            #             shop_category_id=value
+            #         )
             response_data['ret_val'] = '商店更新成功!'
     return JsonResponse(response_data)
 # 單一商店
