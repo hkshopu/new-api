@@ -1420,3 +1420,26 @@ def update_notification_setting_of_specific_shop(request, id):
                 shop.hkshopu_event_notification = hkshopu_event_notification
             shop.save()
     return JsonResponse(response_data)
+# 取得單一商店簡要資訊
+def get_simple_info_of_specific_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            shops = models.Shop.objects.filter(id=id).select_related()
+            if len(shops) == 0:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店編號的商店!'
+
+        if response_data['status'] == 0:
+            response_data['data']['shop_icon'] = shops[0].shop_icon
+            response_data['data']['shop_title'] = shops[0].shop_title
+            response_data['data']['shop_background_pic'] = shops[0].shop_background_pic
+            response_data['data']['shop_phone'] = shops[0].phone
+            response_data['data']['shop_email'] = shops[0].shop_email
+            response_data['data']['long_description'] = shops[0].long_description
+            response_data['ret_val'] = '取得單一商店簡要資訊成功!'
+    return JsonResponse(response_data)
