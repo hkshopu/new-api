@@ -1437,7 +1437,7 @@ def get_simple_info_of_specific_shop(request, id):
         if response_data['status'] == 0:
             response_data['data']['shop_icon'] = shops[0].shop_icon
             response_data['data']['shop_title'] = shops[0].shop_title
-            response_data['data']['shop_background_pic'] = shops[0].shop_background_pic
+            response_data['data']['shop_background_pic'] = shops[0].background_pic
             response_data['data']['shop_phone'] = shops[0].phone
             response_data['data']['shop_email'] = shops[0].shop_email
             response_data['data']['long_description'] = shops[0].long_description
