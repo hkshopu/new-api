@@ -662,7 +662,6 @@ def product_info_forAndroid(request,id): #product_id
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
 
-
 # 更新商品
 def update(request,id): #product_id
     response_data = {
@@ -796,7 +795,7 @@ def save(request):
         quantity = request.POST.get('quantity', 0)
         product_description = request.POST.get('product_description', '')
         # product_country_code = request.POST.get('product_country_code', '') UI無此column
-        # product_price = request.POST.get('product_price', 0)
+        product_price = request.POST.get('product_price', 0)
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
         new_secondhand = request.POST.get('new_secondhand', '')
@@ -922,14 +921,14 @@ def save(request):
                 response_data['ret_val'] = '產品子分類編號不存在!'
 
 
-        if response_data['status']==0:
-            if product_spec_list["product_spec_list"][0]["spec_desc_1"]=="" and product_spec_list["product_spec_list"][0]["spec_desc_2"]=="" and product_spec_list["product_spec_list"][0]["price"]==0 and product_spec_list["product_spec_list"][0]["quantity"]==0:
-                response_data['status'] = -87
-                response_data['ret_val'] = '未傳送商品規格!'
-        if response_data['status']==0:
-            if shipment_method[0]["price"]==0 and shipment_method[0]["shop_id"]==0 and shipment_method[0]["shipment_desc"]=="" and shipment_method[0]["onoff"]=="on":
-                response_data['status'] = -88
-                response_data['ret_val'] = '未傳送商品運輸方式!'
+        # if response_data['status']==0:
+        #     if product_spec_list["product_spec_list"][0]["spec_desc_1"]=="" and product_spec_list["product_spec_list"][0]["spec_desc_2"]=="" and product_spec_list["product_spec_list"][0]["price"]==0 and product_spec_list["product_spec_list"][0]["quantity"]==0:
+        #         response_data['status'] = -87
+        #         response_data['ret_val'] = '未傳送商品規格!'
+        # if response_data['status']==0:
+        #     if shipment_method[0]["price"]==0 and shipment_method[0]["shop_id"]==0 and shipment_method[0]["shipment_desc"]=="" and shipment_method[0]["onoff"]=="on":
+        #         response_data['status'] = -88
+        #         response_data['ret_val'] = '未傳送商品運輸方式!'
 
         productPicURL=[]
         
@@ -942,81 +941,139 @@ def save(request):
 
                     # upload_file(product_pic,'images/product/',suffix="img")
                     productPicURL.append(upload_file(f,'images/product_test/',suffix="img"))
-                
-                #return url需參數
-            # return JsonResponse(response_data)
-            models.Product.objects.create(
-                shop_id=shop_id, 
-                product_category_id=product_category_id, 
-                product_sub_category_id=product_sub_category_id, 
-                product_title=product_title, 
-                quantity=quantity, 
-                product_description=product_description, 
-                # product_country_code=product_country_code, 
-                # product_price=product_price, 
-                shipping_fee=shipping_fee, 
-                weight=weight,
-                new_secondhand=new_secondhand,
-                user_id=user_id,
-                length=length, 
-                width=width, 
-                height=height,
-                longterm_stock_up=longterm_stock_up,
-                product_status=product_status,
-                product_spec_on=product_spec_on
-            )
-            #傳回product_id
-            products=models.Product.objects.filter(
-                shop_id=shop_id, 
-                product_category_id=product_category_id, 
-                product_sub_category_id=product_sub_category_id, 
-                product_title=product_title, 
-                quantity=quantity, 
-                product_description=product_description,  
-                # product_price=product_price, 
-                shipping_fee=shipping_fee, 
-                weight=weight,
-                new_secondhand=new_secondhand
-                )
-            for product in products:
-                    productInfo = {
-                    'id': product.id,
-                }
-            getProductID=[]
-            getProductID.append(productInfo)
-            print(getProductID)
-            #圖片上傳DB
-            #處理cover
-            for index,product_pic_url in enumerate(productPicURL):
-            
-                # 寫入資料庫
-                if index==0:
-                    models.Selected_Product_Pic.objects.create(
-                        product_id=getProductID[0]['id'], 
-                        product_pic=product_pic_url,
-                        cover="y"
-                    )
-                else :
-                    models.Selected_Product_Pic.objects.create(
-                        product_id=getProductID[0]['id'], 
-                        product_pic=product_pic_url,
-                        cover="n"
-                    )
-           #----------------
-            
-            # 寫入資料庫(規格)
-            for i in range(len(product_spec_list["product_spec_list"])):
-                models.Product_Spec.objects.create(
-                    product_id=getProductID[0]['id'],
-                    spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
-                    spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
-                    spec_dec_1_items=product_spec_list["product_spec_list"][i]["spec_dec_1_items"],
-                    spec_dec_2_items=product_spec_list["product_spec_list"][i]["spec_dec_2_items"],
-                    price=product_spec_list["product_spec_list"][i]["price"],
-                    quantity=product_spec_list["product_spec_list"][i]["quantity"],
-                )
-            
+            if product_spec_on=="y":    
 
+                models.Product.objects.create(
+                    shop_id=shop_id, 
+                    product_category_id=product_category_id, 
+                    product_sub_category_id=product_sub_category_id, 
+                    product_title=product_title, 
+                    quantity=quantity, 
+                    product_description=product_description, 
+                    # product_country_code=product_country_code, 
+                    # product_price=product_price, 
+                    product_price=-1, 
+                    shipping_fee=shipping_fee, 
+                    weight=weight,
+                    new_secondhand=new_secondhand,
+                    user_id=user_id,
+                    length=length, 
+                    width=width, 
+                    height=height,
+                    longterm_stock_up=longterm_stock_up,
+                    product_status=product_status,
+                    product_spec_on=product_spec_on
+                )
+                #傳回product_id
+                products=models.Product.objects.filter(
+                    shop_id=shop_id, 
+                    product_category_id=product_category_id, 
+                    product_sub_category_id=product_sub_category_id, 
+                    product_title=product_title, 
+                    # quantity=quantity, 
+                    product_description=product_description,  
+                    # product_price=product_price, 
+                    shipping_fee=shipping_fee, 
+                    weight=weight,
+                    new_secondhand=new_secondhand
+                    )
+                for product in products:
+                        productInfo = {
+                        'id': product.id,
+                    }
+                getProductID=[]
+                getProductID.append(productInfo)
+                print(getProductID)
+                #圖片上傳DB
+                #處理cover
+                for index,product_pic_url in enumerate(productPicURL):
+                
+                    # 寫入資料庫
+                    if index==0:
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=getProductID[0]['id'], 
+                            product_pic=product_pic_url,
+                            cover="y"
+                        )
+                    else :
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=getProductID[0]['id'], 
+                            product_pic=product_pic_url,
+                            cover="n"
+                        )
+            #----------------
+                
+                # 寫入資料庫(規格)
+                for i in range(len(product_spec_list["product_spec_list"])):
+                    models.Product_Spec.objects.create(
+                        product_id=getProductID[0]['id'],
+                        spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
+                        spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
+                        spec_dec_1_items=product_spec_list["product_spec_list"][i]["spec_dec_1_items"],
+                        spec_dec_2_items=product_spec_list["product_spec_list"][i]["spec_dec_2_items"],
+                        price=product_spec_list["product_spec_list"][i]["price"],
+                        quantity=product_spec_list["product_spec_list"][i]["quantity"],
+                    )
+            elif product_spec_on=="n":   
+                models.Product.objects.create(
+                    shop_id=shop_id, 
+                    product_category_id=product_category_id, 
+                    product_sub_category_id=product_sub_category_id, 
+                    product_title=product_title, 
+                    quantity=quantity, 
+                    product_description=product_description, 
+                    # product_country_code=product_country_code, 
+                    # product_price=product_price, 
+                    product_price=product_price, 
+                    shipping_fee=shipping_fee, 
+                    weight=weight,
+                    new_secondhand=new_secondhand,
+                    user_id=user_id,
+                    length=length, 
+                    width=width, 
+                    height=height,
+                    longterm_stock_up=longterm_stock_up,
+                    product_status=product_status,
+                    product_spec_on=product_spec_on
+                )
+                #傳回product_id
+                products=models.Product.objects.filter(
+                    shop_id=shop_id, 
+                    product_category_id=product_category_id, 
+                    product_sub_category_id=product_sub_category_id, 
+                    product_title=product_title, 
+                    # quantity=quantity, 
+                    product_description=product_description,  
+                    # product_price=product_price, 
+                    shipping_fee=shipping_fee, 
+                    weight=weight,
+                    new_secondhand=new_secondhand
+                    )
+                for product in products:
+                        productInfo = {
+                        'id': product.id,
+                    }
+                getProductID=[]
+                getProductID.append(productInfo)
+                print(getProductID)
+                #圖片上傳DB
+                #處理cover
+                for index,product_pic_url in enumerate(productPicURL):
+                
+                    # 寫入資料庫
+                    if index==0:
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=getProductID[0]['id'], 
+                            product_pic=product_pic_url,
+                            cover="y"
+                        )
+                    else :
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=getProductID[0]['id'], 
+                            product_pic=product_pic_url,
+                            cover="n"
+                        )
+            
             for i in range(len(shipment_method)):
                 models.Product_Shipment_Method.objects.create(
                     product_id=getProductID[0]['id'],
