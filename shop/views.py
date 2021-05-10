@@ -309,9 +309,8 @@ def update(request, id):
 
         if response_data['status'] == 0:
             if not(address_id):
-                if address_name or address_country_code or address_phone or address_is_phone_show or address_area or address_district or address_road or address_number or address_other or address_floor or address_room:
-                    response_data['status'] = -2
-                    response_data['ret_val'] = '未填寫商店地址編號!'
+                response_data['status'] = -2
+                response_data['ret_val'] = '未填寫商店地址編號!'
 
         if response_data['status'] == 0:
             try:
@@ -1009,15 +1008,52 @@ def delete_shop_address(request): #id : uuid(column)
     return JsonResponse(responseData)
     # pass
 
-# 銀行帳號 - 新增
-def createBankAccount(request, id):
+# 銀行帳號
+def bankAccount(request, id=0, bank_account_id=''):
     # 回傳資料
     responseData = {
         'status': 0, 
         'ret_val': '',
-        'data': {}
+        'data': []
     }
-    if request.method == 'POST':
+    if request.method == 'GET': # 取得
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            shop_bank_account_attr = [
+                'id',
+                'shop_id',
+                'code',
+                'name',
+                'account',
+                'account_name',
+                'is_default']
+            shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id)
+            for account in shop_bank_accounts:
+                tempAccount = {}
+                for attr in shop_bank_account_attr:
+                    if(hasattr(account, attr)):
+                        if attr is 'account':
+                            tempAccount[attr] = '*'+getattr(account, attr)[-4:]
+                        else:
+                            tempAccount[attr] = getattr(account, attr)
+                responseData['data'].append(tempAccount)
+            responseData['ret_val'] = '已找到銀行帳號資料!'
+    elif request.method == 'PATCH': # 修改 - 是否預設(Y/N)
+        try:
+            default_account = models.Shop_Bank_Account.objects.get(id=bank_account_id)
+        except:
+            responseData['status'] = -1
+            responseData['ret_val'] = '無此商店銀行帳號'
+
+        if responseData['status'] == 0:
+            default_account.is_default = 'Y'
+            default_account.save()
+            other_account = models.Shop_Bank_Account.objects.filter(shop_id=default_account.shop_id).filter(~Q(id=bank_account_id))
+            other_account.update(is_default='N')
+            
+            responseData['ret_val'] = '預設商店銀行帳號更新成功'
+    elif request.method == 'POST': # 新增        
         code = request.POST.get('code', '')
         name = request.POST.get('name', '')
         account = request.POST.get('account', '')
@@ -1046,111 +1082,9 @@ def createBankAccount(request, id):
             )
             responseData['data'] = {'id':new.id}
             responseData['ret_val'] = '商店銀行帳號新增成功'
-    return JsonResponse(responseData)
-# 更新銀行帳號(x)
-def updateBankAccount(request, id):
-    pass
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': ''
-    }
-    if request.method == 'POST':
-        bank_account_settings = request.POST.get('bank_account_settings')
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('bank_account_settings', -2, bank_account_settings)
-        if responseData['status'] == 0:
-            bank_account_settings = json.loads(bank_account_settings)
-            shop_bank_account_settings_delete = models.Shop_Bank_Account.objects.filter(shop_id=id)
-            with transaction.atomic():
-                for setting in bank_account_settings:
-                    if 'is_default' not in setting or setting['is_default'] is '':
-                        setting['is_default'] = None
-                    if 'id' not in setting or setting['id'] is '': # insert
-                        print('insert')
-                        new = models.Shop_Bank_Account.objects.create(
-                            id=uuid.uuid4(),
-                            shop_id=id,
-                            code=setting['code'],
-                            name=setting['name'],
-                            account=setting['account'],
-                            account_name=setting['account_name'],
-                            is_default=setting['is_default']
-                        )
-                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=new.id))
-                    else:
-                        shop_bank_account_settings_delete = shop_bank_account_settings_delete.filter(~Q(id=setting['id']))
-                if len(shop_bank_account_settings_delete) > 0: # delete
-                    print('delete')
-                    shop_bank_account_settings_delete.delete()
-            responseData['ret_val'] = '商店銀行設定設定成功'
-    return JsonResponse(responseData)
-# 銀行帳號 - 取得
-def getBankAccount(request, id):
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': '',
-        'data': []
-    }
-    if request.method == 'GET':
-        if responseData['status'] == 0:
-            shop_bank_account_attr = [
-                'id',
-                'shop_id',
-                'code',
-                'name',
-                'account',
-                'account_name',
-                'is_default']
-            shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id)
-            for account in shop_bank_accounts:
-                tempAccount = {}
-                for attr in shop_bank_account_attr:
-                    print(attr)
-                    if(hasattr(account, attr)):
-                        if attr is 'account':
-                            tempAccount[attr] = '*'+getattr(account, attr)[-4:]
-                        else:
-                            tempAccount[attr] = getattr(account, attr)
-                responseData['data'].append(tempAccount)
-            responseData['ret_val'] = '已找到銀行帳號資料!'
-    return JsonResponse(responseData)
-# 銀行帳號 - 預設值設定
-def defaultBankAccount(request, id):
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': ''
-    }
-    if request.method == 'POST':
+    elif request.method == 'DELETE': # 刪除
         try:
-            default_account = models.Shop_Bank_Account.objects.get(id=id)
-        except:
-            responseData['status'] = -1
-            responseData['ret_val'] = '無此商店銀行帳號'
-
-        if responseData['status'] == 0:
-            default_account.is_default = 'Y'
-            default_account.save()
-            other_account = models.Shop_Bank_Account.objects.filter(shop_id=default_account.shop_id).filter(~Q(id=id))
-            other_account.update(is_default='N')
-            
-            responseData['ret_val'] = '預設商店銀行帳號更新成功'
-
-    return JsonResponse(responseData)
-# 銀行帳號 - 刪除
-def deleteBankAccount(request, id):
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': ''
-    }
-    if request.method == 'GET':
-        try:
-            account = models.Shop_Bank_Account.objects.get(id=id)
+            account = models.Shop_Bank_Account.objects.get(id=bank_account_id)
         except:
             responseData['status'] = -1
             responseData['ret_val'] = '無此商店銀行帳號'

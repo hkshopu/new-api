@@ -12,6 +12,9 @@ urlpatterns = [
     path('<id>/bankAccount/get/', views.getBankAccount),
     path('bankAccount/<id>/default/', views.defaultBankAccount),
     path('bankAccount/<id>/delete/', views.deleteBankAccount),
+    path('<id>/bankAccount/', views.bankAccount),
+    path('<id>/bankAccount/<uuid:bank_account_id>/', views.bankAccount),
+    path('bankAccount/<uuid:bank_account_id>/', views.bankAccount),
     # 運輸設定
     path('<id>/shipmentSettings/', views.shipmentSettings),
     path('<id>/shipmentSettings/get/', views.getShipmentSettings),
