@@ -309,8 +309,9 @@ def update(request, id):
 
         if response_data['status'] == 0:
             if not(address_id):
-                response_data['status'] = -2
-                response_data['ret_val'] = '未填寫商店地址編號!'
+                if address_name or address_country_code or address_phone or address_is_phone_show or address_area or address_district or address_road or address_number or address_other or address_floor or address_room:
+                    response_data['status'] = -2
+                    response_data['ret_val'] = '未填寫商店地址編號!'
 
         if response_data['status'] == 0:
             try:
