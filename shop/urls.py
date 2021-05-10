@@ -27,7 +27,7 @@ urlpatterns = [
     path('<id>/get_shop_address/', views.get_shop_address),
     path('<id>/createShopAddress/', views.createShopAddress),
     path('updateShopAddress_isDefault/', views.updateShopAddress_isDefault),
-    path('updateShopAddress/', views.updateShopAddress),
+    path('<id>/updateShopAddress/', views.updateShopAddress),
     path('updateShopAddress_isAddressShow/', views.updateShopAddress_isAddressShow),
     path('<id>/update_notification_setting_of_specific_shop/', views.update_notification_setting_of_specific_shop), 
     path('<id>/get_simple_info_of_specific_shop/', views.get_simple_info_of_specific_shop),
