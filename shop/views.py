@@ -912,45 +912,102 @@ def updateShopAddress_isAddressShow(request): #id : uuid(column)
 
     return JsonResponse(responseData)
     # pass
-# 更新店鋪地址
-def updateShopAddress(request):
+# # 更新店鋪地址
+# def updateShopAddress(request):
+#     # 回傳資料
+#     responseData = {
+#         'status': 0, 
+#         'ret_val': ''
+#     }
+#     if request.method == 'POST':
+#         addressID=request.POST.get('address_ID', '')
+#         addressName= request.POST.get('address_name', '')
+#         addressCountry_code= request.POST.get('address_country_code', '')
+#         addressPhone= request.POST.get('address_phone', '')
+#         addressIs_phone_show= request.POST.get('address_is_phone_show', '')
+#         addressArea= request.POST.get('address_area', '')
+#         addressDistrict= request.POST.get('address_district', '')
+#         addressRoad= request.POST.get('address_road', '')
+#         addressNumber= request.POST.get('address_number', '')
+#         addressOther= request.POST.get('address_other', '')
+#         addressFloor= request.POST.get('address_floor', '')
+#         addressRoom= request.POST.get('address_room', '')
+
+#         shop_address=models.Shop_Address.objects.get(id=addressID)
+#         shop_address.name=addressName
+#         shop_address.country_code=addressCountry_code
+#         shop_address.phone=addressPhone
+#         shop_address.is_phone_show=addressIs_phone_show
+#         shop_address.area=addressDistrict
+#         shop_address.road=addressRoad
+#         shop_address.number=addressNumber
+#         shop_address.other=addressOther
+#         shop_address.floor=addressFloor
+#         shop_address.room=addressRoom
+#         shop_address.save()
+
+#         responseData['status'] =0
+#         responseData['ret_val'] = '商店地址更新成功!'
+
+#     return JsonResponse(responseData)
+    # pass
+# 更新商店地址
+def updateShopAddress(request, id):
     # 回傳資料
     responseData = {
         'status': 0, 
         'ret_val': ''
     }
     if request.method == 'POST':
-        addressID=request.POST.get('address_ID', '')
-        addressName= request.POST.get('address_name', '')
-        addressCountry_code= request.POST.get('address_country_code', '')
-        addressPhone= request.POST.get('address_phone', '')
-        addressIs_phone_show= request.POST.get('address_is_phone_show', '')
-        addressArea= request.POST.get('address_area', '')
-        addressDistrict= request.POST.get('address_district', '')
-        addressRoad= request.POST.get('address_road', '')
-        addressNumber= request.POST.get('address_number', '')
-        addressOther= request.POST.get('address_other', '')
-        addressFloor= request.POST.get('address_floor', '')
-        addressRoom= request.POST.get('address_room', '')
-
-        shop_address=models.Shop_Address.objects.get(id=addressID)
-        shop_address.name=addressName
-        shop_address.country_code=addressCountry_code
-        shop_address.phone=addressPhone
-        shop_address.is_phone_show=addressIs_phone_show
-        shop_address.area=addressDistrict
-        shop_address.road=addressRoad
-        shop_address.number=addressNumber
-        shop_address.other=addressOther
-        shop_address.floor=addressFloor
-        shop_address.room=addressRoom
-        shop_address.save()
-
-        responseData['status'] =0
-        responseData['ret_val'] = '商店地址更新成功!'
-
+        shop_address_list = request.POST.get('shop_address_list')
+        # if responseData['status'] == 0:
+        #     responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shop_id', -1, id)
+        # if responseData['status'] == 0:
+        #     responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shipment_settings', -2, shipment_settings)
+        if responseData['status'] == 0:
+            shop_address_list = json.loads(shop_address_list)
+            shop_address_delete = models.Shop_Address.objects.filter(shop_id=id)
+            with transaction.atomic():
+                for setting in shop_address_delete:
+                    shop_address = models.Shop_Address.objects.filter(shop_id=id).filter(name=setting['name']).filter(country_code=setting['country_code']).filter(phone=setting['phone']).filter(area=setting['area']).filter(district=setting['district']).filter(road=setting['road']).filter(number=setting['number']).filter(other=setting['other']).filter(floor=setting['floor']).filter(room=setting['room'])
+                    row_count = len(shop_address)
+                    if row_count is 0: # insert
+                        models.Shop_Address.objects.create(
+                            shop_id=id,
+                            name=setting['name'],
+                            country_code=setting['country_code'],
+                            phone=setting['phone'],
+                            area=setting['area'],
+                            district=setting['district'],
+                            road=setting['road'],
+                            number=setting['number'],
+                            other=setting['other'],
+                            floor=setting['floor'],
+                            room=setting['room']
+                        )
+                    elif row_count is 1: # update
+                        shop_address.update(name=setting['name'],country_code=setting['country_code'],
+                            phone=setting['phone'],
+                            area=setting['area'],
+                            district=setting['district'],
+                            road=setting['road'],
+                            number=setting['number'],
+                            other=setting['other'],
+                            floor=setting['floor'],
+                            room=setting['room'])
+                    shop_address_delete = shop_address_delete.filter(~Q(name=setting['name'],country_code=setting['country_code'],
+                            phone=setting['phone'],
+                            area=setting['area'],
+                            district=setting['district'],
+                            road=setting['road'],
+                            number=setting['number'],
+                            other=setting['other'],
+                            floor=setting['floor'],
+                            room=setting['room']))
+                if len(shop_address_delete) > 0: # delete
+                    shop_address_delete.delete()
+            responseData['ret_val'] = '更新商店地址成功'
     return JsonResponse(responseData)
-    # pass
 def get_shop_address(request,id): 
     # 回傳資料
     responseData = {
