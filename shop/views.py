@@ -999,9 +999,10 @@ def delete_shop_address(request): #id : uuid(column)
             models.Shop_Address.objects.filter(id=address_id).delete()
             address_delete=models.Shop_Address.objects.filter(id=address_id)
             if len(address_delete)==0:
-                responseData['status'] = -1
+                responseData['status'] = 0
                 responseData['ret_val'] = '刪除商店地址成功!'
             else:
+            responseData['status'] = -1
                 responseData['ret_val'] = '刪除商店地址失敗!'
 
     return JsonResponse(responseData)
