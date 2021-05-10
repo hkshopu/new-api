@@ -965,13 +965,18 @@ def updateShopAddress(request, id):
         #     responseData['status'], responseData['ret_val'] = models.Shop_Shipment_Setting.validate_column('shipment_settings', -2, shipment_settings)
         if responseData['status'] == 0:
             shop_address_list = json.loads(shop_address_list)
+            # print(shop_address_list)
             shop_address_delete = models.Shop_Address.objects.filter(shop_id=id)
+            # print(shop_address_delete)
             with transaction.atomic():
-                for setting in shop_address_delete:
+                for setting in shop_address_list:
+                    # print(setting.name)
                     shop_address = models.Shop_Address.objects.filter(shop_id=id).filter(name=setting['name']).filter(country_code=setting['country_code']).filter(phone=setting['phone']).filter(area=setting['area']).filter(district=setting['district']).filter(road=setting['road']).filter(number=setting['number']).filter(other=setting['other']).filter(floor=setting['floor']).filter(room=setting['room'])
+                    # shop_address = models.Shop_Address.objects.filter(Q(shop_id=id)&Q(name=setting['name'])&Q(country_code=setting['country_code'])&Q(phone=setting['phone'])&Q(area=setting['area'])&Q(district=setting['district'])&Q(road=setting['road'])&Q(number=setting['number'])&Q(other=setting['other'])&Q(floor=setting['floor'])&Q(room=setting['room']))
                     row_count = len(shop_address)
                     if row_count is 0: # insert
                         models.Shop_Address.objects.create(
+                            id = uuid.uuid4(),
                             shop_id=id,
                             name=setting['name'],
                             country_code=setting['country_code'],
