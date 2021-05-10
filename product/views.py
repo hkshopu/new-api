@@ -701,12 +701,13 @@ def product_info_forAndroid(request,id): #product_id
             productInfo.update({'spec_dec_1_items':spec_dec_1_items})
             productInfo.update({'spec_dec_2_items':spec_dec_2_items})
             productInfo.update({'spec_quantity':spec_quantity})
+            productInfo.update(productSpecPriceInfo)
             # productInfo.update({'shipment_desc':shipment_desc})
             # productInfo.update({'shipment_price':shipment_price})
             # productInfo.update({'onoff':onoff})
             productInfo.update({'pic_path':v2})   
             responseData['data'].append(productInfo)
-            responseData['data'].append(spec_price_dict)
+            # responseData['data'].append(spec_price_dict)
             # responseData['data'].append(productSpecPriceInfo)
             shipment_dict={"product_shipment_list":[]}
             print(productShipments)
@@ -717,8 +718,8 @@ def product_info_forAndroid(request,id): #product_id
                     "onoff":productShipment.onoff,
                 }
                 shipment_dict["product_shipment_list"].append(productShipmentInfo)
-
-            responseData['data'].append(shipment_dict)
+            productInfo.update(shipment_dict)
+            # responseData['data'].append(shipment_dict)
 
             responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
