@@ -8,10 +8,6 @@ urlpatterns = [
     path('<id>/show/', views.show), 
     path('checkShopNameIsExistsProcess/', views.checkShopNameIsExistsProcess),
     # 銀行帳號
-    path('<id>/bankAccount/create/', views.createBankAccount),
-    path('<id>/bankAccount/get/', views.getBankAccount),
-    path('bankAccount/<id>/default/', views.defaultBankAccount),
-    path('bankAccount/<id>/delete/', views.deleteBankAccount),
     path('<id>/bankAccount/', views.bankAccount),
     path('<id>/bankAccount/<uuid:bank_account_id>/', views.bankAccount),
     path('bankAccount/<uuid:bank_account_id>/', views.bankAccount),
