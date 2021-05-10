@@ -669,6 +669,7 @@ def product_info_forAndroid(request,id): #product_id
             onoff=[]
             v2=[]
             spec_price=[]
+            quantity_range=[]
             for obj in productSpecs:
                 v1.append(getattr(obj,'price'))
                 spec_desc_1.append(getattr(obj,'spec_desc_1'))
@@ -678,15 +679,23 @@ def product_info_forAndroid(request,id): #product_id
                 spec_quantity.append(getattr(obj,'quantity'))
 
                 spec_price.append(getattr(obj,'price'))
+                quantity_range.append(getattr(obj,'quantity'))
             min_price=min(spec_price)
             max_price=max(spec_price)
+            min_quantity=min(quantity_range)
+            max_quantity=max(quantity_range)
             productSpecPriceInfo = {
                 "min_price":min_price,
                 "max_price":max_price
             }
+            productSpecQuantityInfo = {
+                "min_quantity":min_quantity,
+                "max_quantity":max_quantity
+            }
             spec_price_dict={"spec_price":[]}
             spec_price_dict["spec_price"].append(productSpecPriceInfo)
-            
+            spec_price_dict={"quantity_range":[]}
+            spec_price_dict["quantity_range"].append(productSpecQuantityInfo)
             # for productShipment in productShipments:
             #     shipment_desc.append(getattr(productShipment,'shipment_desc'))
             #     shipment_price.append(getattr(productShipment,'price'))
@@ -702,6 +711,7 @@ def product_info_forAndroid(request,id): #product_id
             productInfo.update({'spec_dec_2_items':spec_dec_2_items})
             productInfo.update({'spec_quantity':spec_quantity})
             productInfo.update(productSpecPriceInfo)
+            productInfo.update(productSpecQuantityInfo)
             # productInfo.update({'shipment_desc':shipment_desc})
             # productInfo.update({'shipment_price':shipment_price})
             # productInfo.update({'onoff':onoff})
