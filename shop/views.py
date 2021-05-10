@@ -988,8 +988,26 @@ def get_shop_address(request,id):
                 responseData['ret_val'] = '已取得商店地址!'
     return JsonResponse(responseData)
 # 刪除店鋪地址
-def delShopAddress(request, id):
-    pass
+def delete_shop_address(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        address_id= request.POST.get('address_id', '')
+        if responseData['status'] == 0:
+            models.Shop_Address.objects.filter(id=address_id).delete()
+            address_delete=models.Shop_Address.objects.filter(id=address_id)
+            if len(address_delete)==0:
+                responseData['status'] = 0
+                responseData['ret_val'] = '刪除商店地址成功!'
+            else:
+                responseData['status'] = -1
+                responseData['ret_val'] = '刪除商店地址失敗!'
+
+    return JsonResponse(responseData)
+    # pass
 # 更新銀行帳號
 def updateBankAccount(request, id):
     # 回傳資料
@@ -1067,7 +1085,7 @@ def defaultBankAccount(request, id):
         'status': 0, 
         'ret_val': ''
     }
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
             default_account = models.Shop_Bank_Account.objects.get(id=id)
         except:
