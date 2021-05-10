@@ -1002,7 +1002,7 @@ def delete_shop_address(request): #id : uuid(column)
                 responseData['status'] = 0
                 responseData['ret_val'] = '刪除商店地址成功!'
             else:
-            responseData['status'] = -1
+                responseData['status'] = -1
                 responseData['ret_val'] = '刪除商店地址失敗!'
 
     return JsonResponse(responseData)
