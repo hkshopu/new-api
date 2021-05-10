@@ -615,48 +615,99 @@ def product_info_forAndroid(request,id): #product_id
                 sub_category_name=(getattr(productSubCategory,'c_product_sub_category'))
             productInfo.update({'c_sub_product_category':sub_category_name}) 
 
-            pic_list=[]
-            for productPic in productPics:
-                pic_list.append(getattr(productPic,'product_pic'))
-            productInfo.update({'pic_path':pic_list})
+            # pic_list=[]
+            # for productPic in productPics:
+            #     pic_list.append(getattr(productPic,'product_pic'))
+            # productInfo.update({'pic_path':pic_list})
 
-            responseData['data'].append(productInfo)
-            # product_spec_list=['product_spec_list']
-            spec_dict={"product_spec_list":[]}
-            spec_price_dict={"spec_price":[]}
-            spec_price=[]
+            # responseData['data'].append(productInfo)
+            # # product_spec_list=['product_spec_list']
+            # spec_dict={"product_spec_list":[]}
+            # spec_price_dict={"spec_price":[]}
+            # spec_price=[]
             
-            for productSpec in productSpecs:
-                productSpecInfo = {
-                    "spec_desc_1":productSpec.spec_desc_1,
-                    "spec_desc_2":productSpec.spec_desc_2,
-                    "spec_dec_1_items":productSpec.spec_dec_1_items,
-                    "spec_dec_2_items":productSpec.spec_dec_2_items,
-                    "quantity":productSpec.quantity,
-                    "price":productSpec.price
-                }
-                v = []
-                for obj in productSpecs:
-                    # if product.id==productSpecs.product.id:
-                    # responseData['data'].update({'price':obj.price})
-                    v.append(getattr(obj,'price'))
-                # productSpecInfo.update({'price':v})
+            # for productSpec in productSpecs:
+            #     productSpecInfo = {
+            #         "spec_desc_1":productSpec.spec_desc_1,
+            #         "spec_desc_2":productSpec.spec_desc_2,
+            #         "spec_dec_1_items":productSpec.spec_dec_1_items,
+            #         "spec_dec_2_items":productSpec.spec_dec_2_items,
+            #         "quantity":productSpec.quantity,
+            #         "price":productSpec.price
+            #     }
+            #     v = []
+            #     for obj in productSpecs:
+            #         # if product.id==productSpecs.product.id:
+            #         # responseData['data'].update({'price':obj.price})
+            #         v.append(getattr(obj,'price'))
+            #     # productSpecInfo.update({'price':v})
                    
-                spec_price.append(productSpec.price)
-                spec_dict["product_spec_list"].append(productSpecInfo)
+            #     spec_price.append(productSpec.price)
+            #     spec_dict["product_spec_list"].append(productSpecInfo)
+            # min_price=min(spec_price)
+            # max_price=max(spec_price)
+            # productSpecPriceInfo = {
+            #     "min_price":min_price,
+            #     "max_price":max_price
+            # }
+            # spec_price_dict["spec_price"].append(productSpecPriceInfo)
+
+            # spec_dict.update({"min_price":min_price})     
+            # spec_dict.update({"max_price":max_price}) 
+                # product_spec_list.append(productSpecInfo)
+            # responseData['data'].append(spec_dict)
+            # responseData['data'].append(spec_price_dict)
+
+            v1 = []
+            spec_desc_1=[]
+            spec_desc_2=[]
+            spec_dec_1_items=[]
+            spec_dec_2_items=[]
+            spec_quantity=[]
+            shipment_desc=[]
+            shipment_price=[]
+            onoff=[]
+            v2=[]
+            spec_price=[]
+            for obj in productSpecs:
+                v1.append(getattr(obj,'price'))
+                spec_desc_1.append(getattr(obj,'spec_desc_1'))
+                spec_desc_2.append(getattr(obj,'spec_desc_2'))
+                spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
+                spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
+                spec_quantity.append(getattr(obj,'quantity'))
+
+                spec_price.append(getattr(obj,'price'))
             min_price=min(spec_price)
             max_price=max(spec_price)
             productSpecPriceInfo = {
                 "min_price":min_price,
                 "max_price":max_price
             }
+            spec_price_dict={"spec_price":[]}
             spec_price_dict["spec_price"].append(productSpecPriceInfo)
+            
+            # for productShipment in productShipments:
+            #     shipment_desc.append(getattr(productShipment,'shipment_desc'))
+            #     shipment_price.append(getattr(productShipment,'price'))
+            #     onoff.append(getattr(productShipment,'onoff'))
 
-            # spec_dict.update({"min_price":min_price})     
-            # spec_dict.update({"max_price":max_price}) 
-                # product_spec_list.append(productSpecInfo)
-            responseData['data'].append(spec_dict)
+            for picObj in productPics:
+                v2.append(getattr(picObj,'product_pic'))
+
+            productInfo.update({'price':v1})
+            productInfo.update({'spec_desc_1':spec_desc_1})
+            productInfo.update({'spec_desc_2':spec_desc_2})
+            productInfo.update({'spec_dec_1_items':spec_dec_1_items})
+            productInfo.update({'spec_dec_2_items':spec_dec_2_items})
+            productInfo.update({'spec_quantity':spec_quantity})
+            # productInfo.update({'shipment_desc':shipment_desc})
+            # productInfo.update({'shipment_price':shipment_price})
+            # productInfo.update({'onoff':onoff})
+            productInfo.update({'pic_path':v2})   
+            responseData['data'].append(productInfo)
             responseData['data'].append(spec_price_dict)
+            # responseData['data'].append(productSpecPriceInfo)
             shipment_dict={"product_shipment_list":[]}
             print(productShipments)
             for productShipment in productShipments:
