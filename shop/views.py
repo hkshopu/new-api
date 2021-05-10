@@ -858,7 +858,9 @@ def createShopAddress(request,id):
             number = addressNumber,
             other = addressOther,
             floor = addressFloor,
-            room = addressRoom
+            room = addressRoom,
+            is_address_show='n',
+            is_default='n'
         )
         responseData['status'] =0
         responseData['ret_val'] = '商店地址新增成功!'
@@ -987,7 +989,9 @@ def updateShopAddress(request, id):
                             number=setting['number'],
                             other=setting['other'],
                             floor=setting['floor'],
-                            room=setting['room']
+                            room=setting['room'],
+                            is_address_show='n',
+                            is_default='n'
                         )
                     elif row_count is 1: # update
                         shop_address.update(name=setting['name'],country_code=setting['country_code'],
@@ -1007,7 +1011,8 @@ def updateShopAddress(request, id):
                             number=setting['number'],
                             other=setting['other'],
                             floor=setting['floor'],
-                            room=setting['room']))
+                            room=setting['room'])
+                            )
                 if len(shop_address_delete) > 0: # delete
                     shop_address_delete.delete()
             responseData['ret_val'] = '更新商店地址成功'
