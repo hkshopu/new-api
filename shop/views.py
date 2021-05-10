@@ -430,7 +430,7 @@ def update(request, id):
 
         if response_data['status'] == 0:
             if address_country_code:
-                if not(re.match('^\+[0-9]{3}$', address_country_code)):
+                if not(re.match('^[0-9]{3}$', address_country_code)):
                     response_data['status'] = -28
                     response_data['ret_val'] = '國碼格式錯誤!'
 
