@@ -1007,8 +1007,48 @@ def delete_shop_address(request): #id : uuid(column)
 
     return JsonResponse(responseData)
     # pass
-# 更新銀行帳號
+
+# 銀行帳號 - 新增
+def createBankAccount(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '',
+        'data': {}
+    }
+    if request.method == 'POST':
+        code = request.POST.get('code', '')
+        name = request.POST.get('name', '')
+        account = request.POST.get('account', '')
+        account_name = request.POST.get('account_name', '')
+        is_default = request.POST.get('is_default', 'N')
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('shop_id', -1, id)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('code', -2, code)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('name', -3, name)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('account', -4, account)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Bank_Account.validate_column('account_name', -5, account_name)
+            
+        if responseData['status'] == 0:
+            new = models.Shop_Bank_Account.objects.create(
+                id=uuid.uuid4(),
+                shop_id=id,
+                code=code,
+                name=name,
+                account=account,
+                account_name=account_name,
+                is_default=is_default
+            )
+            responseData['data'] = {'id':new.id}
+            responseData['ret_val'] = '商店銀行帳號新增成功'
+    return JsonResponse(responseData)
+# 更新銀行帳號(x)
 def updateBankAccount(request, id):
+    pass
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -1046,7 +1086,7 @@ def updateBankAccount(request, id):
                     shop_bank_account_settings_delete.delete()
             responseData['ret_val'] = '商店銀行設定設定成功'
     return JsonResponse(responseData)
-# 取得銀行帳號
+# 銀行帳號 - 取得
 def getBankAccount(request, id):
     # 回傳資料
     responseData = {
@@ -1077,7 +1117,7 @@ def getBankAccount(request, id):
                 responseData['data'].append(tempAccount)
             responseData['ret_val'] = '已找到銀行帳號資料!'
     return JsonResponse(responseData)
-# 預設銀行帳號
+# 銀行帳號 - 預設值設定
 def defaultBankAccount(request, id):
     # 回傳資料
     responseData = {
@@ -1100,7 +1140,32 @@ def defaultBankAccount(request, id):
             responseData['ret_val'] = '預設商店銀行帳號更新成功'
 
     return JsonResponse(responseData)
-# 同步運輸設定
+# 銀行帳號 - 刪除
+def deleteBankAccount(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'GET':
+        try:
+            account = models.Shop_Bank_Account.objects.get(id=id)
+        except:
+            responseData['status'] = -1
+            responseData['ret_val'] = '無此商店銀行帳號'
+
+        if responseData['status'] == 0:
+            try:
+                with transaction.atomic():
+                    account.delete()
+                    responseData['ret_val'] = '預設商店銀行帳號刪除成功'
+            except:
+                responseData['status'] = -99
+                responseData['ret_val'] = '預設商店銀行帳號刪除失敗'
+
+    return JsonResponse(responseData)
+
+# 運輸設定 - 同步
 def shipmentSettings(request, id):
     # 回傳資料
     responseData = {
@@ -1127,7 +1192,7 @@ def shipmentSettings(request, id):
                 )
             responseData['ret_val'] = '運輸設定更新成功!'
     return JsonResponse(responseData)
-# 取得運輸設定
+# 運輸設定 - 取得
 def getShipmentSettings(request, id):
     # 回傳資料
     responseData = {
@@ -1154,7 +1219,7 @@ def getShipmentSettings(request, id):
             responseData['ret_val'] = '已找到商店運輸設定資料!'
             
     return JsonResponse(responseData)
-# 設定運輸設定
+# 運輸設定 - 設定
 def setShipmnetSettings(request, id):
     # 回傳資料
     responseData = {

@@ -8,9 +8,10 @@ urlpatterns = [
     path('<id>/show/', views.show), 
     path('checkShopNameIsExistsProcess/', views.checkShopNameIsExistsProcess),
     # 銀行帳號
+    path('<id>/bankAccount/create/', views.createBankAccount),
     path('<id>/bankAccount/get/', views.getBankAccount),
-    path('<id>/bankAccount/update/', views.updateBankAccount),
     path('bankAccount/<id>/default/', views.defaultBankAccount),
+    path('bankAccount/<id>/delete/', views.deleteBankAccount),
     # 運輸設定
     path('<id>/shipmentSettings/', views.shipmentSettings),
     path('<id>/shipmentSettings/get/', views.getShipmentSettings),
