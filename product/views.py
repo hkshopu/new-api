@@ -711,6 +711,8 @@ def product_info_forAndroid(request,id): #product_id
             # responseData['data'].append(productSpecPriceInfo)
             shipment_dict={"product_shipment_list":[]}
             print(productShipments)
+            shipment_price=[]
+
             for productShipment in productShipments:
                 productShipmentInfo = {
                     "shipment_desc":productShipment.shipment_desc,
@@ -718,6 +720,12 @@ def product_info_forAndroid(request,id): #product_id
                     "onoff":productShipment.onoff,
                 }
                 shipment_dict["product_shipment_list"].append(productShipmentInfo)
+                shipment_price.append(productShipment.price)
+            shipment_min_price=min(shipment_price)
+            shipment_max_price=max(shipment_price)
+
+            productInfo.update({'shipment_min_price':shipment_min_price})
+            productInfo.update({'shipment_max_price':shipment_max_price})
             productInfo.update(shipment_dict)
             # responseData['data'].append(shipment_dict)
 
