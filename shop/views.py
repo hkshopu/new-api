@@ -281,10 +281,7 @@ def update(request, id):
         transport_setting = request.POST.get('transport_setting', None)
         discount_by_amount = request.POST.get('discount_by_amount', None)
         discount_by_percent = request.POST.get('discount_by_percent', None)
-        bank_code = request.POST.get('bank_code', None)
-        bank_name = request.POST.get('bank_name', None)
-        bank_account = request.POST.get('bank_account', None)
-        bank_account_name = request.POST.get('bank_account_name', None)
+        address_id = request.POST.get('address_id', None)
         address_name = request.POST.get('address_name', None)
         address_country_code = request.POST.get('address_country_code', None)
         address_phone = request.POST.get('address_phone', None)
@@ -310,21 +307,17 @@ def update(request, id):
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
-        # if response_data['status'] == 0:
-        #     if not(shop.shop_icon) and not(shop_icon):
-        #         response_data['status'] = -3
-        #         response_data['ret_val'] = '未上傳商店小圖!'
+        if response_data['status'] == 0:
+            if not(address_id):
+                response_data['status'] = -2
+                response_data['ret_val'] = '未填寫商店地址編號!'
 
-        # if response_data['status'] == 0:
-        #     if not(shop.shop_title) and not(shop_title):
-        #         response_data['status'] = -4
-        #         response_data['ret_val'] = '未填寫商店標題!'
-
-        # if response_data['status'] == 0:
-        #     selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id)
-        #     if len(selected_shop_categories) == 0 and not(shop_category_id):
-        #         response_data['status'] = -5
-        #         response_data['ret_val'] = '未填寫商店分類編號!'
+        if response_data['status'] == 0:
+            try:
+                shop_address = models.Shop_Address.objects.get(id=address_id)
+            except:
+                response_data['status'] = -3
+                response_data['ret_val'] = '找不到此商店地址編號的地址!'
 
         if response_data['status'] == 0:
             if shop_title == '':
@@ -428,30 +421,6 @@ def update(request, id):
                 if not(re.match('^\d+$', discount_by_percent)):
                     response_data['status'] = -22
                     response_data['ret_val'] = '百分比折扣格式錯誤!'
-
-        if response_data['status'] == 0:
-            if bank_code:
-                if not(re.match('^\d+$', bank_code)):
-                    response_data['status'] = -23
-                    response_data['ret_val'] = '銀行代碼格式錯誤!'
-
-        if response_data['status'] == 0:
-            if bank_name:
-                if not(re.match('^[()\w\s]+$', bank_name)):
-                    response_data['status'] = -24
-                    response_data['ret_val'] = '銀行名稱格式錯誤!'
-
-        if response_data['status'] == 0:
-            if bank_account:
-                if not(re.match('^[\-\d]+$', bank_account)):
-                    response_data['status'] = -25
-                    response_data['ret_val'] = '銀行帳號格式錯誤!'
-
-        if response_data['status'] == 0:
-            if bank_account_name:
-                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', bank_account_name)):
-                    response_data['status'] = -26
-                    response_data['ret_val'] = '銀行戶名格式錯誤!'
 
         if response_data['status'] == 0:
             if address_name:
@@ -633,51 +602,39 @@ def update(request, id):
             if discount_by_percent is not None:
                 if discount_by_percent != shop.discount_by_percent:
                     shop.discount_by_percent = discount_by_percent
-            if bank_code is not None:
-                if bank_code != shop.bank_code:
-                    shop.bank_code = bank_code
-            if bank_name is not None:
-                if bank_name != shop.bank_name:
-                    shop.bank_name = bank_name
-            if bank_account is not None:
-                if bank_account != shop.bank_account:
-                    shop.bank_account = bank_account
-            if bank_account_name is not None:
-                if bank_account_name != shop.bank_account_name:
-                    shop.bank_account_name = bank_account_name
             if address_name is not None:
-                if address_name != shop.address_name:
-                    shop.address_name = address_name
+                if address_name != shop_address.name:
+                    shop_address.name = address_name
             if address_country_code is not None:
-                if address_country_code != shop.address_country_code:
-                    shop.address_country_code = address_country_code
+                if address_country_code != shop_address.country_code:
+                    shop_address.country_code = address_country_code
             if address_phone is not None:
-                if address_phone != shop.address_phone:
-                    shop.address_phone = address_phone
+                if address_phone != shop_address.phone:
+                    shop_address.phone = address_phone
             if address_is_phone_show is not None:
-                if address_is_phone_show != shop.address_is_phone_show:
-                    shop.address_is_phone_show = address_is_phone_show
+                if address_is_phone_show != shop_address.is_phone_show:
+                    shop_address.is_phone_show = address_is_phone_show
             if address_area is not None:
-                if address_area != shop.address_area:
-                    shop.address_area = address_area
+                if address_area != shop_address.area:
+                    shop_address.area = address_area
             if address_district is not None:
-                if address_district != shop.address_district:
-                    shop.address_district = address_district
+                if address_district != shop_address.district:
+                    shop_address.district = address_district
             if address_road is not None:
-                if address_road != shop.address_road:
-                    shop.address_road = address_road
+                if address_road != shop_address.road:
+                    shop_address.road = address_road
             if address_number is not None:
-                if address_number != shop.address_number:
-                    shop.address_number = address_number
+                if address_number != shop_address.number:
+                    shop_address.number = address_number
             if address_other is not None:
-                if address_other != shop.address_other:
-                    shop.address_other = address_other
+                if address_other != shop_address.other:
+                    shop_address.other = address_other
             if address_floor is not None:
-                if address_floor != shop.address_floor:
-                    shop.address_floor = address_floor
+                if address_floor != shop_address.floor:
+                    shop_address.floor = address_floor
             if address_room is not None:
-                if address_room != shop.address_room:
-                    shop.address_room = address_room
+                if address_room != shop_address.room:
+                    shop_address.room = address_room
             if background_pic is not None:
                 if background_pic_url != shop.background_pic:
                     shop.background_pic = background_pic_url
