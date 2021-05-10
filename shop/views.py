@@ -1386,17 +1386,34 @@ def get_simple_info_of_specific_shop(request, id):
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
-            shops = models.Shop.objects.filter(id=id).select_related()
-            if len(shops) == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
                 response_data['status'] = 1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
         if response_data['status'] == 0:
-            response_data['data']['shop_icon'] = shops[0].shop_icon
-            response_data['data']['shop_title'] = shops[0].shop_title
-            response_data['data']['shop_background_pic'] = shops[0].background_pic
-            response_data['data']['shop_phone'] = shops[0].phone
-            response_data['data']['shop_email'] = shops[0].shop_email
-            response_data['data']['long_description'] = shops[0].long_description
+            shop_addresses = models.Shop_Address.objects.filter(shop_id=id)
+            response_data['data']['shop_address'] = []
+            for shop_address in shop_addresses:
+                shop_address_info = {}
+                shop_address_info['name'] = shop_address.name
+                if shop_address.is_phone_show == 'Y':
+                    shop_address_info['phone'] = shop_address.phone
+                if shop_address.is_address_show == 'Y' and shop_address.is_default == 'Y':
+                    shop_address_info['country_code'] = shop_address.country_code
+                    shop_address_info['area'] = shop_address.area
+                    shop_address_info['district'] = shop_address.district
+                    shop_address_info['road'] = shop_address.road
+                    shop_address_info['number'] = shop_address.number
+                    shop_address_info['other'] = shop_address.other
+                    shop_address_info['floor'] = shop_address.floor
+                    shop_address_info['room'] = shop_address.room
+                response_data['data']['shop_address'].append(shop_address_info)
+            response_data['data']['shop_icon'] = shop.shop_icon
+            response_data['data']['background_pic'] = shop.background_pic
+            if shop.email_on == 'Y':
+                response_data['data']['shop_email'] = shop.shop_email
+            response_data['data']['long_description'] = shop.long_description
             response_data['ret_val'] = '取得單一商店簡要資訊成功!'
     return JsonResponse(response_data)
