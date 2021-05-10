@@ -93,8 +93,6 @@ def shop_product(request,id):
                             #responseData['data'].append(productInfo)    
                             # responseData['data']['price'] = {}
                             v = []
-                            # object_methods = [method_name for method_name in dir(responseData['data'])
-                            #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
                             for obj in productSpecs:
                                 # if product.id==productSpecs.product.id:
                                 # responseData['data'].update({'price':obj.price})
@@ -617,6 +615,11 @@ def product_info_forAndroid(request,id): #product_id
                 sub_category_name=(getattr(productSubCategory,'c_product_sub_category'))
             productInfo.update({'c_sub_product_category':sub_category_name}) 
 
+            pic_list=[]
+            for productPic in productPics:
+                pic_list.append(getattr(productPic,'product_pic'))
+            productInfo.update({'pic_path':pic_list})
+
             responseData['data'].append(productInfo)
             # product_spec_list=['product_spec_list']
             spec_dict={"product_spec_list":[]}
@@ -630,8 +633,15 @@ def product_info_forAndroid(request,id): #product_id
                     "spec_dec_1_items":productSpec.spec_dec_1_items,
                     "spec_dec_2_items":productSpec.spec_dec_2_items,
                     "quantity":productSpec.quantity,
-                    # "price":productSpec.price
+                    "price":productSpec.price
                 }
+                v = []
+                for obj in productSpecs:
+                    # if product.id==productSpecs.product.id:
+                    # responseData['data'].update({'price':obj.price})
+                    v.append(getattr(obj,'price'))
+                # productSpecInfo.update({'price':v})
+                   
                 spec_price.append(productSpec.price)
                 spec_dict["product_spec_list"].append(productSpecInfo)
             min_price=min(spec_price)
