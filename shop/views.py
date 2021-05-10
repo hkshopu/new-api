@@ -1066,7 +1066,7 @@ def defaultBankAccount(request, id):
         'status': 0, 
         'ret_val': ''
     }
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
             default_account = models.Shop_Bank_Account.objects.get(id=id)
         except:
