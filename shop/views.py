@@ -1095,7 +1095,7 @@ def bankAccount(request, id=0, bank_account_id=''):
                 'account',
                 'account_name',
                 'is_default']
-            shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id)
+            shop_bank_accounts = models.Shop_Bank_Account.objects.filter(shop_id=id).order_by('-is_default')
             for account in shop_bank_accounts:
                 tempAccount = {}
                 for attr in shop_bank_account_attr:
