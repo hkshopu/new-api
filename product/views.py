@@ -1092,6 +1092,8 @@ def update(request,id): #product_id
                 product.product_category_id = product_category_id
                 product.product_sub_category_id = product_sub_category_id
                 product.product_title = product_title
+                product.quantity=-1
+                product.product_price=-1
                 product.product_description = product_description
                 product.shipping_fee = shipping_fee
                 product.weight = weight
