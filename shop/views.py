@@ -1485,8 +1485,6 @@ def get_simple_info_of_specific_shop(request, id):
             for shop_address in shop_addresses:
                 shop_address_info = {}
                 shop_address_info['name'] = shop_address.name
-                if shop_address.is_phone_show == 'Y':
-                    shop_address_info['phone'] = shop_address.phone
                 if shop_address.is_address_show == 'Y' and shop_address.is_default == 'Y':
                     shop_address_info['country_code'] = shop_address.country_code
                     shop_address_info['area'] = shop_address.area
@@ -1499,6 +1497,8 @@ def get_simple_info_of_specific_shop(request, id):
                 response_data['data']['shop_address'].append(shop_address_info)
             response_data['data']['shop_icon'] = shop.shop_icon
             response_data['data']['background_pic'] = shop.background_pic
+            if shop.address_is_phone_show == 'Y':
+                response_data['data']['address_phone'] = shop.address_phone
             if shop.email_on == 'Y':
                 response_data['data']['shop_email'] = shop.shop_email
             response_data['data']['long_description'] = shop.long_description
