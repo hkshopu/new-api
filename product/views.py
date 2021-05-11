@@ -770,7 +770,7 @@ def product_info(request,id): #product_id
                 productInfo.update({'spec_desc_2':spec_desc_2})
                 productInfo.update({'spec_dec_1_items':spec_dec_1_items})
                 productInfo.update({'spec_dec_2_items':spec_dec_2_items})
-                productInfo.update({'quantity':quantity})
+                productInfo.update({'spec_quantity':quantity})
                 productInfo.update({'shipment_desc':shipment_desc})
                 productInfo.update({'shipment_price':shipment_price})
                 productInfo.update({'onoff':onoff})
@@ -1092,6 +1092,8 @@ def update(request,id): #product_id
                 product.product_category_id = product_category_id
                 product.product_sub_category_id = product_sub_category_id
                 product.product_title = product_title
+                product.quantity=-1
+                product.product_price=-1
                 product.product_description = product_description
                 product.shipping_fee = shipping_fee
                 product.weight = weight
