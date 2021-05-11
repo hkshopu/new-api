@@ -913,45 +913,45 @@ def updateShopAddress_isAddressShow(request): #id : uuid(column)
 
     return JsonResponse(responseData)
     # pass
-# # 更新店鋪地址
-# def updateShopAddress(request):
-#     # 回傳資料
-#     responseData = {
-#         'status': 0, 
-#         'ret_val': ''
-#     }
-#     if request.method == 'POST':
-#         addressID=request.POST.get('address_ID', '')
-#         addressName= request.POST.get('address_name', '')
-#         addressCountry_code= request.POST.get('address_country_code', '')
-#         addressPhone= request.POST.get('address_phone', '')
-#         addressIs_phone_show= request.POST.get('address_is_phone_show', '')
-#         addressArea= request.POST.get('address_area', '')
-#         addressDistrict= request.POST.get('address_district', '')
-#         addressRoad= request.POST.get('address_road', '')
-#         addressNumber= request.POST.get('address_number', '')
-#         addressOther= request.POST.get('address_other', '')
-#         addressFloor= request.POST.get('address_floor', '')
-#         addressRoom= request.POST.get('address_room', '')
+# 更新店鋪地址(x)
+def updateShopAddress_unused(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        addressID=request.POST.get('address_ID', '')
+        addressName= request.POST.get('address_name', '')
+        addressCountry_code= request.POST.get('address_country_code', '')
+        addressPhone= request.POST.get('address_phone', '')
+        addressIs_phone_show= request.POST.get('address_is_phone_show', '')
+        addressArea= request.POST.get('address_area', '')
+        addressDistrict= request.POST.get('address_district', '')
+        addressRoad= request.POST.get('address_road', '')
+        addressNumber= request.POST.get('address_number', '')
+        addressOther= request.POST.get('address_other', '')
+        addressFloor= request.POST.get('address_floor', '')
+        addressRoom= request.POST.get('address_room', '')
 
-#         shop_address=models.Shop_Address.objects.get(id=addressID)
-#         shop_address.name=addressName
-#         shop_address.country_code=addressCountry_code
-#         shop_address.phone=addressPhone
-#         shop_address.is_phone_show=addressIs_phone_show
-#         shop_address.area=addressDistrict
-#         shop_address.road=addressRoad
-#         shop_address.number=addressNumber
-#         shop_address.other=addressOther
-#         shop_address.floor=addressFloor
-#         shop_address.room=addressRoom
-#         shop_address.save()
+        shop_address=models.Shop_Address.objects.get(id=addressID)
+        shop_address.name=addressName
+        shop_address.country_code=addressCountry_code
+        shop_address.phone=addressPhone
+        shop_address.is_phone_show=addressIs_phone_show
+        shop_address.area=addressDistrict
+        shop_address.road=addressRoad
+        shop_address.number=addressNumber
+        shop_address.other=addressOther
+        shop_address.floor=addressFloor
+        shop_address.room=addressRoom
+        shop_address.save()
 
-#         responseData['status'] =0
-#         responseData['ret_val'] = '商店地址更新成功!'
+        responseData['status'] =0
+        responseData['ret_val'] = '商店地址更新成功!'
 
-#     return JsonResponse(responseData)
-    # pass
+    return JsonResponse(responseData)
+    pass
 # 更新商店地址
 def updateShopAddress(request, id):
     # 回傳資料
