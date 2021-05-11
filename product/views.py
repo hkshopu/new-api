@@ -567,179 +567,254 @@ def product_info_forAndroid(request,id): #product_id
             products = models.Product.objects.filter(id=id)
             getCategoryID=[]
             getSubCategoryID=[]
+            print(products[0].product_spec_on)
             for product in products:
                 getCategoryID.append(product.product_category_id)
                 getSubCategoryID.append(product.product_sub_category_id)
             print(getCategoryID)
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-            productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
-            productSpecs=models.Product_Spec.objects.filter(product_id=id)
-            productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
-            productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
-            productSubCategorys=models.Product_Sub_Category.objects.filter(id=getSubCategoryID[0])
             
-            for product in products:       
-                productInfo = {
-                    'id': product.id,
-                    'product_category_id': product.product_category_id,
-                    'product_sub_category_id': product.product_sub_category_id,  
-                    'product_title': product.product_title,
-                    'quantity': product.quantity, 
-                    'product_description': product.product_description, 
-                    'product_price': product.product_price, 
-                    'shipping_fee': product.shipping_fee, 
-                    'created_at': product.created_at, 
-                    'updated_at': product.updated_at,
-                    'weight':product.weight,
-                    'longterm_stock_up':product.longterm_stock_up,
-                    'new_secondhand':product.new_secondhand,
-                    'product_status':product.product_status,
-                    'length':product.length,
-                    'width':product.width,
-                    'height':product.height,
-                    'like':product.like,
-                    'seen':product.seen,
-                    'sold_quantity':product.sold_quantity,
-                    'product_spec_on':product.product_spec_on,
-                    # 'c_category_name':productCategorys.c_product_category,
-                    # 'c_sub_category_name':productSubCategorys.c_product_sub_category
+            if products[0].product_spec_on=='y':
+                print("有規格，spec_on=y")
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                productSpecs=models.Product_Spec.objects.filter(product_id=id)
+                productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
+                productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
+                productSubCategorys=models.Product_Sub_Category.objects.filter(id=getSubCategoryID[0])
+                
+                for product in products:       
+                    productInfo = {
+                        'id': product.id,
+                        'product_category_id': product.product_category_id,
+                        'product_sub_category_id': product.product_sub_category_id,  
+                        'product_title': product.product_title,
+                        'quantity': product.quantity, 
+                        'product_description': product.product_description, 
+                        'product_price': product.product_price, 
+                        'shipping_fee': product.shipping_fee, 
+                        'created_at': product.created_at, 
+                        'updated_at': product.updated_at,
+                        'weight':product.weight,
+                        'longterm_stock_up':product.longterm_stock_up,
+                        'new_secondhand':product.new_secondhand,
+                        'product_status':product.product_status,
+                        'length':product.length,
+                        'width':product.width,
+                        'height':product.height,
+                        'like':product.like,
+                        'seen':product.seen,
+                        'sold_quantity':product.sold_quantity,
+                        'product_spec_on':product.product_spec_on,
+                        # 'c_category_name':productCategorys.c_product_category,
+                        # 'c_sub_category_name':productSubCategorys.c_product_sub_category
+                    }
+                # category_name=[]
+                # sub_category_name=[]
+                print(productCategorys)
+                for productCategory in productCategorys:
+                    category_name=(getattr(productCategory,'c_product_category'))
+                productInfo.update({'c_product_category':category_name}) 
+                
+                for productSubCategory in productSubCategorys:
+                    sub_category_name=(getattr(productSubCategory,'c_product_sub_category'))
+                productInfo.update({'c_sub_product_category':sub_category_name}) 
+
+                # pic_list=[]
+                # for productPic in productPics:
+                #     pic_list.append(getattr(productPic,'product_pic'))
+                # productInfo.update({'pic_path':pic_list})
+
+                # responseData['data'].append(productInfo)
+                # # product_spec_list=['product_spec_list']
+                # spec_dict={"product_spec_list":[]}
+                # spec_price_dict={"spec_price":[]}
+                # spec_price=[]
+                
+                # for productSpec in productSpecs:
+                #     productSpecInfo = {
+                #         "spec_desc_1":productSpec.spec_desc_1,
+                #         "spec_desc_2":productSpec.spec_desc_2,
+                #         "spec_dec_1_items":productSpec.spec_dec_1_items,
+                #         "spec_dec_2_items":productSpec.spec_dec_2_items,
+                #         "quantity":productSpec.quantity,
+                #         "price":productSpec.price
+                #     }
+                #     v = []
+                #     for obj in productSpecs:
+                #         # if product.id==productSpecs.product.id:
+                #         # responseData['data'].update({'price':obj.price})
+                #         v.append(getattr(obj,'price'))
+                #     # productSpecInfo.update({'price':v})
+                    
+                #     spec_price.append(productSpec.price)
+                #     spec_dict["product_spec_list"].append(productSpecInfo)
+                # min_price=min(spec_price)
+                # max_price=max(spec_price)
+                # productSpecPriceInfo = {
+                #     "min_price":min_price,
+                #     "max_price":max_price
+                # }
+                # spec_price_dict["spec_price"].append(productSpecPriceInfo)
+
+                # spec_dict.update({"min_price":min_price})     
+                # spec_dict.update({"max_price":max_price}) 
+                    # product_spec_list.append(productSpecInfo)
+                # responseData['data'].append(spec_dict)
+                # responseData['data'].append(spec_price_dict)
+
+                v1 = []
+                spec_desc_1=[]
+                spec_desc_2=[]
+                spec_dec_1_items=[]
+                spec_dec_2_items=[]
+                spec_quantity=[]
+                shipment_desc=[]
+                shipment_price=[]
+                onoff=[]
+                v2=[]
+                spec_price=[]
+                quantity_range=[]
+                for obj in productSpecs:
+                    v1.append(getattr(obj,'price'))
+                    spec_desc_1.append(getattr(obj,'spec_desc_1'))
+                    spec_desc_2.append(getattr(obj,'spec_desc_2'))
+                    spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
+                    spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
+                    spec_quantity.append(getattr(obj,'quantity'))
+
+                    spec_price.append(getattr(obj,'price'))
+                    quantity_range.append(getattr(obj,'quantity'))
+                min_price=min(spec_price)
+                max_price=max(spec_price)
+                min_quantity=min(quantity_range)
+                max_quantity=max(quantity_range)
+                productSpecPriceInfo = {
+                    "min_price":min_price,
+                    "max_price":max_price
                 }
-            # category_name=[]
-            # sub_category_name=[]
-            print(productCategorys)
-            for productCategory in productCategorys:
-                category_name=(getattr(productCategory,'c_product_category'))
-            productInfo.update({'c_product_category':category_name}) 
-             
-            for productSubCategory in productSubCategorys:
-                sub_category_name=(getattr(productSubCategory,'c_product_sub_category'))
-            productInfo.update({'c_sub_product_category':sub_category_name}) 
-
-            # pic_list=[]
-            # for productPic in productPics:
-            #     pic_list.append(getattr(productPic,'product_pic'))
-            # productInfo.update({'pic_path':pic_list})
-
-            # responseData['data'].append(productInfo)
-            # # product_spec_list=['product_spec_list']
-            # spec_dict={"product_spec_list":[]}
-            # spec_price_dict={"spec_price":[]}
-            # spec_price=[]
-            
-            # for productSpec in productSpecs:
-            #     productSpecInfo = {
-            #         "spec_desc_1":productSpec.spec_desc_1,
-            #         "spec_desc_2":productSpec.spec_desc_2,
-            #         "spec_dec_1_items":productSpec.spec_dec_1_items,
-            #         "spec_dec_2_items":productSpec.spec_dec_2_items,
-            #         "quantity":productSpec.quantity,
-            #         "price":productSpec.price
-            #     }
-            #     v = []
-            #     for obj in productSpecs:
-            #         # if product.id==productSpecs.product.id:
-            #         # responseData['data'].update({'price':obj.price})
-            #         v.append(getattr(obj,'price'))
-            #     # productSpecInfo.update({'price':v})
-                   
-            #     spec_price.append(productSpec.price)
-            #     spec_dict["product_spec_list"].append(productSpecInfo)
-            # min_price=min(spec_price)
-            # max_price=max(spec_price)
-            # productSpecPriceInfo = {
-            #     "min_price":min_price,
-            #     "max_price":max_price
-            # }
-            # spec_price_dict["spec_price"].append(productSpecPriceInfo)
-
-            # spec_dict.update({"min_price":min_price})     
-            # spec_dict.update({"max_price":max_price}) 
-                # product_spec_list.append(productSpecInfo)
-            # responseData['data'].append(spec_dict)
-            # responseData['data'].append(spec_price_dict)
-
-            v1 = []
-            spec_desc_1=[]
-            spec_desc_2=[]
-            spec_dec_1_items=[]
-            spec_dec_2_items=[]
-            spec_quantity=[]
-            shipment_desc=[]
-            shipment_price=[]
-            onoff=[]
-            v2=[]
-            spec_price=[]
-            quantity_range=[]
-            for obj in productSpecs:
-                v1.append(getattr(obj,'price'))
-                spec_desc_1.append(getattr(obj,'spec_desc_1'))
-                spec_desc_2.append(getattr(obj,'spec_desc_2'))
-                spec_dec_1_items.append(getattr(obj,'spec_dec_1_items'))
-                spec_dec_2_items.append(getattr(obj,'spec_dec_2_items'))
-                spec_quantity.append(getattr(obj,'quantity'))
-
-                spec_price.append(getattr(obj,'price'))
-                quantity_range.append(getattr(obj,'quantity'))
-            min_price=min(spec_price)
-            max_price=max(spec_price)
-            min_quantity=min(quantity_range)
-            max_quantity=max(quantity_range)
-            productSpecPriceInfo = {
-                "min_price":min_price,
-                "max_price":max_price
-            }
-            productSpecQuantityInfo = {
-                "min_quantity":min_quantity,
-                "max_quantity":max_quantity
-            }
-            spec_price_dict={"spec_price":[]}
-            spec_price_dict["spec_price"].append(productSpecPriceInfo)
-            spec_price_dict={"quantity_range":[]}
-            spec_price_dict["quantity_range"].append(productSpecQuantityInfo)
-            # for productShipment in productShipments:
-            #     shipment_desc.append(getattr(productShipment,'shipment_desc'))
-            #     shipment_price.append(getattr(productShipment,'price'))
-            #     onoff.append(getattr(productShipment,'onoff'))
-
-            for picObj in productPics:
-                v2.append(getattr(picObj,'product_pic'))
-
-            productInfo.update({'price':v1})
-            productInfo.update({'spec_desc_1':spec_desc_1})
-            productInfo.update({'spec_desc_2':spec_desc_2})
-            productInfo.update({'spec_dec_1_items':spec_dec_1_items})
-            productInfo.update({'spec_dec_2_items':spec_dec_2_items})
-            productInfo.update({'spec_quantity':spec_quantity})
-            productInfo.update(productSpecPriceInfo)
-            productInfo.update(productSpecQuantityInfo)
-            # productInfo.update({'shipment_desc':shipment_desc})
-            # productInfo.update({'shipment_price':shipment_price})
-            # productInfo.update({'onoff':onoff})
-            productInfo.update({'pic_path':v2})   
-            responseData['data'].append(productInfo)
-            # responseData['data'].append(spec_price_dict)
-            # responseData['data'].append(productSpecPriceInfo)
-            shipment_dict={"product_shipment_list":[]}
-            print(productShipments)
-            shipment_price=[]
-
-            for productShipment in productShipments:
-                productShipmentInfo = {
-                    "shipment_desc":productShipment.shipment_desc,
-                    "price":productShipment.price,
-                    "onoff":productShipment.onoff,
+                productSpecQuantityInfo = {
+                    "min_quantity":min_quantity,
+                    "max_quantity":max_quantity
                 }
-                shipment_dict["product_shipment_list"].append(productShipmentInfo)
-                shipment_price.append(productShipment.price)
-            shipment_min_price=min(shipment_price)
-            shipment_max_price=max(shipment_price)
+                spec_price_dict={"spec_price":[]}
+                spec_price_dict["spec_price"].append(productSpecPriceInfo)
+                spec_price_dict={"quantity_range":[]}
+                spec_price_dict["quantity_range"].append(productSpecQuantityInfo)
+                # for productShipment in productShipments:
+                #     shipment_desc.append(getattr(productShipment,'shipment_desc'))
+                #     shipment_price.append(getattr(productShipment,'price'))
+                #     onoff.append(getattr(productShipment,'onoff'))
 
-            productInfo.update({'shipment_min_price':shipment_min_price})
-            productInfo.update({'shipment_max_price':shipment_max_price})
-            productInfo.update(shipment_dict)
-            # responseData['data'].append(shipment_dict)
+                for picObj in productPics:
+                    v2.append(getattr(picObj,'product_pic'))
 
-            responseData['ret_val'] = '已取得商品資訊!'
+                productInfo.update({'price':v1})
+                productInfo.update({'spec_desc_1':spec_desc_1})
+                productInfo.update({'spec_desc_2':spec_desc_2})
+                productInfo.update({'spec_dec_1_items':spec_dec_1_items})
+                productInfo.update({'spec_dec_2_items':spec_dec_2_items})
+                productInfo.update({'spec_quantity':spec_quantity})
+                productInfo.update(productSpecPriceInfo)
+                productInfo.update(productSpecQuantityInfo)
+                # productInfo.update({'shipment_desc':shipment_desc})
+                # productInfo.update({'shipment_price':shipment_price})
+                # productInfo.update({'onoff':onoff})
+                productInfo.update({'pic_path':v2})   
+                responseData['data'].append(productInfo)
+                # responseData['data'].append(spec_price_dict)
+                # responseData['data'].append(productSpecPriceInfo)
+                shipment_dict={"product_shipment_list":[]}
+                print(productShipments)
+                shipment_price=[]
+
+                for productShipment in productShipments:
+                    productShipmentInfo = {
+                        "shipment_desc":productShipment.shipment_desc,
+                        "price":productShipment.price,
+                        "onoff":productShipment.onoff,
+                    }
+                    shipment_dict["product_shipment_list"].append(productShipmentInfo)
+                    shipment_price.append(productShipment.price)
+                shipment_min_price=min(shipment_price)
+                shipment_max_price=max(shipment_price)
+
+                productInfo.update({'shipment_min_price':shipment_min_price})
+                productInfo.update({'shipment_max_price':shipment_max_price})
+                productInfo.update(shipment_dict)
+                # responseData['data'].append(shipment_dict)
+
+                responseData['ret_val'] = '已取得商品資訊!'
+            elif products[0].product_spec_on=='n':
+                print("無規格，spec_on=n")
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                productSpecs=models.Product_Spec.objects.filter(product_id=id)
+                productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
+                productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
+                productSubCategorys=models.Product_Sub_Category.objects.filter(id=getSubCategoryID[0])
+                
+                for product in products:       
+                    productInfo = {
+                        'id': product.id,
+                        'product_category_id': product.product_category_id,
+                        'product_sub_category_id': product.product_sub_category_id,  
+                        'product_title': product.product_title,
+                        'quantity': product.quantity, 
+                        'product_description': product.product_description, 
+                        'product_price': product.product_price, 
+                        'shipping_fee': product.shipping_fee, 
+                        'created_at': product.created_at, 
+                        'updated_at': product.updated_at,
+                        'weight':product.weight,
+                        'longterm_stock_up':product.longterm_stock_up,
+                        'new_secondhand':product.new_secondhand,
+                        'product_status':product.product_status,
+                        'length':product.length,
+                        'width':product.width,
+                        'height':product.height,
+                        'like':product.like,
+                        'seen':product.seen,
+                        'sold_quantity':product.sold_quantity,
+                        'product_spec_on':product.product_spec_on,
+                        # 'c_category_name':productCategorys.c_product_category,
+                        # 'c_sub_category_name':productSubCategorys.c_product_sub_category
+                    }
+                # category_name=[]
+                # sub_category_name=[]
+                print(productCategorys)
+                for productCategory in productCategorys:
+                    category_name=(getattr(productCategory,'c_product_category'))
+                productInfo.update({'c_product_category':category_name}) 
+                
+                for productSubCategory in productSubCategorys:
+                    sub_category_name=(getattr(productSubCategory,'c_product_sub_category'))
+                productInfo.update({'c_sub_product_category':sub_category_name}) 
+               
+                for picObj in productPics:
+                    v2.append(getattr(picObj,'product_pic'))
+
+                productInfo.update({'pic_path':v2})   
+                responseData['data'].append(productInfo)
+                shipment_dict={"product_shipment_list":[]}
+                print(productShipments)
+                shipment_price=[]
+
+                for productShipment in productShipments:
+                    productShipmentInfo = {
+                        "shipment_desc":productShipment.shipment_desc,
+                        "price":productShipment.price,
+                        "onoff":productShipment.onoff,
+                    }
+                    shipment_dict["product_shipment_list"].append(productShipmentInfo)
+                    shipment_price.append(productShipment.price)
+                shipment_min_price=min(shipment_price)
+                shipment_max_price=max(shipment_price)
+
+                productInfo.update({'shipment_min_price':shipment_min_price})
+                productInfo.update({'shipment_max_price':shipment_max_price})
+                productInfo.update(shipment_dict)
+                # responseData['data'].append(shipment_dict)
+
+                responseData['ret_val'] = '已取得商品資訊!'
     return JsonResponse(responseData)
 
 # 更新商品
@@ -754,9 +829,9 @@ def update(request,id): #product_id
         product_category_id = request.POST.get('product_category_id', '')
         product_sub_category_id = request.POST.get('product_sub_category_id', '')
         product_title = request.POST.get('product_title', '')
-        # quantity = request.POST.get('quantity', 0)
+        quantity = request.POST.get('quantity', 0)
         product_description = request.POST.get('product_description', '')
-        # product_price = request.POST.get('product_price', 0)
+        product_price = request.POST.get('product_price', 0)
         shipping_fee = request.POST.get('shipping_fee', 0)
         weight = request.POST.get('weight', 0)
         new_secondhand = request.POST.get('new_secondhand', '')
@@ -779,84 +854,159 @@ def update(request,id): #product_id
         if response_data['status'] == 0:
             try:
                 product = models.Product.objects.get(id=id)
-                productSpec= models.Product_Spec.objects.filter(product_id=id)
-                productShipment= models.Product_Shipment_Method.objects.filter(product_id=id)
+                # productSpec= models.Product_Spec.objects.filter(product_id=id)
+                # productShipment= models.Product_Shipment_Method.objects.filter(product_id=id)
             except:
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此編號的商品!'
         if response_data['status'] == 0:
-            product = models.Product.objects.get(id=id)
-            product.product_category_id = product_category_id
-            product.product_sub_category_id = product_sub_category_id
-            product.product_title = product_title
-            product.product_description = product_description
-            product.shipping_fee = shipping_fee
-            product.weight = weight
-            product.new_secondhand=new_secondhand
-            product.length=length
-            product.width=width
-            product.height=height
-            product.longterm_stock_up=longterm_stock_up
-            product.product_status=product_status
-            product.product_spec_on=product_spec_on
-            product.save()
+            if product_spec_on=='y':
+                product = models.Product.objects.get(id=id)
+                product.product_category_id = product_category_id
+                product.product_sub_category_id = product_sub_category_id
+                product.product_title = product_title
+                product.product_description = product_description
+                product.shipping_fee = shipping_fee
+                product.weight = weight
+                product.new_secondhand=new_secondhand
+                product.length=length
+                product.width=width
+                product.height=height
+                product.longterm_stock_up=longterm_stock_up
+                product.product_status=product_status
+                product.product_spec_on=product_spec_on
+                product.save()
 
-            productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
-            for product_pic_del in productPics:
-               delete_file(product_pic_del.product_pic)
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                for product_pic_del in productPics:
+                    delete_file(product_pic_del.product_pic)
 
-            productPicURL=[]
-            for filename, product_pic_list in request.FILES.lists():
-                print(filename,product_pic_list)
-                name = request.FILES[filename].name
-                print(name)
-                for f in product_pic_list:
+                productPicURL=[]
+                for filename, product_pic_list in request.FILES.lists():
+                    print(filename,product_pic_list)
+                    name = request.FILES[filename].name
+                    print(name)
+                    for f in product_pic_list:
 
-                    # upload_file(product_pic,'images/product/',suffix="img")
-                    productPicURL.append(upload_file(f,'images/product_test/',suffix="img"))
-            
-            models.Selected_Product_Pic.objects.filter(product_id=id).delete()
-            #處理圖片&cover
-            for index,product_pic_url in enumerate(productPicURL):            
-                # 寫入資料庫
-                if index==0:
-                    models.Selected_Product_Pic.objects.create(
-                        product_id=id, 
-                        product_pic=product_pic_url,
-                        cover="y"
-                    )
-                else :
-                    models.Selected_Product_Pic.objects.create(
-                        product_id=id, 
-                        product_pic=product_pic_url,
-                        cover="n"
+                        # upload_file(product_pic,'images/product/',suffix="img")
+                        productPicURL.append(upload_file(f,'images/product_test/',suffix="img"))
+                
+                models.Selected_Product_Pic.objects.filter(product_id=id).delete()
+                #處理圖片&cover
+                for index,product_pic_url in enumerate(productPicURL):            
+                    # 寫入資料庫
+                    if index==0:
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=id, 
+                            product_pic=product_pic_url,
+                            cover="y"
+                        )
+                    else :
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=id, 
+                            product_pic=product_pic_url,
+                            cover="n"
+                        )
+                    
+                models.Product_Spec.objects.filter(product_id=id).delete()
+                models.Product_Shipment_Method.objects.filter(product_id=id).delete()
+                    # 寫入資料庫(規格)
+                for i in range(len(product_spec_list["product_spec_list"])):
+                    models.Product_Spec.objects.create(
+                        product_id=id,
+                        spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
+                        spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
+                        spec_dec_1_items=product_spec_list["product_spec_list"][i]["spec_dec_1_items"],
+                        spec_dec_2_items=product_spec_list["product_spec_list"][i]["spec_dec_2_items"],
+                        price=product_spec_list["product_spec_list"][i]["price"],
+                        quantity=product_spec_list["product_spec_list"][i]["quantity"],
                     )
                 
-            models.Product_Spec.objects.filter(product_id=id).delete()
-            models.Product_Shipment_Method.objects.filter(product_id=id).delete()
-                # 寫入資料庫(規格)
-            for i in range(len(product_spec_list["product_spec_list"])):
-                models.Product_Spec.objects.create(
-                    product_id=id,
-                    spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
-                    spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
-                    spec_dec_1_items=product_spec_list["product_spec_list"][i]["spec_dec_1_items"],
-                    spec_dec_2_items=product_spec_list["product_spec_list"][i]["spec_dec_2_items"],
-                    price=product_spec_list["product_spec_list"][i]["price"],
-                    quantity=product_spec_list["product_spec_list"][i]["quantity"],
-                )
-            
 
-            for i in range(len(shipment_method)):
-                models.Product_Shipment_Method.objects.create(
-                    product_id=id,
-                    shipment_desc=shipment_method[i]["shipment_desc"],
-                    price=shipment_method[i]["price"],
-                    onoff=shipment_method[i]["onoff"],
-                    shop_id=shipment_method[i]["shop_id"]
-                )
-            response_data['status'] = 0
-            response_data['ret_val'] = '商品更新成功!'
+                for i in range(len(shipment_method)):
+                    models.Product_Shipment_Method.objects.create(
+                        product_id=id,
+                        shipment_desc=shipment_method[i]["shipment_desc"],
+                        price=shipment_method[i]["price"],
+                        onoff=shipment_method[i]["onoff"],
+                        shop_id=shipment_method[i]["shop_id"]
+                    )
+                response_data['status'] = 0
+                response_data['ret_val'] = '商品更新成功!'
+            elif product_spec_on=='n':
+                product = models.Product.objects.get(id=id)
+                product.product_category_id = product_category_id
+                product.product_sub_category_id = product_sub_category_id
+                product.product_title = product_title
+                product.quantity=quantity
+                product.product_price=product_price
+                product.product_description = product_description
+                product.shipping_fee = shipping_fee
+                product.weight = weight
+                product.new_secondhand=new_secondhand
+                product.length=length
+                product.width=width
+                product.height=height
+                product.longterm_stock_up=longterm_stock_up
+                product.product_status=product_status
+                product.product_spec_on=product_spec_on
+                product.save()
+
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                for product_pic_del in productPics:
+                    delete_file(product_pic_del.product_pic)
+
+                productPicURL=[]
+                for filename, product_pic_list in request.FILES.lists():
+                    print(filename,product_pic_list)
+                    name = request.FILES[filename].name
+                    print(name)
+                    for f in product_pic_list:
+
+                        # upload_file(product_pic,'images/product/',suffix="img")
+                        productPicURL.append(upload_file(f,'images/product_test/',suffix="img"))
+                
+                models.Selected_Product_Pic.objects.filter(product_id=id).delete()
+                #處理圖片&cover
+                for index,product_pic_url in enumerate(productPicURL):            
+                    # 寫入資料庫
+                    if index==0:
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=id, 
+                            product_pic=product_pic_url,
+                            cover="y"
+                        )
+                    else :
+                        models.Selected_Product_Pic.objects.create(
+                            product_id=id, 
+                            product_pic=product_pic_url,
+                            cover="n"
+                        )
+                    
+                # models.Product_Spec.objects.filter(product_id=id).delete()
+                models.Product_Shipment_Method.objects.filter(product_id=id).delete()
+                #     # 寫入資料庫(規格)
+                # for i in range(len(product_spec_list["product_spec_list"])):
+                #     models.Product_Spec.objects.create(
+                #         product_id=id,
+                #         spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
+                #         spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
+                #         spec_dec_1_items=product_spec_list["product_spec_list"][i]["spec_dec_1_items"],
+                #         spec_dec_2_items=product_spec_list["product_spec_list"][i]["spec_dec_2_items"],
+                #         price=product_spec_list["product_spec_list"][i]["price"],
+                #         quantity=product_spec_list["product_spec_list"][i]["quantity"],
+                #     )
+                
+                for i in range(len(shipment_method)):
+                    models.Product_Shipment_Method.objects.create(
+                        product_id=id,
+                        shipment_desc=shipment_method[i]["shipment_desc"],
+                        price=shipment_method[i]["price"],
+                        onoff=shipment_method[i]["onoff"],
+                        shop_id=shipment_method[i]["shop_id"]
+                    )
+                response_data['status'] = 0
+                response_data['ret_val'] = '商品更新成功!'
     return JsonResponse(response_data)
 # 新增商品
 def save(request):
@@ -1028,7 +1178,7 @@ def save(request):
                     product_category_id=product_category_id, 
                     product_sub_category_id=product_sub_category_id, 
                     product_title=product_title, 
-                    quantity=quantity, 
+                    quantity=-1, 
                     product_description=product_description, 
                     # product_country_code=product_country_code, 
                     # product_price=product_price, 
@@ -1169,6 +1319,7 @@ def save(request):
           
         #------------
     return JsonResponse(response_data)
+
 
 # 上架/下架
 def update_product_status(request): 
