@@ -314,11 +314,12 @@ def update(request, id):
                     response_data['ret_val'] = '未填寫商店地址編號!'
 
         if response_data['status'] == 0:
-            try:
-                shop_address = models.Shop_Address.objects.get(id=address_id)
-            except:
-                response_data['status'] = -3
-                response_data['ret_val'] = '找不到此商店地址編號的地址!'
+            if address_id:
+                try:
+                    shop_address = models.Shop_Address.objects.get(id=address_id)
+                except:
+                    response_data['status'] = -3
+                    response_data['ret_val'] = '找不到此商店地址編號的地址!'
 
         if response_data['status'] == 0:
             if shop_title == '':
@@ -655,7 +656,8 @@ def update(request, id):
                 if instagram_on != shop.instagram_on:
                     shop.instagram_on = instagram_on
             shop.save()
-            shop_address.save()
+            if shop_address:
+                shop_address.save()
             # 更新選擇商店分類
             # to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id).exclude(shop_category_id__in=shop_category_id)
             # if len(to_delete_selected_shop_categories) > 0:
