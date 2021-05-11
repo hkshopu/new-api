@@ -163,9 +163,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -187,7 +187,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                             print(product.id)
                             for productPic in productPics:  
                                 print(product.id) 
-                                if product.id==productPic.product_id : 
+                                if product.id==productPic.product_id and product.quantity !=0 : 
                                     print("成功")
                                     productInfo = {
                                         'id': product.id,
@@ -205,9 +205,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -255,9 +255,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -279,7 +279,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                             print(product.id)
                             for productPic in productPics:  
                                 print(product.id) 
-                                if product.id==productPic.product_id : 
+                                if product.id==productPic.product_id  and product.quantity !=0 : 
                                     print("成功")
                                     productInfo = {
                                         'id': product.id,
@@ -297,9 +297,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -356,9 +356,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -396,9 +396,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -450,9 +450,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -490,9 +490,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -542,9 +542,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -584,9 +584,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -634,9 +634,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -676,9 +676,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'length':product.length,
                                         'width':product.width,
                                         'height':product.height,
-                                        # 'like':product.like,
-                                        # 'seen':product.seen,
-                                        # 'sold_quantity':product.sold_quantity,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
                                         'product_spec_on':product.product_spec_on,
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
@@ -1419,7 +1419,10 @@ def save(request):
                     height=height,
                     longterm_stock_up=longterm_stock_up,
                     product_status=product_status,
-                    product_spec_on=product_spec_on
+                    product_spec_on=product_spec_on,
+                    like=0,
+                    seen=0,
+                    sold_quantity=0
                 )
                 #傳回product_id
                 products=models.Product.objects.filter(
@@ -1491,7 +1494,10 @@ def save(request):
                     height=height,
                     longterm_stock_up=longterm_stock_up,
                     product_status=product_status,
-                    product_spec_on=product_spec_on
+                    product_spec_on=product_spec_on,
+                    like=0,
+                    seen=0,
+                    sold_quantiy=0
                 )
                 #傳回product_id
                 products=models.Product.objects.filter(
