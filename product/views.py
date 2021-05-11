@@ -187,7 +187,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                             print(product.id)
                             for productPic in productPics:  
                                 print(product.id) 
-                                if product.id==productPic.product_id : 
+                                if product.id==productPic.product_id and product.quantity !=0: 
                                     print("成功")
                                     productInfo = {
                                         'id': product.id,
@@ -279,7 +279,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                             print(product.id)
                             for productPic in productPics:  
                                 print(product.id) 
-                                if product.id==productPic.product_id : 
+                                if product.id==productPic.product_id and product.quantity !=0 : 
                                     print("成功")
                                     productInfo = {
                                         'id': product.id,
