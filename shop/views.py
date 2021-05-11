@@ -656,7 +656,7 @@ def update(request, id):
                 if instagram_on != shop.instagram_on:
                     shop.instagram_on = instagram_on
             shop.save()
-            if shop_address:
+            if address_id:
                 shop_address.save()
             # 更新選擇商店分類
             # to_delete_selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=id).exclude(shop_category_id__in=shop_category_id)
