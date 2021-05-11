@@ -128,83 +128,91 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                 if keyword=="none":
                     print("為空值")
                     products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status)
-                    print(products)
+                    # print(products)
                     getProductID=[]
                     for product in products:
                         getProductID.append(product.id)
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-                    for product in products:   
-                        for productPic in productPics:
-                            # for productSpec in productSpecs:    
+                    for product in products: 
+                        print(product.product_spec_on)  
+                        if product.product_spec_on=='y':
+                            for productPic in productPics:
+                                # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    if product.product_spec_on=='y':
-                                        productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
-                                        print("spec_data")
-                                        print(len(productSpecs))
-                                        if(len(productSpecs)==0):
-                                            break
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        v = []
-                                        # object_methods = [method_name for method_name in dir(responseData['data'])
-                                        #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-                                        for obj in productSpecs:
-                                            # if product.id==productSpecs.product.id:
-                                            # responseData['data'].update({'price':obj.price})
-                                            v.append(getattr(obj,'price'))
-                                        min_price=min(v)
-                                        max_price=max(v)
-                                        productInfo.update({'min_price':min_price}) 
-                                        productInfo.update({'max_price':max_price})   
-                                        responseData['data'].append(productInfo)
-                                    elif product.product_spec_on=='n':         
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        responseData['data'].append(productInfo)
-
+                                    print(product.product_spec_on)
+                                    
+                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
+                                    print("spec_data")
+                                    print(len(productSpecs))
+                                    if(len(productSpecs)==0):
+                                        break
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    v = []
+                                    # object_methods = [method_name for method_name in dir(responseData['data'])
+                                    #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
+                                    for obj in productSpecs:
+                                        # if product.id==productSpecs.product.id:
+                                        # responseData['data'].update({'price':obj.price})
+                                        v.append(getattr(obj,'price'))
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})   
+                                    responseData['data'].append(productInfo)
+                        elif product.product_spec_on=='n':     
+                            print("無規格") 
+                            print(product.id)
+                            for productPic in productPics:  
+                                print(product.id) 
+                                if product.id==productPic.product_id : 
+                                    print("成功")
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
                     print("不能為空值")
@@ -216,75 +224,85 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                         getProductID.append(product.id)
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-                    for product in products:   
-                        for productPic in productPics:
-                            # for productSpec in productSpecs:    
-                                if product.id==productPic.product_id :
-                                    if product.product_spec_on=='y': 
-                                        productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
-                                        if(len(productSpecs)==0):
-                                            break
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        v = []
-                                        # object_methods = [method_name for method_name in dir(responseData['data'])
-                                        #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-                                        for obj in productSpecs:
-                                            # if product.id==productSpecs.product.id:
-                                            # responseData['data'].update({'price':obj.price})
-                                            v.append(getattr(obj,'price'))
-                                        min_price=min(v)
-                                        max_price=max(v)
-                                        productInfo.update({'min_price':min_price}) 
-                                        productInfo.update({'max_price':max_price})
-                                        # productInfo.update({'price':v})   
-                                        responseData['data'].append(productInfo)
-                                    elif product.product_spec_on=='n':  
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }   
-                                        responseData['data'].append(productInfo)
+                    for product in products: 
+                        print(product.product_spec_on)  
+                        if product.product_spec_on=='y':
+                            for productPic in productPics:
+                                # for productSpec in productSpecs:    
+                                if product.id==productPic.product_id : 
+                                    print(product.product_spec_on)
+                                    
+                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
+                                    print("spec_data")
+                                    print(len(productSpecs))
+                                    if(len(productSpecs)==0):
+                                        break
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    v = []
+                                    # object_methods = [method_name for method_name in dir(responseData['data'])
+                                    #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
+                                    for obj in productSpecs:
+                                        # if product.id==productSpecs.product.id:
+                                        # responseData['data'].update({'price':obj.price})
+                                        v.append(getattr(obj,'price'))
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})   
+                                    responseData['data'].append(productInfo)
+                        elif product.product_spec_on=='n':     
+                            print("無規格") 
+                            print(product.id)
+                            for productPic in productPics:  
+                                print(product.id) 
+                                if product.id==productPic.product_id : 
+                                    print("成功")
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'             
             elif product_status=="active" and int(quantity)==0: #已售完
                 print("===已售完===")
@@ -301,82 +319,87 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                                         
                     productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=getProductID).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
                     productSpecsIDList=[] #沒spec等於塞product的id
+                    print(len(productSpecs_tests))
                     if len(productSpecs_tests)==0:
                         productSpecsIDList=getProductID         
                     else:
                         for i in range (len(productSpecs_tests)):
                             productSpecsIDList.append(productSpecs_tests[i]['product_id'])
                         
-
+                    print(productSpecsIDList)
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')     
-                    for product in products:   
-                        for productPic in productPics:
+                    for product in products:  
+                        if product.product_spec_on=='y' and product.quantity==0 : 
+                            for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    if product.product_spec_on=='y':
-                                        productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
+                                    
+                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
 
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        v = []
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    v = []
 
-                                        productSpecs_final=models.Product_Spec.objects.filter(product_id=product.id) #.filter(quantity=0)
-                                        for obj in productSpecs_final:
-                                            # if product.id==productSpecs.product.id:
-                                            # responseData['data'].update({'price':obj.price})
-                                            v.append(getattr(obj,'price'))
-                                        min_price=min(v)
-                                        max_price=max(v)
-                                        productInfo.update({'min_price':min_price}) 
-                                        productInfo.update({'max_price':max_price})
-                                        # productInfo.update({'price':v})   
-                                        responseData['data'].append(productInfo)                 
-                                    elif product.product_spec_on=='n':
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        responseData['data'].append(productInfo)
+                                    productSpecs_final=models.Product_Spec.objects.filter(product_id=product.id) #.filter(quantity=0)
+                                    for obj in productSpecs_final:
+                                        # if product.id==productSpecs.product.id:
+                                        # responseData['data'].update({'price':obj.price})
+                                        v.append(getattr(obj,'price'))
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
+                                    responseData['data'].append(productInfo)                 
+                        elif product.product_spec_on=='n' and product.quantity==0:
+                            for productPic in productPics:
+                                # for productSpec in productSpecs:    
+                                if product.id==productPic.product_id : 
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
                     print("不能為空值")
@@ -397,73 +420,78 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
 
 
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')
-                    for product in products:   
-                        for productPic in productPics:
+                    for product in products:  
+                        if product.product_spec_on=='y'and product.quantity==0: 
+                            for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    if product.product_spec_on=='y':
-                                        productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        v = []
+                                    
+                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
 
-                                        productSpecs_final=models.Product_Spec.objects.filter(product_id=product.id) #.filter(quantity=0)
-                                        for obj in productSpecs_final:
-                                            # if product.id==productSpecs.product.id:
-                                            # responseData['data'].update({'price':obj.price})
-                                            v.append(getattr(obj,'price'))
-                                        min_price=min(v)
-                                        max_price=max(v)
-                                        productInfo.update({'min_price':min_price}) 
-                                        productInfo.update({'max_price':max_price})
-                                        # productInfo.update({'price':v})   
-                                        responseData['data'].append(productInfo)
-                                    elif product.product_spec_on=='n':
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        responseData['data'].append(productInfo)
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    v = []
+
+                                    productSpecs_final=models.Product_Spec.objects.filter(product_id=product.id) #.filter(quantity=0)
+                                    for obj in productSpecs_final:
+                                        # if product.id==productSpecs.product.id:
+                                        # responseData['data'].update({'price':obj.price})
+                                        v.append(getattr(obj,'price'))
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
+                                    # productInfo.update({'price':v})   
+                                    responseData['data'].append(productInfo)                 
+                        elif product.product_spec_on=='n' and product.quantity==0:
+                            for productPic in productPics:
+                                # for productSpec in productSpecs:    
+                                if product.id==productPic.product_id : 
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             elif product_status=="draft": #未上架
                 print("===未上架===")
@@ -477,75 +505,85 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                         getProductID.append(product.id)
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-                    for product in products:   
-                        for productPic in productPics:
-                            # for productSpec in productSpecs:    
+                    for product in products: 
+                        print(product.product_spec_on)  
+                        if product.product_spec_on=='y':
+                            for productPic in productPics:
+                                # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    if product.product_spec_on=='y':
-                                        productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
-                                        if(len(productSpecs)==0):
-                                            break
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        v = []
-                                        # object_methods = [method_name for method_name in dir(responseData['data'])
-                                        #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-                                        for obj in productSpecs:
-                                            # if product.id==productSpecs.product.id:
-                                            # responseData['data'].update({'price':obj.price})
-                                            v.append(getattr(obj,'price'))
-                                        min_price=min(v)
-                                        max_price=max(v)
-                                        productInfo.update({'min_price':min_price}) 
-                                        productInfo.update({'max_price':max_price})
-                                        # productInfo.update({'price':v})   
-                                        responseData['data'].append(productInfo)    
-                                    elif product.product_spec_on=='n':             
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'product_spec_on':product.product_spec_on,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        responseData['data'].append(productInfo) 
+                                    print(product.product_spec_on)
+                                    
+                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    print("spec_data")
+                                    print(len(productSpecs))
+                                    if(len(productSpecs)==0):
+                                        break
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    v = []
+                                    # object_methods = [method_name for method_name in dir(responseData['data'])
+                                    #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
+                                    for obj in productSpecs:
+                                        # if product.id==productSpecs.product.id:
+                                        # responseData['data'].update({'price':obj.price})
+                                        v.append(getattr(obj,'price'))
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})   
+                                    responseData['data'].append(productInfo)
+                        elif product.product_spec_on=='n':     
+                            print("無規格") 
+                            print(product.id)
+                            for productPic in productPics:  
+                                print(product.id) 
+                                if product.id==productPic.product_id : 
+                                    print("成功")
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
                     print("不能為空值")
@@ -557,73 +595,85 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                         getProductID.append(product.id)
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-                    for product in products:   
-                        for productPic in productPics:
-                            # for productSpec in productSpecs:    
+                    for product in products: 
+                        print(product.product_spec_on)  
+                        if product.product_spec_on=='y':
+                            for productPic in productPics:
+                                # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    if product.product_spec_on=='y': 
-                                        productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
-                                        if(len(productSpecs)==0):
-                                            break
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        v = []
-                                        # object_methods = [method_name for method_name in dir(responseData['data'])
-                                        #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
-                                        for obj in productSpecs:
-                                            # if product.id==productSpecs.product.id:
-                                            # responseData['data'].update({'price':obj.price})
-                                            v.append(getattr(obj,'price'))
-                                        min_price=min(v)
-                                        max_price=max(v)
-                                        productInfo.update({'min_price':min_price}) 
-                                        productInfo.update({'max_price':max_price})
-                                        # productInfo.update({'price':v})   
-                                        responseData['data'].append(productInfo)
-                                    elif product.product_spec_on=='n': 
-                                        productInfo = {
-                                            'id': product.id,
-                                            'product_category_id': product.product_category_id, 
-                                            'product_title': product.product_title,
-                                            'quantity': product.quantity, 
-                                            'product_description': product.product_description, 
-                                            'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
-                                            'pic_path':productPic.product_pic,
-                                            # 'price' : productSpec.price
-                                        }
-                                        responseData['data'].append(productInfo)
+                                    print(product.product_spec_on)
+                                    
+                                    productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                    print("spec_data")
+                                    print(len(productSpecs))
+                                    if(len(productSpecs)==0):
+                                        break
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    v = []
+                                    # object_methods = [method_name for method_name in dir(responseData['data'])
+                                    #     if (callable(getattr(responseData['data'], method_name)) and not method_name.startswith('_'))]
+                                    for obj in productSpecs:
+                                        # if product.id==productSpecs.product.id:
+                                        # responseData['data'].update({'price':obj.price})
+                                        v.append(getattr(obj,'price'))
+                                    min_price=min(v)
+                                    max_price=max(v)
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})   
+                                    responseData['data'].append(productInfo)
+                        elif product.product_spec_on=='n':     
+                            print("無規格") 
+                            print(product.id)
+                            for productPic in productPics:  
+                                print(product.id) 
+                                if product.id==productPic.product_id : 
+                                    print("成功")
+                                    productInfo = {
+                                        'id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_spec_on':product.product_spec_on,
+                                        'pic_path':productPic.product_pic,
+                                        # 'price' : productSpec.price
+                                    }
+                                    responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             else :
                 responseData['status'] = -8787
