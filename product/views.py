@@ -719,9 +719,9 @@ def product_info(request,id): #product_id
                     'product_category_id': product.product_category_id,
                     'product_sub_category_id': product.product_sub_category_id,  
                     'product_title': product.product_title,
-                    # 'quantity': product.quantity, 
+                    'quantity': product.quantity, 
                     'product_description': product.product_description, 
-                    # 'product_price': product.product_price, 
+                    'product_price': product.product_price, 
                     'shipping_fee': product.shipping_fee, 
                     'created_at': product.created_at, 
                     'updated_at': product.updated_at,
@@ -765,7 +765,7 @@ def product_info(request,id): #product_id
                 for picObj in productPics:
                     v2.append(getattr(picObj,'product_pic'))
 
-                productInfo.update({'price':v})
+                productInfo.update({'spec_price':v})
                 productInfo.update({'spec_desc_1':spec_desc_1})
                 productInfo.update({'spec_desc_2':spec_desc_2})
                 productInfo.update({'spec_dec_1_items':spec_dec_1_items})
