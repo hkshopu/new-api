@@ -1422,7 +1422,7 @@ def save(request):
                     product_spec_on=product_spec_on,
                     like=0,
                     seen=0,
-                    sold_quantiy=0
+                    sold_quantity=0
                 )
                 #傳回product_id
                 products=models.Product.objects.filter(
