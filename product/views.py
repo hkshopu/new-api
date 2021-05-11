@@ -788,7 +788,7 @@ def product_info_forAndroid(request,id): #product_id
                 for productSubCategory in productSubCategorys:
                     sub_category_name=(getattr(productSubCategory,'c_product_sub_category'))
                 productInfo.update({'c_sub_product_category':sub_category_name}) 
-               
+                v2=[]
                 for picObj in productPics:
                     v2.append(getattr(picObj,'product_pic'))
 
