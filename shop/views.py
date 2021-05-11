@@ -859,8 +859,8 @@ def createShopAddress(request,id):
             other = addressOther,
             floor = addressFloor,
             room = addressRoom,
-            is_address_show='n',
-            is_default='n'
+            is_address_show='N',
+            is_default='N'
         )
         responseData['status'] =0
         responseData['ret_val'] = '商店地址新增成功!'
@@ -880,11 +880,11 @@ def updateShopAddress_isDefault(request): #id : uuid(column)
 
         shop_address_default_olds=models.Shop_Address.objects.filter(shop_id=shop_id)
         for shop_address_default_old in shop_address_default_olds:
-            shop_address_default_old.is_default='n'
+            shop_address_default_old.is_default='N'
             shop_address_default_old.save()
 
         shop_address_default=models.Shop_Address.objects.get(id=shop_address_id)
-        shop_address_default.is_default='y'
+        shop_address_default.is_default='Y'
         shop_address_default.save()
 
         responseData['status'] =0
@@ -990,8 +990,8 @@ def updateShopAddress(request, id):
                             other=setting['other'],
                             floor=setting['floor'],
                             room=setting['room'],
-                            is_address_show='n',
-                            is_default='n'
+                            is_address_show='N',
+                            is_default='N'
                         )
                     elif row_count is 1: # update
                         shop_address.update(name=setting['name'],country_code=setting['country_code'],
