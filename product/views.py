@@ -212,6 +212,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
+                                    productInfo.update({'min_price':0}) 
+                                    productInfo.update({'max_price':0}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
@@ -302,6 +304,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
+                                    productInfo.update({'min_price':0}) 
+                                    productInfo.update({'max_price':0}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'             
             elif product_status=="active" and int(quantity)==0: #已售完
@@ -399,6 +403,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
+                                    productInfo.update({'min_price':0}) 
+                                    productInfo.update({'max_price':0}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
@@ -491,6 +497,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
+                                    productInfo.update({'min_price':0}) 
+                                    productInfo.update({'max_price':0}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             elif product_status=="draft": #未上架
@@ -583,6 +591,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
+                                    productInfo.update({'min_price':0}) 
+                                    productInfo.update({'max_price':0}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
@@ -673,6 +683,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
+                                    productInfo.update({'min_price':0}) 
+                                    productInfo.update({'max_price':0}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             else :
