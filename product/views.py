@@ -88,6 +88,7 @@ def shop_product(request,id):
                                 'sold_quantity':product.sold_quantity,
                                 'product_status':product.product_status,
                                 'pic_path':productPic.product_pic,
+                                'product_spec_on':product.product_spec_on
                                 # 'price' : productSpec.price
                             }
                             #responseData['data'].append(productInfo)    
