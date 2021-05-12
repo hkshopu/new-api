@@ -93,11 +93,17 @@ def shop_product(request,id):
                             #responseData['data'].append(productInfo)    
                             # responseData['data']['price'] = {}
                             v = []
+                            price_range=[]
                             for obj in productSpecs:
                                 # if product.id==productSpecs.product.id:
                                 # responseData['data'].update({'price':obj.price})
                                 v.append(getattr(obj,'price'))
+                                price_range.append(getattr(obj,'price'))
+                            min_price=min(price_range)
+                            max_price=max(price_range)
                             productInfo.update({'price':v})   
+                            productInfo.update({'min_price':min_price})   
+                            productInfo.update({'max_price':max_price})   
                             responseData['data'].append(productInfo)                 
             # for product in products:   
             #     for productPic in productPics:  
