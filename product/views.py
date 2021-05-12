@@ -63,8 +63,9 @@ def shop_product(request,id):
                
             productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
             for product in products:   
-                for productPic in productPics:
-                    # for productSpec in productSpecs:    
+                if product.product_spec_on=='y':
+                    for productPic in productPics:
+                        # for productSpec in productSpecs:    
                         if product.id==productPic.product_id : 
                             productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                             productInfo = {
@@ -104,21 +105,50 @@ def shop_product(request,id):
                                 quantity_sum.append(getattr(obj,'quantity'))
                             min_price=min(price_range)
                             max_price=max(price_range)
-                           
+                        
                             productInfo.update({'price':v})   
                             productInfo.update({'min_price':min_price})   
                             productInfo.update({'max_price':max_price})  
                             productInfo.update({'sum_quantity': sum(quantity_sum)}) 
-                            responseData['data'].append(productInfo)                 
-            # for product in products:   
-            #     for productPic in productPics:  
-            #         for productSpec in productSpecs:  
-            #              if product.id==productPic.product_id and product.id==productSpec.product_id:
-            #                 productPriceInfo = {
-            #                     'id': product.id,
-            #                     'price' : productSpec.price
-            #                 }
-            #                 responseData['data'].append(productPriceInfo)  
+                            responseData['data'].append(productInfo)
+                elif product.product_spec_on=='n':   
+                    for productPic in productPics:
+                        # for productSpec in productSpecs:    
+                        if product.id==productPic.product_id : 
+                            # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                            productInfo = {
+                                'id': product.id,
+                                'product_category_id': product.product_category_id, 
+                                'product_title': product.product_title,
+                                'quantity': product.quantity, 
+                                'product_description': product.product_description, 
+                                'product_price': product.product_price, 
+                                'shipping_fee': product.shipping_fee, 
+                                'created_at': product.created_at, 
+                                'updated_at': product.updated_at,
+                                'weight':product.weight,
+                                'longterm_stock_up':product.longterm_stock_up,
+                                'new_secondhand':product.new_secondhand,
+                                'length':product.length,
+                                'width':product.width,
+                                'height':product.height,
+                                'like':product.like,
+                                'seen':product.seen,
+                                'sold_quantity':product.sold_quantity,
+                                'product_status':product.product_status,
+                                'pic_path':productPic.product_pic,
+                                'product_spec_on':product.product_spec_on
+                                # 'price' : productSpec.price
+                            }
+                            #responseData['data'].append(productInfo)    
+                            # responseData['data']['price'] = {}
+                            productInfo.update({'min_price':product.product_price}) 
+                            productInfo.update({'max_price':product.product_price}) 
+                            productInfo.update({'min_quantity':product.quantity}) 
+                            productInfo.update({'max_quantity':product.quantity})
+                            productInfo.update({'sum_quantity':product.quantity})
+                            responseData['data'].append(productInfo) 
+                                         
 
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
