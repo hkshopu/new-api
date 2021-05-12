@@ -1637,7 +1637,7 @@ def update_product_status_forAndroid(request):
             for product in products:
                 product.product_status='draft'
                 product.save()
-        elif status=="active":
+        elif status=="draft":
             for product in products:
                 product.product_status='active'
                 product.save()
