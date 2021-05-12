@@ -931,7 +931,8 @@ def product_info_forAndroid(request,id): #product_id
                 }
                 productSpecQuantityInfo = {
                     "min_quantity":min_quantity,
-                    "max_quantity":max_quantity
+                    "max_quantity":max_quantity,
+                    "sum_quantity":sum(spec_quantity)
                 }
                 spec_price_dict={"spec_price":[]}
                 spec_price_dict["spec_price"].append(productSpecPriceInfo)
