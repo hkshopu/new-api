@@ -1637,11 +1637,11 @@ def update_product_status_forAndroid(request):
         products=models.Product.objects.filter(id=id)
         if status=="active":
             for product in products:
-                product.product_status='draft'
+                product.product_status='active'
                 product.save()
         elif status=="draft":
             for product in products:
-                product.product_status='active'
+                product.product_status='draft'
                 product.save()
 
         responseData['status'] =0
