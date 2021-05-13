@@ -1584,7 +1584,7 @@ def save(request):
                         )
             
             for i in range(len(shipment_method)):
-                if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True":
+                if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True:
                     print("True")
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
@@ -1593,7 +1593,7 @@ def save(request):
                         onoff="on",
                         shop_id=shipment_method[i]["shop_id"]
                     )
-                elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False":
+                elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False:
                     print("False")
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
@@ -1648,13 +1648,13 @@ def update_product_status_forAndroid(request):
         id=request.POST.get('id')
         status=request.POST.get('status')
         products=models.Product.objects.filter(id=id)
-        if status=="active":
-            for product in products:
-                product.product_status='active'
-                product.save()
-        elif status=="draft":
+        if status=="draft":
             for product in products:
                 product.product_status='draft'
+                product.save()
+        elif status=="active":
+            for product in products:
+                product.product_status='active'
                 product.save()
 
         responseData['status'] =0
