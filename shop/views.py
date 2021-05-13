@@ -649,6 +649,7 @@ def update(request, id):
             if long_description is not None:
                 if long_description != shop.long_description:
                     shop.long_description = long_description
+                    shop.shop_description = str(long_description).split(' ')[0]
             if facebook_on is not None:
                 if facebook_on != shop.facebook_on:
                     shop.facebook_on = facebook_on
