@@ -1584,7 +1584,7 @@ def save(request):
                         )
             
             for i in range(len(shipment_method)):
-                if shipment_method[i]["onoff"]=="on" or shipment_method[i]["shipment_desc"]=="True":
+                if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True":
                     print("True")
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
@@ -1593,7 +1593,7 @@ def save(request):
                         onoff="on",
                         shop_id=shipment_method[i]["shop_id"]
                     )
-                elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["shipment_desc"]=="False":
+                elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False":
                     print("False")
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
