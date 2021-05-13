@@ -56,7 +56,7 @@ def shop_product(request,id):
     if request.method == 'GET':
         if responseData['status'] == 0:
             # shop=models.Shop.objects.get(id=id)
-            products = models.Product.objects.filter(shop_id=id)
+            products = models.Product.objects.filter(shop_id=id).filter(product_status='active')
             getProductID=[]
             for product in products:
                 getProductID.append(product.id)
@@ -109,6 +109,8 @@ def shop_product(request,id):
                             productInfo.update({'price':v})   
                             productInfo.update({'min_price':min_price})   
                             productInfo.update({'max_price':max_price})  
+                            productInfo.update({'min_quantity':product.quantity}) 
+                            productInfo.update({'max_quantity':product.quantity})
                             productInfo.update({'sum_quantity': sum(quantity_sum)}) 
                             responseData['data'].append(productInfo)
                 elif product.product_spec_on=='n':   
@@ -253,8 +255,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
-                                    productInfo.update({'min_price':0}) 
-                                    productInfo.update({'max_price':0}) 
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
@@ -345,8 +347,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
-                                    productInfo.update({'min_price':0}) 
-                                    productInfo.update({'max_price':0}) 
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'             
             elif product_status=="active" and int(quantity)==0: #已售完
@@ -413,8 +415,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         v.append(getattr(obj,'price'))
                                     min_price=min(v)
                                     max_price=max(v)
-                                    productInfo.update({'min_price':min_price}) 
-                                    productInfo.update({'max_price':max_price})
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price})
                                     # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
                         elif product.product_spec_on=='n' and product.quantity==0:
@@ -444,8 +446,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
-                                    productInfo.update({'min_price':0}) 
-                                    productInfo.update({'max_price':0}) 
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
@@ -507,8 +509,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         v.append(getattr(obj,'price'))
                                     min_price=min(v)
                                     max_price=max(v)
-                                    productInfo.update({'min_price':min_price}) 
-                                    productInfo.update({'max_price':max_price})
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price})
                                     # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
                         elif product.product_spec_on=='n' and product.quantity==0:
@@ -538,8 +540,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
-                                    productInfo.update({'min_price':0}) 
-                                    productInfo.update({'max_price':0}) 
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             elif product_status=="draft": #未上架
@@ -632,8 +634,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
-                                    productInfo.update({'min_price':0}) 
-                                    productInfo.update({'max_price':0}) 
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
@@ -724,8 +726,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         'pic_path':productPic.product_pic,
                                         # 'price' : productSpec.price
                                     }
-                                    productInfo.update({'min_price':0}) 
-                                    productInfo.update({'max_price':0}) 
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             else :
