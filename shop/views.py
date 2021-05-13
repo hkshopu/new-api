@@ -648,8 +648,12 @@ def update(request, id):
                     shop.email_on = email_on
             if long_description is not None:
                 if long_description != shop.long_description:
+                    description = str(long_description).split('\n')
                     shop.long_description = long_description
-                    shop.shop_description = str(long_description).split('\n')[0]
+                    if len(description) < 2:
+                        shop.shop_description = description[0]
+                    else:
+                        shop.shop_description = description[0] + description[1]
             if facebook_on is not None:
                 if facebook_on != shop.facebook_on:
                     shop.facebook_on = facebook_on
