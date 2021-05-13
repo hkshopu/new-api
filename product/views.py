@@ -1281,6 +1281,7 @@ def update(request,id): #product_id
                 response_data['status'] = 0
                 response_data['ret_val'] = '商品更新成功!'
     return JsonResponse(response_data)
+# 新增商品
 def save(request):
     # 回傳資料
     response_data = {
@@ -1583,7 +1584,8 @@ def save(request):
                         )
             
             for i in range(len(shipment_method)):
-                if shipment_method[i]["shipment_desc"]=="on" or shipment_method[i]["shipment_desc"]=="True":
+                if shipment_method[i]["onoff"]=="on" or shipment_method[i]["shipment_desc"]=="True":
+                    print("True")
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
                         shipment_desc=shipment_method[i]["shipment_desc"],
@@ -1591,7 +1593,8 @@ def save(request):
                         onoff="on",
                         shop_id=shipment_method[i]["shop_id"]
                     )
-                elif shipment_method[i]["shipment_desc"]=="off" or shipment_method[i]["shipment_desc"]=="False":
+                elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["shipment_desc"]=="False":
+                    print("False")
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
                         shipment_desc=shipment_method[i]["shipment_desc"],
@@ -1599,6 +1602,8 @@ def save(request):
                         onoff="off",
                         shop_id=shipment_method[i]["shop_id"]
                     )
+                else:
+                    print("有bug")
 
             response_data['ret_val'] = '產品新增成功!'
             response_data['status'] = 0
