@@ -423,24 +423,24 @@ class Shop_Bank_Account(models.Model):
                     if hasattr(setting, 'id') and setting['id'] is not '':
                         pass
                     else:
-                        code = setting['code']
-                        name = setting['name']
-                        account = setting['account']
-                        account_name = setting['account_name']
+                        param = setting['code']
+                        param = setting['name']
+                        param = setting['account']
+                        param = setting['account_name']
             except:
                 ret_code, ret_description = err_code, '商店銀行設定格式錯誤!'
         elif param is 'code':
             if not(re.match('^\d+$', param)):
-                ret_code, ret_desciprtion = err_code, '銀行代碼格式錯誤!'
+                ret_code, ret_description = err_code, '銀行代碼格式錯誤!'
         elif param is 'name':
             if not(re.match('^[()\w\s]+$', param)):
-                ret_code, ret_desciprtion = err_code, '銀行名稱格式錯誤!'
+                ret_code, ret_description = err_code, '銀行名稱格式錯誤!'
         elif param is 'account':
             if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)):
-                ret_code, ret_desciprtion = err_code, '銀行戶名格式錯誤!'
+                ret_code, ret_description = err_code, '銀行戶名格式錯誤!'
         elif param is 'account_name':
             if not(re.match('^[\-\d]+$', param)):
-                ret_code, ret_desciprtion = err_code, '銀行帳號格式錯誤!'
+                ret_code, ret_description = err_code, '銀行帳號格式錯誤!'
         return ret_code, ret_description
         
 
