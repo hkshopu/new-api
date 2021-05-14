@@ -1197,13 +1197,22 @@ def update(request,id): #product_id
                 
 
                 for i in range(len(shipment_method)):
-                    models.Product_Shipment_Method.objects.create(
-                        product_id=id,
-                        shipment_desc=shipment_method[i]["shipment_desc"],
-                        price=shipment_method[i]["price"],
-                        onoff=shipment_method[i]["onoff"],
-                        shop_id=shipment_method[i]["shop_id"]
-                    )
+                    if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
+                        models.Product_Shipment_Method.objects.create(
+                            product_id=id,
+                            shipment_desc=shipment_method[i]["shipment_desc"],
+                            price=shipment_method[i]["price"],
+                            onoff="on",
+                            shop_id=shipment_method[i]["shop_id"]
+                        )
+                    elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
+                        models.Product_Shipment_Method.objects.create(
+                            product_id=id,
+                            shipment_desc=shipment_method[i]["shipment_desc"],
+                            price=shipment_method[i]["price"],
+                            onoff="off",
+                            shop_id=shipment_method[i]["shop_id"]
+                        )
                 response_data['status'] = 0
                 response_data['ret_val'] = '商品更新成功!'
             elif product_spec_on=='n':
@@ -1271,13 +1280,23 @@ def update(request,id): #product_id
                 #     )
                 
                 for i in range(len(shipment_method)):
-                    models.Product_Shipment_Method.objects.create(
-                        product_id=id,
-                        shipment_desc=shipment_method[i]["shipment_desc"],
-                        price=shipment_method[i]["price"],
-                        onoff=shipment_method[i]["onoff"],
-                        shop_id=shipment_method[i]["shop_id"]
-                    )
+                    if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
+                        models.Product_Shipment_Method.objects.create(
+                            product_id=id,
+                            shipment_desc=shipment_method[i]["shipment_desc"],
+                            price=shipment_method[i]["price"],
+                            onoff="on",
+                            shop_id=shipment_method[i]["shop_id"]
+                        )
+                    elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
+                        models.Product_Shipment_Method.objects.create(
+                            product_id=id,
+                            shipment_desc=shipment_method[i]["shipment_desc"],
+                            price=shipment_method[i]["price"],
+                            onoff="off",
+                            shop_id=shipment_method[i]["shop_id"]
+                        )
+
                 response_data['status'] = 0
                 response_data['ret_val'] = '商品更新成功!'
     return JsonResponse(response_data)
@@ -1584,13 +1603,26 @@ def save(request):
                         )
             
             for i in range(len(shipment_method)):
-                models.Product_Shipment_Method.objects.create(
-                    product_id=getProductID[0]['id'],
-                    shipment_desc=shipment_method[i]["shipment_desc"],
-                    price=shipment_method[i]["price"],
-                    onoff=shipment_method[i]["onoff"],
-                    shop_id=shipment_method[i]["shop_id"]
-                )
+                if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
+                    print("True")
+                    models.Product_Shipment_Method.objects.create(
+                        product_id=getProductID[0]['id'],
+                        shipment_desc=shipment_method[i]["shipment_desc"],
+                        price=shipment_method[i]["price"],
+                        onoff="on",
+                        shop_id=shipment_method[i]["shop_id"]
+                    )
+                elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
+                    print("False")
+                    models.Product_Shipment_Method.objects.create(
+                        product_id=getProductID[0]['id'],
+                        shipment_desc=shipment_method[i]["shipment_desc"],
+                        price=shipment_method[i]["price"],
+                        onoff="off",
+                        shop_id=shipment_method[i]["shop_id"]
+                    )
+                else:
+                    print("有bug")
 
             response_data['ret_val'] = '產品新增成功!'
             response_data['status'] = 0
@@ -1635,13 +1667,13 @@ def update_product_status_forAndroid(request):
         id=request.POST.get('id')
         status=request.POST.get('status')
         products=models.Product.objects.filter(id=id)
-        if status=="active":
-            for product in products:
-                product.product_status='active'
-                product.save()
-        elif status=="draft":
+        if status=="draft":
             for product in products:
                 product.product_status='draft'
+                product.save()
+        elif status=="active":
+            for product in products:
+                product.product_status='active'
                 product.save()
 
         responseData['status'] =0
