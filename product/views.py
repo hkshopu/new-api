@@ -375,8 +375,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                         
                     print(productSpecsIDList)
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')     
+                    print(productPics)
                     for product in products:  
-                        if product.product_spec_on=='y' and product.quantity==0 : 
+                        if product.product_spec_on=='y' and product.quantity==-1 : 
                             for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
@@ -415,8 +416,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         v.append(getattr(obj,'price'))
                                     min_price=min(v)
                                     max_price=max(v)
-                                    productInfo.update({'min_price':product.product_price}) 
-                                    productInfo.update({'max_price':product.product_price})
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
                                     # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
                         elif product.product_spec_on=='n' and product.quantity==0:
