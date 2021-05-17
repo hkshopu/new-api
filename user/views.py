@@ -262,7 +262,7 @@ def generateAndSendValidationCodeProcess(request):
             subject = ''
             html_message = render_to_string('validation_mail.html', {'account_name': user.account_name, 'validation_code': rand_str})
             message = strip_tags(html_message)
-            from_email = 'HKShopU'
+            from_email = 'info@hkshopu.com'
             recipient_list = [user.email, ]
             mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
             response_data['ret_val'] = '已寄出驗證碼!'
