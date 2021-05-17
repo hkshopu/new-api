@@ -250,6 +250,15 @@ def save(request):
                             shop_id=new_shop.id,
                             shop_category_id=value
                         )
+                # 取得預設運輸方法
+                shipment_default_methods = models.Shipment_default_method.objects.all()
+                # 新增商店運輸設定
+                for shipment_default_method in shipment_default_methods:
+                    models.Shop_Shipment_Setting.objects.create(
+                        shop_id=new_shop.id, 
+                        shipment_desc=shipment_default_method.shipment_default_desc, 
+                        onoff=shipment_default_method.onoff
+                    )
             responseData['ret_val'] = '商店與選擇商店分類新增成功!'
     return JsonResponse(responseData)
 # 更新商店
