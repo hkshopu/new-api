@@ -354,34 +354,37 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
             elif product_status=="active" and int(quantity)==0: #已售完
                 print("===已售完===")
                 print("=========")
-                print(keyword)
+                # print(keyword)
                 zero_status=[]
                 if keyword=="none":
                     print("為空值")
-                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status)
+                    
+                    products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1)
+                    products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0) 
                     getProductID=[]
-                    print(products)
-                    for product in products:
-                        getProductID.append(product.id)
-                                                        
-                    productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=getProductID).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
-                    productSpecsIDList=[] #沒spec等於塞product的id
+                    # print(products)
+                    # for product in products_on_id:
+                    #     getProductID.append(product.id)
+
+                    productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=products_on_id).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
+                    # productSpecsIDList=[] #沒spec等於塞product的id
                     print(len(productSpecs_tests))
-                    if len(productSpecs_tests)==0:
-                        productSpecsIDList=getProductID         
-                    else:
-                        for i in range (len(productSpecs_tests)):
-                            productSpecsIDList.append(productSpecs_tests[i]['product_id'])
-                        
-                    print(productSpecsIDList)
-                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')     
+
+                    for i in range (len(productSpecs_tests)):
+                        getProductID.append(productSpecs_tests[i]['product_id'])
+                    print(getProductID)    
+                    # print(productSpecsIDList)
+                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
+                    print(productPics)
+
+                    products = models.Product.objects.filter(id__in=getProductID)
                     for product in products:  
-                        if product.product_spec_on=='y' and product.quantity==0 : 
+                        if product.product_spec_on=='y' and product.quantity==-1 : 
                             for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
                                     
-                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
+                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=getProductID) #.filter(quantity=0)
 
                                     productInfo = {
                                         'id': product.id,
@@ -415,8 +418,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                         v.append(getattr(obj,'price'))
                                     min_price=min(v)
                                     max_price=max(v)
-                                    productInfo.update({'min_price':product.product_price}) 
-                                    productInfo.update({'max_price':product.product_price})
+                                    productInfo.update({'min_price':min_price}) 
+                                    productInfo.update({'max_price':max_price})
                                     # productInfo.update({'price':v})   
                                     responseData['data'].append(productInfo)                 
                         elif product.product_spec_on=='n' and product.quantity==0:
@@ -453,19 +456,25 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                 else: 
                     print("不能為空值")
                     print("=========")
-                    print(keyword)
-                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
+                    products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1)
+                    products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0) 
                     getProductID=[]
-                    for product in products:
-                        getProductID.append(product.id)
+                    # print(products)
+                    # for product in products_on_id:
+                    #     getProductID.append(product.id)
 
-                    productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=getProductID).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
-                    productSpecsIDList=[] #沒spec等於塞product的id
-                    if len(productSpecs_tests)==0:
-                        productSpecsIDList=getProductID         
-                    else:
-                        for i in range (len(productSpecs_tests)):
-                            productSpecsIDList.append(productSpecs_tests[i]['product_id'])
+                    productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=products_on_id).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
+                    # productSpecsIDList=[] #沒spec等於塞product的id
+                    print(len(productSpecs_tests))
+
+                    for i in range (len(productSpecs_tests)):
+                        getProductID.append(productSpecs_tests[i]['product_id'])
+                    print(getProductID)    
+                    # print(productSpecsIDList)
+                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
+                    print(productPics)
+
+                    products = models.Product.objects.filter(id__in=getProductID)
 
 
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')

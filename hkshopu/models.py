@@ -339,8 +339,8 @@ class Shop_Address(models.Model):
     other = models.CharField(max_length=50)
     floor = models.CharField(max_length=50)
     room = models.CharField(max_length=50)
-    is_address_show=models.CharField(max_length=1)
-    is_default=models.CharField(max_length=1)
+    is_address_show=models.CharField(max_length=1, null=True, default = 'Y')
+    is_default=models.CharField(max_length=1, null=True, default = 'Y')
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
