@@ -467,7 +467,7 @@ def forgetPasswordProcess(request):
             subject = 'HKShopU - 忘記密碼'
             htmlMessage = render_to_string('forget_password_mail.html', {'id': user.id, 'account_name': user.account_name, 'token': user.forget_password_token})
             message = strip_tags(htmlMessage)
-            fromEmail = 'HKShopU'
+            fromEmail = 'info@hkshopu.com'
             toEmail = [email, ]
             mail.send_mail(subject=subject, message=message, from_email=fromEmail, recipient_list=toEmail, html_message=htmlMessage)
             responseData['ret_val'] = '已發送重設密碼連結至您的電子郵件!'
