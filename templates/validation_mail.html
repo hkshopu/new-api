@@ -6,7 +6,109 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKShopU - 會員驗證信</title>
-    <link rel="stylesheet" href="{% static 'css/validation_mail.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/validation_mail.css' %}"> -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #D6F0EC;
+            width: 100%;
+            height: 100%;
+            padding: 0.5rem;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #logo-pic {
+            width: 28.36px;
+            height: 24px;
+        }
+        #nav-content {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #title {
+            font-weight: 500;
+            font-family: "Heebo";
+            font-size: 18px;
+            color: #000000;
+        }
+        #main-content {
+            margin-top: 35px;
+            padding: 0.5rem;
+        }
+        #validation-pic {
+            width: 288px;
+            height: 166.58px;
+        }
+        #content-body {
+            margin-top: 16px;
+            padding: 0.5rem;
+        }
+        #content-greeting {
+            font-family: "Heebo";
+            font-weight: bold;
+            font-size: 20px;
+            color: #191919;
+        }
+        #content-description {
+            font-family: "Noto Sans TC";
+            font-size: 18px;
+        }
+        #validation-code-box {
+            position: relative;
+            width: 252px;
+            height: 137px;
+            background-color: #ECF2F0;
+            border-radius: 8px;
+        }
+        #validation-code {
+            font-family: "Heebo";
+            font-weight: 800;
+            font-size: 64px;
+            color: #48484A;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 214px;
+            height: 97px;
+        }
+        footer {
+            padding: 1rem;
+            width: 252px;
+            height: 48px;
+        }
+        #contact-email {
+            font-family: "Heebo";
+            text-align: center;
+            color: #48484A;
+        }
+        #social-links {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 24px 0;
+        }
+        #instagram-icon, #facebook-icon {
+            width: 32px;
+            height: 32px;
+        }
+        #other-content {
+            padding: 1rem;
+        }
+        #other-content a {
+            color: #191919;
+            font-family: "Heebo";
+        }
+        .separator {
+            margin: 0 1rem;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -61,6 +163,6 @@
         </div>
     </footer>
 
-    <script src="{% static 'js/validation_mail.js' %}"></script>
+    <!-- <script src="{% static 'js/validation_mail.js' %}"></script> -->
 </body>
 </html>
