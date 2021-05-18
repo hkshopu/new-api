@@ -13,14 +13,9 @@
         }
         html, body {
             background-color: #D6F0EC;
-            width: 100%;
-            height: 100%;
             padding: 0.5rem;
         }
         nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             position: relative;
         }
         #logo-pic {
@@ -46,11 +41,17 @@
             width: 288px;
             height: 166.58px;
         }
-        #content-body {
+        #content-box {
             margin-top: 16px;
             padding: 40px 18px;
             background-color: #FFFFFF;
             border-radius: 8px;
+            position: relative;
+        }
+        #content-body {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         #content-greeting {
             font-family: "Heebo";
@@ -91,13 +92,15 @@
         }
         #social-links {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
             margin: 24px 0;
+            text-align: center;
         }
         #instagram-icon, #facebook-icon {
             width: 32px;
             height: 32px;
+            margin: 0 13.5px;
         }
         #other-content {
             padding: 1rem;
@@ -105,6 +108,7 @@
         #other-content a {
             color: #191919;
             font-family: "Heebo";
+            text-decoration: none;
         }
         .separator {
             margin: 0 1rem;
@@ -123,19 +127,21 @@
     <div id="main-content">
         <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic">
 
-        <div id="content-body">
-            <div id="content-greeting">
-                親愛的顧客您好, 👋
-            </div>
-            <div id="content-description">
-                歡迎來到 HKSHOPU!<br>
-                您在 HKSHOPU 的帳號已創建。<br>
-                請至 APP 輸入以下驗證碼完成啟用操作：
-            </div>
-            <div id="validation-code-box">
-                <span id="validation-code">
-                    {{ validation_code }}
-                </span>
+        <div id="content-box">
+            <div id="content-body">
+                <div id="content-greeting">
+                    親愛的顧客您好, 👋
+                </div>
+                <div id="content-description">
+                    歡迎來到 HKSHOPU!<br>
+                    您在 HKSHOPU 的帳號已創建。<br>
+                    請至 APP 輸入以下驗證碼完成啟用操作：
+                </div>
+                <div id="validation-code-box">
+                    <div id="validation-code">
+                        {{ validation_code }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
