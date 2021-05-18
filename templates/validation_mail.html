@@ -11,21 +11,16 @@
         * {
             box-sizing: border-box;
         }
-        html, body {
+        body {
             background-color: #D6F0EC;
             padding: 0.5rem;
         }
         nav {
-            position: relative;
+            text-align: center;
         }
         #logo-pic {
             width: 28.36px;
             height: 24px;
-        }
-        #nav-content {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
         }
         #title {
             font-weight: 500;
@@ -83,7 +78,7 @@
         }
         footer {
             padding: 1rem;
-            width: 252px;
+            text-align: center;
         }
         #contact-email {
             font-family: "Heebo";
@@ -117,11 +112,9 @@
 </head>
 <body>
     <nav>
-        <div id="nav-content">
-            <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
-            &nbsp;
-            <span id="title">HKSHOPU</span>
-        </div>
+        <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
+        &nbsp;
+        <span id="title">HKSHOPU</span>
     </nav>
 
     <div id="main-content">
