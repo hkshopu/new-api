@@ -5,6 +5,9 @@
 }
 body {
     background-color: #D6F0EC;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
 }
 nav {
     display: flex;
@@ -12,162 +15,88 @@ nav {
     align-items: center;
 }
 #logo-pic {
-    position: absolute;
     width: 28.36px;
     height: 24px;
-    left: 100px;
-    top: 36px;
+}
+#nav-content {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 #title {
-    position: absolute;
-    width: 84px;
-    height: 26px;
-    left: 136px;
-    top: 35px;
-    font-family: "Heebo";
-    font-style: normal;
     font-weight: 500;
+    font-family: "Heebo";
     font-size: 18px;
-    line-height: 26px;
-    display: flex;
-    align-items: center;
     color: #000000;
 }
+#main-content {
+    margin-top: 35px;
+    padding: 0.5rem;
+}
 #validation-pic {
-    position: absolute;
     width: 288px;
     height: 166.58px;
-    left: 0px;
-    top: 13px;
 }
-#main-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 18px;
-    position: absolute;
-    width: 288px;
-    height: 407px;
-    left: 0px;
-    top: 208px;
-    background: #FFFFFF;
-    border-radius: 8px;
+#content-body {
+    margin-top: 16px;
+    padding: 0.5rem;
 }
-#content-title {
-    position: static;
-    width: 252px;
-    height: 30px;
-    left: 0px;
-    top: 0px;
+#content-greeting {
     font-family: "Heebo";
-    font-style: normal;
     font-weight: bold;
     font-size: 20px;
-    line-height: 24px;
     color: #191919;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 16px 0px;
 }
 #content-description {
-    position: static;
-    width: 252px;
-    height: 128px;
-    left: 0px;
-    top: 46px;
     font-family: "Noto Sans TC";
-    font-style: normal;
-    font-weight: normal;
     font-size: 18px;
-    line-height: 32px;
-    color: #3B3B3B;
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-    margin: 16px 0px;
 }
-#validation-code-block {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 239px;
-    position: static;
+#validation-code-box {
+    position: relative;
     width: 252px;
     height: 137px;
-    left: 0px;
-    top: 190px;
-    background: #ECF2F0;
+    background-color: #ECF2F0;
     border-radius: 8px;
-    flex: none;
-    order: 2;
-    flex-grow: 0;
-    margin: 16px 0px;
 }
 #validation-code {
-    position: static;
-    width: 214px;
-    height: 97px;
-    left: 19px;
-    top: 20px;
     font-family: "Heebo";
-    font-style: normal;
     font-weight: 800;
     font-size: 64px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    text-align: center;
     color: #48484A;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 0px 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 214px;
+    height: 97px;
 }
-#contact-email {
-    position: static;
+footer {
+    padding: 1rem;
     width: 252px;
     height: 48px;
-    left: 0px;
-    top: 0px;
+}
+#contact-email {
     font-family: "Heebo";
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
     text-align: center;
     color: #48484A;
-    opacity: 0.8;
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 24px 0px;
 }
 #social-links {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 24px 0;
+}
+#instagram-icon, #facebook-icon {
+    width: 32px;
+    height: 32px;
 }
 #other-content {
-    position: static;
-    width: 252px;
-    height: 48px;
-    left: 0px;
-    top: 128px;
-    font-family: "Heebo";
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
+    padding: 1rem;
+}
+#other-content a {
     color: #191919;
-    flex: none;
-    order: 2;
-    flex-grow: 0;
-    margin: 24px 0px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+    font-family: "Heebo";
+}
+.separator {
+    margin: 0 1rem;
 }

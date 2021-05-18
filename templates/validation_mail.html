@@ -10,23 +10,26 @@
 </head>
 <body>
     <nav>
-        <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic" width="28.36" height="24">
-        <span id="title">HKSHOPU</span>
+        <div id="nav-content">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
+            &nbsp;
+            <span id="title">HKSHOPU</span>
+        </div>
     </nav>
 
     <div id="main-content">
-        <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic" width="288" height="166.58">
+        <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic">
 
-        <div id="content-title">
-            親愛的顧客您好, 👋
-        </div>
         <div id="content-body">
+            <div id="content-greeting">
+                親愛的顧客您好, 👋
+            </div>
             <div id="content-description">
                 歡迎來到HKSHOPU!<br>
                 您在HKSHOPU的帳號已創建。<br>
                 請至APP輸入以下驗證碼完成啟用操作：
             </div>
-            <div id="validation-code-block">
+            <div id="validation-code-box">
                 <span id="validation-code">
                     {{ validation_code }}
                 </span>
@@ -43,10 +46,10 @@
         </div>
         <div id="social-links">
             <a href="https://instagram.com/hkshopu/">
-                <img src="{% static 'images/instagram_black.png' %}" alt="instagram-icon" id="instagram-icon" width="32" height="32">
+                <img src="{% static 'images/instagram_black.png' %}" alt="instagram-icon" id="instagram-icon">
             </a>
             <a href="https://www.facebook.com/hkshopu/">
-                <img src="{% static 'images/facebook_black.png' %}" alt="facebook-icon" id="facebook-icon" width="32" height="32">
+                <img src="{% static 'images/facebook_black.png' %}" alt="facebook-icon" id="facebook-icon">
             </a>
         </div>
         <div id="other-content">
