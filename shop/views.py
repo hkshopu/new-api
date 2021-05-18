@@ -304,6 +304,7 @@ def update(request, id):
         address_room = request.POST.get('address_room', None)
         background_pic = request.FILES.get('background_pic', None)
         shop_phone = request.POST.get('shop_phone', None)
+        shop_is_phone_show = request.POST.get('shop_is_phone_show', None)
         shop_email = request.POST.get('shop_email', None)
         email_on = request.POST.get('email_on', None)
         long_description = request.POST.get('long_description', None)
@@ -659,6 +660,9 @@ def update(request, id):
             if shop_phone is not None:
                 if shop_phone != shop.address_phone:
                     shop.address_phone = shop_phone
+            if shop_is_phone_show is not None:
+                if shop_is_phone_show != shop.is_phone_show:
+                    shop.is_phone_show = shop_is_phone_show
             if shop_email is not None:
                 if shop_email != shop.shop_email:
                     shop.shop_email = shop_email
@@ -739,6 +743,7 @@ def show(request, id):
                     'shop_name_updated_at',
                     'background_pic',
                     'address_phone',
+                    'address_is_phone_show',
                     'shop_email',
                     'email_on',
                     'long_description',
@@ -768,6 +773,8 @@ def show(request, id):
                     if(hasattr(shop, attr)):
                         if attr == 'address_phone':
                             responseData['data']['shop_phone'] = getattr(shop, attr)
+                        elif attr == 'address_is_phone_show':
+                            responseData['data']['address_is_phone_show'] = getattr(shop, attr)
                         else:
                             responseData['data'][attr] = getattr(shop, attr)
 
