@@ -259,7 +259,7 @@ def generateAndSendValidationCodeProcess(request):
                     validation_code=rand_str
                 )
             # 發送電子郵件，告知帳號註冊驗證碼
-            subject = ''
+            subject = 'HKShopU - 會員電子郵件驗證'
             html_message = render_to_string('validation_mail.html', {'validation_code': rand_str})
             message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'

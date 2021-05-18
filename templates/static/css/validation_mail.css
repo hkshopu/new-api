@@ -6,6 +6,11 @@
 body {
     background-color: #D6F0EC;
 }
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 #logo-pic {
     position: absolute;
     width: 28.36px;
@@ -66,7 +71,7 @@ body {
     flex-grow: 0;
     margin: 16px 0px;
 }
-#content-body pre {
+#content-description {
     position: static;
     width: 252px;
     height: 128px;
