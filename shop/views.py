@@ -303,6 +303,7 @@ def update(request, id):
         address_floor = request.POST.get('address_floor', None)
         address_room = request.POST.get('address_room', None)
         background_pic = request.FILES.get('background_pic', None)
+        shop_phone = request.POST.get('shop_phone', None)
         shop_email = request.POST.get('shop_email', None)
         email_on = request.POST.get('email_on', None)
         long_description = request.POST.get('long_description', None)
@@ -544,6 +545,12 @@ def update(request, id):
                 response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
 
         if response_data['status'] == 0:
+            if shop_phone:
+                if not(re.match('^\d+$', shop_phone)):
+                    response_data['status'] = -29
+                    response_data['ret_val'] = '電話號碼格式錯誤!'
+
+        if response_data['status'] == 0:
             # 上傳圖檔
             destination_path = 'images/shop/'
             shop_icon_url = ''
@@ -649,6 +656,9 @@ def update(request, id):
             if background_pic is not None:
                 if background_pic_url != shop.background_pic:
                     shop.background_pic = background_pic_url
+            if shop_phone is not None:
+                if shop_phone != shop.address_phone:
+                    shop.address_phone = shop_phone
             if shop_email is not None:
                 if shop_email != shop.shop_email:
                     shop.shop_email = shop_email
@@ -728,6 +738,7 @@ def show(request, id):
                     'shop_address',
                     'shop_name_updated_at',
                     'background_pic',
+                    'address_phone',
                     'shop_email',
                     'email_on',
                     'long_description',
