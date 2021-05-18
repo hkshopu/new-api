@@ -661,7 +661,7 @@ def update(request, id):
                 if shop_phone != shop.address_phone:
                     shop.address_phone = shop_phone
             if shop_is_phone_show is not None:
-                if shop_is_phone_show != shop.is_phone_show:
+                if shop_is_phone_show != shop.address_is_phone_show:
                     shop.address_is_phone_show = shop_is_phone_show
             if shop_email is not None:
                 if shop_email != shop.shop_email:
@@ -774,7 +774,7 @@ def show(request, id):
                         if attr == 'address_phone':
                             responseData['data']['shop_phone'] = getattr(shop, attr)
                         elif attr == 'address_is_phone_show':
-                            responseData['data']['address_is_phone_show'] = getattr(shop, attr)
+                            responseData['data']['shop_is_phone_show'] = getattr(shop, attr)
                         else:
                             responseData['data'][attr] = getattr(shop, attr)
 
