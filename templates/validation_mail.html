@@ -11,9 +11,10 @@
         * {
             box-sizing: border-box;
         }
-        body {
+        #main-content {
             background-color: #D6F0EC;
             padding: 0.5rem;
+            width: 100%;
         }
         nav {
             text-align: center;
@@ -28,13 +29,13 @@
             font-size: 18px;
             color: #000000;
         }
-        #main-content {
+        main {
             margin-top: 35px;
             padding: 0.5rem;
         }
         #validation-pic {
-            width: 75%;
-            height: 75%;
+            width: 50%;
+            height: 50%;
         }
         #content-box {
             margin-top: 16px;
@@ -86,9 +87,6 @@
             color: #48484A;
         }
         #social-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             margin: 24px 0;
             text-align: center;
         }
@@ -111,57 +109,61 @@
     </style>
 </head>
 <body>
-    <nav>
-        <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
-        &nbsp;
-        <span id="title">HKSHOPU</span>
-    </nav>
-
     <div id="main-content">
-        <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic">
-
-        <div id="content-box">
-            <div id="content-body">
-                <div id="content-greeting">
-                    親愛的顧客您好, 👋
-                </div>
-                <div id="content-description">
-                    歡迎來到 HKSHOPU!<br>
-                    您在 HKSHOPU 的帳號已創建。<br>
-                    請至 APP 輸入以下驗證碼完成啟用操作：
-                </div>
-                <div id="validation-code-box">
-                    <div id="validation-code">
-                        {{ validation_code }}
+        <nav>
+            <div id="nav-content">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
+                &nbsp;
+                <span id="title">HKSHOPU</span>
+            </div>
+        </nav>
+    
+        <main>
+            <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic">
+    
+            <div id="content-box">
+                <div id="content-body">
+                    <div id="content-greeting">
+                        親愛的顧客您好, 👋
+                    </div>
+                    <div id="content-description">
+                        歡迎來到 HKSHOPU!<br>
+                        您在 HKSHOPU 的帳號已創建。<br>
+                        請至 APP 輸入以下驗證碼完成啟用操作：
+                    </div>
+                    <div id="validation-code-box">
+                        <div id="validation-code">
+                            {{ validation_code }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+    
+        <footer>
+            <div id="contact-email">
+                如果有任何問題，請隨時聯繫<br>
+                <a href="mailto:customer-service@hkshopu.com">
+                    customer-service@hkshopu.com
+                </a>
+            </div>
+            <div id="social-links">
+                <a href="https://instagram.com/hkshopu/">
+                    <img src="{% static 'images/instagram_black.png' %}" alt="instagram-icon" id="instagram-icon">
+                </a>
+                <a href="https://www.facebook.com/hkshopu/">
+                    <img src="{% static 'images/facebook_black.png' %}" alt="facebook-icon" id="facebook-icon">
+                </a>
+            </div>
+            <div id="other-content">
+                <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>
+                <span class="separator">|</span>
+                <a href="https://www.hkshopu.com/%E6%9C%8D%E5%8B%99%E6%A2%9D%E6%AC%BE" target="_blank">服務條款</a>
+                <span class="separator">|</span>
+                <a href="https://www.hkshopu.com/%E9%9A%B1%E7%A7%81%E6%A2%9D%E4%BE%8B%E6%94%BF%E7%AD%96" target="_blank">隱私權政策</a>         
+            </div>
+        </footer>
     </div>
-
-    <footer>
-        <div id="contact-email">
-            如果有任何問題，請隨時聯繫<br>
-            <a href="mailto:customer-service@hkshopu.com">
-                customer-service@hkshopu.com
-            </a>
-        </div>
-        <div id="social-links">
-            <a href="https://instagram.com/hkshopu/">
-                <img src="{% static 'images/instagram_black.png' %}" alt="instagram-icon" id="instagram-icon">
-            </a>
-            <a href="https://www.facebook.com/hkshopu/">
-                <img src="{% static 'images/facebook_black.png' %}" alt="facebook-icon" id="facebook-icon">
-            </a>
-        </div>
-        <div id="other-content">
-            <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>
-            <span class="separator">|</span>
-            <a href="https://www.hkshopu.com/%E6%9C%8D%E5%8B%99%E6%A2%9D%E6%AC%BE" target="_blank">服務條款</a>
-            <span class="separator">|</span>
-            <a href="https://www.hkshopu.com/%E9%9A%B1%E7%A7%81%E6%A2%9D%E4%BE%8B%E6%94%BF%E7%AD%96" target="_blank">隱私權政策</a>         
-        </div>
-    </footer>
 
     <!-- <script src="{% static 'js/validation_mail.js' %}"></script> -->
 </body>
