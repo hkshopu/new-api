@@ -6,16 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKShopU - 會員驗證信</title>
-    <link rel="stylesheet" href="https://hkshopu.df.r.appspot.com/static/css/validation_mail.css">
+    <link rel="stylesheet" href="{% static 'css/validation_mail.css' %}">
 </head>
 <body>
     <nav>
-        <img src="https://hkshopu.df.r.appspot.com/static/images/logo.png" alt="Logo" id="logo-pic" width="28.36" height="24">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic" width="28.36" height="24">
         <span id="title">HKSHOPU</span>
     </nav>
 
     <div id="main-content">
-        <img src="https://hkshopu.df.r.appspot.com/static/images/validation.png" alt="validation-pic" id="validation-pic" width="288" height="166.58">
+        <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic" width="288" height="166.58">
 
         <div id="content-title">
             親愛的顧客您好, 👋
@@ -43,17 +43,21 @@
         </div>
         <div id="social-links">
             <a href="https://instagram.com/hkshopu/">
-                <img src="https://hkshopu.df.r.appspot.com/static/images/instagram_black.png" alt="instagram-icon" id="instagram-icon" width="32" height="32">
+                <img src="{% static 'images/instagram_black.png' %}" alt="instagram-icon" id="instagram-icon" width="32" height="32">
             </a>
             <a href="https://www.facebook.com/hkshopu/">
-                <img src="https://hkshopu.df.r.appspot.com/static/images/facebook_black.png" alt="facebook-icon" id="facebook-icon" width="32" height="32">
+                <img src="{% static 'images/facebook_black.png' %}" alt="facebook-icon" id="facebook-icon" width="32" height="32">
             </a>
         </div>
-        <pre id="other-content">
-            <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>     |     <a href="https://www.hkshopu.com/%E6%9C%8D%E5%8B%99%E6%A2%9D%E6%AC%BE" target="_blank">服務條款</a>     |    <a href="https://www.hkshopu.com/%E9%9A%B1%E7%A7%81%E6%A2%9D%E4%BE%8B%E6%94%BF%E7%AD%96" target="_blank">隱私權政策</a>         
-        </pre>
+        <div id="other-content">
+            <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>
+            <span class="separator">|</span>
+            <a href="https://www.hkshopu.com/%E6%9C%8D%E5%8B%99%E6%A2%9D%E6%AC%BE" target="_blank">服務條款</a>
+            <span class="separator">|</span>
+            <a href="https://www.hkshopu.com/%E9%9A%B1%E7%A7%81%E6%A2%9D%E4%BE%8B%E6%94%BF%E7%AD%96" target="_blank">隱私權政策</a>         
+        </div>
     </footer>
 
-    <script src="https://hkshopu.df.r.appspot.com/static/js/validation_mail.js"></script>
+    <script src="{% static 'js/validation_mail.js' %}"></script>
 </body>
 </html>
