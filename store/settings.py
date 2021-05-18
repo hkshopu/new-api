@@ -138,7 +138,7 @@ STATICFILES_DIRS = [
 # Email
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'chrischen@hkshopu.com'
-EMAIL_HOST_PASSWORD = 'hks67996'
+EMAIL_HOST_PASSWORD = 'kjlorxrvicukyvut'
 DEFAULT_FROM_EMAIL = 'info@hkshopu.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
