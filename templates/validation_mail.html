@@ -6,7 +6,172 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKShopU - 會員驗證信</title>
-    <link rel="stylesheet" href="https://hkshopu.df.r.appspot.com/static/css/validation_mail.css">
+    <!-- <link rel="stylesheet" href="https://hkshopu.df.r.appspot.com/static/css/validation_mail.css"> -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #D6F0EC;
+        }
+        #logo-pic {
+            position: absolute;
+            width: 28.36px;
+            height: 24px;
+            left: 100px;
+            top: 36px;
+        }
+        #title {
+            position: absolute;
+            width: 84px;
+            height: 26px;
+            left: 136px;
+            top: 35px;
+            font-family: "Heebo";
+            font-style: normal;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 26px;
+            display: flex;
+            align-items: center;
+            color: #000000;
+        }
+        #validation-pic {
+            position: absolute;
+            width: 288px;
+            height: 166.58px;
+            left: 0px;
+            top: 13px;
+        }
+        #main-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 18px;
+            position: absolute;
+            width: 288px;
+            height: 407px;
+            left: 0px;
+            top: 208px;
+            background: #FFFFFF;
+            border-radius: 8px;
+        }
+        #content-title {
+            position: static;
+            width: 252px;
+            height: 30px;
+            left: 0px;
+            top: 0px;
+            font-family: "Heebo";
+            font-style: normal;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 24px;
+            color: #191919;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            margin: 16px 0px;
+        }
+        #content-body pre {
+            position: static;
+            width: 252px;
+            height: 128px;
+            left: 0px;
+            top: 46px;
+            font-family: "Noto Sans TC";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 32px;
+            color: #3B3B3B;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            margin: 16px 0px;
+        }
+        #validation-code-block {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 239px;
+            position: static;
+            width: 252px;
+            height: 137px;
+            left: 0px;
+            top: 190px;
+            background: #ECF2F0;
+            border-radius: 8px;
+            flex: none;
+            order: 2;
+            flex-grow: 0;
+            margin: 16px 0px;
+        }
+        #validation-code {
+            position: static;
+            width: 214px;
+            height: 97px;
+            left: 19px;
+            top: 20px;
+            font-family: "Heebo";
+            font-style: normal;
+            font-weight: 800;
+            font-size: 64px;
+            line-height: 24px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #48484A;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            margin: 0px 10px;
+        }
+        #contact-email {
+            position: static;
+            width: 252px;
+            height: 48px;
+            left: 0px;
+            top: 0px;
+            font-family: "Heebo";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+            text-align: center;
+            color: #48484A;
+            opacity: 0.8;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            margin: 24px 0px;
+        }
+        #social-links {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        #other-content {
+            position: static;
+            width: 252px;
+            height: 48px;
+            left: 0px;
+            top: 128px;
+            font-family: "Heebo";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+            text-align: center;
+            color: #191919;
+            flex: none;
+            order: 2;
+            flex-grow: 0;
+            margin: 24px 0px;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -46,10 +211,10 @@
             <img src="https://hkshopu.df.r.appspot.com/static/images/facebook_black.png" alt="facebook-icon" id="facebook-icon">
         </div>
         <pre id="other-content">
-            HKSHOPU     |     服務條款     |     隱私權政策
+            <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>     |     <a href="https://www.hkshopu.com/%E6%9C%8D%E5%8B%99%E6%A2%9D%E6%AC%BE" target="_blank">服務條款</a>     |    <a href="https://www.hkshopu.com/%E9%9A%B1%E7%A7%81%E6%A2%9D%E4%BE%8B%E6%94%BF%E7%AD%96" target="_blank">隱私權政策</a>         
         </pre>
     </footer>
 
-    <script src="https://hkshopu.df.r.appspot.com/static/js/validation_mail.js"></script>
+    <!-- <script src="https://hkshopu.df.r.appspot.com/static/js/validation_mail.js"></script> -->
 </body>
 </html>
