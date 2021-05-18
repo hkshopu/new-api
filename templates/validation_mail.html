@@ -1,13 +1,54 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
 {% load static %}
-{% block title %}會員註冊驗證信{% endblock %}
-{% block css %}
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKShopU - 會員驗證信</title>
     <link rel="stylesheet" href="{% static 'css/validation_mail.css' %}">
-{% endblock %}
-{% block content %}
-    親愛的 <b>{{ account_name }}</b> 您好!<br>
-    您的驗證碼為: <b>{{ validation_code }}</b>
-{% endblock %}
-{% block js %}
+</head>
+<body>
+    <nav>
+        <span id="title">HKSHOPU</span>
+    </nav>
+
+    <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic">
+
+    <div id="main-content">
+        <div id="content-title">
+            親愛的顧客您好, 👋
+        </div>
+        <div id="content-body">
+            <pre>
+                歡迎來到HKSHOPU!
+                您在HKSHOPU的帳號已創建。
+                請至APP輸入以下驗證碼完成啟用操作：
+            </pre>
+            <div id="validation-code-block">
+                <span id="validation-code">
+                    {{ validationco_code }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <pre id="contact-email">
+            如果有任何問題，請隨時聯繫
+            <a href="mailto:customer-service@hkshopu.com">
+                customer-service@hkshopu.com
+            </a>
+        </pre>
+        <div id="social-links">
+            <img src="{% static 'images/instagram_black.png' %}" alt="instagram-icon" id="instagram-icon">
+            <img src="{% static 'images/facebook_black.png' %}" alt="facebook-icon" id="facebook-icon">
+        </div>
+        <pre id="other-content">
+            HKSHOPU     |     服務條款     |     隱私權政策
+        </pre>
+    </footer>
+
     <script src="{% static 'js/validation_mail.js' %}"></script>
-{% endblock %}
+</body>
+</html>
