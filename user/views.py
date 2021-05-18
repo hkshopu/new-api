@@ -264,7 +264,7 @@ def generateAndSendValidationCodeProcess(request):
             message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'
             recipient_list = [user.email, ]
-            mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list)
+            mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list, html_message=html_message)
             response_data['ret_val'] = '已寄出驗證碼!'
     return JsonResponse(response_data)
 # 驗證電子郵件
