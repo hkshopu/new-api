@@ -662,7 +662,7 @@ def update(request, id):
                     shop.address_phone = shop_phone
             if shop_is_phone_show is not None:
                 if shop_is_phone_show != shop.is_phone_show:
-                    shop.is_phone_show = shop_is_phone_show
+                    shop.address_is_phone_show = shop_is_phone_show
             if shop_email is not None:
                 if shop_email != shop.shop_email:
                     shop.shop_email = shop_email
