@@ -766,7 +766,11 @@ def show(request, id):
                     'room']
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
-                        responseData['data'][attr] = getattr(shop, attr)
+                        if attr == 'address_phone':
+                            responseData['data']['shop_phone'] = getattr(shop, attr)
+                        else:
+                            responseData['data'][attr] = getattr(shop, attr)
+
                     elif attr is 'shop_bank_account':
                         responseData['data'][attr] = []
                         for item in shop_bank_account.values():
