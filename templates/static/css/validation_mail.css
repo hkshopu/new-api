@@ -6,6 +6,13 @@
 body {
     background-color: #D6F0EC;
 }
+#logo-pic {
+    position: absolute;
+    width: 28.36px;
+    height: 24px;
+    left: 100px;
+    top: 36px;
+}
 #title {
     position: absolute;
     width: 84px;
