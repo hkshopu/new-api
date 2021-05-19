@@ -18,10 +18,12 @@
         }
         #navbar {
             margin-bottom: 39px;
-            text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        #navbar-content {
+            margin: 0 auto;
         }
         #logo-pic img {
             max-width: 28px;
@@ -131,11 +133,13 @@
 <body>
     <div id="main-content">
         <div id="navbar">
-            <span id="logo-pic">
-                <img src="{% static 'images/logo.png' %}" alt="Logo">
-            </span>
-            &nbsp;
-            <span id="title">HKSHOPU</span>
+            <div id="navbar-content">
+                <span id="logo-pic">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo">
+                </span>
+                &nbsp;
+                <span id="title">HKSHOPU</span>
+            </div>
         </div>
     
         <main>
