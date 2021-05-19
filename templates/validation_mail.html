@@ -53,9 +53,6 @@
             border-radius: 8px;
             text-align: center;
         }
-        #content-body {
-            position: relative;
-        }
         #content-greeting {
             font-family: "Heebo";
             font-weight: bold;
@@ -76,9 +73,6 @@
             font-weight: 800;
             font-size: 64px;
             color: #48484A;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
         }
         footer {
             padding: 0.5rem;
@@ -131,18 +125,16 @@
             </div>
     
             <div id="content-box">
-                <div id="content-body">
-                    <div id="content-greeting">
-                        親愛的顧客您好, 👋
-                    </div>
-                    <div id="content-description">
-                        歡迎來到 HKSHOPU!<br>
-                        您在 HKSHOPU 的帳號已創建。<br>
-                        請至 APP 輸入以下驗證碼完成啟用操作：
-                    </div>
-                    <div id="validation-code-box">
-                        {{ validation_code }}
-                    </div>
+                <div id="content-greeting">
+                    親愛的顧客您好, 👋
+                </div>
+                <div id="content-description">
+                    歡迎來到 HKSHOPU!<br>
+                    您在 HKSHOPU 的帳號已創建。<br>
+                    請至 APP 輸入以下驗證碼完成啟用操作：
+                </div>
+                <div id="validation-code-box">
+                    {{ validation_code }}
                 </div>
             </div>
         </main>
