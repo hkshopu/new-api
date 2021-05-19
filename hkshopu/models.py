@@ -498,7 +498,7 @@ class Product(models.Model):
     sold_quantity = models.PositiveIntegerField()
     product_status= models.CharField(max_length=50)
     product_spec_on=models.CharField(max_length=1)
-    is_delete=models.CharField(max_length=1)
+    is_delete=models.CharField(max_length=1, default='N')
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
