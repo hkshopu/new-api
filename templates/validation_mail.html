@@ -17,12 +17,9 @@
             width: 100%;
         }
         nav {
-            position: relative;
-        }
-        #nav-content {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #logo-pic {
             width: 28.36px;
@@ -117,11 +114,9 @@
 <body>
     <div id="main-content">
         <nav>
-            <div id="nav-content">
-                <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
-                &nbsp;
-                <span id="title">HKSHOPU</span>
-            </div>
+            <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
+            &nbsp;
+            <span id="title">HKSHOPU</span>
         </nav>
     
         <main>
@@ -140,9 +135,7 @@
                         請至 APP 輸入以下驗證碼完成啟用操作：
                     </div>
                     <div id="validation-code-box">
-                        <span id="validation-code">
-                            {{ validation_code }}
-                        </span>
+                        {{ validation_code }}
                     </div>
                 </div>
             </div>
