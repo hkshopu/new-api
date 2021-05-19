@@ -16,15 +16,12 @@
             padding: 0.5rem;
             width: 100%;
         }
-        nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #navbar {
             text-align: center;
         }
         #logo-pic {
-            width: 28.36px;
-            height: 24px;
+            width: 70%;
+            height: 70%;
         }
         #title {
             font-weight: 500;
@@ -51,7 +48,7 @@
             padding: 40px 18px;
             background-color: #FFFFFF;
             border-radius: 8px;
-            text-align: center;
+            position: relative;
         }
         #content-greeting {
             font-family: "Heebo";
@@ -73,6 +70,9 @@
             font-weight: 800;
             font-size: 64px;
             color: #48484A;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         footer {
             padding: 0.5rem;
@@ -104,20 +104,32 @@
             margin: 0 1rem;
         }
         @media screen and (min-width: 680px) {
+            #logo-pic {
+                width: 100%;
+                height: 100%;
+            }
+            #title {
+                font-size: 24px;
+            }
             #validation-pic img {
                 width: 80%;
                 height: 80%;
+            }
+            #validation-code-box {
+                width: 525px;
+                height: 177px;
+                font-size: 96px;
             }
         }
     </style>
 </head>
 <body>
     <div id="main-content">
-        <nav>
+        <div id="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
             &nbsp;
             <span id="title">HKSHOPU</span>
-        </nav>
+        </div>
     
         <main>
             <div id="validation-pic">
