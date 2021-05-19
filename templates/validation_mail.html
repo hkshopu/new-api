@@ -69,7 +69,12 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            text-align: center;
+        }
+        #validation-code {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         footer {
             padding: 0.5rem;
@@ -145,7 +150,9 @@
                     請至 APP 輸入以下驗證碼完成啟用操作：
                 </div>
                 <div id="validation-code-box">
-                    {{ validation_code }}
+                    <span id="validation-code">
+                        {{ validation_code }}
+                    </span>
                 </div>
             </div>
         </main>
