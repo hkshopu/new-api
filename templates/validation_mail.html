@@ -60,16 +60,12 @@
             font-weight: 800;
             font-size: 64px;
             color: #48484A;
-            position: relative;
+            display: table;
             margin: 0 auto;
         }
         #validation-code {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 214px;
-            height: 97px;
+            display: table-cell;
+            vertical-align: middle;
         }
         footer {
             padding: 0.5rem;
@@ -123,9 +119,6 @@
                 font-size: 96px;
                 padding: 40px 239px;
             }
-            #validation-code {
-                width: 333px;
-            }
         }
     </style>
 </head>
@@ -152,9 +145,9 @@
                     請至 APP 輸入以下驗證碼完成啟用操作：
                 </div>
                 <div id="validation-code-box">
-                    <span id="validation-code">
+                    <div id="validation-code">
                         {{ validation_code }}
-                    </span>
+                    </div>
                 </div>
             </div>
         </main>
