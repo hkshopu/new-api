@@ -18,12 +18,7 @@
         }
         #navbar {
             margin-bottom: 39px;
-            position: relative;
-        }
-        #navbar-content {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,12 +26,14 @@
         #logo-pic img {
             max-width: 28px;
             max-height: 24px;
+            margin-right: 0.5rem;
         }
         #title {
             font-weight: 500;
             font-family: "Heebo";
             font-size: 18px;
             color: #000000;
+            margin-left: 0.5rem;
         }
         #validation-pic {
             text-align: center;
@@ -136,13 +133,11 @@
 <body>
     <div id="main-content">
         <div id="navbar">
-            <div id="navbar-content">
-                <div id="logo-pic">
-                    <img src="{% static 'images/logo.png' %}" alt="Logo">
-                </div>
-                <div id="title">
-                    HKSHOPU
-                </div>
+            <div id="logo-pic">
+                <img src="{% static 'images/logo.png' %}" alt="Logo">
+            </div>
+            <div id="title">
+                HKSHOPU
             </div>
         </div>
     
