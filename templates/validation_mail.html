@@ -17,7 +17,6 @@
             width: 100%;
         }
         nav {
-            width: 100%;
             text-align: center;
         }
         #logo-pic {
@@ -38,9 +37,11 @@
             width: 100%;
         }
         #validation-pic {
+            text-align: center;
+        }
+        #validation-pic img {
             width: 35%;
             height: 35%;
-            text-align: center;
         }
         #content-box {
             margin-top: 16px;
@@ -62,9 +63,6 @@
             margin: 16px 0;
         }
         #validation-code-box {
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
             width: 252px;
             height: 137px;
             background-color: #ECF2F0;
@@ -75,10 +73,6 @@
             font-weight: 800;
             font-size: 64px;
             color: #48484A;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
         footer {
             padding: 0.5rem;
@@ -120,9 +114,11 @@
 <body>
     <div id="main-content">
         <nav>
-            <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
-            &nbsp;
-            <span id="title">HKSHOPU</span>
+            <div id="nav-content">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" id="logo-pic">
+                &nbsp;
+                <span id="title">HKSHOPU</span>
+            </div>
         </nav>
     
         <main>
