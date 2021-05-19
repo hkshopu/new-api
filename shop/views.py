@@ -1137,7 +1137,33 @@ def delete_shop_address(request): #id : uuid(column)
 
     return JsonResponse(responseData)
     # pass
+# 刪除店鋪地址
+def delete_shop_address_forAndroid(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # address_id= request.POST.getlist('address_id', '')
+        address_id=json.loads(request.POST.get('address_id'))
+        if responseData['status'] == 0:
+            addressIDList=[]
+            for addressID in address_id:
+                addressIDList.append(addressID)
+            print(addressIDList)
+            models.Shop_Address.objects.filter(id__in=addressIDList).delete()
+            address_delete=models.Shop_Address.objects.filter(id__in=addressIDList)
+            print(len(address_delete))
+            if len(address_delete)==0:
+                responseData['status'] = 0
+                responseData['ret_val'] = '刪除商店地址成功!'
+            else:
+                responseData['status'] = -1
+                responseData['ret_val'] = '刪除商店地址失敗!'
 
+    return JsonResponse(responseData)
+    # pass
 # 銀行帳號
 def bankAccount(request, id=0, bank_account_id=''):
     # 回傳資料
