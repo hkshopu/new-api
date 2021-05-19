@@ -56,7 +56,7 @@ def shop_product(request,id):
     if request.method == 'GET':
         if responseData['status'] == 0:
             # shop=models.Shop.objects.get(id=id)
-            products = models.Product.objects.filter(shop_id=id).filter(product_status='active')
+            products = models.Product.objects.filter(shop_id=id).filter(product_status='active').filter(is_delete='N')
             getProductID=[]
             for product in products:
                 getProductID.append(product.id)
@@ -170,7 +170,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                 print("===架上商品===")
                 if keyword=="none":
                     print("為空值")
-                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status)
+                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(is_delete='N')
                     # print(products)
                     getProductID=[]
                     for product in products:
@@ -263,7 +263,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     print("不能為空值")
                     print("=========")
                     print(keyword)
-                    products = models.Product.objects.filter(shop_id=id).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
+                    products = models.Product.objects.filter(shop_id=id).filter(is_delete='N').filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
                     getProductID=[]
                     for product in products:
                         getProductID.append(product.id)
@@ -359,8 +359,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                 if keyword=="none":
                     print("為空值")
                     
-                    products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1)
-                    products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0) 
+                    products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1).filter(is_delete='N')
+                    products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0).filter(is_delete='N')
                     getProductID=[]
                     # print(products)
                     # for product in products_on_id:
@@ -456,8 +456,8 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                 else: 
                     print("不能為空值")
                     print("=========")
-                    products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1)
-                    products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0) 
+                    products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1).filter(is_delete='N')
+                    products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0).filter(is_delete='N') 
                     getProductID=[]
                     # print(products)
                     # for product in products_on_id:
@@ -477,14 +477,14 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     products = models.Product.objects.filter(id__in=getProductID)
 
 
-                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=productSpecsIDList).filter(cover='y')
+                    productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')
                     for product in products:  
                         if product.product_spec_on=='y'and product.quantity==0: 
                             for productPic in productPics:
                             # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
                                     
-                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=productSpecsIDList) #.filter(quantity=0)
+                                    productSpecs=models.Product_Spec.objects.filter(product_id__in=getProductID) #.filter(quantity=0)
 
                                     productInfo = {
                                         'id': product.id,
@@ -559,7 +559,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                 print(keyword)
                 if keyword=="none":
                     print("為空值")
-                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status)
+                    products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(is_delete='N')
                     getProductID=[]
                     for product in products:
                         getProductID.append(product.id)
@@ -651,7 +651,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     print("不能為空值")
                     print("=========")
                     print(keyword)
-                    products = models.Product.objects.filter(shop_id=id).filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword)).filter(product_status=product_status)
+                    products = models.Product.objects.filter(shop_id=id).filter(is_delete='N').filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword)).filter(product_status=product_status)
                     getProductID=[]
                     for product in products:
                         getProductID.append(product.id)
@@ -755,7 +755,7 @@ def product_info(request,id): #product_id
     if request.method == 'GET':
         if responseData['status'] == 0:
             # shop=models.Shop.objects.get(id=id)
-            products = models.Product.objects.filter(id=id)
+            products = models.Product.objects.filter(id=id).filter(is_delete='N')
             getProductID=[]
             for product in products:
                 getProductID.append(product.id)
@@ -843,7 +843,7 @@ def product_info_forAndroid(request,id): #product_id
     if request.method == 'GET':
         if responseData['status'] == 0:
             # shop=models.Shop.objects.get(id=id)
-            products = models.Product.objects.filter(id=id)
+            products = models.Product.objects.filter(id=id).filter(is_delete='N')
             getCategoryID=[]
             getSubCategoryID=[]
             print(products[0].product_spec_on)
@@ -1687,6 +1687,31 @@ def update_product_status_forAndroid(request):
 
         responseData['status'] =0
         responseData['ret_val'] = '上架/下架成功!'
+
+    return JsonResponse(responseData)
+    # pass
+
+# 上架/下架
+def delete_product(request,id): 
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        products=models.Product.objects.filter(id=id).filter(is_delete='N')
+        for product in products:
+            product.is_delete='Y'
+            product.save()
+
+        products_check=models.Product.objects.filter(id=id).filter(is_delete='Y')
+        if len(products_check)==1:
+
+            responseData['status'] =0
+            responseData['ret_val'] = '刪除商品成功!'
+        else:
+            responseData['status'] =-1
+            responseData['ret_val'] = '刪除商品失敗!'
 
     return JsonResponse(responseData)
     # pass
