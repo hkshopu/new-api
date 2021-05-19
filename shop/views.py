@@ -808,17 +808,17 @@ def delete(request, id):
     responseData = {
         'status': 0, 
         'ret_val': '',
-        'data': {}
+        'data': {"order_count": 0}
     }
     if request.method == 'DELETE':
         try:
             shop = models.Shop.objects.get(id=id,is_delete='N')
         except:
             responseData['status'], responseData['status'] = -1, '無此商店'
-        if responseData['stauts'] == 0:
+        if responseData['status'] == 0:
             pass
             # 取得進行中的訂單數量，if length > 0 then raise error
-        if responseData['stauts'] == 0:
+        if responseData['status'] == 0:
             models.Product.objects.filter(shop_id=id,is_delete='N').update(is_delete='Y')
             shop.is_delete='Y'
             shop.save()
