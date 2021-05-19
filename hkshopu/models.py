@@ -81,6 +81,7 @@ class Shop(models.Model):
     hkshopu_event_notification = models.CharField(max_length=1, null=True, default='Y')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_delete = models.CharField(max_length=1, default='N')
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
@@ -262,7 +263,7 @@ class Selected_Shop_Category(models.Model):
         ret_description = ''
         if column_name is 'shop_id':
             try:
-                Shop.objects.get(id=param)
+                Shop.objects.get(id=param,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '商店編號不存在'
         elif column_name is 'shop_category_id':
@@ -307,7 +308,7 @@ class Shop_Shipment_Setting(models.Model):
         ret_description = ''
         if column_name is 'shop_id':
             try:
-                Shop.objects.get(id=param)
+                Shop.objects.get(id=param,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '無此商店'
         if column_name is 'shipment_settings':
@@ -346,7 +347,7 @@ class Shop_Address(models.Model):
         ret_description = ''
         if param is 'shop_id':
             try:
-                Shop.objects.get(id=id)
+                Shop.objects.get(id=id,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'                
         elif param is 'name':
@@ -409,7 +410,7 @@ class Shop_Bank_Account(models.Model):
         ret_description = ''
         if param is 'shop_id':
             try:
-                Shop.objects.get(id=param)
+                Shop.objects.get(id=param,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'
         elif param is 'bank_account_settings':
@@ -506,7 +507,7 @@ class Product(models.Model):
                 ret_code, ret_description = err_code, '未填寫商店編號!'
             elif not(re.match('^\d+$', param)):
                 ret_code, ret_description = err_code, '商店編號格式錯誤!'
-            elif not(Shop.objects.get(id=param).exists()):
+            elif not(Shop.objects.get(id=param,is_delete='N').exists()):
                 ret_code, ret_description = err_code, '商店編號不存在!'
         elif column_name=='product_category_id':
             if not(param):

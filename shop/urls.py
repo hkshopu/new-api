@@ -6,6 +6,7 @@ urlpatterns = [
     path('save/', views.save), 
     path('<id>/update/', views.update), 
     path('<id>/show/', views.show), 
+    path('<id>/delete/', views.delete),
     path('checkShopNameIsExistsProcess/', views.checkShopNameIsExistsProcess),
     # 銀行帳號
     path('<id>/bankAccount/', views.bankAccount),
