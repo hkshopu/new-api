@@ -21,7 +21,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 39px auto;
+            margin-bottom: 39px;
+            text-align: center;
+        }
+        #navbar-content {
+            text-align: center;
+            margin: 0 auto;
         }
         #logo-pic img {
             max-width: 28px;
@@ -133,12 +138,14 @@
 <body>
     <div id="main-content">
         <div id="navbar">
-            <span id="logo-pic">
-                <img src="{% static 'images/logo.png' %}" alt="Logo">
-            </span>
-            <span id="title">
-                HKSHOPU
-            </span>
+            <div id="navbar-content">
+                <span id="logo-pic">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo">
+                </span>
+                <span id="title">
+                    HKSHOPU
+                </span>
+            </div>
         </div>
     
         <main>
