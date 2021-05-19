@@ -158,7 +158,7 @@ def save(request):
         # 檢查同一人是否重複新增同名的商店
         if responseData['status'] == 0:
             try:
-                shop = models.Shop.objects.get(shop_title=shopTitle)
+                shop = models.Shop.objects.get(shop_title=shopTitle,is_delete='N')
                 responseData['status'] = -99
                 responseData['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
             except:
@@ -313,7 +313,7 @@ def update(request, id):
 
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
@@ -540,7 +540,7 @@ def update(request, id):
                         response_data['ret_val'] = '過去 30 天內已更改過商店名稱!'
 
         if response_data['status'] == 0:
-            shops = models.Shop.objects.filter(shop_title=shop_title)
+            shops = models.Shop.objects.filter(shop_title=shop_title,is_delete='N')
             if len(shops) > 0:
                 response_data['status'] = -44
                 response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
@@ -713,7 +713,7 @@ def show(request, id):
         # 檢查商店編號是否正確
         if responseData['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
                 shop_bank_account = models.Shop_Bank_Account.objects.filter(shop_id=shop.id)
                 shop_address = models.Shop_Address.objects.filter(shop_id=shop.id)
                 shop_attr = [
@@ -802,6 +802,24 @@ def show(request, id):
                 responseData['status'] = 1
                 responseData['ret_val'] = '找不到此商店編號的商店!'
     return JsonResponse(responseData)
+# 刪除商店
+def delete(request, id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'DELETE':
+        try:
+            shop = models.Shop.objects.get(id=id,is_delete='N')
+            shop.is_delete='Y'
+            shop.save()
+            responseData['ret_val'] = '刪除成功'
+        except:
+            responseData['status'], responseData['status'] = -1, '無此商店'
+    return JsonResponse(responseData)
+    
+
 # 確認商店名稱是否重複
 def checkShopNameIsExistsProcess(request):
     response_data = {
@@ -814,7 +832,7 @@ def checkShopNameIsExistsProcess(request):
         shopTitle = shopTitle.replace('"','')
         shopTitle = shopTitle.replace("'",'')
         if response_data['status'] == 0:
-            shops = models.Shop.objects.filter(shop_title=shopTitle)
+            shops = models.Shop.objects.filter(shop_title=shopTitle, is_delete='N')
             if len(shops) > 0:
                 response_data['status'] = -1
                 response_data['ret_val'] = '已存在相同名稱的商店!'
@@ -1320,13 +1338,13 @@ def get_product_quantity_of_specific_shop(request, id):
     if request.method == 'GET':
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = 1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
         if response_data['status'] == 0:
-            products = models.Product.objects.filter(shop_id=id)
+            products = models.Product.objects.filter(shop_id=id,is_delete='N')
             response_data['product_quantity'] = len(products)
             response_data['ret_val'] = '已取得該商店產品數量!'
     return JsonResponse(response_data)
@@ -1340,7 +1358,7 @@ def get_follower_quantity_of_specific_shop(request, id):
     if request.method == 'GET':
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = 1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
@@ -1360,7 +1378,7 @@ def get_product_average_rating_of_specific_shop(request, id):
     if request.method == 'GET':
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = 1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
@@ -1383,7 +1401,7 @@ def get_order_amount_of_specific_shop(request, id):
     if request.method == 'GET':
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = 1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
@@ -1434,7 +1452,7 @@ def update_notification_setting_of_specific_shop(request, id):
 
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
@@ -1512,7 +1530,7 @@ def get_simple_info_of_specific_shop(request, id):
     if request.method == 'GET':
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id)
+                shop = models.Shop.objects.get(id=id,is_delete='N')
             except:
                 response_data['status'] = 1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
