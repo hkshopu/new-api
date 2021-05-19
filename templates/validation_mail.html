@@ -40,9 +40,7 @@
         #validation-pic {
             width: 35%;
             height: 35%;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            text-align: center;
         }
         #content-box {
             margin-top: 16px;
@@ -50,6 +48,7 @@
             background-color: #FFFFFF;
             border-radius: 8px;
             text-align: center;
+            position: relative;
         }
         #content-greeting {
             font-family: "Heebo";
@@ -64,6 +63,8 @@
         }
         #validation-code-box {
             position: relative;
+            left: 50%;
+            transform: translateX(-50%);
             width: 252px;
             height: 137px;
             background-color: #ECF2F0;
@@ -125,7 +126,9 @@
         </nav>
     
         <main>
-            <img src="{% static 'images/validation.png' %}" alt="validation-pic" id="validation-pic">
+            <div id="validation-pic">
+                <img src="{% static 'images/validation.png' %}" alt="validation-pic">
+            </div>
     
             <div id="content-box">
                 <div id="content-body">
@@ -138,9 +141,9 @@
                         請至 APP 輸入以下驗證碼完成啟用操作：
                     </div>
                     <div id="validation-code-box">
-                        <div id="validation-code">
+                        <span id="validation-code">
                             {{ validation_code }}
-                        </div>
+                        </span>
                     </div>
                 </div>
             </div>
