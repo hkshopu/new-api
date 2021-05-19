@@ -20,16 +20,6 @@
             width: inherit;
             margin-bottom: 39px;
             text-align: center;
-            position: relative;
-        }
-        #navbar-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
         #logo-pic img {
             max-width: 28px;
@@ -141,14 +131,12 @@
 <body>
     <div id="main-content">
         <div id="navbar">
-            <div id="navbar-content">
-                <div id="logo-pic">
-                    <img src="{% static 'images/logo.png' %}" alt="Logo">
-                </div>
-                <div id="title">
-                    HKSHOPU
-                </div>
-            </div>
+            <span id="logo-pic">
+                <img src="{% static 'images/logo.png' %}" alt="Logo">
+            </span>
+            <span id="title">
+                HKSHOPU
+            </span>
         </div>
     
         <main>
