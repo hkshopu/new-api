@@ -14,25 +14,27 @@
         #main-content {
             background-color: #D6F0EC;
             padding: 1rem;
-            width: 100%;
         }
         #navbar {
             list-style-type: none;
             margin: 0 auto 39px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            row-gap: 1rem;
+            text-align: center;
+            position: relative;
         }
         #logo-pic img {
             max-width: 28px;
             max-height: 24px;
+            margin-right: 0.25rem;
         }
         #title {
             font-weight: 500;
             font-family: "Heebo";
             font-size: 18px;
             color: #000000;
+            margin-left: 0.25rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
         }
         #validation-pic {
             text-align: center;
@@ -131,14 +133,14 @@
 </head>
 <body>
     <div id="main-content">
-        <ul id="navbar">
-            <li id="logo-pic">
+        <div id="navbar">
+            <span id="logo-pic">
                 <img src="{% static 'images/logo.png' %}" alt="Logo">
-            </li>
-            <li id="title">
+            </span>
+            <span id="title">
                 HKSHOPU
-            </li>
-        </ul>
+            </span>
+        </div>
     
         <main>
             <div id="validation-pic">
