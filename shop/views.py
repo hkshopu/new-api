@@ -713,9 +713,6 @@ def show(request, id):
         # 檢查商店編號是否正確
         if responseData['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id,is_delete='N')
-                shop_bank_account = models.Shop_Bank_Account.objects.filter(shop_id=shop.id)
-                shop_address = models.Shop_Address.objects.filter(shop_id=shop.id)
                 shop_attr = [
                     'id',
                     'user_id',
@@ -750,13 +747,16 @@ def show(request, id):
                     'facebook_on',
                     'instagram_on'
                     ]
-                shop_bank_account_attr = [
-                    'id'
+                
+                shop = models.Shop.objects.get(id=id,is_delete='N')
+                shop_bank_account = models.Shop_Bank_Account.objects.values_list(
+                    'id',
                     'code',
                     'name',
                     'account',
-                    'account_name']
-                shop_address_attr = [
+                    'account_name'
+                ).filter(shop_id=shop.id)
+                shop_address = models.Shop_Address.objects.values_list(
                     'id',
                     'name',
                     'country_code',
@@ -768,7 +768,8 @@ def show(request, id):
                     'number',
                     'other',
                     'floor',
-                    'room']
+                    'room'
+                ).filter(shop_id=shop.id)
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
                         if attr == 'address_phone':
@@ -778,11 +779,14 @@ def show(request, id):
                         else:
                             responseData['data'][attr] = getattr(shop, attr)
 
-                    elif attr is 'shop_bank_account':
+                    elif attr is 'shop_bank_account': # join table
                         responseData['data'][attr] = []
                         for item in shop_bank_account.values():
-                            responseData['data'][attr].append(item)
-                    elif attr is 'shop_address':
+                            if 'account' in item:
+                                item['account'] = "*"+item['account'][-4:]
+                            responseData['data'][attr].append(item)                            
+                                    
+                    elif attr is 'shop_address': # join table
                         responseData['data'][attr] = []
                         for item in shop_address.values():
                             responseData['data'][attr].append(item)
