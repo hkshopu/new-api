@@ -639,3 +639,34 @@ def getUserShopCount(request, id):
             responseData['data'].append(shopInfo)
             responseData['ret_val'] = '已取得您的商店總數!'
     return JsonResponse(responseData)
+# 發送電子郵件邀請使用者參與測試
+def sned_invitation_testing_mail(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        email = request.POST.get('email', '')
+
+        if response_data['status'] == 0:
+            if not(email):
+                response_data['status'] = -1
+                response_data['ret_val'] = '未填寫電子郵件!'
+
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(email=email)
+            except:
+                response_data['status'] = -2
+                response_data['ret_val'] = '此電子郵件未被註冊使用!'
+
+        if response_data['status'] == 0:
+            subject = 'HKShopU - 參與測試邀請'
+            html_message = render_to_string('invitation_testing_mail.html', {'user_name': user.name})
+            message = strip_tags(html_message)
+            from_email = 'info@hkshopu.com'
+            recipient_list = [email, ]
+            mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list, html_message=html_message)
+            response_data['ret_val'] = '發送參與測試邀請電子郵件成功!'
+    return JsonResponse(response_data)

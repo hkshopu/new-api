@@ -15,5 +15,6 @@ urlpatterns = [
     path('checkEmailIsAllowedLoginProcess/', views.checkEmailIsAllowedLoginProcess), 
     path('getUserListProcess/', views.getUserListProcess), 
     path('<id>/show/', views.show),
-    path('<id>/shopCount/', views.getUserShopCount)
+    path('<id>/shopCount/', views.getUserShopCount), 
+    path('sned_invitation_testing_mail/', views.sned_invitation_testing_mail)
 ]
