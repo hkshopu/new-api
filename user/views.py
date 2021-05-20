@@ -517,14 +517,14 @@ def getUserShopListProcess(request, id):
 
     if request.method == 'GET':
         if responseData['status'] == 0:
-            shops = models.Shop.objects.filter(user_id=id)
+            shops = models.Shop.objects.filter(user_id=id,is_delete='N')
             if len(shops) == 0:
                 responseData['status'] = 1
                 responseData['ret_val'] = '您尚未建立任何商店!'
         
         if responseData['status'] == 0:
             for shop in shops:
-                products = models.Product.objects.filter(shop_id=shop.id)
+                products = models.Product.objects.filter(shop_id=shop.id,is_delete='N')
                 shopInfo = {
                     'id': shop.id, 
                     'shop_title': shop.shop_title, 
@@ -632,7 +632,7 @@ def getUserShopCount(request, id):
 
     if request.method == 'GET':        
         if responseData['status'] == 0:
-            shops = models.Shop.objects.filter(user_id=id)
+            shops = models.Shop.objects.filter(user_id=id,is_delete='N')
             shopInfo = {
                 'shop_count': len(shops)
             }
