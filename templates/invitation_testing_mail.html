@@ -9,14 +9,290 @@
         * {
             box-sizing: border-box;
         }
-        body {
+        #main-content {
             margin: 0;
             padding: 0;
             background-color: #D6F0EC;
+            min-width: 100%;
+            min-height: 100%;
+        }
+        a {
+            text-decoration: none;
+        }
+        nav {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .logo-pic {
+            margin-right: 0.25rem;
+            max-width: 16.6%;
+            max-height: 16.3%;
+        }
+        nav .title {
+            margin-left: 0.25rem;
+        }
+        #invitation-title-box {
+            background: #FFFFFF;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #invitation-title-box ul {
+            list-style-type: none;
+            padding: 12px;
+        }
+        #invitation-title-box ul:nth-child(1) {
+            font-family: "Heebo";
+            font-size: 48px;
+        }
+        #invitation-title-box ul:nth-child(2) {
+            color: #191919;
+            font-family: "Heebo";
+            font-size: 33px;
+            font-weight: bold;
+        }
+        #invitation-title-box ul:nth-child(3) {
+            color: #191919;
+            font-family: "Heebo";
+            font-size: 20px;
+        }
+        .promotion-pic-small {
+            max-width: 288px;
+            max-height: 280px;
+            margin-top: 37px;
+        }
+        .promotion-pic-large {
+            max-width: 600px;
+            max-height: 280px;
+            margin-top: 45px;
+        }
+        #invitation-msg-box {
+            margin: 16px 0;
+            padding: 40px 18px;
+            background: #FFFFFF;
+            border-radius: 8px;
+        }
+        .msg-title {
+            font-family: "Heebo";
+            font-weight: bold;
+            font-size: 20px;
+            color: #191919;
+        }
+        .msg-content p {
+            font-family: "Heebo";
+            font-size: 18px;
+            color: #3B3B3B;
+        }
+        .msg-content p:last-child {
+            font-size: 20px;
+        }
+        .msg-pic-apple img {
+            max-width: 10%;
+            max-height: 10%;
+        }
+        .msg-pic-google-play img {
+            max-width: 15.6%;
+            max-height: 15.6%;
+        }
+        .coupon-pic img {
+            max-width: 50.5%;
+            max-height: 50.5%;
+        }
+        .content-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 8px 0;
+            border-radius: 8px;
+        }
+        .content-box .img-box {
+            position: relative;
+            width: 288px;
+            height: 144px;
+            background: #ECF2F0;
+        }
+        .content-box .img-box img {
+            max-width: 33%;
+            max-height: 33%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .content-box .content {
+            width: 288px;
+            background: #FFFFFF;
+        }
+        .content-box .content .content-head {
+            font-family: "Heebo";
+            font-size: 20px;
+        }
+        .content-box .content .content-body {
+            font-family: "Noto Sans TC";
+            font-size: 16px;
+        }
+        footer {
+            margin-top: 8px;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .contact-email {
+            font-family: "Heebo";
+            font-size: 16px;
+            color: #48484A;
+        }
+        .contact-email a {
+            text-decoration: underline;
+        }
+        .social-links {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 27px;
+        }
+        .homepage-links a {
+            color: #191919;
+            font-size: 16px;
+        }
+        .separator {
+            margin: 0 1rem;
+        }
+        @media screen and (max-width: 679px) {
+            .promotion-pic-large {
+                display: none;
+            }
+        }
+        @media screen and (min-width: 680px) {
+            .promotion-pic-small {
+                display: none;
+            }
+            .content-box {
+                flex-direction: row;
+            }
+            .content-box .img-box {
+                width: 188px;
+            }
+            .content-box .content {
+                width: 412px;
+            }
+            .social-links {
+                gap: 57px;
+            }
         }
     </style>
 </head>
 <body>
+    <div id="main-content">
+        <nav>
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-pic">
+            <span class="title">HKSHOPU</span>
+        </nav>
     
+        <div id="invitation-title-box">
+            <ul>
+                <li>
+                    🎉
+                </li>
+                <li>
+                    您被邀請參與測試！
+                </li>
+                <li>
+                    歡迎來到HKSHOPU.
+                </li>
+            </ul>
+            <img src="{% static 'images/ig-05.png' %}" alt="Small Promotion Pic" class="promotion-pic-small">
+            <img src="{% static 'images/Facebook-Ad-03.jpg' %}" alt="Large Promotion Pic" class="promotion-pic-large">
+        </div>
+    
+        <div id="invitation-msg-box">
+            <div class="msg-title">
+                親愛的顧客您好, 👋
+            </div>
+            <div class="msg-content">
+                <p>
+                    在產品上架前，我們希望能透過測試來改善舊問題、創作新功能。因此，我們需要以不同方式使用app的人，在不同裝置及設定上進行測試，並希望藉由您的看法及建議，幫助我們更加精進。請您撥冗幾分鐘的時間，協助參與公開測試。
+                </p>            
+                <p>
+                    在公開測試前，請確保穩定的Wifi及充足的手機電量。如果有任何問題，歡迎進行反饋。您寶貴的意見將是我們持續改善的動力，感謝您的協助及配合！
+                </p>
+                <p>
+                    立即參與公開測試👇
+                </p>
+                <div class="msg-pic-apple">
+                    <a href="https://apps.apple.com/tw/app/%E5%BA%97%E5%8C%AF/id1565793162/" target="_blank">
+                        <img src="{% static 'images/2000px-Download_on_the_App_Store_Badge.svg.png' %}" alt="Download on the App Store">
+                    </a>
+                </div>
+                <div class="msg-pic-google-play">
+                    <a href="" target="_blank">
+                        <img src="{% static 'images/1280px-Google_Play_Store_badge_EN.svg.png' %}" alt="GET IT ON Google Play">
+                    </a>
+                </div>
+                <p>
+                    參與公開測試送HK$100廣告費抵用卷👇
+                </p>
+                <div class="coupon-pic">
+                    <img src="{% static 'images/coupon@2x.png' %}" alt="Coupon">
+                </div>
+            </div>
+        </div>
+    
+        <div id="features">
+            <div class="content-box">
+                <div class="img-box">
+                    <img src="{% static 'images/store.png' %}" alt="Store">
+                </div>
+                <div class="content">
+                    <div class="content-head">
+                        第一階段功能 #建立店舖
+                    </div>
+                    <div class="content-body">
+                        一個帳號就能同時經營管理多家店鋪，擁有專屬你的不同賣場，多方經營創造更多商機。
+                    </div>
+                </div>
+            </div>
+            <div class="content-box">
+                <div class="img-box">
+                    <img src="{% static 'images/list.png' %}" alt="List">
+                </div>
+                <div class="content">
+                    <div class="content-head">
+                        第二階段功能 #高效管理訂單及銷售
+                    </div>
+                    <div class="content-body">
+                        Coming Soon...
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <footer>
+            <div class="contact-email">
+                如果有任何問題，請隨時聯繫<br>
+                <a href="mailto:customer-service@hkshopu.com">
+                    customer-service@hkshopu.com
+                </a>
+            </div>
+            <ul class="social-links">
+                <li>
+                    <img src="{% static 'images/instagram_black.png' %}" alt="Instagram">
+                </li>
+                <li>
+                    <img src="{% static 'images/facebook_black.png' %}" alt="Facebook">
+                </li>
+            </ul>
+            <div class="homepage-links">
+                <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>
+                <span class="separator">|</span>
+                <a href="https://www.hkshopu.com/%E6%9C%8D%E5%8B%99%E6%A2%9D%E6%AC%BE" target="_blank">服務條款</a>
+                <span class="separator">|</span>
+                <a href="https://www.hkshopu.com/%E9%9A%B1%E7%A7%81%E6%A2%9D%E4%BE%8B%E6%94%BF%E7%AD%96" target="_blank">私隱條例政策</a>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
