@@ -11,47 +11,52 @@
             box-sizing: border-box;
         }
         #main-content {
-            margin: 0;
-            padding: 0;
+            padding: 1rem;
             background-color: #D6F0EC;
-            min-width: 100%;
-            min-height: 100%;
         }
         a {
             text-decoration: none;
         }
-        nav {
+        #navbar {
             text-align: center;
-            margin-bottom: 35px;
+            margin: 0 auto 35px auto;
         }
         .logo-pic {
             margin-right: 0.25rem;
-            max-width: 16.6%;
-            max-height: 16.3%;
+            width: 28.36px;
+            height: 24px;
         }
-        nav .title {
+        #navbar .title {
             margin-left: 0.25rem;
+            font-weight: 500;
+            font-family: "Heebo";
+            font-size: 18px;
+            color: #000000;
         }
         #invitation-title-box {
             background: #FFFFFF;
             border-radius: 8px;
             text-align: center;
+            width: 288px;
+            margin: 0 auto;
         }
         #invitation-title-box ul {
             list-style-type: none;
-            padding: 12px;
         }
-        #invitation-title-box ul:nth-child(1) {
+        #invitation-title-box ul li {
+            margin: 6px auto;
+        }
+        #invitation-title-box ul li:nth-child(1) {
             font-family: "Heebo";
             font-size: 48px;
         }
-        #invitation-title-box ul:nth-child(2) {
+        #invitation-title-box ul li:nth-child(2) {
             color: #191919;
             font-family: "Heebo";
             font-size: 33px;
             font-weight: bold;
         }
-        #invitation-title-box ul:nth-child(3) {
+        #invitation-title-box ul li:nth-child(3) {
             color: #191919;
             font-family: "Heebo";
             font-size: 20px;
@@ -78,6 +83,11 @@
             font-size: 20px;
             color: #191919;
         }
+        .msg-pic {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
         .msg-content p {
             font-family: "Heebo";
             font-size: 18px;
@@ -87,23 +97,26 @@
             font-size: 20px;
         }
         .msg-pic-apple img {
-            max-width: 10%;
-            max-height: 10%;
+            max-width: 200px;
+            max-height: 59.31px;
         }
         .msg-pic-google-play img {
-            max-width: 15.6%;
-            max-height: 15.6%;
+            max-width: 200px;
+            max-height: 59.07px;
         }
         .coupon-pic img {
-            max-width: 50.5%;
-            max-height: 50.5%;
+            max-width: 263px;
+            max-height: 161px;
+        }
+        #features {
+            text-align: center;
         }
         .content-box {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin: 8px 0;
+            margin: 8px auto;
             border-radius: 8px;
         }
         .content-box .img-box {
@@ -134,7 +147,7 @@
         }
         footer {
             margin-top: 8px;
-            padding: 1rem;
+            padding: 0.5rem;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -155,6 +168,10 @@
             align-items: center;
             gap: 27px;
         }
+        .social-links img {
+            max-width: 32px;
+            max-height: 32px;
+        }
         .homepage-links a {
             color: #191919;
             font-size: 16px;
@@ -168,6 +185,20 @@
             }
         }
         @media screen and (min-width: 680px) {
+            .logo-pic {
+                width: 39px;
+                height: 34px;
+            }
+            #invitation-title-box {
+                width: 600px;
+            }
+            .msg-pic {
+                flex-direction: row;
+                gap: 48px;
+            }
+            .msg-content p {
+                font-size: 20px;
+            }
             .promotion-pic-small {
                 display: none;
             }
@@ -188,10 +219,10 @@
 </head>
 <body>
     <div id="main-content">
-        <nav>
+        <div id="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-pic">
             <span class="title">HKSHOPU</span>
-        </nav>
+        </div>
     
         <div id="invitation-title-box">
             <ul>
@@ -223,15 +254,17 @@
                 <p>
                     立即參與公開測試👇
                 </p>
-                <div class="msg-pic-apple">
-                    <a href="https://apps.apple.com/tw/app/%E5%BA%97%E5%8C%AF/id1565793162/" target="_blank">
-                        <img src="{% static 'images/2000px-Download_on_the_App_Store_Badge.svg.png' %}" alt="Download on the App Store">
-                    </a>
-                </div>
-                <div class="msg-pic-google-play">
-                    <a href="" target="_blank">
-                        <img src="{% static 'images/1280px-Google_Play_Store_badge_EN.svg.png' %}" alt="GET IT ON Google Play">
-                    </a>
+                <div class="msg-pic">
+                    <div class="msg-pic-apple">
+                        <a href="https://apps.apple.com/tw/app/%E5%BA%97%E5%8C%AF/id1565793162/" target="_blank">
+                            <img src="{% static 'images/2000px-Download_on_the_App_Store_Badge.svg.png' %}" alt="Download on the App Store">
+                        </a>
+                    </div>
+                    <div class="msg-pic-google-play">
+                        <a href="" target="_blank">
+                            <img src="{% static 'images/1280px-Google_Play_Store_badge_EN.svg.png' %}" alt="GET IT ON Google Play">
+                        </a>
+                    </div>
                 </div>
                 <p>
                     參與公開測試送HK$100廣告費抵用卷👇
@@ -280,10 +313,14 @@
             </div>
             <ul class="social-links">
                 <li>
-                    <img src="{% static 'images/instagram_black.png' %}" alt="Instagram">
+                    <a href="https://instagram.com/hkshopu/" target="_blank">
+                        <img src="{% static 'images/instagram_black.png' %}" alt="Instagram">
+                    </a>
                 </li>
                 <li>
-                    <img src="{% static 'images/facebook_black.png' %}" alt="Facebook">
+                    <a href="https://www.facebook.com/hkshopu/" target="_blank">
+                        <img src="{% static 'images/facebook_black.png' %}" alt="Facebook">
+                    </a>
                 </li>
             </ul>
             <div class="homepage-links">
