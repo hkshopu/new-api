@@ -1613,8 +1613,12 @@ def save(request):
                         shop_id=shipment_method[i]["shop_id"]
                     )
                 else:
-                    response_data['ret_val'] = '產品新增成功!'
-                    response_data['status'] = 0
+                    print('error')
+                    response_data['ret_val'] = '產品新增失敗!'
+                    response_data['status'] = -1
+
+            response_data['ret_val'] = '產品新增成功!'
+            response_data['status'] = 0
                     # response_data['pic_upload'] = 'success'
           
         #------------
