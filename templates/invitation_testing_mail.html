@@ -37,19 +37,19 @@
             background: #FFFFFF;
             border-radius: 8px;
             text-align: center;
-            margin: 0 auto;
+            width: 288px;
         }
-        #invitation-title-box p:nth-child(1) {
+        #invitation-title-box .param1 {
             font-family: "Heebo";
             font-size: 48px;
         }
-        #invitation-title-box p:nth-child(2) {
+        #invitation-title-box .param2 {
             color: #191919;
             font-family: "Heebo";
             font-size: 33px;
             font-weight: bold;
         }
-        #invitation-title-box p:nth-child(3) {
+        #invitation-title-box .param3 {
             color: #191919;
             font-family: "Heebo";
             font-size: 20px;
@@ -69,6 +69,7 @@
             padding: 40px 18px;
             background: #FFFFFF;
             border-radius: 8px;
+            width: 288px;
         }
         .msg-title {
             font-family: "Heebo";
@@ -77,9 +78,7 @@
             color: #191919;
         }
         .msg-pic {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            display: inline-block;
         }
         .msg-content p {
             font-family: "Heebo";
@@ -92,10 +91,12 @@
         .msg-pic-apple img {
             max-width: 200px;
             max-height: 59.31px;
+            margin-bottom: 8px;
         }
         .msg-pic-google-play img {
             max-width: 200px;
             max-height: 59.07px;
+            margin-top: 8px;
         }
         .coupon-pic img {
             max-width: 263px;
@@ -103,12 +104,11 @@
         }
         #features {
             text-align: center;
+            margin: 0 auto;
+            width: 288px;
         }
         .content-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: inline-block;
             margin: 8px auto;
             border-radius: 8px;
         }
@@ -118,7 +118,7 @@
             height: 144px;
             background: #ECF2F0;
         }
-        .content-box .img-box .images {
+        .content-box .img-box .image, .content-box .content .content-description {
             display: table-cell;
             vertical-align: middle;
         }
@@ -129,6 +129,7 @@
         .content-box .content {
             width: 288px;
             background: #FFFFFF;
+            display: table;
         }
         .content-box .content .content-head {
             font-family: "Heebo";
@@ -154,12 +155,11 @@
             text-decoration: underline;
         }
         .social-links {
-            list-style-type: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 27px;
+            text-align: center;
             margin-bottom: 24px;
+        }
+        .social-links a {
+            margin: 0 13.5px;
         }
         .social-links img {
             max-width: 32px;
@@ -182,18 +182,17 @@
                 width: 39px;
                 height: 34px;
             }
-            .msg-pic {
-                flex-direction: row;
-                gap: 48px;
+            #invitation-title-box, #invitation-msg-box, #features {
+                width: 600px;
             }
             .msg-content p {
                 font-size: 20px;
             }
+            .msg-pic-apple, .msg-pic-google-play {
+                margin: 0 24px;
+            }
             .promotion-pic-small {
                 display: none;
-            }
-            .content-box {
-                flex-direction: row;
             }
             .content-box .img-box {
                 width: 188px;
@@ -201,8 +200,8 @@
             .content-box .content {
                 width: 412px;
             }
-            .social-links {
-                gap: 57px;
+            .social-links a {
+                margin: 0 28.5px;
             }
         }
     </style>
@@ -215,13 +214,13 @@
         </div>
     
         <div id="invitation-title-box">
-            <p>
+            <p class="para1">
                 🎉
             </p>
-            <p>
+            <p class="para2">
                 您被邀請參與測試！
             </p>
-            <p>
+            <p  class="para3">
                 歡迎來到HKSHOPU.
             </p>
             <img src="{% static 'images/ig-05.png' %}" alt="Small Promotion Pic" class="promotion-pic-small">
@@ -271,26 +270,30 @@
                     </div>
                 </div>
                 <div class="content">
-                    <div class="content-head">
-                        第一階段功能 #建立店舖
-                    </div>
-                    <div class="content-body">
-                        一個帳號就能同時經營管理多家店鋪，擁有專屬你的不同賣場，多方經營創造更多商機。
+                    <div class="content-description">
+                        <div class="content-head">
+                            第一階段功能 #建立店舖
+                        </div>
+                        <div class="content-body">
+                            一個帳號就能同時經營管理多家店鋪，擁有專屬你的不同賣場，多方經營創造更多商機。
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="content-box">
                 <div class="img-box">
-                    <div class="images">
+                    <div class="image">
                         <img src="{% static 'images/list.png' %}" alt="List">
                     </div>
                 </div>
                 <div class="content">
-                    <div class="content-head">
-                        第二階段功能 #高效管理訂單及銷售
-                    </div>
-                    <div class="content-body">
-                        Coming Soon...
+                    <div class="content-description">
+                        <div class="content-head">
+                            第二階段功能 #高效管理訂單及銷售
+                        </div>
+                        <div class="content-body">
+                            Coming Soon...
+                        </div>
                     </div>
                 </div>
             </div>
@@ -303,18 +306,14 @@
                     customer-service@hkshopu.com
                 </a>
             </div>
-            <ul class="social-links">
-                <li>
-                    <a href="https://instagram.com/hkshopu/" target="_blank">
-                        <img src="{% static 'images/instagram_black.png' %}" alt="Instagram">
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.facebook.com/hkshopu/" target="_blank">
-                        <img src="{% static 'images/facebook_black.png' %}" alt="Facebook">
-                    </a>
-                </li>
-            </ul>
+            <div class="social-links">
+                <a href="https://instagram.com/hkshopu/" target="_blank">
+                    <img src="{% static 'images/instagram_black.png' %}" alt="Instagram">
+                </a>
+                <a href="https://www.facebook.com/hkshopu/" target="_blank">
+                    <img src="{% static 'images/facebook_black.png' %}" alt="Facebook">
+                </a>
+            </div>
             <div class="homepage-links">
                 <a href="https://www.hkshopu.com/" target="_blank">HKSHOPU</a>
                 <span class="separator">|</span>
