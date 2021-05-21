@@ -37,26 +37,19 @@
             background: #FFFFFF;
             border-radius: 8px;
             text-align: center;
-            width: 288px;
             margin: 0 auto;
         }
-        #invitation-title-box ul {
-            list-style-type: none;
-        }
-        #invitation-title-box ul li {
-            margin: 6px auto;
-        }
-        #invitation-title-box ul li:nth-child(1) {
+        #invitation-title-box p:nth-child(1) {
             font-family: "Heebo";
             font-size: 48px;
         }
-        #invitation-title-box ul li:nth-child(2) {
+        #invitation-title-box p:nth-child(2) {
             color: #191919;
             font-family: "Heebo";
             font-size: 33px;
             font-weight: bold;
         }
-        #invitation-title-box ul li:nth-child(3) {
+        #invitation-title-box p:nth-child(3) {
             color: #191919;
             font-family: "Heebo";
             font-size: 20px;
@@ -120,18 +113,18 @@
             border-radius: 8px;
         }
         .content-box .img-box {
-            position: relative;
+            display: table;
             width: 288px;
             height: 144px;
             background: #ECF2F0;
         }
+        .content-box .img-box .images {
+            display: table-cell;
+            vertical-align: middle;
+        }
         .content-box .img-box img {
             max-width: 33%;
             max-height: 33%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
         .content-box .content {
             width: 288px;
@@ -140,6 +133,7 @@
         .content-box .content .content-head {
             font-family: "Heebo";
             font-size: 20px;
+            font-weight: bold;
         }
         .content-box .content .content-body {
             font-family: "Noto Sans TC";
@@ -149,14 +143,12 @@
             margin-top: 8px;
             padding: 0.5rem;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
         }
         .contact-email {
             font-family: "Heebo";
             font-size: 16px;
             color: #48484A;
+            margin-bottom: 24px;
         }
         .contact-email a {
             text-decoration: underline;
@@ -167,6 +159,7 @@
             justify-content: center;
             align-items: center;
             gap: 27px;
+            margin-bottom: 24px;
         }
         .social-links img {
             max-width: 32px;
@@ -188,9 +181,6 @@
             .logo-pic {
                 width: 39px;
                 height: 34px;
-            }
-            #invitation-title-box {
-                width: 600px;
             }
             .msg-pic {
                 flex-direction: row;
@@ -225,17 +215,15 @@
         </div>
     
         <div id="invitation-title-box">
-            <ul>
-                <li>
-                    🎉
-                </li>
-                <li>
-                    您被邀請參與測試！
-                </li>
-                <li>
-                    歡迎來到HKSHOPU.
-                </li>
-            </ul>
+            <p>
+                🎉
+            </p>
+            <p>
+                您被邀請參與測試！
+            </p>
+            <p>
+                歡迎來到HKSHOPU.
+            </p>
             <img src="{% static 'images/ig-05.png' %}" alt="Small Promotion Pic" class="promotion-pic-small">
             <img src="{% static 'images/Facebook-Ad-03.jpg' %}" alt="Large Promotion Pic" class="promotion-pic-large">
         </div>
@@ -278,7 +266,9 @@
         <div id="features">
             <div class="content-box">
                 <div class="img-box">
-                    <img src="{% static 'images/store.png' %}" alt="Store">
+                    <div class="image">
+                        <img src="{% static 'images/store.png' %}" alt="Store">
+                    </div>
                 </div>
                 <div class="content">
                     <div class="content-head">
@@ -291,7 +281,9 @@
             </div>
             <div class="content-box">
                 <div class="img-box">
-                    <img src="{% static 'images/list.png' %}" alt="List">
+                    <div class="images">
+                        <img src="{% static 'images/list.png' %}" alt="List">
+                    </div>
                 </div>
                 <div class="content">
                     <div class="content-head">
