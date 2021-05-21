@@ -770,6 +770,8 @@ def show(request, id):
                     'floor',
                     'room'
                 ).filter(shop_id=shop.id)
+
+                responseData['data']['username'] = models.User.objects.get(id=shop.user_id).account_name
                 for attr in shop_attr:
                     if(hasattr(shop, attr)):
                         if attr == 'address_phone':
@@ -814,14 +816,17 @@ def delete(request, id):
         'ret_val': '',
         'data': {"order_count": 0}
     }
+    print(request.method)
     if request.method == 'DELETE':
         try:
             shop = models.Shop.objects.get(id=id,is_delete='N')
         except:
             responseData['status'], responseData['status'] = -1, '無此商店'
         if responseData['status'] == 0:
-            pass
-            # 取得進行中的訂單數量，if length > 0 then raise error
+            orders = models.Shop_Order.objects.filter(shop_id=id).exclude(status='Pending for Delivery')
+            orders_count = len(orders)
+            if orders_count>0:
+                responseData['status'], responseData['ret_val'], responseData['data']['order_count'] = -2, '尚有訂單未完成', orders_count
         if responseData['status'] == 0:
             models.Product.objects.filter(shop_id=id,is_delete='N').update(is_delete='Y')
             shop.is_delete='Y'
