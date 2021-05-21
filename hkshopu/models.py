@@ -694,5 +694,6 @@ class Shop_Order(models.Model):
     shop_id = models.PositiveIntegerField()
     product_id = models.PositiveIntegerField()
     amount = models.PositiveIntegerField()
+    status = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
