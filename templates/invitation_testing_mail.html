@@ -38,18 +38,19 @@
             border-radius: 8px;
             text-align: center;
             width: 288px;
+            margin: 0 auto;
         }
-        #invitation-title-box .param1 {
+        #invitation-title-box .para1 {
             font-family: "Heebo";
             font-size: 48px;
         }
-        #invitation-title-box .param2 {
+        #invitation-title-box .para2 {
             color: #191919;
             font-family: "Heebo";
             font-size: 33px;
             font-weight: bold;
         }
-        #invitation-title-box .param3 {
+        #invitation-title-box .para3 {
             color: #191919;
             font-family: "Heebo";
             font-size: 20px;
@@ -65,7 +66,7 @@
             margin-top: 45px;
         }
         #invitation-msg-box {
-            margin: 16px 0;
+            margin: 16px auto;
             padding: 40px 18px;
             background: #FFFFFF;
             border-radius: 8px;
@@ -194,11 +195,15 @@
             .promotion-pic-small {
                 display: none;
             }
+            #features {
+                width: 600px;
+            }
             .content-box .img-box {
                 width: 188px;
             }
             .content-box .content {
                 width: 412px;
+                height: 144px;
             }
             .social-links a {
                 margin: 0 28.5px;
@@ -221,7 +226,7 @@
                 您被邀請參與測試！
             </p>
             <p  class="para3">
-                歡迎來到HKSHOPU.
+                歡迎來到 HKSHOPU.
             </p>
             <img src="{% static 'images/ig-05.png' %}" alt="Small Promotion Pic" class="promotion-pic-small">
             <img src="{% static 'images/Facebook-Ad-03.jpg' %}" alt="Large Promotion Pic" class="promotion-pic-large">
