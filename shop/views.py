@@ -792,7 +792,7 @@ def show(request, id):
                         responseData['data'][attr] = []
                         for item in shop_address.values():
                             responseData['data'][attr].append(item)
-                products = models.Product.objects.filter(shop_id=shop.id)
+                products = models.Product.objects.filter(shop_id=shop.id,is_delete='N')
                 responseData['data']['product_count'] = len(products)
                 # dummy data
                 responseData['data']['rating'] = 0
