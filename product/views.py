@@ -165,11 +165,10 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
 
     if request.method == 'GET':
         if responseData['status'] == 0:
-            print(quantity)
+            
             if product_status=="active" and int(quantity)==1: #架上商品
-                print("===架上商品===")
+                
                 if keyword=="none":
-                    print("為空值")
                     products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(is_delete='N')
                     # print(products)
                     getProductID=[]
@@ -178,16 +177,15 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                     for product in products: 
-                        print(product.product_spec_on)  
+                         
                         if product.product_spec_on=='y':
                             for productPic in productPics:
                                 # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    print(product.product_spec_on)
+                                    
                                     
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
-                                    print("spec_data")
-                                    print(len(productSpecs))
+                                    
                                     if(len(productSpecs)==0):
                                         break
                                     productInfo = {
@@ -226,12 +224,11 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     productInfo.update({'max_price':max_price})   
                                     responseData['data'].append(productInfo)
                         elif product.product_spec_on=='n':     
-                            print("無規格") 
-                            print(product.id)
+                            
                             for productPic in productPics:  
-                                print(product.id) 
+                                
                                 if product.id==productPic.product_id and product.quantity !=0 : 
-                                    print("成功")
+                                    
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -260,9 +257,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
-                    print("不能為空值")
-                    print("=========")
-                    print(keyword)
+                    
                     products = models.Product.objects.filter(shop_id=id).filter(is_delete='N').filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword))
                     getProductID=[]
                     for product in products:
@@ -270,16 +265,15 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                     for product in products: 
-                        print(product.product_spec_on)  
+                        
                         if product.product_spec_on=='y':
                             for productPic in productPics:
                                 # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    print(product.product_spec_on)
+                                    
                                     
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id).filter(quantity__gt=0)
-                                    print("spec_data")
-                                    print(len(productSpecs))
+                                    
                                     if(len(productSpecs)==0):
                                         break
                                     productInfo = {
@@ -318,12 +312,12 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     productInfo.update({'max_price':max_price})   
                                     responseData['data'].append(productInfo)
                         elif product.product_spec_on=='n':     
-                            print("無規格") 
-                            print(product.id)
+                            
+                            
                             for productPic in productPics:  
-                                print(product.id) 
+                                
                                 if product.id==productPic.product_id  and product.quantity !=0 : 
-                                    print("成功")
+                                    
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -352,12 +346,10 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'             
             elif product_status=="active" and int(quantity)==0: #已售完
-                print("===已售完===")
-                print("=========")
+                
                 # print(keyword)
                 zero_status=[]
                 if keyword=="none":
-                    print("為空值")
                     
                     products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1).filter(is_delete='N')
                     products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0).filter(is_delete='N')
@@ -368,14 +360,14 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
 
                     productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=products_on_id).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
                     # productSpecsIDList=[] #沒spec等於塞product的id
-                    print(len(productSpecs_tests))
+                    
 
                     for i in range (len(productSpecs_tests)):
                         getProductID.append(productSpecs_tests[i]['product_id'])
-                    print(getProductID)    
+                       
                     # print(productSpecsIDList)
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-                    print(productPics)
+                    
 
                     products = models.Product.objects.filter(id__in=getProductID)
                     for product in products:  
@@ -454,8 +446,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
-                    print("不能為空值")
-                    print("=========")
+                    
                     products_on_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=-1).filter(is_delete='N')
                     products_off_id = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(quantity=0).filter(is_delete='N') 
                     getProductID=[]
@@ -465,14 +456,14 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
 
                     productSpecs_tests=models.Product_Spec.objects.filter(product_id__in=products_on_id).values('product_id').order_by('product_id').annotate(quantity_sum=Sum('quantity')).filter(quantity_sum=0)
                     # productSpecsIDList=[] #沒spec等於塞product的id
-                    print(len(productSpecs_tests))
+                   
 
                     for i in range (len(productSpecs_tests)):
                         getProductID.append(productSpecs_tests[i]['product_id'])
-                    print(getProductID)    
+                      
                     # print(productSpecsIDList)
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-                    print(productPics)
+                    
 
                     products = models.Product.objects.filter(id__in=getProductID)
 
@@ -554,11 +545,9 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
             elif product_status=="draft": #未上架
-                print("===未上架===")
-                print("=========")
-                print(keyword)
+                
                 if keyword=="none":
-                    print("為空值")
+                    
                     products = models.Product.objects.filter(shop_id=id).filter(product_status=product_status).filter(is_delete='N')
                     getProductID=[]
                     for product in products:
@@ -566,16 +555,15 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                     for product in products: 
-                        print(product.product_spec_on)  
+                       
                         if product.product_spec_on=='y':
                             for productPic in productPics:
                                 # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    print(product.product_spec_on)
+                                    
                                     
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
-                                    print("spec_data")
-                                    print(len(productSpecs))
+                                    
                                     if(len(productSpecs)==0):
                                         break
                                     productInfo = {
@@ -614,12 +602,11 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     productInfo.update({'max_price':max_price})   
                                     responseData['data'].append(productInfo)
                         elif product.product_spec_on=='n':     
-                            print("無規格") 
-                            print(product.id)
+                            
                             for productPic in productPics:  
-                                print(product.id) 
+                                
                                 if product.id==productPic.product_id : 
-                                    print("成功")
+                                    
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -648,9 +635,7 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     responseData['data'].append(productInfo)
                     responseData['ret_val'] = '已取得商品清單!'
                 else: 
-                    print("不能為空值")
-                    print("=========")
-                    print(keyword)
+                    
                     products = models.Product.objects.filter(shop_id=id).filter(is_delete='N').filter(Q(product_title__contains=keyword) | Q(product_description__contains=keyword)).filter(product_status=product_status)
                     getProductID=[]
                     for product in products:
@@ -658,16 +643,15 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                     
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                     for product in products: 
-                        print(product.product_spec_on)  
+                      
                         if product.product_spec_on=='y':
                             for productPic in productPics:
                                 # for productSpec in productSpecs:    
                                 if product.id==productPic.product_id : 
-                                    print(product.product_spec_on)
+                                    
                                     
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
-                                    print("spec_data")
-                                    print(len(productSpecs))
+                                    
                                     if(len(productSpecs)==0):
                                         break
                                     productInfo = {
@@ -706,12 +690,11 @@ def product_list(request,id,keyword,product_status,quantity): #shop_id
                                     productInfo.update({'max_price':max_price})   
                                     responseData['data'].append(productInfo)
                         elif product.product_spec_on=='n':     
-                            print("無規格") 
-                            print(product.id)
+                            
                             for productPic in productPics:  
-                                print(product.id) 
+                                
                                 if product.id==productPic.product_id : 
-                                    print("成功")
+                                    
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -764,7 +747,7 @@ def product_info(request,id): #product_id
             productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
             productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0])
             productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
-            print(productShipments)
+            
             for product in products:       
                 productInfo = {
                     'id': product.id,
@@ -846,15 +829,15 @@ def product_info_forAndroid(request,id): #product_id
             products = models.Product.objects.filter(id=id).filter(is_delete='N')
             getCategoryID=[]
             getSubCategoryID=[]
-            print(products[0].product_spec_on)
+            
             for product in products:
                 getCategoryID.append(product.product_category_id)
                 getSubCategoryID.append(product.product_sub_category_id)
-            print(getCategoryID)
+            
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
             
             if products[0].product_spec_on=='y':
-                print("有規格，spec_on=y")
+                
                 productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
                 productSpecs=models.Product_Spec.objects.filter(product_id=id)
                 productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
@@ -1004,7 +987,7 @@ def product_info_forAndroid(request,id): #product_id
                 # responseData['data'].append(spec_price_dict)
                 # responseData['data'].append(productSpecPriceInfo)
                 shipment_dict={"product_shipment_list":[]}
-                print(productShipments)
+                
                 shipment_price=[]
 
                 for productShipment in productShipments:
@@ -1025,7 +1008,7 @@ def product_info_forAndroid(request,id): #product_id
 
                 responseData['ret_val'] = '已取得商品資訊!'
             elif products[0].product_spec_on=='n':
-                print("無規格，spec_on=n")
+                
                 productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
                 productSpecs=models.Product_Spec.objects.filter(product_id=id)
                 productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
@@ -1124,13 +1107,12 @@ def update(request,id): #product_id
         product_spec_on=request.POST.get('product_spec_on', '')
         # 商品規格
         product_spec_list=json.loads(request.POST.get('product_spec_list'))
-        print(product_spec_list["product_spec_list"])
-        print("====================")
+        
         # print(product_spec_list["product_spec_list"][3]["price"])
-        print(len(product_spec_list["product_spec_list"]))
+        
         # 商品運送方式
         shipment_method=json.loads(request.POST.get('shipment_method'))
-        print(id)
+        
         if response_data['status'] == 0:
             try:
                 product = models.Product.objects.get(id=id)
@@ -1613,7 +1595,7 @@ def save(request):
             
             for i in range(len(shipment_method)):
                 if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
-                    print("True")
+                    
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
                         shipment_desc=shipment_method[i]["shipment_desc"],
@@ -1622,7 +1604,7 @@ def save(request):
                         shop_id=shipment_method[i]["shop_id"]
                     )
                 elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
-                    print("False")
+                    
                     models.Product_Shipment_Method.objects.create(
                         product_id=getProductID[0]['id'],
                         shipment_desc=shipment_method[i]["shipment_desc"],
@@ -1631,7 +1613,7 @@ def save(request):
                         shop_id=shipment_method[i]["shop_id"]
                     )
                 else:
-                    print("有bug")
+                    
 
             response_data['ret_val'] = '產品新增成功!'
             response_data['status'] = 0
