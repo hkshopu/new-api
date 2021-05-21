@@ -656,7 +656,7 @@ def sned_invitation_testing_mail(request):
 
         if response_data['status'] == 0:
             subject = 'HKShopU - 參與測試邀請'
-            html_message = render_to_string('invitation_testing_mail.html', {'user_name': user.account_name})
+            html_message = render_to_string('invitation_testing_mail.html')
             message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'
             recipient_list = email
