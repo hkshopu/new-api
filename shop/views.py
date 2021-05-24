@@ -816,7 +816,6 @@ def delete(request, id):
         'ret_val': '',
         'data': {"order_count": 0}
     }
-    print(request.method)
     if request.method == 'DELETE':
         try:
             shop = models.Shop.objects.get(id=id,is_delete='N')
@@ -828,7 +827,6 @@ def delete(request, id):
             if orders_count>0:
                 responseData['status'], responseData['ret_val'], responseData['data']['order_count'] = -2, '尚有訂單未完成', orders_count
         if responseData['status'] == 0:
-            models.Product.objects.filter(shop_id=id,is_delete='N').update(is_delete='Y')
             shop.is_delete='Y'
             shop.save()
             responseData['ret_val'] = '刪除成功'
