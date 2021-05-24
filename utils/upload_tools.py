@@ -2,9 +2,23 @@ from google.cloud.storage import Blob
 from google.cloud import storage
 from google.cloud.exceptions import GoogleCloudError
 from google.oauth2 import service_account
+from utils.util import strtobool
 import datetime
 import math
 import random
+from os import environ
+
+DEBUG = strtobool(environ['DEBUG'])
+DNS = 'https://storage.googleapis.com/'
+
+if DEBUG:
+    project = 'hkshopu'
+    bucket_name = "hkshopu.appspot.com"
+    service_key = 'utils/hkshopu-1ef39fa54ea8.json'
+else:
+    project = 'peppy-booth-311912'
+    bucket_name = "peppy-booth-311912.appspot.com"
+    service_key = 'utils/peppy-booth-311912-0189bdb40f56.json'
 
 def upload_file(FILE,destination_path,suffix=""):
     """
@@ -19,7 +33,6 @@ def upload_file(FILE,destination_path,suffix=""):
         suffix = "_" + suffix
     now = datetime.datetime.now()
     rand_num = get_random_num()
-    bucket_name = "hkshopu.appspot.com"
     
     if FILE:
         splited = str(FILE.name).split('.')
@@ -29,8 +42,8 @@ def upload_file(FILE,destination_path,suffix=""):
         fileExtension = splited[len(splited)-1]
         fileFullName = destination_path + fileName + '_' + now.strftime('%Y%m%d%H%M%S') + '_' + str(math.floor(now.timestamp())) + "_" + rand_num + suffix + '.' + fileExtension
 
-        credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-1ef39fa54ea8.json')
-        client = storage.Client(project="hkshopu",credentials=credentials)
+        credentials = service_account.Credentials.from_service_account_file(service_key)
+        client = storage.Client(project=project,credentials=credentials)
         bucket = client.get_bucket(bucket_name)
         while (Blob(fileFullName, bucket).exists()):
             now = datetime.datetime.now()
@@ -39,7 +52,7 @@ def upload_file(FILE,destination_path,suffix=""):
             
         blob = Blob(fileFullName, bucket)
         blob.upload_from_file(file_obj=FILE.file, content_type=FILE.content_type)
-        fileURL = 'https://storage.googleapis.com/' + bucket_name + '/' + fileFullName
+        fileURL = DNS + bucket_name + '/' + fileFullName
     else:
         fileURL = ''
     
@@ -52,11 +65,10 @@ def delete_file(db_file_path):
     * 傳入值:
     *   db_file_path            =>      資料庫的DB路徑
     """
-    DNS = 'https://storage.googleapis.com/'
-    bucket_name = 'hkshopu.appspot.com'
+    
     file_path = db_file_path.replace(DNS+bucket_name+'/','')
-    credentials = service_account.Credentials.from_service_account_file('utils/hkshopu-1ef39fa54ea8.json')
-    client = storage.Client(project="hkshopu",credentials=credentials)
+    credentials = service_account.Credentials.from_service_account_file(service_key)
+    client = storage.Client(project=project,credentials=credentials)
     bucket = client.get_bucket(bucket_name)
     try:
         Blob(file_path, bucket).delete()

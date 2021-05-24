@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, response
 from django.template.loader import get_template
 from django.db.models import Q
 from django.db.models import Avg
@@ -1351,22 +1351,6 @@ def setShipmnetSettings(request, id):
             responseData['ret_val'] = '運輸設定設定成功'
     return JsonResponse(responseData)
 
-def testAPI(request):
-    # 回傳資料
-    responseData = {
-        'status': 0, 
-        'ret_val': ''
-    }
-
-    object_methods = [method_name for method_name in dir(models.Product.objects)
-                  if (callable(getattr(models.Product.objects, method_name)) and not method_name.startswith('_'))]
-    print(object_methods)
-    print(models.Shop.objects.check())
-    
-    # for key, value in request.POST.lists():
-    #     print(key, value)
-    #     print(request.POST.get(key))
-    return JsonResponse(responseData)
 # 取得單一商店產品數量
 def get_product_quantity_of_specific_shop(request, id):
     response_data = {
