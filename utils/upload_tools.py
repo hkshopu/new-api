@@ -7,8 +7,8 @@ import datetime
 import math
 import random
 from os import environ
+from store.settings import DEBUG
 
-DEBUG = strtobool(environ['DEBUG'])
 DNS = 'https://storage.googleapis.com/'
 
 if DEBUG:
