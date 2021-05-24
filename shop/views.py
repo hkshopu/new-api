@@ -853,14 +853,6 @@ def checkShopNameIsExistsProcess(request):
         if response_data['status'] == 0:
             response_data['ret_val'] = '商店名稱未重複!'
             
-        # 新增 log
-        models.Audit_Log.objects.create(
-            id=uuid.uuid4(), 
-            user_id=0, 
-            action='Check Shop Name', 
-            parameter_in='shop_title=' + shopTitle + '&response_data[ret_val]=' + response_data['ret_val'] , 
-            parameter_out=''
-        )
     return JsonResponse(response_data)
 # 更新選擇商店分類
 def updateSelectedShopCategory(request,id):
