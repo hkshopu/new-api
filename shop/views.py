@@ -1575,3 +1575,11 @@ def get_simple_info_of_specific_shop(request, id):
             response_data['data']['long_description'] = shop.long_description
             response_data['ret_val'] = '取得單一商店簡要資訊成功!'
     return JsonResponse(response_data)
+# 取得推薦的熱門商店
+def get_recommended_shop(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    return JsonResponse(response_data)
