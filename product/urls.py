@@ -14,4 +14,6 @@ urlpatterns = [
     path('update_product_status/', views.update_product_status),
     path('update_product_status_forAndroid/', views.update_product_status_forAndroid),
     path('<id>/delete_product/', views.delete_product),
+    path('<id>/product_analytics/', views.product_analytics),
+    
 ]
