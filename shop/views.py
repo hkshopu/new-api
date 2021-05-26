@@ -1582,4 +1582,23 @@ def get_recommended_shop(request):
         'ret_val': '', 
         'data': []
     }
+    if request.method == 'GET':
+        shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')
+        for shop in shops:
+            sum_of_shop_ratings = 0
+            average_of_shop_ratings = 0
+            shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id).values('rating')
+            for shop_rating in shop_ratings:
+                sum_of_shop_ratings += shop_rating.rating
+            if len(shop_ratings) > 0:
+                average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+            shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
+            data = {
+                'shop_icon': shop.shop_icon, 
+                'shop_title': shop.shop_title, 
+                'shop_average_rating': average_of_shop_ratings, 
+                'shop_followers_qty': len(shop_followers)
+            }
+            response_data['data'].append(data)
+        response_data['ret_val'] = '取得推薦的熱門商店成功!'
     return JsonResponse(response_data)
