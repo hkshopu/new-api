@@ -1536,7 +1536,7 @@ def update_notification_setting_of_specific_shop(request, id):
             shop.save()
     return JsonResponse(response_data)
 # 取得單一商店簡要資訊
-def get_simple_info_of_specific_shop(request, id):
+def get_simple_info_of_specific_shop(request):
     response_data = {
         'status': 0, 
         'ret_val': '', 
