@@ -1536,7 +1536,7 @@ def update_notification_setting_of_specific_shop(request, id):
             shop.save()
     return JsonResponse(response_data)
 # 取得單一商店簡要資訊
-def get_simple_info_of_specific_shop(request):
+def get_simple_info_of_specific_shop(request, id):
     response_data = {
         'status': 0, 
         'ret_val': '', 
@@ -1574,4 +1574,31 @@ def get_simple_info_of_specific_shop(request):
                 response_data['data']['shop_email'] = shop.shop_email
             response_data['data']['long_description'] = shop.long_description
             response_data['ret_val'] = '取得單一商店簡要資訊成功!'
+    return JsonResponse(response_data)
+# 取得推薦的熱門商店
+def get_recommended_shop(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')
+        for shop in shops:
+            sum_of_shop_ratings = 0
+            average_of_shop_ratings = 0
+            shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id).values('rating')
+            for shop_rating in shop_ratings:
+                sum_of_shop_ratings += shop_rating.rating
+            if len(shop_ratings) > 0:
+                average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+            shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
+            data = {
+                'shop_icon': shop.shop_icon, 
+                'shop_title': shop.shop_title, 
+                'shop_average_rating': average_of_shop_ratings, 
+                'shop_followers_qty': len(shop_followers)
+            }
+            response_data['data'].append(data)
+        response_data['ret_val'] = '取得推薦的熱門商店成功!'
     return JsonResponse(response_data)
