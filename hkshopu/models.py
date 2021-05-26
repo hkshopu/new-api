@@ -697,3 +697,10 @@ class Shop_Order(models.Model):
     status = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Liked(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    product_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
