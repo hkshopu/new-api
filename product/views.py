@@ -1760,12 +1760,14 @@ def product_analytics(request,id): #userid
                                 # responseData['data']['price'] = {}
                                 v = []
                                 price_range=[]
+                                quantity_range=[]
                                 quantity_sum=[]
                                 for obj in productSpecs:
                                     # if product.id==productSpecs.product.id:
                                     # responseData['data'].update({'price':obj.price})
                                     v.append(getattr(obj,'price'))
                                     price_range.append(getattr(obj,'price'))
+                                    quantity_range.append(getattr(obj,'quantity'))
                                     quantity_sum.append(getattr(obj,'quantity'))
                                 min_price=min(price_range)
                                 max_price=max(price_range)
@@ -1773,8 +1775,8 @@ def product_analytics(request,id): #userid
                                 productInfo.update({'price':v})   
                                 productInfo.update({'min_price':min_price})   
                                 productInfo.update({'max_price':max_price})  
-                                productInfo.update({'min_quantity':product.quantity}) 
-                                productInfo.update({'max_quantity':product.quantity})
+                                productInfo.update({'min_quantity':min(quantity_range)}) 
+                                productInfo.update({'max_quantity':max(quantity_range)})
                                 productInfo.update({'sum_quantity': sum(quantity_sum)}) 
                                 responseData['data'].append(productInfo)
 
@@ -1879,12 +1881,14 @@ def product_analytics(request,id): #userid
                                 # responseData['data']['price'] = {}
                                 v = []
                                 price_range=[]
+                                quantity_range=[]
                                 quantity_sum=[]
                                 for obj in productSpecs:
                                     # if product.id==productSpecs.product.id:
                                     # responseData['data'].update({'price':obj.price})
                                     v.append(getattr(obj,'price'))
                                     price_range.append(getattr(obj,'price'))
+                                    quantity_range.append(getattr(obj,'quantity'))
                                     quantity_sum.append(getattr(obj,'quantity'))
                                 min_price=min(price_range)
                                 max_price=max(price_range)
@@ -1892,8 +1896,8 @@ def product_analytics(request,id): #userid
                                 productInfo.update({'price':v})   
                                 productInfo.update({'min_price':min_price})   
                                 productInfo.update({'max_price':max_price})  
-                                productInfo.update({'min_quantity':product.quantity}) 
-                                productInfo.update({'max_quantity':product.quantity})
+                                productInfo.update({'min_quantity':min(quantity_range)}) 
+                                productInfo.update({'max_quantity':max(quantity_range)})
                                 productInfo.update({'sum_quantity': sum(quantity_sum)}) 
                                 responseData['data'].append(productInfo)
 
