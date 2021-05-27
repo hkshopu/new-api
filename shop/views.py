@@ -1575,8 +1575,8 @@ def get_simple_info_of_specific_shop(request, id):
             response_data['data']['long_description'] = shop.long_description
             response_data['ret_val'] = '取得單一商店簡要資訊成功!'
     return JsonResponse(response_data)
-# 取得推薦的熱門商店
-def get_recommended_shop(request):
+# 取得推薦熱門商店列表
+def get_recommended_shops(request):
     response_data = {
         'status': 0, 
         'ret_val': '', 
@@ -1606,5 +1606,34 @@ def get_recommended_shop(request):
                     'shop_followed': 'N' if len(shop_followers) == 0 else 'Y'
                 }
                 response_data['data'].append(data)
-            response_data['ret_val'] = '取得推薦的熱門商店成功!'
+            response_data['ret_val'] = '取得推薦熱門商店列表成功!'
+    return JsonResponse(response_data)
+# 取得推薦單一熱門商店
+def get_specific_recommended_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = 1
+                response_data['ret_val'] = '找不到此商店!'
+
+        if response_data['status'] == 0:
+            sum_of_shop_ratings = 0
+            average_of_shop_ratings = 0
+            shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id)
+            shop_rating_nums = len(shop_ratings)
+            for shop_rating in shop_ratings:
+                sum_of_shop_ratings += shop_rating.rating
+            if shop_rating_nums > 0:
+                average_of_shop_ratings = sum_of_shop_ratings / shop_rating_nums
+            products_of_shop = models.Product.objects.filter(shop_id=shop.id)
+            product_nums_of_shop = len(products_of_shop)
+            shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
+            follower_nums_of_shop = len(shop_followers)
     return JsonResponse(response_data)
