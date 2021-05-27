@@ -9,6 +9,7 @@ import math
 from django.core.files.storage import FileSystemStorage
 from utils.upload_tools import upload_file , delete_file
 import json
+import uuid
 # Create your views here.
 # 取得商品清單
 def index(request):
