@@ -33,5 +33,6 @@ urlpatterns = [
     path('<id>/get_simple_info_of_specific_shop/', views.get_simple_info_of_specific_shop),
     path('delete_shop_address/', views.delete_shop_address),
     path('delete_shop_address_forAndroid/', views.delete_shop_address_forAndroid),
-    path('get_recommended_shop/', views.get_recommended_shop)
+    path('get_recommended_shops/', views.get_recommended_shops), 
+    path('<id>/get_specific_recommended_shop/', views.get_specific_recommended_shop)
 ]
