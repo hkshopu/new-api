@@ -1584,7 +1584,7 @@ def get_recommended_shop(request):
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
-            shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')
+            shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')[:8]
             if len(shops) == 0:
                 response_data['status'] = 1
                 response_data['ret_val'] = '目前暫無商店!'
@@ -1603,7 +1603,7 @@ def get_recommended_shop(request):
                     'shop_icon': shop.shop_icon, 
                     'shop_title': shop.shop_title, 
                     'shop_average_rating': average_of_shop_ratings, 
-                    'shop_followers_qty': len(shop_followers)
+                    'shop_followed': 'N' if len(shop_followers) == 0 else 'Y'
                 }
                 response_data['data'].append(data)
             response_data['ret_val'] = '取得推薦的熱門商店成功!'
