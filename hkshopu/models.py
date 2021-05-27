@@ -157,6 +157,12 @@ class Shop(models.Model):
         
         return ret_code, ret_description
 
+class Shop_Clicked(models.Model):
+    id = models.TextField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Category(models.Model):
     c_shop_category = models.CharField(max_length=50)
