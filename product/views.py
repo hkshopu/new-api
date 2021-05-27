@@ -1753,6 +1753,7 @@ def product_analytics(request,id): #userid
                                     'product_status':product.product_status,
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
+                                    'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title
                                     # 'price' : productSpec.price
                                 }
@@ -1814,6 +1815,7 @@ def product_analytics(request,id): #userid
                                     'product_status':product.product_status,
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
+                                    'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title
                                     # 'price' : productSpec.price
                                 }
@@ -1874,6 +1876,7 @@ def product_analytics(request,id): #userid
                                     'product_status':product.product_status,
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
+                                    'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title
                                     # 'price' : productSpec.price
                                 }
@@ -1935,6 +1938,7 @@ def product_analytics(request,id): #userid
                                     'product_status':product.product_status,
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
+                                    'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title
                                     # 'price' : productSpec.price
                                 }
@@ -1955,7 +1959,7 @@ def product_analytics(request,id): #userid
 
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
-# 取得我的商品清單
+
 #=================
 def spec_test(request):
     response_data = {
