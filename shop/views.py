@@ -1582,11 +1582,20 @@ def get_recommended_shops(request):
         'ret_val': '', 
         'data': []
     }
-    if request.method == 'GET':
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', None)
+
+        if response_data['status'] == 0:
+            if user_id:
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -1
+                    response_data['ret_val'] = '使用者編號格式錯誤!'
+
         if response_data['status'] == 0:
             shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')[:8]
             if len(shops) == 0:
-                response_data['status'] = 1
+                response_data['status'] = -2
                 response_data['ret_val'] = '目前暫無商店!'
 
         if response_data['status'] == 0:
@@ -1606,6 +1615,11 @@ def get_recommended_shops(request):
                     'shop_followed': 'N' if len(shop_followers) == 0 else 'Y'
                 }
                 response_data['data'].append(data)
+                # 寫入 shop_browsed 資料表
+                models.Shop_Browsed.objects.create(
+                    shop_id=shop.id, 
+                    user_id=user_id
+                )
             response_data['ret_val'] = '取得推薦熱門商店列表成功!'
     return JsonResponse(response_data)
 # 取得推薦單一熱門商店
@@ -1615,13 +1629,22 @@ def get_specific_recommended_shop(request, id):
         'ret_val': '', 
         'data': {}
     }
-    if request.method == 'GET':
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', None)
+
         if response_data['status'] == 0:
             try:
                 shop = models.Shop.objects.get(id=id)
             except:
-                response_data['status'] = 1
+                response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店!'
+
+        if response_data['status'] == 0:
+            if user_id:
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -2
+                    response_data['ret_val'] = '使用者編號格式錯誤!'
 
         if response_data['status'] == 0:
             sum_of_shop_ratings = 0 # 商店評分總和
@@ -1655,5 +1678,10 @@ def get_specific_recommended_shop(request, id):
             response_data['data']['product_nums_of_shop'] = product_nums_of_shop
             response_data['data']['follower_nums_of_shop'] = follower_nums_of_shop
             response_data['data']['sum_of_sales'] = sum_of_sales
+            # 寫入 shop_clicked 資料表
+            models.Shop_Clicked.objects.create(
+                shop_id=shop.id, 
+                user_id=user_id
+            )
             response_data['ret_val'] = '取得推薦單一熱門商店成功!'
     return JsonResponse(response_data)
