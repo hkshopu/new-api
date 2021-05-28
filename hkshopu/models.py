@@ -696,11 +696,19 @@ class Product_Shipment_Method(models.Model):
     onoff = models.CharField(max_length=50)
     shop_id=models.PositiveIntegerField()
 
-class Shop_Order(models.Model):
+class Order_Header(models.Model):
+    id = models.TextField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
-    product_id = models.PositiveIntegerField()
-    amount = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
     status = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Order_Details(models.Model):
+    id = models.TextField(primary_key=True, max_length=36)
+    order_header_id = models.TextField(max_length=36)
+    unit_price = models.PositiveIntegerField()
+    purchasing_qty = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
