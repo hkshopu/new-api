@@ -1624,16 +1624,36 @@ def get_specific_recommended_shop(request, id):
                 response_data['ret_val'] = '找不到此商店!'
 
         if response_data['status'] == 0:
-            sum_of_shop_ratings = 0
-            average_of_shop_ratings = 0
+            sum_of_shop_ratings = 0 # 商店評分總和
+            average_of_shop_ratings = 0 # 商店平均評分
+            sum_of_sales = 0 # 總銷售量
+            # 商店平均評分
             shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id)
-            shop_rating_nums = len(shop_ratings)
+            shop_rating_nums = len(shop_ratings) # 商店評分人數
             for shop_rating in shop_ratings:
                 sum_of_shop_ratings += shop_rating.rating
             if shop_rating_nums > 0:
                 average_of_shop_ratings = sum_of_shop_ratings / shop_rating_nums
+            # 產品數量
             products_of_shop = models.Product.objects.filter(shop_id=shop.id)
             product_nums_of_shop = len(products_of_shop)
+            # 關注人數
             shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
             follower_nums_of_shop = len(shop_followers)
+            # 總銷售量
+            orders = models.Order_Header.objects.filter(shop_id=shop.id)
+            for order in orders:
+                order_details = models.Order_Details.objects.filter(order_header_id=order.id)
+                for order_detail in order_details:
+                    sum_of_sales += order_detail.purchasing_qty
+
+            response_data['data']['shop_title'] = shop.shop_title
+            response_data['data']['shop_icon'] = shop.shop_icon
+            response_data['data']['shop_pic'] = shop.shop_pic
+            response_data['data']['average_of_shop_ratings'] = average_of_shop_ratings
+            response_data['data']['shop_rating_nums'] = shop_rating_nums
+            response_data['data']['product_nums_of_shop'] = product_nums_of_shop
+            response_data['data']['follower_nums_of_shop'] = follower_nums_of_shop
+            response_data['data']['sum_of_sales'] = sum_of_sales
+            response_data['ret_val'] = '取得推薦單一熱門商店成功!'
     return JsonResponse(response_data)
