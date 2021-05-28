@@ -81,7 +81,7 @@ class Shop(models.Model):
     hkshopu_event_notification = models.CharField(max_length=1, null=True, default='Y')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_delete = models.CharField(max_length=1, default='N')
+    is_delete = models.CharField(max_length=1, default='N')        
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
@@ -91,6 +91,8 @@ class Shop(models.Model):
         elif column_name=='shop_title':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫商店標題!'
+            elif len(param)>50:
+                ret_code, ret_description = err_code, '商店標題過長'
         elif column_name=='shop_icon':
             if not(param):
                 ret_code, ret_description = err_code, '未上傳商店小圖!'
@@ -104,31 +106,31 @@ class Shop(models.Model):
             pass
         elif column_name=='paypal':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, 'PayPal 格式錯誤!'
         elif column_name=='visa':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, 'Visa 格式錯誤!'
         elif column_name=='master':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, 'Master 格式錯誤!'
         elif column_name=='apple':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, 'Apple 格式錯誤!'
         elif column_name=='android':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, 'Android 格式錯誤!'
         elif column_name=='is_ship_free':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>1:
                     ret_code, ret_description = err_code, '是否免運費格式錯誤!'
         elif column_name=='ship_by_product':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>1:
                     ret_code, ret_description = err_code, '運費由商品設定格式錯誤!'
         elif column_name=='ship_free_quota':
             if param:
@@ -320,6 +322,9 @@ class Shop_Shipment_Setting(models.Model):
                 shipment_settings = json.loads(param)
                 for setting in shipment_settings:
                     shipmentDesc = setting['shipment_desc']
+                    if len(shipmentDesc)>255:
+                        ret_code, ret_description = err_code, '運輸設定格式錯誤!'
+                        break
                     onOff = setting['onoff']
             except:
                 ret_code, ret_description = err_code, '運輸設定格式錯誤!'
@@ -352,47 +357,47 @@ class Shop_Address(models.Model):
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'                
         elif param is 'name':
             if param:
-                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '姓名/公司名稱格式錯誤!'
         elif param is 'country_code':
             if param:
-                if not(re.match('^[\+\d]+$', param)):
+                if not(re.match('^[\+\d]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '國碼格式錯誤!'
         elif param is 'phone':
             if param:
-                if not(re.match('^\d+$', param)):
+                if not(re.match('^\d+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '電話號碼格式錯誤!'
         elif param is 'is_phone_show':
             if param:
-                if not(re.match('^\w+$', param)):
+                if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '顯示在店鋪簡介格式錯誤!'
         elif param is 'area':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '地域格式錯誤!'
         elif param is 'district':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '地區格式錯誤!'
         elif param is 'road':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '街道名稱格式錯誤!'
         elif param is 'number':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '街道門牌格式錯誤!'
         elif param is 'other':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '其他地址格式錯誤!'
         elif param is 'floor':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '樓層格式錯誤!'
         elif param is 'room':
             if param:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '房(室)名稱格式錯誤!'
         return  ret_code, ret_description
 
@@ -431,16 +436,16 @@ class Shop_Bank_Account(models.Model):
             except:
                 ret_code, ret_description = err_code, '商店銀行設定格式錯誤!'
         elif param is 'code':
-            if not(re.match('^\d+$', param)):
+            if not(re.match('^\d+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行代碼格式錯誤!'
         elif param is 'name':
-            if not(re.match('^[()\w\s]+$', param)):
+            if not(re.match('^[()\w\s]+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行名稱格式錯誤!'
         elif param is 'account':
-            if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)):
+            if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行戶名格式錯誤!'
         elif param is 'account_name':
-            if not(re.match('^[\-\d]+$', param)):
+            if not(re.match('^[\-\d]+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行帳號格式錯誤!'
         return ret_code, ret_description
         
