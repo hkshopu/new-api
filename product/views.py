@@ -1783,8 +1783,7 @@ def product_analytics(request,id): #userid
 
                                 models.Product_Browsed.objects.create(
                                     id=uuid.uuid4(),
-                                    product_id=product.id, 
-                                    user_id=0
+                                    product_id=product.id
                                 )
 
                     elif product.product_spec_on=='n':   
@@ -1829,8 +1828,7 @@ def product_analytics(request,id): #userid
                                 responseData['data'].append(productInfo) 
                                 models.Product_Browsed.objects.create(
                                     id=uuid.uuid4(),
-                                    product_id=product.id, 
-                                    user_id=0
+                                    product_id=product.id
                                 )            
 
                 responseData['ret_val'] = '已取得商品清單!'
@@ -1959,7 +1957,6 @@ def product_analytics(request,id): #userid
 
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
-
 #=================
 def spec_test(request):
     response_data = {
