@@ -95,7 +95,7 @@ def save(request):
         if responseData['status'] == 0: 
             responseData['status'],responseData['ret_val'] = models.Selected_Shop_Category.validate_column('shop_category_id',-4,shopCategoryId)
 
-        # 選填欄位若有填寫，則判斷其格式是否正確        
+        # 選填欄位若有填寫，則判斷其格式是否正確
         if responseData['status'] == 0: 
             responseData['status'],responseData['ret_val'] = models.Shop.validate_column('shop_pic',-9,shopPic)
         if responseData['status'] == 0: 
@@ -336,6 +336,10 @@ def update(request, id):
             if shop_title == '':
                 response_data['status'] = -6
                 response_data['ret_val'] = '商店標題不可為空!'
+            elif len(shop_title)>50:
+                response_data['status'] = -6
+                response_data['ret_val'] = '商店標題長度過長'
+
 
         if response_data['status'] == 0:
             if shop_icon:
@@ -359,31 +363,31 @@ def update(request, id):
 
         if response_data['status'] == 0:
             if paypal:
-                if not(re.match('^\w+$', paypal)):
+                if not(re.match('^\w+$', paypal)) or len(paypal)>50:
                     response_data['status'] = -10
                     response_data['ret_val'] = 'PayPal 格式錯誤!'
 
         if response_data['status'] == 0:
             if visa:
-                if not(re.match('^\w+$', visa)):
+                if not(re.match('^\w+$', visa)) or len(visa)>50:
                     response_data['status'] = -11
                     response_data['ret_val'] = 'Visa 格式錯誤!'
 
         if response_data['status'] == 0:
             if master:
-                if not(re.match('^\w+$', master)):
+                if not(re.match('^\w+$', master)) or len(master)>50:
                     response_data['status'] = -12
                     response_data['ret_val'] = 'Master 格式錯誤!'
 
         if response_data['status'] == 0:
             if apple:
-                if not(re.match('^\w+$', apple)):
+                if not(re.match('^\w+$', apple)) or len(apple)>50:
                     response_data['status'] = -13
                     response_data['ret_val'] = 'Apple 格式錯誤!'
 
         if response_data['status'] == 0:
             if android:
-                if not(re.match('^\w+$', android)):
+                if not(re.match('^\w+$', android)) or len(android)>50:
                     response_data['status'] = -14
                     response_data['ret_val'] = 'Android 格式錯誤!'
 
@@ -437,7 +441,7 @@ def update(request, id):
 
         if response_data['status'] == 0:
             if address_name:
-                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', address_name)):
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', address_name)) or len(address_name)>50:
                     response_data['status'] = -27
                     response_data['ret_val'] = '姓名/公司名稱格式錯誤!'
 
@@ -455,49 +459,49 @@ def update(request, id):
 
         if response_data['status'] == 0:
             if address_is_phone_show:
-                if not(re.match('^\w+$', address_is_phone_show)):
+                if not(re.match('^\w+$', address_is_phone_show)) or len(address_is_phone_show)>1:
                     response_data['status'] = -30
                     response_data['ret_val'] = '顯示在店鋪簡介格式錯誤!'
 
         if response_data['status'] == 0:
             if address_area:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_area)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_area)) or len(address_area)>50:
                     response_data['status'] = -31
                     response_data['ret_val'] = '地域格式錯誤!'
 
         if response_data['status'] == 0:
             if address_district:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_district)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_district)) or len(address_district)>50:
                     response_data['status'] = -32
                     response_data['ret_val'] = '地區格式錯誤!'
 
         if response_data['status'] == 0:
             if address_road:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_road)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_road)) or len(address_road)>50:
                     response_data['status'] = -33
                     response_data['ret_val'] = '街道名稱格式錯誤!'
 
         if response_data['status'] == 0:
             if address_number:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_number)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_number)) or len(address_number)>50:
                     response_data['status'] = -34
                     response_data['ret_val'] = '街道門牌格式錯誤!'
 
         if response_data['status'] == 0:
             if address_other:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_other)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_other)) or len(address_other)>50:
                     response_data['status'] = -35
                     response_data['ret_val'] = '其他地址格式錯誤!'
 
         if response_data['status'] == 0:
             if address_floor:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_floor)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_floor)) or len(address_floor)>50:
                     response_data['status'] = -36
                     response_data['ret_val'] = '樓層格式錯誤!'
 
         if response_data['status'] == 0:
             if address_room:
-                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_room)):
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_room)) or len(address_room)>50:
                     response_data['status'] = -37
                     response_data['ret_val'] = '房(室)名稱格式錯誤!'
 
@@ -906,26 +910,50 @@ def createShopAddress(request,id):
         addressOther = request.POST.get('address_other', '')
         addressFloor = request.POST.get('address_floor', '')
         addressRoom = request.POST.get('address_room', '')
-        # 新增商店地址
-        models.Shop_Address.objects.create(
-            id = uuid.uuid4(),
-            shop_id = id,
-            name = addressName,
-            country_code = addressCountryCode,
-            phone = addressPhone,
-            is_phone_show = addressIsPhoneShow,
-            area = addressArea,
-            district = addressDistrict,
-            road = addressRoad,
-            number = addressNumber,
-            other = addressOther,
-            floor = addressFloor,
-            room = addressRoom,
-            is_address_show='N',
-            is_default='N'
-        )
-        responseData['status'] =0
-        responseData['ret_val'] = '商店地址新增成功!'
+
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('name',-1,addressName)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('country_code',-2,addressCountryCode)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('phone',-3,addressPhone)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('is_phone_show',-4,addressIsPhoneShow)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('area',-5,addressIsPhoneShow)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('district',-6,addressDistrict)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('road',-7,addressDistrict)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('number',-8,addressNumber)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('other',-9,addressOther)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('floor',-10,addressFloor)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Shop_Address.validate_column('room',-11,addressRoom)
+        if responseData['status'] == 0:
+            # 新增商店地址
+            models.Shop_Address.objects.create(
+                id = uuid.uuid4(),
+                shop_id = id,
+                name = addressName,
+                country_code = addressCountryCode,
+                phone = addressPhone,
+                is_phone_show = addressIsPhoneShow,
+                area = addressArea,
+                district = addressDistrict,
+                road = addressRoad,
+                number = addressNumber,
+                other = addressOther,
+                floor = addressFloor,
+                room = addressRoom,
+                is_address_show='N',
+                is_default='N'
+            )
+            responseData['status'] =0
+            responseData['ret_val'] = '商店地址新增成功!'
 
     return JsonResponse(responseData)
         # pass
@@ -1032,52 +1060,55 @@ def updateShopAddress(request, id):
             # print(shop_address_list)
             shop_address_delete = models.Shop_Address.objects.filter(shop_id=id)
             # print(shop_address_delete)
-            with transaction.atomic():
-                for setting in shop_address_list:
-                    # print(setting.name)
-                    shop_address = models.Shop_Address.objects.filter(shop_id=id).filter(name=setting['name']).filter(country_code=setting['country_code']).filter(phone=setting['phone']).filter(area=setting['area']).filter(district=setting['district']).filter(road=setting['road']).filter(number=setting['number']).filter(other=setting['other']).filter(floor=setting['floor']).filter(room=setting['room'])
-                    # shop_address = models.Shop_Address.objects.filter(Q(shop_id=id)&Q(name=setting['name'])&Q(country_code=setting['country_code'])&Q(phone=setting['phone'])&Q(area=setting['area'])&Q(district=setting['district'])&Q(road=setting['road'])&Q(number=setting['number'])&Q(other=setting['other'])&Q(floor=setting['floor'])&Q(room=setting['room']))
-                    row_count = len(shop_address)
-                    if row_count is 0: # insert
-                        models.Shop_Address.objects.create(
-                            id = uuid.uuid4(),
-                            shop_id=id,
-                            name=setting['name'],
-                            country_code=setting['country_code'],
-                            phone=setting['phone'],
-                            area=setting['area'],
-                            district=setting['district'],
-                            road=setting['road'],
-                            number=setting['number'],
-                            other=setting['other'],
-                            floor=setting['floor'],
-                            room=setting['room'],
-                            is_address_show='N',
-                            is_default='N'
-                        )
-                    elif row_count is 1: # update
-                        shop_address.update(name=setting['name'],country_code=setting['country_code'],
-                            phone=setting['phone'],
-                            area=setting['area'],
-                            district=setting['district'],
-                            road=setting['road'],
-                            number=setting['number'],
-                            other=setting['other'],
-                            floor=setting['floor'],
-                            room=setting['room'])
-                    shop_address_delete = shop_address_delete.filter(~Q(name=setting['name'],country_code=setting['country_code'],
-                            phone=setting['phone'],
-                            area=setting['area'],
-                            district=setting['district'],
-                            road=setting['road'],
-                            number=setting['number'],
-                            other=setting['other'],
-                            floor=setting['floor'],
-                            room=setting['room'])
+            try:
+                with transaction.atomic():
+                    for setting in shop_address_list:
+                        # print(setting.name)
+                        shop_address = models.Shop_Address.objects.filter(shop_id=id).filter(name=setting['name']).filter(country_code=setting['country_code']).filter(phone=setting['phone']).filter(area=setting['area']).filter(district=setting['district']).filter(road=setting['road']).filter(number=setting['number']).filter(other=setting['other']).filter(floor=setting['floor']).filter(room=setting['room'])
+                        # shop_address = models.Shop_Address.objects.filter(Q(shop_id=id)&Q(name=setting['name'])&Q(country_code=setting['country_code'])&Q(phone=setting['phone'])&Q(area=setting['area'])&Q(district=setting['district'])&Q(road=setting['road'])&Q(number=setting['number'])&Q(other=setting['other'])&Q(floor=setting['floor'])&Q(room=setting['room']))
+                        row_count = len(shop_address)
+                        if row_count is 0: # insert
+                            models.Shop_Address.objects.create(
+                                id = uuid.uuid4(),
+                                shop_id=id,
+                                name=setting['name'],
+                                country_code=setting['country_code'],
+                                phone=setting['phone'],
+                                area=setting['area'],
+                                district=setting['district'],
+                                road=setting['road'],
+                                number=setting['number'],
+                                other=setting['other'],
+                                floor=setting['floor'],
+                                room=setting['room'],
+                                is_address_show='N',
+                                is_default='N'
                             )
-                if len(shop_address_delete) > 0: # delete
-                    shop_address_delete.delete()
-            responseData['ret_val'] = '更新商店地址成功'
+                        elif row_count is 1: # update
+                            shop_address.update(name=setting['name'],country_code=setting['country_code'],
+                                phone=setting['phone'],
+                                area=setting['area'],
+                                district=setting['district'],
+                                road=setting['road'],
+                                number=setting['number'],
+                                other=setting['other'],
+                                floor=setting['floor'],
+                                room=setting['room'])
+                        shop_address_delete = shop_address_delete.filter(~Q(name=setting['name'],country_code=setting['country_code'],
+                                phone=setting['phone'],
+                                area=setting['area'],
+                                district=setting['district'],
+                                road=setting['road'],
+                                number=setting['number'],
+                                other=setting['other'],
+                                floor=setting['floor'],
+                                room=setting['room'])
+                                )
+                    if len(shop_address_delete) > 0: # delete
+                        shop_address_delete.delete()
+                responseData['ret_val'] = '更新商店地址成功'
+            except:
+                responseData['status'], responseData['ret_val'] = -1,'更新時發生錯誤'
     return JsonResponse(responseData)
 def get_shop_address(request,id): 
     # 回傳資料

@@ -1115,6 +1115,15 @@ def update(request,id): #product_id
         shipment_method=json.loads(request.POST.get('shipment_method'))
         
         if response_data['status'] == 0:
+            if not(product_title):
+                response_data['status'] = -1
+                response_data['ret_val'] = '未填寫產品標題!'
+            elif len(product_title)>50:
+                response_data['status'] = -1
+                response_data['ret_val'] = '產品標題過長'
+                
+
+        if response_data['status'] == 0:
             try:
                 product = models.Product.objects.get(id=id)
                 # productSpec= models.Product_Spec.objects.filter(product_id=id)
@@ -1350,11 +1359,15 @@ def save(request):
             if not(product_title):
                 response_data['status'] = -4
                 response_data['ret_val'] = '未填寫產品標題!'
+            elif len(product_title)>50:
+                response_data['status'] = -4
+                response_data['ret_val'] = '產品標題過長'
 
         if response_data['status'] == 0:
             if not(product_description):
                 response_data['status'] = -5
                 response_data['ret_val'] = '未填寫產品描述!'
+
 
         # if response_data['status'] == 0:
         #     if not(product_price):
