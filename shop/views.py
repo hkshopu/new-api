@@ -1584,7 +1584,7 @@ def get_recommended_shops(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        user_id = request.POST.get('user_id', None)
+        user_id = request.POST.get('user_id', 0)
 
         if response_data['status'] == 0:
             if user_id:
@@ -1593,7 +1593,7 @@ def get_recommended_shops(request):
                     response_data['ret_val'] = '使用者編號格式錯誤!'
 
         if response_data['status'] == 0:
-            shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')[:8]
+            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_icon', 'shop_title')[:8]
             if len(shops) == 0:
                 response_data['status'] = -2
                 response_data['ret_val'] = '目前暫無商店!'
@@ -1607,8 +1607,9 @@ def get_recommended_shops(request):
                     sum_of_shop_ratings += shop_rating.rating
                 if len(shop_ratings) > 0:
                     average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
-                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
+                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id, follower_id=user_id)
                 data = {
+                    'shop_id': shop.id, 
                     'shop_icon': shop.shop_icon, 
                     'shop_title': shop.shop_title, 
                     'shop_average_rating': average_of_shop_ratings, 
@@ -1631,7 +1632,7 @@ def get_specific_recommended_shop(request, id):
     }
     if request.method == 'POST':
         # 欄位資料
-        user_id = request.POST.get('user_id', None)
+        user_id = request.POST.get('user_id', 0)
 
         if response_data['status'] == 0:
             try:
@@ -1670,9 +1671,11 @@ def get_specific_recommended_shop(request, id):
                 for order_detail in order_details:
                     sum_of_sales += order_detail.purchasing_qty
 
+            response_data['data']['shop_id'] = shop.id
             response_data['data']['shop_title'] = shop.shop_title
             response_data['data']['shop_icon'] = shop.shop_icon
-            response_data['data']['shop_pic'] = shop.shop_pic
+            response_data['data']['long_description'] = shop.long_description
+            response_data['data']['background_pic'] = shop.background_pic
             response_data['data']['average_of_shop_ratings'] = average_of_shop_ratings
             response_data['data']['shop_rating_nums'] = shop_rating_nums
             response_data['data']['product_nums_of_shop'] = product_nums_of_shop
