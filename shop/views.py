@@ -1719,3 +1719,55 @@ def get_specific_recommended_shop(request, id):
             )
             response_data['ret_val'] = '取得推薦單一熱門商店成功!'
     return JsonResponse(response_data)
+# 取得單一商店簡要資訊(買家)
+def get_simple_info_of_specific_shop_for_buyer(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商店!'
+
+        if response_data['status'] == 0:
+            shop_addresses = models.Shop_Address.objects.filter(shop_id=shop.id, is_address_show='Y', is_default='Y')
+
+            response_data['data']['shop_id'] = shop.id
+            response_data['data']['shop_icon'] = shop.shop_icon
+            response_data['data']['shop_title'] = shop.shop_title
+            response_data['data']['background_pic'] = shop.background_pic
+            if shop.address_is_phone_show == 'Y':
+                response_data['data']['address_phone'] = shop.address_phone
+            else:
+                response_data['data']['address_phone'] = ''
+            if shop.email_on == 'Y':
+                response_data['data']['shop_email'] = shop.shop_email
+            else:
+                response_data['data']['shop_email'] = ''
+            response_data['data']['shop_address'] = {}
+            if len(shop_addresses) > 0:
+                response_data['data']['shop_address']['country_code'] = shop_addresses[0].country_code
+                response_data['data']['shop_address']['area'] = shop_addresses[0].area
+                response_data['data']['shop_address']['district'] = shop_addresses[0].district
+                response_data['data']['shop_address']['road'] = shop_addresses[0].road
+                response_data['data']['shop_address']['number'] = shop_addresses[0].number
+                response_data['data']['shop_address']['other'] = shop_addresses[0].other
+                response_data['data']['shop_address']['floor'] = shop_addresses[0].floor
+                response_data['data']['shop_address']['room'] = shop_addresses[0].room
+            else:
+                response_data['data']['shop_address']['country_code'] = ''
+                response_data['data']['shop_address']['area'] = ''
+                response_data['data']['shop_address']['district'] = ''
+                response_data['data']['shop_address']['road'] = ''
+                response_data['data']['shop_address']['number'] = ''
+                response_data['data']['shop_address']['other'] = ''
+                response_data['data']['shop_address']['floor'] = ''
+                response_data['data']['shop_address']['room'] = ''
+            response_data['data']['long_description'] = shop.long_description
+            response_data['ret_val'] = '取得單一商店簡要資訊(買家)成功!'
+    return JsonResponse(response_data)
