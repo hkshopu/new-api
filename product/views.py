@@ -1767,7 +1767,8 @@ def product_analytics(request,id): #userid
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
-                                    'shop_title':productShopId.shop_title
+                                    'shop_title':productShopId.shop_title,
+                                    'liked':'N'
                                     # 'price' : productSpec.price
                                 }
                                 #responseData['data'].append(productInfo)    
@@ -1828,7 +1829,8 @@ def product_analytics(request,id): #userid
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
-                                    'shop_title':productShopId.shop_title
+                                    'shop_title':productShopId.shop_title,
+                                    'liked':'N'
                                     # 'price' : productSpec.price
                                 }
                                 #responseData['data'].append(productInfo)    
@@ -1860,10 +1862,12 @@ def product_analytics(request,id): #userid
                 for product in products:   
                     if product.product_spec_on=='y':
                         for productPic in productPics:
-                            # for productSpec in productSpecs:    
+  
                             if product.id==productPic.product_id : 
+                                print(product.id)
                                 productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                 productShopId=models.Shop.objects.get(id=product.shop_id)
+                                productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
 
                                 productInfo = {
                                     'id': product.id,
@@ -1888,18 +1892,14 @@ def product_analytics(request,id): #userid
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
-                                    'shop_title':productShopId.shop_title
-                                    # 'price' : productSpec.price
+                                    'shop_title':productShopId.shop_title,
                                 }
-                                #responseData['data'].append(productInfo)    
-                                # responseData['data']['price'] = {}
+
                                 v = []
                                 price_range=[]
                                 quantity_range=[]
                                 quantity_sum=[]
                                 for obj in productSpecs:
-                                    # if product.id==productSpecs.product.id:
-                                    # responseData['data'].update({'price':obj.price})
                                     v.append(getattr(obj,'price'))
                                     price_range.append(getattr(obj,'price'))
                                     quantity_range.append(getattr(obj,'quantity'))
@@ -1913,6 +1913,13 @@ def product_analytics(request,id): #userid
                                 productInfo.update({'min_quantity':min(quantity_range)}) 
                                 productInfo.update({'max_quantity':max(quantity_range)})
                                 productInfo.update({'sum_quantity': sum(quantity_sum)}) 
+
+                                for productLike in productLikes:
+                                    if productLike.product_id==product.id :
+                                        productInfo.update({'liked': 'Y'})
+                                    else:
+                                        productInfo.update({'liked': 'N'})
+
                                 responseData['data'].append(productInfo)
 
                                 models.Product_Browsed.objects.create(
@@ -1922,11 +1929,12 @@ def product_analytics(request,id): #userid
                                 )
 
                     elif product.product_spec_on=='n':   
-                        for productPic in productPics:
-                            # for productSpec in productSpecs:    
+                        for productPic in productPics:  
                             if product.id==productPic.product_id : 
-                                # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                                print(product.id)
                                 productShopId=models.Shop.objects.get(id=product.shop_id)
+                                productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
+                                
                                 productInfo = {
                                     'id': product.id,
                                     'product_category_id': product.product_category_id, 
@@ -1950,24 +1958,29 @@ def product_analytics(request,id): #userid
                                     'pic_path':productPic.product_pic,
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
-                                    'shop_title':productShopId.shop_title
-                                    # 'price' : productSpec.price
+                                    'shop_title':productShopId.shop_title,
                                 }
-                                #responseData['data'].append(productInfo)    
-                                # responseData['data']['price'] = {}
+
                                 productInfo.update({'min_price':product.product_price}) 
                                 productInfo.update({'max_price':product.product_price}) 
                                 productInfo.update({'min_quantity':product.quantity}) 
                                 productInfo.update({'max_quantity':product.quantity})
                                 productInfo.update({'sum_quantity':product.quantity})
+                                
+                                for productLike in productLikes:
+                                    if productLike.product_id==product.id :
+                                        productInfo.update({'liked': 'Y'})
+                                    else:
+                                        productInfo.update({'liked': 'N'})
+
                                 responseData['data'].append(productInfo)
 
                                 models.Product_Browsed.objects.create(
                                     id=uuid.uuid4(),
                                     product_id=product.id, 
                                     user_id=id
-                                )            
-
+                                )      
+                                        
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
 
