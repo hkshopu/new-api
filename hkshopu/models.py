@@ -1,4 +1,5 @@
 # _*_ encoding: utf-8 _*_
+from django.core.exceptions import ValidationError
 from django.db import models
 import re
 
@@ -479,6 +480,18 @@ class Shop_Rate(models.Model):
             if not(re.match('^[()\w\s]+$', param)):
                 ret_code, ret_desciprtion = err_code, '格式錯誤!'
         return ret_code, ret_description
+
+class Shop_Rating(models.Model):
+    def validator_between_one_and_five(value):
+        if value<1 or value>5:
+            raise ValidationError(
+                '%s is not between 1 and 5'%value,
+                params={'value': value},
+            )
+    shop_id = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField(validators=[validator_between_one_and_five])
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Shipment_default_method(models.Model):
