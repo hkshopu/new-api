@@ -670,7 +670,8 @@ def sned_invitation_testing_mail(request):
 def followShop(request, user_id='', shop_id=''):
     response_data = {
         'status': 0, 
-        'ret_val': ''
+        'ret_val': '',
+        'data': []
     }
     if request.method=='POST':
         try:
