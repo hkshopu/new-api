@@ -1970,7 +1970,45 @@ def product_analytics(request,id): #userid
 
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
+
+def like_product(request):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method=='POST':
+        if response_data['status']==0:
+            # user id, product id
+            user_id= request.POST.get('user_id', '')
+            product_id= request.POST.get('product_id', '')
+
+            products_liked_check=models.Product_Liked.objects.filter(user_id=user_id,product_id=product_id)
+            print(products_liked_check)
+            if(len(products_liked_check))>0:
+                response_data['ret_val'] = '商品已收藏過!'
+                response_data['status'] = 0
+            else:
+                models.Product_Liked.objects.create(
+                    id=uuid.uuid4(),
+                    user_id=user_id,
+                    product_id=product_id
+                )
+                products_liked=models.Product_Liked.objects.filter(user_id=user_id,product_id=product_id)
+                if(len(products_liked))>0:
+
+                    response_data['ret_val'] = '商品收藏成功!'
+                    response_data['status'] = 0
+                elif(len(products_liked))==0:
+                    response_data['ret_val'] = '商品收藏失敗!'
+                    response_data['status'] = -1
+            # response_data['pic_upload'] = 'success'
+          
+        #------------
+    return JsonResponse(response_data)
 #=================
+
 def spec_test(request):
     response_data = {
         'status': 0, 
