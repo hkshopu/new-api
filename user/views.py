@@ -7,6 +7,7 @@ from django.core import mail
 from django.utils.html import strip_tags
 from django.db.models import Q
 from hkshopu import models
+import uuid
 import datetime
 import re
 import random
@@ -663,4 +664,37 @@ def sned_invitation_testing_mail(request):
             email_message.content_subtype = 'html'
             email_message.send()
             response_data['ret_val'] = '發送參與測試邀請電子郵件成功!'
+    return JsonResponse(response_data)
+
+# 收藏商店
+def followShop(request, user_id='', shop_id=''):
+    response_data = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method=='POST':
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            response_data['status'], response_data['ret_val'] = -1, '尚未登入'
+        
+        if response_data['status'] == 0:
+            try:
+                models.Shop.objects.get(id=shop_id)
+            except:
+                response_data['status'], response_data['ret_val'] = -2, '無此商店編號'
+
+        if response_data['status'] == 0:
+            try:
+                models.Shop_Follower.objects.create(
+                    id=uuid.uuid4(),                
+                    shop_id=shop_id,
+                    follower_id=user_id                
+                )
+                response_data['ret_val'] = '新增成功'
+            except:
+                response_data['status'], response_data['ret_val'] = -3, '新增錯誤'
+
+
+    
     return JsonResponse(response_data)

@@ -16,5 +16,6 @@ urlpatterns = [
     path('getUserListProcess/', views.getUserListProcess), 
     path('<id>/show/', views.show),
     path('<id>/shopCount/', views.getUserShopCount), 
-    path('sned_invitation_testing_mail/', views.sned_invitation_testing_mail)
+    path('sned_invitation_testing_mail/', views.sned_invitation_testing_mail),
+    path('<user_id>/followShop/<shop_id>/', views.followShop)
 ]
