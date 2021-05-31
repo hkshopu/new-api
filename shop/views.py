@@ -1696,9 +1696,9 @@ def get_specific_recommended_shop(request, id):
             shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
             follower_nums_of_shop = len(shop_followers)
             # 總銷售量
-            orders = models.Order_Header.objects.filter(shop_id=shop.id)
+            orders = models.Shop_Order.objects.filter(shop_id=shop.id)
             for order in orders:
-                order_details = models.Order_Details.objects.filter(order_header_id=order.id)
+                order_details = models.Shop_Order_Details.objects.filter(order_id=order.id)
                 for order_detail in order_details:
                     sum_of_sales += order_detail.purchasing_qty
 
