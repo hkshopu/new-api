@@ -313,19 +313,19 @@ def update(request, id):
 
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id,is_delete='N')
+                shop = models.Shop.objects.get(id=id, is_delete='N')
             except:
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
         if response_data['status'] == 0:
-            if not(address_id):
-                if address_name or address_country_code or address_phone or address_is_phone_show or address_area or address_district or address_road or address_number or address_other or address_floor or address_room:
+            if address_id is None:
+                if (address_name is not None) or (address_country_code is not None) or (address_phone is not None) or (address_is_phone_show is not None) or (address_area is not None) or (address_district is not None) or (address_road is not None) or (address_number is not None) or (address_other is not None) or (address_floor is not None) or (address_room is not None):
                     response_data['status'] = -2
                     response_data['ret_val'] = '未填寫商店地址編號!'
 
         if response_data['status'] == 0:
-            if address_id:
+            if address_id is not None:
                 try:
                     shop_address = models.Shop_Address.objects.get(id=address_id)
                 except:
@@ -333,7 +333,7 @@ def update(request, id):
                     response_data['ret_val'] = '找不到此商店地址編號的地址!'
 
         if response_data['status'] == 0:
-            if shop_title == '':
+            if shop_title is None:
                 response_data['status'] = -6
                 response_data['ret_val'] = '商店標題不可為空!'
             elif len(shop_title)>50:
@@ -342,7 +342,7 @@ def update(request, id):
 
 
         if response_data['status'] == 0:
-            if shop_icon:
+            if shop_icon is not None:
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_icon.name))):
                     response_data['status'] = -7
                     response_data['ret_val'] = '商店小圖格式錯誤!'
@@ -356,187 +356,187 @@ def update(request, id):
         #                 break
 
         if response_data['status'] == 0:
-            if shop_pic:
+            if shop_pic is not None:
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_pic.name))):
                     response_data['status'] = -9
                     response_data['ret_val'] = '商店主圖格式錯誤!'
 
         if response_data['status'] == 0:
-            if paypal:
+            if paypal is not None:
                 if not(re.match('^\w+$', paypal)) or len(paypal)>50:
                     response_data['status'] = -10
                     response_data['ret_val'] = 'PayPal 格式錯誤!'
 
         if response_data['status'] == 0:
-            if visa:
+            if visa is not None:
                 if not(re.match('^\w+$', visa)) or len(visa)>50:
                     response_data['status'] = -11
                     response_data['ret_val'] = 'Visa 格式錯誤!'
 
         if response_data['status'] == 0:
-            if master:
+            if master is not None:
                 if not(re.match('^\w+$', master)) or len(master)>50:
                     response_data['status'] = -12
                     response_data['ret_val'] = 'Master 格式錯誤!'
 
         if response_data['status'] == 0:
-            if apple:
+            if apple is not None:
                 if not(re.match('^\w+$', apple)) or len(apple)>50:
                     response_data['status'] = -13
                     response_data['ret_val'] = 'Apple 格式錯誤!'
 
         if response_data['status'] == 0:
-            if android:
+            if android is not None:
                 if not(re.match('^\w+$', android)) or len(android)>50:
                     response_data['status'] = -14
                     response_data['ret_val'] = 'Android 格式錯誤!'
 
         if response_data['status'] == 0:
-            if is_ship_free:
+            if is_ship_free is not None:
                 if not(re.match('^(Y|N)$', is_ship_free)):
                     response_data['status'] = -15
                     response_data['ret_val'] = '是否免運費格式錯誤!'
 
         if response_data['status'] == 0:
-            if ship_by_product:
+            if ship_by_product is not None:
                 if not(re.match('^(Y|N)$', ship_by_product)):
                     response_data['status'] = -16
                     response_data['ret_val'] = '運費由商品設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if ship_free_quota:
+            if ship_free_quota is not None:
                 if not(re.match('^\d+$', ship_free_quota)):
                     response_data['status'] = -17
                     response_data['ret_val'] = '免運費訂單價格格式錯誤!'
 
         if response_data['status'] == 0:
-            if fix_ship_fee:
+            if fix_ship_fee is not None:
                 if not(re.match('^\d+$', fix_ship_fee)):
                     response_data['status'] = -18
                     response_data['ret_val'] = '運費訂價格式錯誤!'
 
         if response_data['status'] == 0:
-            if fix_ship_fee_from:
+            if fix_ship_fee_from is not None:
                 if not(re.match('^\d+$', fix_ship_fee_from)):
                     response_data['status'] = -19
                     response_data['ret_val'] = '訂單價格由格式錯誤!'
 
         if response_data['status'] == 0:
-            if fix_ship_fee_to:
+            if fix_ship_fee_to is not None:
                 if not(re.match('^\d+$', fix_ship_fee_to)):
                     response_data['status'] = -20
                     response_data['ret_val'] = '訂單價格至格式錯誤!'
 
         if response_data['status'] == 0:
-            if discount_by_amount:
+            if discount_by_amount is not None:
                 if not(re.match('^\d+$', discount_by_amount)):
                     response_data['status'] = -21
                     response_data['ret_val'] = '價格折扣格式錯誤!'
 
         if response_data['status'] == 0:
-            if discount_by_percent:
+            if discount_by_percent is not None:
                 if not(re.match('^\d+$', discount_by_percent)):
                     response_data['status'] = -22
                     response_data['ret_val'] = '百分比折扣格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_name:
+            if address_name is not None:
                 if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', address_name)) or len(address_name)>50:
                     response_data['status'] = -27
                     response_data['ret_val'] = '姓名/公司名稱格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_country_code:
+            if address_country_code is not None:
                 if not(re.match('^[0-9]{3}$', address_country_code)):
                     response_data['status'] = -28
                     response_data['ret_val'] = '國碼格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_phone:
+            if address_phone is not None:
                 if not(re.match('^\d+$', address_phone)):
                     response_data['status'] = -29
                     response_data['ret_val'] = '電話號碼格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_is_phone_show:
+            if address_is_phone_show is not None:
                 if not(re.match('^\w+$', address_is_phone_show)) or len(address_is_phone_show)>1:
                     response_data['status'] = -30
                     response_data['ret_val'] = '顯示在店鋪簡介格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_area:
+            if address_area is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_area)) or len(address_area)>50:
                     response_data['status'] = -31
                     response_data['ret_val'] = '地域格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_district:
+            if address_district is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_district)) or len(address_district)>50:
                     response_data['status'] = -32
                     response_data['ret_val'] = '地區格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_road:
+            if address_road is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_road)) or len(address_road)>50:
                     response_data['status'] = -33
                     response_data['ret_val'] = '街道名稱格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_number:
+            if address_number is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_number)) or len(address_number)>50:
                     response_data['status'] = -34
                     response_data['ret_val'] = '街道門牌格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_other:
+            if address_other is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_other)) or len(address_other)>50:
                     response_data['status'] = -35
                     response_data['ret_val'] = '其他地址格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_floor:
+            if address_floor is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_floor)) or len(address_floor)>50:
                     response_data['status'] = -36
                     response_data['ret_val'] = '樓層格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_room:
+            if address_room is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_room)) or len(address_room)>50:
                     response_data['status'] = -37
                     response_data['ret_val'] = '房(室)名稱格式錯誤!'
 
         if response_data['status'] == 0:
-            if background_pic:
+            if background_pic is not None:
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(background_pic.name))):
                     response_data['status'] = -38
                     response_data['ret_val'] = '背景圖片格式錯誤!'
 
         if response_data['status'] == 0:
-            if shop_email:
+            if shop_email is not None:
                 if not(re.match('[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+', shop_email)):
                     response_data['status'] = -39
                     response_data['ret_val'] = '商店電子郵件格式錯誤!'
 
         if response_data['status'] == 0:
-            if email_on:
+            if email_on is not None:
                 if not(re.match('^(Y|N)$', email_on)):
                     response_data['status'] = -40
                     response_data['ret_val'] = '電子郵件開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if facebook_on:
+            if facebook_on is not None:
                 if not(re.match('^(Y|N)$', facebook_on)):
                     response_data['status'] = -41
                     response_data['ret_val'] = 'Facebook 開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if instagram_on:
+            if instagram_on is not None:
                 if not(re.match('^(Y|N)$', instagram_on)):
                     response_data['status'] = -42
                     response_data['ret_val'] = 'Instagram 開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if shop_title:
+            if shop_title is not None:
                 if shop.shop_name_updated_at:
                     now = datetime.datetime.now()
                     if (now - shop.shop_name_updated_at).days < 30:
@@ -550,7 +550,7 @@ def update(request, id):
                 response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
 
         if response_data['status'] == 0:
-            if shop_phone:
+            if shop_phone is not None:
                 if not(re.match('^\d+$', shop_phone)):
                     response_data['status'] = -29
                     response_data['ret_val'] = '電話號碼格式錯誤!'
