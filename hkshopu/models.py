@@ -668,9 +668,9 @@ class Shop_Follower(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Shop_Product_Rating(models.Model):
+class Product_Rate(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    shop_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
     product_id = models.PositiveIntegerField()
     rating = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)

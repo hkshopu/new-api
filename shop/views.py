@@ -1431,7 +1431,7 @@ def get_product_average_rating_of_specific_shop(request, id):
 
         if response_data['status'] == 0:
             sum_of_rating = 0
-            shop_product_ratings = models.Shop_Product_Rating.objects.filter(shop_id=id)
+            shop_product_ratings = models.Product_Rate.objects.filter(shop_id=id)
             for shop_product_rating in shop_product_ratings:
                 sum_of_rating += shop_product_rating.rating
             response_data['average_rating'] = round(sum_of_rating / len(shop_product_ratings))
