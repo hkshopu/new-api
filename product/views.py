@@ -1997,7 +1997,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
     if request.method == 'GET':
         if responseData['status'] == 0:
             if mode=="new":
-                if id=="null" or id is None:
+                if user_id=="null" or user_id is None:
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N').order_by('-created_at')[:12]#.filter(like__gt=0) 
                     getProductID=[]
@@ -2259,7 +2259,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                             
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="top_sale":
-                if id=="null" or id is None:
+                if user_id=="null" or user_id is None:
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')[:12]#.filter(like__gt=0) 
                     
@@ -2564,7 +2564,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                     responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['sale_quantity'],reverse=True)                        
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="lower_price":
-                if id=="null" or id is None:
+                if user_id=="null" or user_id is None:
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')#.order_by('-price')[:12]#.filter(like__gt=0) 
                     getProductID=[]
@@ -2832,7 +2832,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
 
 
             elif mode=="higher_price":
-                if id=="null" or id is None:
+                if user_id=="null" or user_id is None:
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')#.order_by('-price')[:12]#.filter(like__gt=0) 
                     getProductID=[]
@@ -3098,7 +3098,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                     responseData['data']=sorted(responseData['data'], key=lambda priceSort : priceSort['max_price'],reverse=True)
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="overall":
-                if id=="null" or id is None:
+                if user_id=="null" or user_id is None:
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')[:12]#.filter(like__gt=0) 
                     
@@ -3171,8 +3171,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                     productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                     for productOverall in productOveralls:
-                                        if productLike.product_id==product.id :
-                                            productInfo.update({'rating': productOverall.ratings})
+                                        if productOverall["product_id"]==product.id :
+                                            productInfo.update({'rating': productOverall["rating"]})
                                         else:
                                             productInfo.update({'rating': 0})
 
@@ -3226,7 +3226,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                     productInfo.update({'sum_quantity':product.quantity})
 
                                     for productOverall in productOveralls:
-                                        if productLike["product_id"]==product.id :
+                                        if productOverall["product_id"]==product.id :
                                             productInfo.update({'rating': productOverall["rating"]})
                                         else:
                                             productInfo.update({'rating': 0})
