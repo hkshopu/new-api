@@ -336,10 +336,11 @@ def update(request, id):
             if shop_title is None:
                 response_data['status'] = -6
                 response_data['ret_val'] = '商店標題不可為空!'
-            elif len(shop_title)>50:
-                response_data['status'] = -6
-                response_data['ret_val'] = '商店標題長度過長'
 
+        if response_data['status'] == 0:
+            if not(re.match('^.{1,50}$', shop_title)):
+                response_data['status'] = -8
+                response_data['ret_val'] = '商店標題長度過長!'
 
         if response_data['status'] == 0:
             if shop_icon is not None:
