@@ -2040,7 +2040,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N'
+                                        'liked':'N',
+                                        'rating':0
                                         # 'price' : productSpec.price
                                     }
                                     #responseData['data'].append(productInfo)    
@@ -2102,7 +2103,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N'
+                                        'liked':'N',
+                                        'rating':0
                                         # 'price' : productSpec.price
                                     }
                                     #responseData['data'].append(productInfo)    
@@ -2165,6 +2167,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                     }
 
                                     v = []
@@ -2231,6 +2234,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                     }
 
                                     productInfo.update({'min_price':product.product_price}) 
@@ -2276,7 +2280,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                 if product.id==productPic.product_id : 
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
-
+                                    productOveralls=models.Shop_Product_Rating.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -2328,8 +2332,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                     productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                     for productOverall in productOveralls:
-                                        if productLike.product_id==product.id :
-                                            productInfo.update({'rating': productOverall.ratings})
+                                        if productOverall["product_id"]==product.id :
+                                            productInfo.update({'rating': productOverall["rating"]})
                                         else:
                                             productInfo.update({'rating': 0})
 
@@ -2383,7 +2387,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                     productInfo.update({'sum_quantity':product.quantity})
 
                                     for productOverall in productOveralls:
-                                        if productLike["product_id"]==product.id :
+                                        if productOverall["product_id"]==product.id :
                                             productInfo.update({'rating': productOverall["rating"]})
                                         else:
                                             productInfo.update({'rating': 0})
@@ -2443,6 +2447,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                         'liked':'N',
                                         'sale_quantity':0
                                     }
@@ -2521,6 +2526,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                         'liked':'N',
                                         'sale_quantity':0
                                     }
@@ -2601,7 +2607,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N'
+                                        'liked':'N',
+                                        'rating':0
                                         # 'price' : productSpec.price
                                     }
                                     #responseData['data'].append(productInfo)    
@@ -2663,7 +2670,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N'
+                                        'liked':'N',
+                                        'rating':0
                                         # 'price' : productSpec.price
                                     }
                                     #responseData['data'].append(productInfo)    
@@ -2727,6 +2735,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                     }
 
                                     v = []
@@ -2793,6 +2802,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                     }
 
                                     productInfo.update({'min_price':product.product_price}) 
@@ -2865,7 +2875,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N'
+                                        'liked':'N',
+                                        'rating':0
                                         # 'price' : productSpec.price
                                     }
                                     #responseData['data'].append(productInfo)    
@@ -2927,7 +2938,8 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N'
+                                        'liked':'N',
+                                        'rating':0
                                         # 'price' : productSpec.price
                                     }
                                     #responseData['data'].append(productInfo)    
@@ -2991,6 +3003,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                     }
 
                                     v = []
@@ -3057,6 +3070,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
+                                        'rating':0
                                     }
 
                                     productInfo.update({'min_price':product.product_price}) 
@@ -3390,7 +3404,6 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                 responseData['status'] =-1
                 responseData['ret_val'] = '未輸入排序規則'
     return JsonResponse(responseData)
-
 def like_product(request):
     # 回傳資料
     response_data = {
