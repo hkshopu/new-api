@@ -333,7 +333,7 @@ def update(request, id):
                     response_data['ret_val'] = '找不到此商店地址編號的地址!'
 
         if response_data['status'] == 0:
-            if shop_title is None:
+            if shop_title == '':
                 response_data['status'] = -6
                 response_data['ret_val'] = '商店標題不可為空!'
 
