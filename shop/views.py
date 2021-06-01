@@ -1633,6 +1633,34 @@ def get_recommended_shops(request):
 
         if response_data['status'] == 0:
             for shop in shops:
+                rating_of_products = []
+                products_of_highest_ratings = []
+                data_of_products = []
+                product_pics = []
+                products = models.Product.objects.filter(shop_id=shop.id).values('id')
+                for product in products:
+                    sum_of_product_ratings = 0
+                    average_of_product_ratings = 0
+                    product_ratings = models.Product_Rate.objects.filter(product_id=product.id)
+                    for product_rating in product_ratings:
+                        sum_of_product_ratings += product_rating.rating
+                    if len(product_ratings) > 0:
+                        average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
+                    data_of_products.append({
+                        'product_id': product.id, 
+                        'average_of_product_ratings': average_of_product_ratings
+                    })
+                    rating_of_products.append(average_of_product_ratings)
+                for i in range(3):
+                    for j in range(len(data_of_products)):
+                        if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
+                            products_of_highest_ratings.append(data_of_products[j]['product_id'])
+                            rating_of_products.pop(j)
+                            data_of_products.pop(j)
+                            break
+                for products_of_highest_rating in products_of_highest_ratings:
+                    selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
+                    product_pics.append(selected_product_pics[0].product_pic)
                 sum_of_shop_ratings = 0
                 average_of_shop_ratings = 0
                 shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id).values('rating')
@@ -1645,8 +1673,9 @@ def get_recommended_shops(request):
                     'shop_id': shop.id, 
                     'shop_icon': shop.shop_icon, 
                     'shop_title': shop.shop_title, 
-                    'shop_average_rating': average_of_shop_ratings, 
-                    'shop_followed': 'N' if len(shop_followers) == 0 else 'Y'
+                    'shop_average_ratings': average_of_shop_ratings, 
+                    'shop_followed': 'N' if len(shop_followers) == 0 else 'Y', 
+                    'product_pics': product_pics
                 }
                 response_data['data'].append(data)
                 # 寫入 shop_browsed 資料表
