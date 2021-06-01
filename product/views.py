@@ -2447,7 +2447,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'rating':0
+                                        'rating':0,
                                         'liked':'N',
                                         'sale_quantity':0
                                     }
@@ -2526,7 +2526,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'rating':0
+                                        'rating':0,
                                         'liked':'N',
                                         'sale_quantity':0
                                     }
