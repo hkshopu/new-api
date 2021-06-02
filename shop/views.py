@@ -1834,3 +1834,11 @@ def getAdvertisementBanner(request, id):
             
             responseData['ret_val'] = '已找到商店廣告資料!'
     return JsonResponse(responseData)
+# 取得商店分頁資料
+def get_shop_analytics_in_pages(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    return JsonResponse(response_data)
