@@ -15,6 +15,7 @@ import os
 from utils.upload_tools import upload_file
 from utils.upload_tools import delete_file
 import json
+import requests
 # Create your views here.
 
 # 新增商店頁面
@@ -1841,4 +1842,22 @@ def get_shop_analytics_in_pages(request):
         'ret_val': '', 
         'data': []
     }
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', None)
+        mode = request.POST.get('mode', None)
+        max_seq = request.POST.get('max_seq', None)
+        keyword = request.POST.get('keyword', '')
+
+        if response_data['status'] == 0:
+            if user_id is not None:
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -1
+                    response_data['ret_val'] = '會員編號格式錯誤!'
+
+        if response_data['status'] == 0:
+            if max_seq == 0:
+                shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id)
+                if len(shop_analytics) > 0:
+                    shop_analytics.delete()
     return JsonResponse(response_data)
