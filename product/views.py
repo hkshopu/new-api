@@ -1985,8 +1985,8 @@ def product_analytics(request,id): #userid
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
 
-# 取得首頁的推薦商品清單
-def shop_product_analytics(request,user_id,shop_id,mode): #userid
+# 取得買家商店商品清單
+def shop_product_analytics(request,shop_id,mode): #userid
     # 回傳資料
     responseData = {
         'status': 0, 
@@ -1994,10 +1994,11 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
         'data': []
     }
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         if responseData['status'] == 0:
+            user_id=request.POST.get('user_id', '')
             if mode=="new":
-                if user_id=="null" or user_id is None:
+                if user_id is None or user_id=='':
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N').order_by('-created_at')[:12]#.filter(like__gt=0) 
                     getProductID=[]
@@ -2259,7 +2260,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                                             
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="top_sale":
-                if user_id=="null" or user_id is None:
+                if user_id is None or user_id=='':
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')[:12]#.filter(like__gt=0) 
                     
@@ -2564,7 +2565,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                     responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['sale_quantity'],reverse=True)                        
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="lower_price":
-                if user_id=="null" or user_id is None:
+                if user_id is None or user_id=='':
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')#.order_by('-price')[:12]#.filter(like__gt=0) 
                     getProductID=[]
@@ -2832,7 +2833,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
 
 
             elif mode=="higher_price":
-                if user_id=="null" or user_id is None:
+                if user_id is None or user_id=='':
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')#.order_by('-price')[:12]#.filter(like__gt=0) 
                     getProductID=[]
@@ -3098,7 +3099,7 @@ def shop_product_analytics(request,user_id,shop_id,mode): #userid
                     responseData['data']=sorted(responseData['data'], key=lambda priceSort : priceSort['max_price'],reverse=True)
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="overall":
-                if user_id=="null" or user_id is None:
+                if user_id is None or user_id=='':
                     # shop=models.Shop.objects.get(id=id)
                     products = models.Product.objects.filter(shop_id=shop_id).filter(product_status='active').filter(is_delete='N')[:12]#.filter(like__gt=0) 
                     

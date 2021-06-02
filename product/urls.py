@@ -16,5 +16,5 @@ urlpatterns = [
     path('<id>/delete_product/', views.delete_product),
     path('<id>/product_analytics/', views.product_analytics),
     path('like_product/', views.like_product),
-    path('<user_id>/<shop_id>/<mode>/shop_product_analytics/', views.shop_product_analytics)
+    path('<shop_id>/<mode>/shop_product_analytics/', views.shop_product_analytics)
 ]
