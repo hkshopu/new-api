@@ -1680,6 +1680,7 @@ def get_recommended_shops(request):
                 response_data['data'].append(data)
                 # 寫入 shop_browsed 資料表
                 models.Shop_Browsed.objects.create(
+                    id=uuid.uuid4(), 
                     shop_id=shop['id'], 
                     user_id=user_id
                 )
@@ -1745,6 +1746,7 @@ def get_specific_recommended_shop(request, id):
             response_data['data']['sum_of_sales'] = sum_of_sales
             # 寫入 shop_clicked 資料表
             models.Shop_Clicked.objects.create(
+                id=uuid.uuid4(), 
                 shop_id=shop.id, 
                 user_id=user_id
             )
