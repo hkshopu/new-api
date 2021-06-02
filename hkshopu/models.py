@@ -658,6 +658,21 @@ class Selected_Product_Pic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     cover= models.CharField(max_length=2)
 
+class Shop_Analytics(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
+    seq = models.PositiveIntegerField()
+    pic_path_1 = models.CharField(max_length=255)
+    pic_path_2 = models.CharField(max_length=255)
+    pic_path_3 = models.CharField(max_length=255)
+    shop_name = models.CharField(max_length=50)
+    rating = models.FloatField()
+    followed = models.CharField(max_length=1)
+    follower_count = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Email_Validation(models.Model):
     user_id = models.PositiveIntegerField()
     email = models.CharField(max_length=50)
