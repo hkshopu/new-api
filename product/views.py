@@ -2007,7 +2007,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                         getProductID.append(product.id)
                     for shop in products:
                         getShopID.append(shop.id)
-
+                    # print(products[0].id)
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                     for product in products:   
                         if product.product_spec_on=='y':
@@ -2271,7 +2271,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                     for shop in products:
                         getShopID.append(shop.id)
 
-                    productQuantitys=models.Shop_Order_Details.objects.filter(product_id__in=getProductID).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
+                    # productQuantitys=models.Shop_Order_Details.objects.filter(product_id__in=getProductID).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
+                    # print(productQuantitys)
                     # from django.db.models import Avg
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                     for product in products:   
@@ -2282,6 +2283,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
+                                    productQuantitys=models.Shop_Order_Details.objects.filter(product_id=product.id).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -2290,8 +2292,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'product_description': product.product_description, 
                                         'product_price': product.product_price, 
                                         'shipping_fee': product.shipping_fee, 
-                                        'created_at': product.created_at, 
-                                        'updated_at': product.updated_at,
+                                        # 'created_at': product.created_at, 
+                                        # 'updated_at': product.updated_at,
                                         'weight':product.weight,
                                         'longterm_stock_up':product.longterm_stock_up,
                                         'new_secondhand':product.new_secondhand,
@@ -2307,7 +2309,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
                                         'liked':'N',
-                                        'rating':0
+                                        'rating':0,
+                                        'productQuantity':0
                                     }
                                     #responseData['data'].append(productInfo)    
                                     # responseData['data']['price'] = {}
@@ -2337,7 +2340,12 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                             productInfo.update({'rating': productOverall["rating"]})
                                         else:
                                             productInfo.update({'rating': 0})
-
+                                    print(productQuantitys)
+                                    for productQuantity in productQuantitys:
+                                        if productQuantity["product_id"]==product.id :
+                                            productInfo.update({'productQuantity': productQuantity["sale_quantity"]})
+                                        else:
+                                            productInfo.update({'productQuantity': 0})
                                     responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
@@ -2352,6 +2360,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
+                                    productQuantitys=models.Shop_Order_Details.objects.filter(product_id=product.id).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
                                     productInfo = {
                                         'id': product.id,
                                         'product_category_id': product.product_category_id, 
@@ -2360,8 +2369,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'product_description': product.product_description, 
                                         'product_price': product.product_price, 
                                         'shipping_fee': product.shipping_fee, 
-                                        'created_at': product.created_at, 
-                                        'updated_at': product.updated_at,
+                                        # 'created_at': product.created_at, 
+                                        # 'updated_at': product.updated_at,
                                         'weight':product.weight,
                                         'longterm_stock_up':product.longterm_stock_up,
                                         'new_secondhand':product.new_secondhand,
@@ -2377,7 +2386,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
                                         'liked':'N',
-                                        'rating':0
+                                        'rating':0,
+                                        'productQuantity':0
                                     }
                                     #responseData['data'].append(productInfo)    
                                     # responseData['data']['price'] = {}
@@ -2390,15 +2400,23 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     for productOverall in productOveralls:
                                         if productOverall["product_id"]==product.id :
                                             productInfo.update({'rating': productOverall["rating"]})
+                                            
                                         else:
                                             productInfo.update({'rating': 0})
+                                    print(productQuantitys)
+                                    for productQuantity in productQuantitys:
+                                        if productQuantity["product_id"]==product.id :
+                                            productInfo.update({'productQuantity': productQuantity["sale_quantity"]})
+                                        else:
+                                            productInfo.update({'productQuantity': 0})
 
                                     responseData['data'].append(productInfo) 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
                                         product_id=product.id
-                                    )            
-                    responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['rating'],reverse=True)
+                                    )      
+                    print(responseData['data'])                      
+                    responseData['data']=sorted(responseData['data'], key=lambda quantitySort : quantitySort['productQuantity'],reverse=True)
                     responseData['ret_val'] = '已取得商品清單!'
                 else:
                     print("userID登入")
@@ -2411,8 +2429,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                     for shop in products:
                         getShopID.append(shop.id)
 
-                    # productOveralls=models.Product_Rate.objects.filter(product_id__in=getProductID).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
-                    # print(productOveralls)
+                    productOveralls=models.Product_Rate.objects.filter(product_id__in=getProductID).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
+                    print(productOveralls)
                     productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')
                     for product in products:   
                         if product.product_spec_on=='y':
@@ -2450,7 +2468,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'shop_title':productShopId.shop_title,
                                         'rating':0,
                                         'liked':'N',
-                                        'sale_quantity':0
+                                        'productQuantity':0
                                     }
 
                                     v = []
@@ -2483,10 +2501,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         # print(product.id)
                                         if productQuantity["product_id"]==product.id :
                                             print("success")
-                                            productInfo.update({'sale_quantity': productQuantity["sale_quantity"]})
+                                            productInfo.update({'productQuantity': productQuantity["sale_quantity"]})
                                         else:
                                             print("no sale_quantity")
-                                            productInfo.update({'sale_quantity': 0})
+                                            productInfo.update({'productQuantity': 0})
 
                                     responseData['data'].append(productInfo)
 
@@ -2529,7 +2547,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'shop_title':productShopId.shop_title,
                                         'rating':0,
                                         'liked':'N',
-                                        'sale_quantity':0
+                                        'productQuantity':0
                                     }
 
                                     productInfo.update({'min_price':product.product_price}) 
@@ -2550,10 +2568,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         # print(product.id)
                                         if productQuantity["product_id"]==product.id :
                                             print("success")
-                                            productInfo.update({'sale_quantity': productQuantity["sale_quantity"]})
+                                            productInfo.update({'productQuantity': productQuantity["sale_quantity"]})
                                         else:
                                             print("no sale_quantity")
-                                            productInfo.update({'sale_quantity': 0})
+                                            productInfo.update({'productQuantity': 0})
 
                                     responseData['data'].append(productInfo)
 
@@ -2562,7 +2580,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         product_id=product.id, 
                                         user_id=user_id
                                     )      
-                    responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['sale_quantity'],reverse=True)                        
+                    responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['productQuantity'],reverse=True)                        
                     responseData['ret_val'] = '已取得商品清單!'
             elif mode=="lower_price":
                 if user_id is None or user_id=='' or user_id=="":
