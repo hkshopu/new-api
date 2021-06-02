@@ -1637,17 +1637,17 @@ def get_recommended_shops(request):
                 products_of_highest_ratings = []
                 data_of_products = []
                 product_pics = []
-                products = models.Product.objects.filter(shop_id=shop.id).values('id')
+                products = models.Product.objects.filter(shop_id=shop['id']).values('id')
                 for product in products:
                     sum_of_product_ratings = 0
                     average_of_product_ratings = 0
-                    product_ratings = models.Product_Rate.objects.filter(product_id=product.id)
+                    product_ratings = models.Product_Rate.objects.filter(product_id=product['id'])
                     for product_rating in product_ratings:
                         sum_of_product_ratings += product_rating.rating
                     if len(product_ratings) > 0:
                         average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
                     data_of_products.append({
-                        'product_id': product.id, 
+                        'product_id': product['id'], 
                         'average_of_product_ratings': average_of_product_ratings
                     })
                     rating_of_products.append(average_of_product_ratings)
@@ -1663,16 +1663,16 @@ def get_recommended_shops(request):
                     product_pics.append(selected_product_pics[0].product_pic)
                 sum_of_shop_ratings = 0
                 average_of_shop_ratings = 0
-                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id).values('rating')
+                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
                 for shop_rating in shop_ratings:
                     sum_of_shop_ratings += shop_rating.rating
                 if len(shop_ratings) > 0:
                     average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
-                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id, follower_id=user_id)
+                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id)
                 data = {
-                    'shop_id': shop.id, 
-                    'shop_icon': shop.shop_icon, 
-                    'shop_title': shop.shop_title, 
+                    'shop_id': shop['id'], 
+                    'shop_icon': shop['shop_icon'], 
+                    'shop_title': shop['shop_title'], 
                     'shop_average_ratings': average_of_shop_ratings, 
                     'shop_followed': 'N' if len(shop_followers) == 0 else 'Y', 
                     'product_pics': product_pics
@@ -1680,7 +1680,7 @@ def get_recommended_shops(request):
                 response_data['data'].append(data)
                 # 寫入 shop_browsed 資料表
                 models.Shop_Browsed.objects.create(
-                    shop_id=shop.id, 
+                    shop_id=shop['id'], 
                     user_id=user_id
                 )
             response_data['ret_val'] = '取得推薦熱門商店列表成功!'
