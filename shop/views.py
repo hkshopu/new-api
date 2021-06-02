@@ -1660,12 +1660,12 @@ def get_recommended_shops(request):
                             break
                 for products_of_highest_rating in products_of_highest_ratings:
                     selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
-                    product_pics.append(selected_product_pics[0].product_pic)
+                    product_pics.append(selected_product_pics[0]['product_pic'])
                 sum_of_shop_ratings = 0
                 average_of_shop_ratings = 0
                 shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
                 for shop_rating in shop_ratings:
-                    sum_of_shop_ratings += shop_rating.rating
+                    sum_of_shop_ratings += shop_rating['rating']
                 if len(shop_ratings) > 0:
                     average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
                 shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id)
