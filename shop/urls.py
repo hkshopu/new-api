@@ -35,5 +35,6 @@ urlpatterns = [
     path('delete_shop_address_forAndroid/', views.delete_shop_address_forAndroid),
     path('get_recommended_shops/', views.get_recommended_shops), 
     path('<id>/get_specific_recommended_shop/', views.get_specific_recommended_shop),
-    path('<id>/get_simple_info_of_specific_shop_for_buyer/', views.get_simple_info_of_specific_shop_for_buyer)
+    path('<id>/get_simple_info_of_specific_shop_for_buyer/', views.get_simple_info_of_specific_shop_for_buyer),
+    path('<id>/advertisement/', views.getAdvertisementBanner)
 ]

@@ -1802,3 +1802,32 @@ def get_simple_info_of_specific_shop_for_buyer(request, id):
             response_data['data']['long_description'] = shop.long_description
             response_data['ret_val'] = '取得單一商店簡要資訊(買家)成功!'
     return JsonResponse(response_data)
+
+# 取得商店廣告Banner
+def getAdvertisementBanner(request, id):
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        try:
+            models.Shop.objects.get(id=id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此商店'
+
+        if responseData['status'] == 0:
+            shop_advertisement_attr = [
+                "shop_id",
+                "pic_path"
+            ]
+            ads = models.Shop_Advertisement.objects.filter(shop_id=id)
+            for ad in ads:
+                tempAd = {}
+                for attr in shop_advertisement_attr:
+                    if hasattr(ad,attr):
+                        tempAd[attr] = getattr(ad,attr)
+                responseData['data'].append(tempAd)
+            
+            responseData['ret_val'] = '已找到商店廣告資料!'
+    return JsonResponse(responseData)
