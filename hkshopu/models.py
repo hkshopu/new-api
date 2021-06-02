@@ -408,6 +408,11 @@ class Shop_Address(models.Model):
                     ret_code, ret_description = err_code, '房(室)名稱格式錯誤!'
         return  ret_code, ret_description
 
+class Shop_Advertisement(models.Model):
+    shop_id = models.PositiveIntegerField()
+    pic_path = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Bank_Account(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
