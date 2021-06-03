@@ -5262,6 +5262,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     }
                             responseData['data'].append(productFirstPage)
 
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '取得商品分頁資訊'
                         # responseData['ret_val'] = '已取得商品清單!'
                         
@@ -5405,7 +5410,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
-
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '取得商品分頁資訊'
                 elif mode=="top_sale":
                     top_sale_data=[] #for sorting
@@ -5604,7 +5613,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
-                        # responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['rating'],reverse=True)
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '已取得商品清單!'
                     else:
                         print("userID登入")
@@ -5771,7 +5784,12 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'price':productAnalytic.price,
                                     'liked':productAnalytic.liked
                                     }
-                            responseData['data'].append(productFirstPage)                         
+                            responseData['data'].append(productFirstPage) 
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )                          
                         responseData['ret_val'] = '已取得商品清單!'
                 elif mode=="lower_price":
                     lower_price_data=[]
@@ -5940,7 +5958,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
-                        # responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['rating'],reverse=True)
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '已取得商品清單!'
                     else:
                         print("userID登入")
@@ -6117,7 +6139,12 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'price':productAnalytic.price,
                                     'liked':productAnalytic.liked
                                     }
-                            responseData['data'].append(productFirstPage) 
+                            responseData['data'].append(productFirstPage)
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )   
                         responseData['ret_val'] = '已取得商品清單!'
 
 
@@ -6288,7 +6315,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
-                        # responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['rating'],reverse=True)
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '已取得商品清單!'
                     else:
                         print("userID登入")
@@ -6465,6 +6496,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '已取得商品清單!'
                 elif mode=="overall":
                     overall_data=[]
@@ -6646,9 +6682,12 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '已取得商品清單!'                
-                        # responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['rating'],reverse=True)
-                        # responseData['ret_val'] = '已取得商品清單!'
                     else:
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
@@ -6850,6 +6889,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
+                        models.Search_History.objects.create(
+                                            id=uuid.uuid4(),
+                                            search_category='product',
+                                            keyword=key_word
+                                        )  
                         responseData['ret_val'] = '已取得商品清單!'   
                 else:
                     responseData['status'] =-1
