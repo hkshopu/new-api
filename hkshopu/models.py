@@ -779,3 +779,11 @@ class Shop_Browsed(models.Model):
     user_id = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Search_History(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    search_category = models.CharField(max_length=25)
+    keyword = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
