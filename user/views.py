@@ -690,7 +690,7 @@ def followShop(request, user_id='', shop_id=''):
         
         if response_data['status'] == 0:
             if follow != 'Y' and follow != 'N':
-                response_data['status'], response_data['ret_val'] = -3, 'follow只能為Y|N'
+                response_data['status'], response_data['ret_val'] = -4, 'follow只能為Y|N'
 
 
         if response_data['status'] == 0:
