@@ -674,6 +674,9 @@ def followShop(request, user_id='', shop_id=''):
         'data': []
     }
     if request.method=='POST':
+
+        follow = request.POST.get('follow')
+
         try:
             models.User.objects.get(id=user_id)
         except:
@@ -684,17 +687,28 @@ def followShop(request, user_id='', shop_id=''):
                 models.Shop.objects.get(id=shop_id)
             except:
                 response_data['status'], response_data['ret_val'] = -2, '無此商店編號'
+        
+        if response_data['status'] == 0:
+            if follow != 'Y' and follow != 'N':
+                response_data['status'], response_data['ret_val'] = -3, 'follow只能為Y|N'
+
 
         if response_data['status'] == 0:
             try:
-                models.Shop_Follower.objects.create(
-                    id=uuid.uuid4(),                
-                    shop_id=shop_id,
-                    follower_id=user_id                
-                )
-                response_data['ret_val'] = '新增成功'
+                if follow == 'Y':
+                    models.Shop_Follower.objects.create(
+                        id=uuid.uuid4(),                
+                        shop_id=shop_id,
+                        follower_id=user_id
+                    )
+                    response_data['ret_val'] = '收藏成功'
+                else:
+                    follows = models.Shop_Follower.objects.filter(shop_id=shop_id, follower=user_id)
+                    if len(follows)>0:
+                        follows.delete()
+                    response_data['ret_val'] = '取消收藏成功'
             except:
-                response_data['status'], response_data['ret_val'] = -3, '新增錯誤'
+                response_data['status'], response_data['ret_val'] = -3, '收藏商店錯誤'
 
 
     
