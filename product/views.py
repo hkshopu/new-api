@@ -6904,17 +6904,35 @@ def like_product(request):
         'data': []
     }
     if request.method=='POST':
-        if response_data['status']==0:
-            # user id, product id
-            user_id= request.POST.get('user_id', '')
-            product_id= request.POST.get('product_id', '')
+        # user id, product id, like[Y|N]
+        user_id= request.POST.get('user_id', '')
+        product_id= request.POST.get('product_id', '')
+        like = request.POST.get('like', '')
 
+        if response_data['status']==0:
+            try:
+                models.User.objects.get(id=user_id)
+            except:
+                response_data['status'], response_data['ret_val'] = -2, '使用者不存在'
+                
+        if response_data['status']==0:
+            try:
+                models.Product.objects.get(id=product_id)
+            except:
+                response_data['status'], response_data['ret_val'] = -3, '商品不存在'
+        
+        if response_data['status']==0:
+            if like!='Y' and like!='N':
+                response_data['status'], response_data['ret_val'] = -4, 'like只能為Y|N'
+
+        if response_data['status']==0:
             products_liked_check=models.Product_Liked.objects.filter(user_id=user_id,product_id=product_id)
             print(products_liked_check)
-            if(len(products_liked_check))>0:
-                response_data['ret_val'] = '商品已收藏過!'
+            if (len(products_liked_check))>0 and like=='N':
+                products_liked_check.delete()
+                response_data['ret_val'] = '取消收藏成功'
                 response_data['status'] = 0
-            else:
+            elif (len(products_liked_check))==0 and like=='Y':
                 models.Product_Liked.objects.create(
                     id=uuid.uuid4(),
                     user_id=user_id,
@@ -6922,7 +6940,6 @@ def like_product(request):
                 )
                 products_liked=models.Product_Liked.objects.filter(user_id=user_id,product_id=product_id)
                 if(len(products_liked))>0:
-
                     response_data['ret_val'] = '商品收藏成功!'
                     response_data['status'] = 0
                 elif(len(products_liked))==0:
