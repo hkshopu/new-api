@@ -755,28 +755,28 @@ class Shop_Order_Details(models.Model):
 class Product_Liked(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     product_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
 class Product_Browsed(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     product_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Clicked(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     product_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Browsed(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
