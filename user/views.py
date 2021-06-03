@@ -694,18 +694,17 @@ def followShop(request, user_id='', shop_id=''):
 
 
         if response_data['status'] == 0:
-            try:
-                if follow == 'Y':
+            follows = models.Shop_Follower.objects.filter(shop_id=shop_id, follower_id=user_id)
+            try:                
+                if follow == 'Y' and len(follows)==0:
                     models.Shop_Follower.objects.create(
                         id=uuid.uuid4(),                
                         shop_id=shop_id,
                         follower_id=user_id
                     )
                     response_data['ret_val'] = '收藏成功'
-                else:
-                    follows = models.Shop_Follower.objects.filter(shop_id=shop_id, follower=user_id)
-                    if len(follows)>0:
-                        follows.delete()
+                elif follow=='N' and len(follows)>0:
+                    follows.delete()
                     response_data['ret_val'] = '取消收藏成功'
             except:
                 response_data['status'], response_data['ret_val'] = -3, '收藏商店錯誤'
