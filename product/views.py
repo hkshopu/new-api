@@ -3438,7 +3438,7 @@ def product_analytics_pages(request,mode): #userid
             max_seq=request.POST.get('max_seq', '')
             
             # key_word=request.POST.get('key_word', '')
-            print(key_word)
+            # print(key_word)
             if int(max_seq)==0:                 
                 if mode=="new":
                     print("new")
@@ -5175,7 +5175,7 @@ def product_analytics_pages_keyword(request,mode): #userid
             max_seq=request.POST.get('max_seq', '')
             
             key_word=request.POST.get('key_word', '')
-            print(key_word)
+            # print(key_word)
             if int(max_seq)==0:                 
                 if mode=="new":
                     print("new")
