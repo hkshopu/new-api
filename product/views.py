@@ -3419,6 +3419,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                 responseData['status'] =-1
                 responseData['ret_val'] = '未輸入排序規則'
     return JsonResponse(responseData)
+
 # 取得首頁的推薦商品清單(分頁)
 def product_analytics_pages(request,mode): #userid
     # 回傳資料
@@ -3476,7 +3477,8 @@ def product_analytics_pages(request,mode): #userid
                                             pic_path=productPic.product_pic,
                                             product_title=products[i].product_title,
                                             shop_title=productShopId.shop_title,
-                                            price=max_price,
+                                            min_price=min_price,
+                                            max_price=max_price,
                                             liked='N'
                                         )
 
@@ -3499,7 +3501,8 @@ def product_analytics_pages(request,mode): #userid
                                             pic_path=productPic.product_pic,
                                             product_title=products[i].product_title,
                                             shop_title=productShopId.shop_title,
-                                            price=products[i].product_price,
+                                            min_price=products[i].product_price,
+                                            max_price=products[i].product_price,                                            
                                             liked='N'
                                         )        
                         pageSize=12
@@ -3516,7 +3519,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
@@ -3590,7 +3594,8 @@ def product_analytics_pages(request,mode): #userid
                                             pic_path=productInfo["pic_path"],
                                             product_title=productInfo["product_title"],
                                             shop_title=productInfo["shop_title"],
-                                            price=productInfo["max_price"],
+                                            min_price=productInfo["min_price"],
+                                            max_price=productInfo["max_price"],
                                             liked=productInfo["liked"]
                                         ) 
                             elif products[i].product_spec_on=='n':   
@@ -3639,7 +3644,8 @@ def product_analytics_pages(request,mode): #userid
                                             pic_path=productInfo["pic_path"],
                                             product_title=productInfo["product_title"],
                                             shop_title=productInfo["shop_title"],
-                                            price=productInfo["max_price"],
+                                            min_price=productInfo["min_price"],
+                                            max_price=productInfo["max_price"],
                                             liked=productInfo["liked"]
                                         )         
                         
@@ -3659,7 +3665,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
@@ -3829,7 +3836,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
                                         shop_title=top_sale_dataFinal[i]["id"],
-                                        price=top_sale_dataFinal[i]["max_price"],
+                                        min_price=top_sale_dataFinal[i]["min_price"],
+                                        max_price=top_sale_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -3851,7 +3859,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
@@ -3980,7 +3989,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
                                         shop_title=top_sale_dataFinal[i]["id"],
-                                        price=top_sale_dataFinal[i]["max_price"],
+                                        min_price=top_sale_dataFinal[i]["min_price"],
+                                        max_price=top_sale_dataFinal[i]["max_price"],
                                         liked=top_sale_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
@@ -4003,7 +4013,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)                         
@@ -4143,7 +4154,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -4319,7 +4331,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -4342,7 +4355,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -4480,7 +4494,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -4502,7 +4517,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
@@ -4657,7 +4673,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -4680,7 +4697,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -4839,7 +4857,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
                                         shop_title=overall_data_dataFinal[i]["id"],
-                                        price=overall_data_dataFinal[i]["max_price"],
+                                        min_price=overall_data_dataFinal[i]["min_price"],
+                                        max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -4861,7 +4880,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -5042,7 +5062,8 @@ def product_analytics_pages(request,mode): #userid
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
                                         shop_title=overall_data_dataFinal[i]["id"],
-                                        price=overall_data_dataFinal[i]["max_price"],
+                                        min_price=overall_data_dataFinal[i]["min_price"],
+                                        max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -5065,7 +5086,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -5089,7 +5111,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                         responseData['data'].append(productInfo)
@@ -5170,7 +5193,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             pic_path=productPic.product_pic,
                                             product_title=products[i].product_title,
                                             shop_title=productShopId.shop_title,
-                                            price=max_price,
+                                            min_price=min_price,
+                                            max_price=max_price,
                                             liked='N'
                                         )
 
@@ -5193,7 +5217,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             pic_path=productPic.product_pic,
                                             product_title=products[i].product_title,
                                             shop_title=productShopId.shop_title,
-                                            price=products[i].product_price,
+                                            min_price=products[i].product_price,
+                                            max_price=products[i].product_price,
                                             liked='N'
                                         )        
                         pageSize=12
@@ -5210,7 +5235,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
@@ -5290,7 +5316,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             pic_path=productInfo["pic_path"],
                                             product_title=productInfo["product_title"],
                                             shop_title=productInfo["shop_title"],
-                                            price=productInfo["max_price"],
+                                            min_price=min_price,
+                                            max_price=max_price,
                                             liked=productInfo["liked"]
                                         ) 
                             elif products[i].product_spec_on=='n':   
@@ -5339,12 +5366,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             pic_path=productInfo["pic_path"],
                                             product_title=productInfo["product_title"],
                                             shop_title=productInfo["shop_title"],
-                                            price=productInfo["max_price"],
+                                            min_price=productInfo["min_price"],
+                                            max_price=productInfo["max_price"],
                                             liked=productInfo["liked"]
                                         )         
                         
-                        
-
                         pageSize=12
                         pageStart=0
                         pageEnd=pageStart+pageSize-1
@@ -5359,7 +5385,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
@@ -5534,7 +5561,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
                                         shop_title=top_sale_dataFinal[i]["id"],
-                                        price=top_sale_dataFinal[i]["max_price"],
+                                        min_price=top_sale_dataFinal[i]["min_price"],
+                                        max_price=top_sale_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -5556,7 +5584,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
@@ -5701,7 +5730,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
                                         shop_title=top_sale_dataFinal[i]["id"],
-                                        price=top_sale_dataFinal[i]["max_price"],
+                                        min_price=top_sale_dataFinal[i]["min_price"],
+                                        max_price=top_sale_dataFinal[i]["max_price"],
                                         liked=top_sale_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
@@ -5724,7 +5754,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -5875,7 +5906,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -5897,7 +5929,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
@@ -6056,7 +6089,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -6079,7 +6113,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
@@ -6232,7 +6267,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -6254,7 +6290,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)         
@@ -6412,7 +6449,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
                                         shop_title=lower_price_dataFinal[i]["id"],
-                                        price=lower_price_dataFinal[i]["max_price"],
+                                        min_price=lower_price_dataFinal[i]["min_price"],
+                                        max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -6435,7 +6473,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -6599,7 +6638,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
                                         shop_title=overall_data_dataFinal[i]["id"],
-                                        price=overall_data_dataFinal[i]["max_price"],
+                                        min_price=overall_data_dataFinal[i]["min_price"],
+                                        max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -6621,7 +6661,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -6802,7 +6843,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
                                         shop_title=overall_data_dataFinal[i]["id"],
-                                        price=overall_data_dataFinal[i]["max_price"],
+                                        min_price=overall_data_dataFinal[i]["min_price"],
+                                        max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
                                     )    
                             models.Product_Browsed.objects.create(
@@ -6825,7 +6867,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage) 
@@ -6854,7 +6897,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                         responseData['data'].append(productInfo)
