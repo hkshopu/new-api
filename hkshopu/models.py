@@ -779,3 +779,16 @@ class Shop_Browsed(models.Model):
     user_id = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Analytics(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id = models.CharField(max_length=36)
+    seq = models.PositiveIntegerField()
+    product_id= models.PositiveIntegerField()
+    pic_path= models.CharField( max_length=255)
+    product_title= models.CharField( max_length=255)
+    shop_title = models.CharField(max_length=255)
+    price= models.PositiveIntegerField()
+    liked= models.CharField(max_length=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
