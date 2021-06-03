@@ -5129,7 +5129,8 @@ def product_analytics_pages(request,mode): #userid
                                     'pic_path':productAnalytic.pic_path,
                                     'product_title':productAnalytic.product_title,
                                     'shop_title':productAnalytic.shop_title,
-                                    'price':productAnalytic.price,
+                                    'min_price':productAnalytic.min_price,
+                                    'max_price':productAnalytic.max_price,
                                     'liked':productAnalytic.liked
                                     }
                         responseData['data'].append(productInfo)
