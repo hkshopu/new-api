@@ -1894,6 +1894,7 @@ def product_analytics(request,id): #userid
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
+                                    'liked':'N'
                                 }
 
                                 v = []
@@ -1960,6 +1961,7 @@ def product_analytics(request,id): #userid
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
+                                    'liked':'N'
                                 }
 
                                 productInfo.update({'min_price':product.product_price}) 
