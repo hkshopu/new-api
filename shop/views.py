@@ -1854,8 +1854,6 @@ def get_shop_analytics_in_pages(request):
                 if not(re.match('^\d+$', user_id)):
                     response_data['status'] = -1
                     response_data['ret_val'] = '會員編號格式錯誤!'
-            else:
-                user_id = str(uuid.uuid4())
 
         if response_data['status'] == 0:
             data_of_shops = []
@@ -1925,7 +1923,7 @@ def get_shop_analytics_in_pages(request):
                 # 資料整理
                 data_of_shops.append({
                     'shop_id': shop['id'], 
-                    'user_id': user_id, 
+                    'user_id': uuid.uuid4(), 
                     'seq': seq, 
                     'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
                     'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
@@ -1982,7 +1980,7 @@ def get_shop_analytics_in_pages(request):
                 # 寫 log 到 shop_browsed 資料表
                 models.Shop_Browsed.objects.create(
                     shop_id=shop_analytic.shop_id, 
-                    user_id=shop_analytic.user_id
+                    user_id=user_id
                 )
             response_data['ret_val'] = '取得商店分頁資料成功!'
     return JsonResponse(response_data)
