@@ -1868,8 +1868,6 @@ def get_shop_analytics_in_pages(request):
                     seq = 0
             shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
             for shop in shops:
-                # seq
-                seq += 1
                 # 商店平均評價
                 sum_of_shop_ratings = 0
                 average_of_shop_ratings = 0
@@ -1927,7 +1925,6 @@ def get_shop_analytics_in_pages(request):
                 data_of_shops.append({
                     'shop_id': shop['id'], 
                     'user_id': user_id_for_shop_analytics, 
-                    'seq': seq, 
                     'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
                     'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
                     'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
@@ -1950,6 +1947,8 @@ def get_shop_analytics_in_pages(request):
                 data_of_shops.sort(key=attrgetter('shop_name'), reverse=True)
             # 將商店資訊寫入 shop_analytics 資料表
             for data_of_shop in data_of_shops:
+                seq += 1
+                data_of_shop['seq'] = seq
                 models.Shop_Analytics.objects.create(
                     id=uuid.uuid4(), 
                     shop_id=data_of_shop['shop_id'], 
