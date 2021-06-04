@@ -672,6 +672,7 @@ class Shop_Analytics(models.Model):
     pic_path_2 = models.CharField(max_length=255)
     pic_path_3 = models.CharField(max_length=255)
     shop_name = models.CharField(max_length=50)
+    shop_icon = models.CharField(max_length=255)
     rating = models.FloatField()
     followed = models.CharField(max_length=1)
     follower_count = models.PositiveIntegerField()
