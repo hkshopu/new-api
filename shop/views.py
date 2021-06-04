@@ -1937,14 +1937,14 @@ def get_shop_analytics_in_pages(request):
                     'sum_of_purchasing_qty': sum_of_purchasing_qty
                 })
             # 排序
-            if mode is 'overall':
-                data_of_shops.sort(key=attrgetter('rating', 'shop_name'), reverse=True)
-            if mode is 'new':
-                data_of_shops.sort(key=attrgetter('created_at', 'shop_name'), reverse=True)
-            if mode is 'top sale':
-                data_of_shops.sort(key=attrgetter('sum_of_purchasing_qty', 'shop_name'), reverse=True)
+            if mode == 'overall':
+                data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
+            if mode == 'new':
+                data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
+            if mode == 'top sale':
+                data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
             if mode is None:
-                data_of_shops.sort(key=attrgetter('shop_name'), reverse=True)
+                data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
             # 將商店資訊寫入 shop_analytics 資料表
             for data_of_shop in data_of_shops:
                 seq += 1
