@@ -1848,8 +1848,6 @@ def get_shop_analytics_in_pages(request):
                 if not(re.match('^\d+$', user_id)):
                     response_data['status'] = -1
                     response_data['ret_val'] = '會員編號格式錯誤!'
-            else:
-                user_id = uuid.uuid4()
 
         if response_data['status'] == 0:
             data_of_shops = []
@@ -1859,7 +1857,7 @@ def get_shop_analytics_in_pages(request):
                 if len(shop_analytics) > 0:
                     shop_analytics.delete()
                     seq = 0
-            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'created_at')
+            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
             for shop in shops:
                 # seq
                 seq += 1
@@ -1919,12 +1917,13 @@ def get_shop_analytics_in_pages(request):
                 # 資料整理
                 data_of_shops.append({
                     'shop_id': shop['id'], 
-                    'user_id': user_id, 
+                    'user_id': uuid.uuid4(), 
                     'seq': seq, 
-                    'pic_path_1': product_pics[0], 
-                    'pic_path_2': product_pics[1], 
-                    'pic_path_3': product_pics[2], 
+                    'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
+                    'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
+                    'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
                     'shop_name': shop['shop_title'], 
+                    'shop_icon': shop['shop_icon'], 
                     'rating': average_of_shop_ratings, 
                     'followed': shop_is_followed, 
                     'follower_count': quantities_of_shop_followers, 
@@ -1951,11 +1950,12 @@ def get_shop_analytics_in_pages(request):
                     pic_path_2=data_of_shop['pic_path_2'], 
                     pic_path_3=data_of_shop['pic_path_3'], 
                     shop_name=data_of_shop['shop_name'], 
+                    shop_icon=data_of_shop['shop_icon'], 
                     rating=data_of_shop['rating'], 
                     followed=data_of_shop['followed'], 
                     follower_count=data_of_shop['follower_count']
                 )
-            # 從 shop_analytics 資料表撈資料
+            # 回傳資料
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id, seq__range=(max_seq + 1, max_seq + 12))
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
@@ -1966,6 +1966,7 @@ def get_shop_analytics_in_pages(request):
                     'pic_path_2': shop_analytic.pic_path_2, 
                     'pic_path_3': shop_analytic.pic_path_3, 
                     'shop_name': shop_analytic.shop_name, 
+                    'shop_icon': shop_analytic.shop_icon, 
                     'rating': shop_analytic.rating, 
                     'followed': shop_analytic.followed, 
                     'follower_count': shop_analytic.follower_count
@@ -1973,7 +1974,7 @@ def get_shop_analytics_in_pages(request):
                 # 寫 log 到 shop_browsed 資料表
                 models.Shop_Browsed.objects.create(
                     shop_id=shop_analytic.shop_id, 
-                    user_id=shop_analytic.user_id
+                    user_id=user_id
                 )
             response_data['ret_val'] = '取得商店分頁資料成功!'
     return JsonResponse(response_data)
