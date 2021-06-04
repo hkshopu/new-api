@@ -1982,6 +1982,7 @@ def get_shop_analytics_in_pages(request):
                 })
                 # 寫 log 到 shop_browsed 資料表
                 models.Shop_Browsed.objects.create(
+                    id=uuid.uuid4(), 
                     shop_id=shop_analytic.shop_id, 
                     user_id=user_id
                 )
