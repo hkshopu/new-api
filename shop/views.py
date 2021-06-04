@@ -1845,9 +1845,12 @@ def get_shop_analytics_in_pages(request):
 
         if response_data['status'] == 0:
             if user_id is not None:
+                user_id_for_shop_analytics = user_id
                 if not(re.match('^\d+$', user_id)):
                     response_data['status'] = -1
                     response_data['ret_val'] = '會員編號格式錯誤!'
+            else:
+                user_id_for_shop_analytics = uuid.uuid4()
 
         if response_data['status'] == 0:
             data_of_shops = []
@@ -1917,7 +1920,7 @@ def get_shop_analytics_in_pages(request):
                 # 資料整理
                 data_of_shops.append({
                     'shop_id': shop['id'], 
-                    'user_id': uuid.uuid4(), 
+                    'user_id': user_id_for_shop_analytics, 
                     'seq': seq, 
                     'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
                     'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
@@ -1956,7 +1959,7 @@ def get_shop_analytics_in_pages(request):
                     follower_count=data_of_shop['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id, seq__range=(max_seq + 1, max_seq + 12))
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12))
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
@@ -1973,6 +1976,7 @@ def get_shop_analytics_in_pages(request):
                 })
                 # 寫 log 到 shop_browsed 資料表
                 models.Shop_Browsed.objects.create(
+                    id=uuid.uuid4(), 
                     shop_id=shop_analytic.shop_id, 
                     user_id=user_id
                 )
