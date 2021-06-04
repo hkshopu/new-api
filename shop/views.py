@@ -1981,4 +1981,5 @@ def get_shop_analytics_in_pages(request):
                     shop_id=shop_analytic.shop_id, 
                     user_id=shop_analytic.user_id
                 )
+            response_data['ret_val'] = '取得商店分頁資料成功!'
     return JsonResponse(response_data)
