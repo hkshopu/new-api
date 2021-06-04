@@ -1863,7 +1863,7 @@ def get_shop_analytics_in_pages(request):
                 if len(shop_analytics) > 0:
                     shop_analytics.delete()
                     seq = 0
-            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'created_at')
+            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
             for shop in shops:
                 # seq
                 seq += 1
