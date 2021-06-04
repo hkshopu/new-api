@@ -666,7 +666,7 @@ class Selected_Product_Pic(models.Model):
 class Shop_Analytics(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=255)
     seq = models.PositiveIntegerField()
     pic_path_1 = models.CharField(max_length=255)
     pic_path_2 = models.CharField(max_length=255)
