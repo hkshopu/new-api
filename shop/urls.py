@@ -36,7 +36,7 @@ urlpatterns = [
     path('get_recommended_shops/', views.get_recommended_shops), 
     path('<id>/get_specific_recommended_shop/', views.get_specific_recommended_shop),
     path('<id>/get_simple_info_of_specific_shop_for_buyer/', views.get_simple_info_of_specific_shop_for_buyer),
-    path('<id>/advertisement/', views.getAdvertisementBanner), 
     path('get_shop_analytics_in_pages/', views.get_shop_analytics_in_pages), 
-    path('get_shop_analytics_with_keyword_in_pages/', views.get_shop_analytics_with_keyword_in_pages)
+    path('get_shop_analytics_with_keyword_in_pages/', views.get_shop_analytics_with_keyword_in_pages), 
+    path('advertisement/', views.getAdvertisementBanner), 
 ]
