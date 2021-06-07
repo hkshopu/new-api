@@ -1857,9 +1857,8 @@ def get_shop_analytics_in_pages(request):
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
-                if len(shop_analytics) > 0:
-                    shop_analytics.delete()
-                    seq = 0
+                models.Shop_Analytics.objects.filter(user_id=user_id).delete()
+                seq = 0
             shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
             for shop in shops:
                 # 商店平均評價
@@ -2009,9 +2008,8 @@ def get_shop_analytics_with_keyword_in_pages(request):
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
-                if len(shop_analytics) > 0:
-                    shop_analytics.delete()
-                    seq = 0
+                models.Shop_Analytics.objects.filter(user_id=user_id).delete()
+                seq = 0
             if keyword:
                 shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
             else:
