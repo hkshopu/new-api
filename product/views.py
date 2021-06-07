@@ -5154,6 +5154,11 @@ def product_analytics_pages_keyword(request,mode): #userid
             max_seq=request.POST.get('max_seq', '')
             
             key_word=request.POST.get('key_word', '')
+            category_id=request.POST.get('category_id','')
+            if category_id=='':
+                categoryId=''
+            else:
+                categoryId=category_id
             # print(key_word)
             if int(max_seq)==0:                 
                 if mode=="new":
@@ -5161,7 +5166,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     if user_id=='' or user_id is None or user_id=="":
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).order_by('-created_at') 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).filter(product_category_id__contains=categoryId).order_by('-created_at') 
 
                         for i in range(len(products)):
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y')      
@@ -5254,7 +5259,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).order_by('-created_at')#.filter(like__gt=0) 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).filter(product_category_id=categoryId).order_by('-created_at')#.filter(like__gt=0) 
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
 
                         for i in range(len(products)):   
@@ -5298,7 +5303,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                         for productLike in productLikes:
-                                            if productLike.product_id==product.id :
+                                            if productLike.product_id==products[i].id :
                                                 productInfo.update({'liked': 'Y'})
                                             else:
                                                 productInfo.update({'liked': 'N'})
@@ -5347,7 +5352,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productInfo.update({'sum_quantity':products[i].quantity})
                                         
                                         for productLike in productLikes:
-                                            if productLike.product_id==product.id :
+                                            if productLike.product_id==products[i].id :
                                                 productInfo.update({'liked': 'Y'})
                                             else:
                                                 productInfo.update({'liked': 'N'})
@@ -5405,7 +5410,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
                         # products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
                         # getProductID=[]
                         # getShopID=[]
                         # for product in products:
@@ -5600,7 +5605,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
                         # productOveralls=models.Product_Rate.objects.filter(product_id__in=getProductID).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                         # print(productOveralls)
                         
@@ -5774,7 +5779,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
 
 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -5946,7 +5951,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6135,7 +6140,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
                         # products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)#.order_by('-price')[:12]#.filter(like__gt=0) 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.order_by('-price')[:12]#.filter(like__gt=0) 
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6306,7 +6311,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word) 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word) 
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6492,7 +6497,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         # shop=models.Shop.objects.get(id=id)
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)#.filter(like__gt=0) 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.filter(like__gt=0) 
                         
                         getProductID=[]
                         getShopID=[]
@@ -6679,7 +6684,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         # shop=models.Shop.objects.get(id=id)
                         # user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)#.filter(like__gt=0) 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.filter(like__gt=0) 
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6925,7 +6930,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                     responseData['ret_val'] = '取得商品分頁資訊'
 
     return JsonResponse(responseData)
-
 
 def like_product(request):
     # 回傳資料
