@@ -656,12 +656,11 @@ def sned_invitation_testing_mail(request):
 
         if response_data['status'] == 0:
             subject = 'HKShopU - 參與測試邀請'
-            body = render_to_string('invitation_testing_mail.html')
+            html_message = render_to_string('invitation_testing_mail.html')
+            message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'
-            bcc = email
-            email_message = mail.EmailMessage(subject=subject, body=body, from_email=from_email, bcc=bcc)
-            email_message.content_subtype = 'html'
-            email_message.send()
+            for x in email:
+                mail.send_mail(subject=subject, message=message, from_email=from_email,recipient_list=[x] , html_message=html_message)
             response_data['ret_val'] = '發送參與測試邀請電子郵件成功!'
     return JsonResponse(response_data)
 
