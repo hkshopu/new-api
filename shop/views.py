@@ -1862,8 +1862,6 @@ def get_shop_analytics_in_pages(request):
                     seq = 0
             shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
             for shop in shops:
-                # seq
-                seq += 1
                 # 商店平均評價
                 sum_of_shop_ratings = 0
                 average_of_shop_ratings = 0
@@ -1921,7 +1919,6 @@ def get_shop_analytics_in_pages(request):
                 data_of_shops.append({
                     'shop_id': shop['id'], 
                     'user_id': user_id_for_shop_analytics, 
-                    'seq': seq, 
                     'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
                     'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
                     'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
@@ -1934,29 +1931,31 @@ def get_shop_analytics_in_pages(request):
                     'sum_of_purchasing_qty': sum_of_purchasing_qty
                 })
             # 排序
-            if mode is 'overall':
-                data_of_shops.sort(key=attrgetter('rating', 'shop_name'), reverse=True)
-            if mode is 'new':
-                data_of_shops.sort(key=attrgetter('created_at', 'shop_name'), reverse=True)
-            if mode is 'top sale':
-                data_of_shops.sort(key=attrgetter('sum_of_purchasing_qty', 'shop_name'), reverse=True)
+            if mode == 'overall':
+                data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
+            if mode == 'new':
+                data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
+            if mode == 'top sale':
+                data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
             if mode is None:
-                data_of_shops.sort(key=attrgetter('shop_name'), reverse=True)
+                data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
             # 將商店資訊寫入 shop_analytics 資料表
-            for data_of_shop in data_of_shops:
+            for i in range(len(data_of_shops)):
+                seq += 1
+                data_of_shops[i]['seq'] = seq
                 models.Shop_Analytics.objects.create(
                     id=uuid.uuid4(), 
-                    shop_id=data_of_shop['shop_id'], 
-                    user_id=data_of_shop['user_id'], 
-                    seq=data_of_shop['seq'], 
-                    pic_path_1=data_of_shop['pic_path_1'], 
-                    pic_path_2=data_of_shop['pic_path_2'], 
-                    pic_path_3=data_of_shop['pic_path_3'], 
-                    shop_name=data_of_shop['shop_name'], 
-                    shop_icon=data_of_shop['shop_icon'], 
-                    rating=data_of_shop['rating'], 
-                    followed=data_of_shop['followed'], 
-                    follower_count=data_of_shop['follower_count']
+                    shop_id=data_of_shops[i]['shop_id'], 
+                    user_id=data_of_shops[i]['user_id'], 
+                    seq=data_of_shops[i]['seq'], 
+                    pic_path_1=data_of_shops[i]['pic_path_1'], 
+                    pic_path_2=data_of_shops[i]['pic_path_2'], 
+                    pic_path_3=data_of_shops[i]['pic_path_3'], 
+                    shop_name=data_of_shops[i]['shop_name'], 
+                    shop_icon=data_of_shops[i]['shop_icon'], 
+                    rating=data_of_shops[i]['rating'], 
+                    followed=data_of_shops[i]['followed'], 
+                    follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12))

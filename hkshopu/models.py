@@ -596,12 +596,6 @@ class Product(models.Model):
 
         return ret_code, ret_description
   
-class Product_Liked(models.Model):
-    id = models.CharField(primary_key=True, max_length=36)
-    product_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)
