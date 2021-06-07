@@ -743,7 +743,14 @@ def topProductDetail(request, user_id='', product_id=''):
             for attr in product_attr:
                 if hasattr(product, attr):
                     tempData[attr] = getattr(product, attr)
-            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('-cover').values_list('product_pic', flat=True))[0:5]
+            pics = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('-cover').values('product_pic'))[0:5]
+            p_c = 1
+            for p in pics:
+                tempData['pic_'+str(p_c)] = p['product_pic']
+                p_c += 1
+            while p_c <=5:
+                tempData['pic_'+str(p_c)] = ''
+                p_c += 1
             tempData['liked_count'] = len(models.Product_Liked.objects.filter(product_id=product_id))
             tempData['category'] = models.Product_Category.objects.get(id=product.product_category_id).c_product_category + '>' + models.Product_Sub_Category.objects.get(id=product.product_sub_category_id).c_product_sub_category
             rating = models.Product_Rate.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating__avg']
