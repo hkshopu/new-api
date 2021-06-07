@@ -1937,7 +1937,7 @@ def get_shop_analytics_in_pages(request):
                 data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
             if mode == 'top sale':
                 data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
-            if mode is None:
+            if mode == '':
                 data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
             # 將商店資訊寫入 shop_analytics 資料表
             for i in range(len(data_of_shops)):
@@ -2092,7 +2092,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
             if mode == 'top sale':
                 data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
-            if mode is None:
+            if mode == '':
                 data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
             # 將搜尋紀錄寫入 search_history 資料表
             models.Search_History.objects.create(
