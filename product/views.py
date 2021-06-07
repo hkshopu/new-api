@@ -1728,7 +1728,7 @@ def product_analytics(request,id): #userid
         if responseData['status'] == 0:
             if id=="null" or id is None:
                 # shop=models.Shop.objects.get(id=id)
-                products = models.Product.objects.filter(product_status='active').filter(is_delete='N').order_by('-like')[:12]#.filter(like__gt=0) 
+                products = models.Product.objects.filter(product_status='active').filter(is_delete='N').order_by('-created_at')[:12]#.filter(like__gt=0) 
                 getProductID=[]
                 getShopID=[]
                 for product in products:
@@ -1746,7 +1746,7 @@ def product_analytics(request,id): #userid
                                 productShopId=models.Shop.objects.get(id=product.shop_id)
 
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,
                                     'quantity': product.quantity, 
@@ -1808,7 +1808,7 @@ def product_analytics(request,id): #userid
                                 # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                 productShopId=models.Shop.objects.get(id=product.shop_id)
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,
                                     'quantity': product.quantity, 
@@ -1851,7 +1851,7 @@ def product_analytics(request,id): #userid
             else:
                 print("userID登入")
                 # shop=models.Shop.objects.get(id=id)
-                products = models.Product.objects.filter(product_status='active').filter(is_delete='N').order_by('-like')[:12]#.filter(like__gt=0) 
+                products = models.Product.objects.filter(product_status='active').filter(is_delete='N').order_by('-created_at')[:12]#.filter(like__gt=0) 
                 getProductID=[]
                 getShopID=[]
                 for product in products:
@@ -1871,7 +1871,7 @@ def product_analytics(request,id): #userid
                                 productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
 
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,
                                     'quantity': product.quantity, 
@@ -1938,7 +1938,7 @@ def product_analytics(request,id): #userid
                                 productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
                                 
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,
                                     'quantity': product.quantity, 
@@ -1986,7 +1986,6 @@ def product_analytics(request,id): #userid
                
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
-
 # 取得買家商店商品清單
 def shop_product_analytics(request,shop_id,mode): #userid
     # 回傳資料
