@@ -3576,7 +3576,7 @@ def product_analytics_pages(request,mode): #userid
                                         productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                         for productLike in productLikes:
-                                            if productLike.product_id==product.id :
+                                            if productLike.product_id==products[i].id :
                                                 productInfo.update({'liked': 'Y'})
                                             else:
                                                 productInfo.update({'liked': 'N'})
