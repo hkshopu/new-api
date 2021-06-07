@@ -1839,12 +1839,12 @@ def get_shop_analytics_in_pages(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', None)
         mode = request.POST.get('mode', None)
         max_seq = request.POST.get('max_seq', None)
 
         if response_data['status'] == 0:
-            if user_id != '':
+            if user_id is not None:
                 user_id_for_shop_analytics = user_id
                 if not(re.match('^\d+$', user_id)):
                     response_data['status'] = -1
@@ -1990,13 +1990,13 @@ def get_shop_analytics_with_keyword_in_pages(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        user_id = request.POST.get('user_id', '')
+        user_id = request.POST.get('user_id', None)
         mode = request.POST.get('mode', None)
         max_seq = request.POST.get('max_seq', None)
         keyword = request.POST.get('keyword', '')
 
         if response_data['status'] == 0:
-            if user_id != '':
+            if user_id is not None:
                 user_id_for_shop_analytics = user_id
                 if not(re.match('^\d+$', user_id)):
                     response_data['status'] = -1
