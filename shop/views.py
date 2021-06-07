@@ -1946,22 +1946,22 @@ def get_shop_analytics_in_pages(request):
             if mode is None:
                 data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
             # 將商店資訊寫入 shop_analytics 資料表
-            for data_of_shop in data_of_shops:
+            for i in range(len(data_of_shops)):
                 seq += 1
-                data_of_shop['seq'] = seq
+                data_of_shops[i]['seq'] = seq
                 models.Shop_Analytics.objects.create(
                     id=uuid.uuid4(), 
-                    shop_id=data_of_shop['shop_id'], 
-                    user_id=data_of_shop['user_id'], 
-                    seq=data_of_shop['seq'], 
-                    pic_path_1=data_of_shop['pic_path_1'], 
-                    pic_path_2=data_of_shop['pic_path_2'], 
-                    pic_path_3=data_of_shop['pic_path_3'], 
-                    shop_name=data_of_shop['shop_name'], 
-                    shop_icon=data_of_shop['shop_icon'], 
-                    rating=data_of_shop['rating'], 
-                    followed=data_of_shop['followed'], 
-                    follower_count=data_of_shop['follower_count']
+                    shop_id=data_of_shops[i]['shop_id'], 
+                    user_id=data_of_shops[i]['user_id'], 
+                    seq=data_of_shops[i]['seq'], 
+                    pic_path_1=data_of_shops[i]['pic_path_1'], 
+                    pic_path_2=data_of_shops[i]['pic_path_2'], 
+                    pic_path_3=data_of_shops[i]['pic_path_3'], 
+                    shop_name=data_of_shops[i]['shop_name'], 
+                    shop_icon=data_of_shops[i]['shop_icon'], 
+                    rating=data_of_shops[i]['rating'], 
+                    followed=data_of_shops[i]['followed'], 
+                    follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12))
