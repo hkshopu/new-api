@@ -1958,7 +1958,7 @@ def get_shop_analytics_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12))
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('-seq')
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
@@ -2119,7 +2119,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12))
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('-seq')
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
