@@ -1,11 +1,10 @@
-from django.shortcuts import render
+from django.db.models import Q, Avg, Min, Max, Count, Sum
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template, render_to_string
 from django.contrib.auth.hashers import make_password
 from passlib.handlers.django import django_pbkdf2_sha256
 from django.core import mail
 from django.utils.html import strip_tags
-from django.db.models import Q
 from hkshopu import models
 import uuid
 import datetime
@@ -712,3 +711,58 @@ def followShop(request, user_id='', shop_id=''):
 
     
     return JsonResponse(response_data)
+
+# 推薦商品詳情
+def topProductDetail(request, user_id='', product_id=''):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': []
+    }
+    def foo(p_name, param):
+        return {p_name:param, 'type':str(type(param)), 'length':len(param)}
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            try:
+                if user_id is not '':
+                    models.User.objects.get(id=user_id)
+            except:
+                responseData['status'], responseData['ret_val'] = -1, '使用者不存在'
+
+        if responseData['status'] == 0:
+            try:
+                product = models.Product.objects.get(id=product_id, is_delete='N')
+            except:
+                responseData['status'], responseData['ret_val'] = -2, '商品不存在'
+        
+        if responseData['status'] == 0:
+            product_attr = [
+                'product_title', # name
+                'new_secondhand',
+                'product_description', # description
+                ]
+            tempData = {}
+            for attr in product_attr:
+                if hasattr(product, attr):
+                    tempData[attr] = getattr(product, attr)
+            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('-cover').values_list('product_pic', flat=True))[0:5]
+            tempData['liked_count'] = len(models.Product_Liked.objects.filter(product_id=product_id))
+            tempData['category'] = models.Product_Category.objects.get(id=product.product_category_id).c_product_category + '>' + models.Product_Sub_Category.objects.get(id=product.product_sub_category_id).c_product_sub_category
+            rating = models.Product_Rate.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating__avg']
+            tempData['average_rating'] = 0 if rating is None else rating
+            min_max_num = models.Product_Spec.objects.filter(product_id=product_id).aggregate(min_price=Min('price'), max_price=Max('price'), min_quantity=Min('quantity'), max_quantity=Max('quantity'))
+            for k in min_max_num:
+                tempData[k] = 0 if min_max_num[k] is None else min_max_num[k]
+            selling_count = models.Shop_Order_Details.objects.filter(product_id=product_id).aggregate(selling_count=Sum('purchasing_qty'))['selling_count']
+            tempData['selling_count'] = 0 if selling_count is None else selling_count
+            liked_count = models.Product_Liked.objects.filter(product_id=product_id).aggregate(liked_count=Count('user_id'))['liked_count']
+            tempData['liked_count'] = 0 if liked_count is None else liked_count
+            responseData['data'].append(tempData)
+
+            models.Product_Clicked.objects.create(
+                id=uuid.uuid4(),
+                user_id=user_id,
+                product_id=product_id
+            )
+        
+    return JsonResponse(responseData)

@@ -3576,7 +3576,7 @@ def product_analytics_pages(request,mode): #userid
                                         productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                         for productLike in productLikes:
-                                            if productLike.product_id==product.id :
+                                            if productLike.product_id==products[i].id :
                                                 productInfo.update({'liked': 'Y'})
                                             else:
                                                 productInfo.update({'liked': 'N'})
@@ -3625,7 +3625,7 @@ def product_analytics_pages(request,mode): #userid
                                         productInfo.update({'sum_quantity':products[i].quantity})
                                         
                                         for productLike in productLikes:
-                                            if productLike.product_id==product.id :
+                                            if productLike.product_id==products[i].id :
                                                 productInfo.update({'liked': 'Y'})
                                             else:
                                                 productInfo.update({'liked': 'N'})
@@ -3837,7 +3837,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
-                                        shop_title=top_sale_dataFinal[i]["id"],
+                                        shop_title=top_sale_dataFinal[i]["shop_title"],
                                         min_price=top_sale_dataFinal[i]["min_price"],
                                         max_price=top_sale_dataFinal[i]["max_price"],
                                         liked='N'
@@ -3990,7 +3990,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
-                                        shop_title=top_sale_dataFinal[i]["id"],
+                                        shop_title=top_sale_dataFinal[i]["shop_title"],
                                         min_price=top_sale_dataFinal[i]["min_price"],
                                         max_price=top_sale_dataFinal[i]["max_price"],
                                         liked=top_sale_dataFinal[i]["liked"]
@@ -4155,7 +4155,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -4332,7 +4332,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -4495,7 +4495,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -4674,7 +4674,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -4858,7 +4858,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
-                                        shop_title=overall_data_dataFinal[i]["id"],
+                                        shop_title=overall_data_dataFinal[i]["shop_title"],
                                         min_price=overall_data_dataFinal[i]["min_price"],
                                         max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
@@ -5063,7 +5063,7 @@ def product_analytics_pages(request,mode): #userid
                                         seq=i,
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
-                                        shop_title=overall_data_dataFinal[i]["id"],
+                                        shop_title=overall_data_dataFinal[i]["shop_title"],
                                         min_price=overall_data_dataFinal[i]["min_price"],
                                         max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
@@ -5563,7 +5563,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
-                                        shop_title=top_sale_dataFinal[i]["id"],
+                                        shop_title=top_sale_dataFinal[i]["shop_title"],
                                         min_price=top_sale_dataFinal[i]["min_price"],
                                         max_price=top_sale_dataFinal[i]["max_price"],
                                         liked='N'
@@ -5732,7 +5732,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=top_sale_dataFinal[i]["pic_path"],
                                         product_title=top_sale_dataFinal[i]["product_title"],
-                                        shop_title=top_sale_dataFinal[i]["id"],
+                                        shop_title=top_sale_dataFinal[i]["shop_title"],
                                         min_price=top_sale_dataFinal[i]["min_price"],
                                         max_price=top_sale_dataFinal[i]["max_price"],
                                         liked=top_sale_dataFinal[i]["liked"]
@@ -5908,7 +5908,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -6091,7 +6091,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -6269,7 +6269,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -6451,7 +6451,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=lower_price_dataFinal[i]["pic_path"],
                                         product_title=lower_price_dataFinal[i]["product_title"],
-                                        shop_title=lower_price_dataFinal[i]["id"],
+                                        shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
                                         liked='N'
@@ -6640,7 +6640,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
-                                        shop_title=overall_data_dataFinal[i]["id"],
+                                        shop_title=overall_data_dataFinal[i]["shop_title"],
                                         min_price=overall_data_dataFinal[i]["min_price"],
                                         max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
@@ -6845,7 +6845,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         seq=i,
                                         pic_path=overall_data_dataFinal[i]["pic_path"],
                                         product_title=overall_data_dataFinal[i]["product_title"],
-                                        shop_title=overall_data_dataFinal[i]["id"],
+                                        shop_title=overall_data_dataFinal[i]["shop_title"],
                                         min_price=overall_data_dataFinal[i]["min_price"],
                                         max_price=overall_data_dataFinal[i]["max_price"],
                                         liked='N'
