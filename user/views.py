@@ -719,8 +719,6 @@ def topProductDetail(request, user_id='', product_id=''):
         'ret_val': '',
         'data': []
     }
-    def foo(p_name, param):
-        return {p_name:param, 'type':str(type(param)), 'length':len(param)}
     if request.method == 'GET':
         if responseData['status'] == 0:
             try:
@@ -765,4 +763,33 @@ def topProductDetail(request, user_id='', product_id=''):
                 product_id=product_id
             )
         
+    return JsonResponse(responseData)
+
+# 新增Audit Log
+def auditLog(request, user_id=''):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    if user_id != '':
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '使用者不存在'
+
+    if request.method == 'POST': # insert
+        action = request.POST.get('action', '')
+        parameter_in = request.POST.get('parameter_in', '')
+        parameter_out = request.POST.get('parameter_out', '')
+        models.Audit_Log.objects.create(
+            id = uuid.uuid4(),
+            user_id = user_id,
+            action = action,
+            parameter_in = parameter_in,
+            parameter_out = parameter_out
+        )
+        responseData['ret_val'] = '新增成功'
+
     return JsonResponse(responseData)
