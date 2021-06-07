@@ -17,5 +17,7 @@ urlpatterns = [
     path('<id>/show/', views.show),
     path('<id>/shopCount/', views.getUserShopCount), 
     path('sned_invitation_testing_mail/', views.sned_invitation_testing_mail),
-    path('<user_id>/followShop/<shop_id>/', views.followShop)
+    path('<user_id>/followShop/<shop_id>/', views.followShop),
+    path('<user_id>/topProductDetail/<product_id>/', views.topProductDetail),
+    path('/topProductDetail/<product_id>/', views.topProductDetail) # if user_id=''
 ]
