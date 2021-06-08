@@ -4230,6 +4230,7 @@ def product_analytics_pages(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -4298,6 +4299,7 @@ def product_analytics_pages(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -4334,7 +4336,7 @@ def product_analytics_pages(request,mode): #userid
                                         shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
-                                        liked='N'
+                                        liked=lower_price_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
                                 id=uuid.uuid4(),
@@ -4572,6 +4574,7 @@ def product_analytics_pages(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -4640,6 +4643,7 @@ def product_analytics_pages(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -4676,7 +4680,7 @@ def product_analytics_pages(request,mode): #userid
                                         shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
-                                        liked='N'
+                                        liked=lower_price_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
                                 id=uuid.uuid4(),
@@ -4963,6 +4967,7 @@ def product_analytics_pages(request,mode): #userid
                                         productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                         for productLike in productLikes:
+                                            print(productLike)
                                             if productLike.product_id==product.id :
                                                 productInfo.update({'liked': 'Y'})
                                             else:
@@ -5029,11 +5034,12 @@ def product_analytics_pages(request,mode): #userid
                                         productInfo.update({'sum_quantity':product.quantity})
                                         
                                         for productLike in productLikes:
-                                            # print(productLike)
+                                            # print(productLike.product_id)
                                             if productLike.product_id==product.id :
                                                 productInfo.update({'liked': 'Y'})
-                                            else:
-                                                productInfo.update({'liked': 'N'})
+                                                # print("Y")
+                                            else : 
+                                                productInfo.update({'liked': 'N'})                
                                         
                                         for productOverall in productOveralls:
                                             
@@ -5065,7 +5071,7 @@ def product_analytics_pages(request,mode): #userid
                                         shop_title=overall_data_dataFinal[i]["shop_title"],
                                         min_price=overall_data_dataFinal[i]["min_price"],
                                         max_price=overall_data_dataFinal[i]["max_price"],
-                                        liked='N'
+                                        liked=overall_data_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
                                 id=uuid.uuid4(),
@@ -5159,6 +5165,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                 categoryId=''
             else:
                 categoryId=category_id
+                category_desc=models.Product_Category.objects.get(id=category_id)
+                categoryDesc=category_desc.c_product_category
             # print(key_word)
             if int(max_seq)==0:                 
                 if mode=="new":
@@ -5247,12 +5255,18 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
-
-                        models.Search_History.objects.create(
-                                            id=uuid.uuid4(),
-                                            search_category='product',
-                                            keyword=key_word
-                                        )  
+                        if categoryDesc=='':
+                            models.Search_History.objects.create(
+                                                id=uuid.uuid4(),
+                                                search_category='product',
+                                                keyword=key_word
+                                            ) 
+                        else:
+                            models.Search_History.objects.create(
+                                                id=uuid.uuid4(),
+                                                search_category='product',
+                                                keyword=categoryDesc
+                                            ) 
                         responseData['ret_val'] = '取得商品分頁資訊'
                         # responseData['ret_val'] = '已取得商品清單!'
                         
@@ -5397,11 +5411,18 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked
                                     }
                             responseData['data'].append(productFirstPage)
-                        models.Search_History.objects.create(
-                                            id=uuid.uuid4(),
-                                            search_category='product',
-                                            keyword=key_word
-                                        )  
+                        if categoryDesc=='':
+                            models.Search_History.objects.create(
+                                                id=uuid.uuid4(),
+                                                search_category='product',
+                                                keyword=key_word
+                                            ) 
+                        else:
+                            models.Search_History.objects.create(
+                                                id=uuid.uuid4(),
+                                                search_category='product',
+                                                keyword=categoryDesc
+                                            )  
                         responseData['ret_val'] = '取得商品分頁資訊'
                 elif mode=="top_sale":
                     top_sale_data=[] #for sorting
@@ -6098,7 +6119,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
-                                        liked='N'
+                                        liked=lower_price_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
                                 id=uuid.uuid4(),
@@ -6354,6 +6375,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -6422,6 +6444,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -6458,7 +6481,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         shop_title=lower_price_dataFinal[i]["shop_title"],
                                         min_price=lower_price_dataFinal[i]["min_price"],
                                         max_price=lower_price_dataFinal[i]["max_price"],
-                                        liked='N'
+                                        liked=lower_price_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
                                 id=uuid.uuid4(),
@@ -6681,8 +6704,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                         responseData['ret_val'] = '已取得商品清單!'                
                     else:
                         
-                        # shop=models.Shop.objects.get(id=id)
-                        # user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
                         products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.filter(like__gt=0) 
                         getProductID=[]
@@ -6692,8 +6713,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                         for shop in products:
                             getShopID.append(shop.id)
 
-                        # productOveralls=models.Product_Rate.objects.filter(product_id__in=getProductID).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
-                        # print(productOveralls)
                         productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')
                         for product in products:   
                             if product.product_spec_on=='y':
@@ -6852,7 +6871,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         shop_title=overall_data_dataFinal[i]["shop_title"],
                                         min_price=overall_data_dataFinal[i]["min_price"],
                                         max_price=overall_data_dataFinal[i]["max_price"],
-                                        liked='N'
+                                        liked=overall_data_dataFinal[i]["liked"]
                                     )    
                             models.Product_Browsed.objects.create(
                                 id=uuid.uuid4(),
