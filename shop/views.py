@@ -1853,11 +1853,13 @@ def get_shop_analytics_in_pages(request):
                 user_id_for_shop_analytics = uuid.uuid4()
 
         if response_data['status'] == 0:
+            if not(max_seq):
+                max_seq = 0
             data_of_shops = []
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id).values('seq').order_by('-seq')
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
-                models.Shop_Analytics.objects.filter(user_id=user_id).delete()
+                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
             shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
             for shop in shops:
@@ -1957,7 +1959,7 @@ def get_shop_analytics_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('seq')
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('seq')
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
@@ -2004,11 +2006,13 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 user_id_for_shop_analytics = uuid.uuid4()
 
         if response_data['status'] == 0:
+            if not(max_seq):
+                max_seq = 0
             data_of_shops = []
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id).values('seq').order_by('-seq')
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
-                models.Shop_Analytics.objects.filter(user_id=user_id).delete()
+                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
             if keyword:
                 shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
@@ -2117,7 +2121,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=user_id_for_shop_analytics, seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('seq')
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('seq')
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
