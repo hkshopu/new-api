@@ -5252,7 +5252,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage)
                         if categoryDesc=='':
@@ -5408,7 +5409,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage)
                         if categoryDesc=='':
@@ -5427,20 +5429,10 @@ def product_analytics_pages_keyword(request,mode): #userid
                 elif mode=="top_sale":
                     top_sale_data=[] #for sorting
                     if user_id=='' or user_id is None or user_id=="":
-                        # shop=models.Shop.objects.get(id=id)
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        # products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
                         products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
-                        # getProductID=[]
-                        # getShopID=[]
-                        # for product in products:
-                        #     getProductID.append(product.id)
-                        # for shop in products:
-                        #     getShopID.append(shop.id)
 
-                        # productQuantitys=models.Shop_Order_Details.objects.filter(product_id__in=getProductID).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
-                        # from django.db.models import Avg
                         
                         for i in range(len(products)):  
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y')     
@@ -5454,24 +5446,9 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productOveralls=models.Product_Rate.objects.filter(product_id=products[i].id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                         productInfo = {
                                             'id': products[i].id,
-                                            # 'product_category_id': product.product_category_id, 
                                             'product_title': products[i].product_title,
                                             'quantity': products[i].quantity, 
-                                            # 'product_description': product.product_description, 
                                             'product_price': products[i].product_price, 
-                                            # 'shipping_fee': product.shipping_fee, 
-                                            # 'created_at': product.created_at, 
-                                            # 'updated_at': product.updated_at,
-                                            # 'weight':product.weight,
-                                            # 'longterm_stock_up':product.longterm_stock_up,
-                                            # 'new_secondhand':product.new_secondhand,
-                                            # 'length':product.length,
-                                            # 'width':product.width,
-                                            # 'height':product.height,
-                                            # 'like':product.like,
-                                            # 'seen':product.seen,
-                                            # 'sold_quantity':product.sold_quantity,
-                                            # 'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':products[i].product_spec_on,
                                             'shop_id':productShopId.id,
@@ -5526,24 +5503,9 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productOveralls=models.Product_Rate.objects.filter(product_id=products[i].id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                         productInfo = {
                                             'id': products[i].id,
-                                            # 'product_category_id': product.product_category_id, 
                                             'product_title': products[i].product_title,
                                             'quantity': products[i].quantity, 
-                                            # 'product_description': product.product_description, 
                                             'product_price': products[i].product_price, 
-                                            # 'shipping_fee': product.shipping_fee, 
-                                            # 'created_at': product.created_at, 
-                                            # 'updated_at': product.updated_at,
-                                            # 'weight':product.weight,
-                                            # 'longterm_stock_up':product.longterm_stock_up,
-                                            # 'new_secondhand':product.new_secondhand,
-                                            # 'length':product.length,
-                                            # 'width':product.width,
-                                            # 'height':product.height,
-                                            # 'like':product.like,
-                                            # 'seen':product.seen,
-                                            # 'sold_quantity':product.sold_quantity,
-                                            # 'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':products[i].product_spec_on,
                                             'shop_id':productShopId.id,
@@ -5572,13 +5534,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             else:
                                                 productInfo.update({'productQuantity': 0})
                                         
-                                        top_sale_data.append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=products[i].id
-                                        # )
-                        # print(top_sale_data)  
-                        # print(len(sorted(top_sale_data , key=lambda quantitySort : quantitySort['productQuantity'],reverse=True)))          
+                                        top_sale_data.append(productInfo)       
                         top_sale_dataFinal=sorted(top_sale_data , key=lambda quantitySort : quantitySort['productQuantity'],reverse=True)
                         for i in range(len(sorted(top_sale_data , key=lambda quantitySort : quantitySort['productQuantity'],reverse=True))):            
                             models.Product_Analytics.objects.create(
@@ -5614,7 +5570,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage)         
                         models.Search_History.objects.create(
@@ -5627,8 +5584,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                         print("userID登入")
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
                         products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
-                        # productOveralls=models.Product_Rate.objects.filter(product_id__in=getProductID).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
-                        # print(productOveralls)
                         
                         for i in range(len(products)):   
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y')
@@ -5636,7 +5591,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                 for productPic in productPics:
         
                                     if products[i].id==productPic.product_id : 
-                                        # print(product.id)
                                         productSpecs=models.Product_Spec.objects.filter(product_id=products[i].id)
                                         productShopId=models.Shop.objects.get(id=products[i].shop_id)
                                         productLikes=models.Product_Liked.objects.filter(product_id=products[i].id).filter(user_id=user_id)
@@ -5684,14 +5638,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                                 productInfo.update({'productQuantity': productQuantity["sale_quantity"]})
                                             else:
                                                 productInfo.update({'productQuantity': 0})
-
-                                        # responseData['data'].append(productInfo)
                                         top_sale_data.append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )
 
                             elif products[i].product_spec_on=='n':   
                                 for productPic in productPics:  
@@ -5736,18 +5683,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                                 
                                                 productInfo.update({'productQuantity': 0})
 
-                                        top_sale_data.append(productInfo)
-
-                                        # responseData['data'].append(productInfo)
-
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )      
-                        # responseData['data']=sorted(responseData['data'], key=lambda ratingSort : ratingSort['productQuantity'],reverse=True)  
-                        # print(top_sale_data)  
-                        # print(len(sorted(top_sale_data , key=lambda quantitySort : quantitySort['productQuantity'],reverse=True)))          
+                                        top_sale_data.append(productInfo)    
                         top_sale_dataFinal=sorted(top_sale_data , key=lambda quantitySort : quantitySort['productQuantity'],reverse=True)
                         for i in range(len(sorted(top_sale_data , key=lambda quantitySort : quantitySort['productQuantity'],reverse=True))):            
                             models.Product_Analytics.objects.create(
@@ -5784,7 +5720,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage) 
                         models.Search_History.objects.create(
@@ -5824,15 +5761,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
                                             'like':product.like,
                                             'seen':product.seen,
                                             'sold_quantity':product.sold_quantity,
@@ -5843,10 +5771,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'shop_title':productShopId.shop_title,
                                             'liked':'N',
                                             'rating':0
-                                            # 'price' : productSpec.price
                                         }
-                                        #responseData['data'].append(productInfo)    
-                                        # responseData['data']['price'] = {}
                                         v = []
                                         price_range=[]
                                         quantity_range=[]
@@ -5869,10 +5794,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productInfo.update({'sum_quantity': sum(quantity_sum)}) 
                                         # responseData['data'].append(productInfo)
                                         lower_price_data.append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id
-                                        # )
+
 
                             elif product.product_spec_on=='n':   
                                 for productPic in productPics:
@@ -5887,15 +5809,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
                                             'like':product.like,
                                             'seen':product.seen,
                                             'sold_quantity':product.sold_quantity,
@@ -5917,13 +5830,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productInfo.update({'sum_quantity':product.quantity})
                                         # responseData['data'].append(productInfo) 
                                         lower_price_data.append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id
-                                        # )            
-                        # print(sorted(responseData['data'], key=lambda priceSort : priceSort['max_price'],reverse=True)) #,reverse=True
-                        # responseData['data']=sorted(responseData['data'], key=lambda priceSort : priceSort['max_price'])
-                        # responseData['ret_val'] = '已取得商品清單!'
+
                         lower_price_dataFinal=sorted(lower_price_data , key=lambda priceSort : priceSort['max_price'])
                         for i in range(len(sorted(lower_price_data , key=lambda priceSort : priceSort['max_price']))):            
                             models.Product_Analytics.objects.create(
@@ -5959,7 +5866,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage)         
                         models.Search_History.objects.create(
@@ -5998,17 +5906,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
                                             'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
@@ -6044,14 +5941,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                                 productInfo.update({'liked': 'N'})
                                         lower_price_data.append(productInfo) 
 
-                                        # responseData['data'].append(productInfo)
-
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )
-
                             elif product.product_spec_on=='n':   
                                 for productPic in productPics:  
                                     if product.id==productPic.product_id : 
@@ -6066,18 +5955,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6098,14 +5975,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             else:
                                                 productInfo.update({'liked': 'N'})
                                         lower_price_data.append(productInfo) 
-
-                                        # responseData['data'].append(productInfo)
-
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )      
 
                         lower_price_dataFinal=sorted(lower_price_data , key=lambda priceSort : priceSort['max_price'])
                         for i in range(len(sorted(lower_price_data , key=lambda priceSort : priceSort['max_price']))):            
@@ -6143,7 +6012,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage)
                         models.Search_History.objects.create(
@@ -6185,18 +6055,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6206,8 +6064,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'rating':0
                                             # 'price' : productSpec.price
                                         }
-                                        #responseData['data'].append(productInfo)    
-                                        # responseData['data']['price'] = {}
                                         v = []
                                         price_range=[]
                                         quantity_range=[]
@@ -6230,10 +6086,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productInfo.update({'sum_quantity': sum(quantity_sum)}) 
                                         # responseData['data'].append(productInfo)
                                         lower_price_data.append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id
-                                        # )
 
                             elif product.product_spec_on=='n':   
                                 for productPic in productPics:
@@ -6248,18 +6100,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6278,13 +6118,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         productInfo.update({'sum_quantity':product.quantity})
                                         # responseData['data'].append(productInfo) 
                                         lower_price_data.append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id
-                                        # )            
-                        # print(sorted(responseData['data'], key=lambda priceSort : priceSort['max_price'],reverse=True)) #,reverse=True
-                        # responseData['data']=sorted(responseData['data'], key=lambda priceSort : priceSort['max_price'])
-                        # responseData['ret_val'] = '已取得商品清單!'
+
                         lower_price_dataFinal=sorted(lower_price_data , key=lambda priceSort : priceSort['max_price'],reverse=True)
                         for i in range(len(sorted(lower_price_data , key=lambda priceSort : priceSort['max_price']))):            
                             models.Product_Analytics.objects.create(
@@ -6320,7 +6154,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage)         
                         models.Search_History.objects.create(
@@ -6358,18 +6193,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6404,15 +6227,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             else:
                                                 productInfo.update({'liked': 'N'})
                                         lower_price_data.append(productInfo) 
-
-                                        # responseData['data'].append(productInfo)
-
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )
-
                             elif product.product_spec_on=='n':   
                                 for productPic in productPics:  
                                     if product.id==productPic.product_id : 
@@ -6427,18 +6241,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6505,7 +6307,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage) 
                         models.Search_History.objects.create(
@@ -6529,8 +6332,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                         for shop in products:
                             getShopID.append(shop.id)
 
-                        # productOveralls=models.Product_Rate.objects.filter(product_id__in=getProductID).values('product_id').annotate(ratings=Avg('rating')).order_by('-rating')
-                        # from django.db.models import Avg
                         productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
                         for product in products:   
                             if product.product_spec_on=='y':
@@ -6547,18 +6348,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6599,11 +6388,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         # responseData['data'].append(productInfo)
                                         overall_data.append(productInfo) 
 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id
-                                        # )
-
                             elif product.product_spec_on=='n':   
                                 for productPic in productPics:
                                     # for productSpec in productSpecs:    
@@ -6618,18 +6402,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6652,12 +6424,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             else:
                                                 productInfo.update({'rating': 0})
                                         overall_data.append(productInfo)
-                                        # responseData['data'].append(productInfo) 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id
-                                        # )           
-                                        #  
+
                         overall_data_dataFinal=sorted(overall_data , key=lambda rateSort : rateSort['rating'],reverse=True)
                         for i in range(len(sorted(overall_data , key=lambda rateSort : rateSort['rating']))):            
                             models.Product_Analytics.objects.create(
@@ -6693,7 +6460,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage) 
                         models.Search_History.objects.create(
@@ -6731,18 +6499,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6787,12 +6543,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                         # responseData['data'].append(productInfo)
                                         overall_data.append(productInfo)
 
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )
-
                             elif product.product_spec_on=='n':   
                                 for productPic in productPics:  
                                     if product.id==productPic.product_id : 
@@ -6807,18 +6557,6 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'quantity': product.quantity, 
                                             'product_description': product.product_description, 
                                             'product_price': product.product_price, 
-                                            'shipping_fee': product.shipping_fee, 
-                                            'created_at': product.created_at, 
-                                            'updated_at': product.updated_at,
-                                            'weight':product.weight,
-                                            'longterm_stock_up':product.longterm_stock_up,
-                                            'new_secondhand':product.new_secondhand,
-                                            'length':product.length,
-                                            'width':product.width,
-                                            'height':product.height,
-                                            'like':product.like,
-                                            'seen':product.seen,
-                                            'sold_quantity':product.sold_quantity,
                                             'product_status':product.product_status,
                                             'pic_path':productPic.product_pic,
                                             'product_spec_on':product.product_spec_on,
@@ -6852,13 +6590,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                                 productInfo.update({'rating': 0})
 
                                         # responseData['data'].append(productInfo)
-                                        overall_data.append(productInfo)
-
-                                        # models.Product_Browsed.objects.create(
-                                        #     id=uuid.uuid4(),
-                                        #     product_id=product.id, 
-                                        #     user_id=user_id
-                                        # )      
+                                        overall_data.append(productInfo)     
                         overall_data_dataFinal=sorted(overall_data , key=lambda rateSort : rateSort['rating'],reverse=True)
                         for i in range(len(sorted(overall_data , key=lambda rateSort : rateSort['rating']))):            
                             models.Product_Analytics.objects.create(
@@ -6895,7 +6627,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                             responseData['data'].append(productFirstPage) 
                         models.Search_History.objects.create(
@@ -6925,7 +6658,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                         responseData['data'].append(productInfo)
                     responseData['ret_val'] = '取得商品分頁資訊'
@@ -6943,7 +6677,8 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'shop_title':productAnalytic.shop_title,
                                     'min_price':productAnalytic.min_price,
                                     'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked
+                                    'liked':productAnalytic.liked,
+                                    'category_desc' : categoryDesc
                                     }
                         responseData['data'].append(productInfo)
                     responseData['ret_val'] = '取得商品分頁資訊'
