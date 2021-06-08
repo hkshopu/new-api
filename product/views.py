@@ -6967,7 +6967,7 @@ def similar_product_list(request):
                                 productShopId=models.Shop.objects.get(id=product.shop_id)
                                 productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,                                    
                                     'product_description': product.product_description, 
@@ -7025,7 +7025,7 @@ def similar_product_list(request):
                                 productShopId=models.Shop.objects.get(id=product.shop_id)
                                 productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,    
                                     'product_price': product.product_price,  
@@ -7080,7 +7080,7 @@ def similar_product_list(request):
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,                                    
                                         'product_description': product.product_description, 
@@ -7138,7 +7138,7 @@ def similar_product_list(request):
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,    
                                         'product_price': product.product_price,  
@@ -7203,7 +7203,7 @@ def similar_product_list(request):
                                 productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
                                 productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,                                    
                                     'product_description': product.product_description, 
@@ -7263,7 +7263,7 @@ def similar_product_list(request):
                                 productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
                                 productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,                                    
                                     'product_description': product.product_description, 
@@ -7324,7 +7324,7 @@ def similar_product_list(request):
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,                                    
                                         'product_description': product.product_description, 
@@ -7382,7 +7382,7 @@ def similar_product_list(request):
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,    
                                         'product_price': product.product_price,  
