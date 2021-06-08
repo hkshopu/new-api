@@ -701,6 +701,7 @@ class Product_Rate(models.Model):
     user_id = models.PositiveIntegerField()
     product_id = models.PositiveIntegerField()
     rating = models.PositiveIntegerField()
+    comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
