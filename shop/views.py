@@ -1858,6 +1858,7 @@ def get_shop_analytics_in_pages(request):
             data_of_shops = []
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
+            current_max_seq = seq
             if max_seq == 0:
                 models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
@@ -1959,7 +1960,7 @@ def get_shop_analytics_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('seq')
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(current_max_seq + 1, current_max_seq + 12)).order_by('seq')
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
@@ -2011,6 +2012,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
             data_of_shops = []
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
+            current_max_seq = seq
             if max_seq == 0:
                 models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
@@ -2121,7 +2123,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(int(max_seq) + 1, int(max_seq) + 12)).order_by('seq')
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(current_max_seq + 1, current_max_seq + 12)).order_by('seq')
             for shop_analytic in shop_analytics:
                 response_data['data'].append({
                     'user_id': shop_analytic.user_id, 
