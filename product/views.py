@@ -7483,14 +7483,10 @@ def same_shop_product(request):
                                 shopFollowerCount=models.Shop_Follower.objects.filter(shop_id=productShopId.id).count()
                                 shopRatings=models.Shop_Rate.objects.filter(shop_id=productShopId.id).values('shop_id').annotate(rating=Avg('rating'))                              
                                 productInfo = {
-                                    'id': product.id,
-                                    'product_category_id': product.product_category_id, 
-                                    'product_title': product.product_title,                                    
-                                    'product_description': product.product_description, 
-                                    'product_price': product.product_price,                                     
-                                    'product_status':product.product_status,
-                                    'pic_path':productPic.product_pic,
-                                    'product_spec_on':product.product_spec_on,
+                                    'product_id': product.id,
+                                    'product_title': product.product_title,                                  
+                                    # 'product_price': product.product_price,                                  
+                                    'pic_path':productPic.product_pic,                                    
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
                                     'shop_icon':productShopId.shop_icon,
@@ -7499,7 +7495,6 @@ def same_shop_product(request):
                                     'follow_count':shopFollowerCount,
                                     'shop_rating':0,
                                     'followed':'N'
-                                    # 'price' : productSpec.price
                                 }
                                 #responseData['data'].append(productInfo)    
                                 # responseData['data']['price'] = {}
@@ -7520,9 +7515,9 @@ def same_shop_product(request):
                                 productInfo.update({'price':v})   
                                 productInfo.update({'min_price':min_price})   
                                 productInfo.update({'max_price':max_price})  
-                                productInfo.update({'min_quantity':min(quantity_range)}) 
-                                productInfo.update({'max_quantity':max(quantity_range)})
-                                productInfo.update({'sum_quantity': sum(quantity_sum)}) 
+                                # productInfo.update({'min_quantity':min(quantity_range)}) 
+                                # productInfo.update({'max_quantity':max(quantity_range)})
+                                # productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
                                 for productOverall in productOveralls:   
                                     if productOverall["product_id"]==product.id :
@@ -7558,14 +7553,10 @@ def same_shop_product(request):
                                 shopFollowerCount=models.Shop_Follower.objects.filter(shop_id=productShopId.id).count()
                                 shopRatings=models.Shop_Rate.objects.filter(shop_id=productShopId.id).values('shop_id').annotate(rating=Avg('rating'))
                                 productInfo = {
-                                    'id': product.id,
-                                    'product_category_id': product.product_category_id, 
-                                    'product_title': product.product_title,                                    
-                                    'product_description': product.product_description, 
-                                    'product_price': product.product_price,                                     
-                                    'product_status':product.product_status,
-                                    'pic_path':productPic.product_pic,
-                                    'product_spec_on':product.product_spec_on,
+                                    'product_id': product.id,
+                                    'product_title': product.product_title,                                  
+                                    # 'product_price': product.product_price,                                  
+                                    'pic_path':productPic.product_pic,                                    
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
                                     'shop_icon':productShopId.shop_icon,
@@ -7574,15 +7565,14 @@ def same_shop_product(request):
                                     'follow_count':shopFollowerCount,
                                     'shop_rating':0,
                                     'followed':'N'
-                                    # 'price' : productSpec.price
                                 }
                                 #responseData['data'].append(productInfo)    
                                 # responseData['data']['price'] = {}
                                 productInfo.update({'min_price':product.product_price}) 
                                 productInfo.update({'max_price':product.product_price}) 
-                                productInfo.update({'min_quantity':product.quantity}) 
-                                productInfo.update({'max_quantity':product.quantity})
-                                productInfo.update({'sum_quantity':product.quantity})
+                                # productInfo.update({'min_quantity':product.quantity}) 
+                                # productInfo.update({'max_quantity':product.quantity})
+                                # productInfo.update({'sum_quantity':product.quantity})
 
                                 for productOverall in productOveralls:   
                                     if productOverall["product_id"]==product.id :
