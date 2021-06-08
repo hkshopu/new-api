@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, response
 from django.template.loader import get_template
 from django.db.models import Q,Sum
 from hkshopu import models
@@ -7267,4 +7267,30 @@ def spec_test(request):
             # response_data['test'].append(product_spec_list)
             
 
+    return JsonResponse(response_data)
+# 取得單一商品評價詳細資料(買家)
+def get_product_rating_details_for_buyer(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                product = models.Product.objects.get(id=id)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商品!'
+
+        if response_data['status'] == 0:
+            product_ratings = models.Product_Rate.objects.filter(product_id=product.id).values('user_id', 'rating', 'comment')
+            for product_rating in product_ratings:
+                users = models.User.objects.filter(id=product_rating['user_id']).values('first_name')
+                response_data['data'].append({
+                    'user_name': users[0]['first_name'] if len(users) > 0 else '', 
+                    'rating': product_rating['rating'], 
+                    'comment': product_rating['comment']
+                })
+            response_data['ret_val'] = '取得單一商品評價詳細資料(買家)成功!'
     return JsonResponse(response_data)
