@@ -5161,6 +5161,7 @@ def product_analytics_pages_keyword(request,mode): #userid
             
             key_word=request.POST.get('key_word', '')
             category_id=request.POST.get('category_id','')
+            categoryDesc=''
             if category_id=='':
                 categoryId=''
             else:
@@ -5274,7 +5275,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).filter(product_category_id=categoryId).order_by('-created_at')#.filter(like__gt=0) 
+                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).filter(product_category_id__contains=categoryId).order_by('-created_at')#.filter(like__gt=0) 
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
 
                         for i in range(len(products)):   
