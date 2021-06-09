@@ -13,16 +13,14 @@
         #main-content {
             padding: 1rem;
             background-color: #D6F0EC;
-            position: relative;
         }
         a {
             text-decoration: none;
         }
         #navbar {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .logo-pic {
             margin-right: 0.25rem;
@@ -30,9 +28,9 @@
             height: 24px;
         }
         #navbar .title {
-            position: absolute;
+            /* position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-50%); */
             margin-left: 0.25rem;
             font-weight: 500;
             font-family: "Heebo";
@@ -193,7 +191,6 @@
             }
             .msg-pic {
                 display: flex;
-                align-items: flex-start;
             }
             .msg-pic-apple, .msg-pic-google-play {
                 margin: 0 24px;
