@@ -13,12 +13,15 @@
         #main-content {
             padding: 1rem;
             background-color: #D6F0EC;
+            position: relative;
         }
         a {
             text-decoration: none;
         }
         #navbar {
-            position: relative;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
             margin: 0 auto 35px auto;
         }
@@ -190,11 +193,12 @@
                 font-size: 20px;
             }
             .msg-pic {
-                display: flex;
-                align-items: center;
+                display: table;
             }
             .msg-pic-apple, .msg-pic-google-play {
                 margin: 0 24px;
+                display: table-cell;
+                vertical-align: middle;
             }
             .promotion-pic-small {
                 display: none;
@@ -254,7 +258,7 @@
                 </p>
                 <div class="msg-pic">
                     <div class="msg-pic-apple">
-                        <a href="https://apps.apple.com/tw/app/%E5%BA%97%E5%8C%AF/id1565793162/" target="_blank">
+                        <a href="https://apps.apple.com/hk/app/店匯/id1565793162/" target="_blank">
                             <img src="{% static 'images/2000px-Download_on_the_App_Store_Badge.svg.png' %}" alt="Download on the App Store">
                         </a>
                     </div>
