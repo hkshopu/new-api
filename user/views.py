@@ -18,6 +18,11 @@ def register(request):
     template = get_template('register.html')
     html = template.render()
     return HttpResponse(html)
+# 測試邀請電子郵件頁面
+def page_of_invitation_email(request):
+    template = get_template('invitation_testing_mail.html')
+    html = template.render()
+    return HttpResponse(html)
 # 檢查電子郵件是否已存在
 def checkEmailExistsProcess(request):
     response_data = {
