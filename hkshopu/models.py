@@ -682,7 +682,7 @@ class Email_Validation(models.Model):
 
 class Audit_Log(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    user_id = models.IntegerField()
+    user_id = models.CharField(max_length=11)
     action = models.CharField(max_length=100)
     parameter_in = models.TextField()
     parameter_out = models.TextField()
