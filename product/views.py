@@ -7633,3 +7633,33 @@ def get_product_rating_details_for_buyer(request, id):
                 })
             response_data['ret_val'] = '取得單一商品評價詳細資料(買家)成功!'
     return JsonResponse(response_data)
+# 取得產品規格
+def get_specification_of_product(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                product = models.Product.objects.get(id=id)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此產品!'
+
+        if response_data['status'] == 0:
+            specifications = models.Product_Spec.objects.filter(product_id=product.id)
+            for specification in specifications:
+                response_data['data'].append({
+                    'id': specification.id, 
+                    'product_id': specification.product_id, 
+                    'spec_desc_1': specification.spec_desc_1, 
+                    'spec_desc_2': specification.spec_desc_2, 
+                    'spec_dec_1_items': specification.spec_dec_1_items, 
+                    'spec_dec_2_items': specification.spec_dec_2_items, 
+                    'price': specification.price, 
+                    'quantity': specification.quantity
+                })
+            response_data['ret_val'] = '取得產品規格成功!'
+    return JsonResponse(response_data)
