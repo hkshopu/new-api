@@ -5953,6 +5953,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -6001,6 +6002,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
