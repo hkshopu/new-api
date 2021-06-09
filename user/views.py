@@ -754,6 +754,8 @@ def topProductDetail(request, user_id='', product_id=''):
             tempData['selling_count'] = 0 if selling_count is None else selling_count
             liked_count = models.Product_Liked.objects.filter(product_id=product_id).aggregate(liked_count=Count('user_id'))['liked_count']
             tempData['liked_count'] = 0 if liked_count is None else liked_count
+            tempData['product_spec_on'] = product.product_spec_on
+            tempData['longterm_stock_up'] = product.longterm_stock_up
             responseData['data'].append(tempData)
 
             models.Product_Clicked.objects.create(
