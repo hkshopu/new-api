@@ -718,10 +718,12 @@ class Product_Spec(models.Model):
     product_id = models.PositiveIntegerField()
     spec_desc_1 = models.CharField(max_length=255)
     spec_desc_2 = models.CharField(max_length=255)
-    spec_dec_1_items= models.CharField(max_length=255)
-    spec_dec_2_items= models.CharField(max_length=255)
-    price=models.PositiveIntegerField()
-    quantity= models.PositiveIntegerField()
+    spec_dec_1_items = models.CharField(max_length=255)
+    spec_dec_2_items = models.CharField(max_length=255)
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Shipment_Method(models.Model):
     product_id = models.PositiveIntegerField()
