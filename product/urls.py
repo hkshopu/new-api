@@ -21,5 +21,6 @@ urlpatterns = [
     path('<mode>/product_analytics_pages_keyword/', views.product_analytics_pages_keyword),
     path('similar_product_list/', views.similar_product_list),
     path('same_shop_product/', views.same_shop_product),
-    path('<id>/get_product_rating_details_for_buyer/', views.get_product_rating_details_for_buyer)
+    path('<id>/get_product_rating_details_for_buyer/', views.get_product_rating_details_for_buyer), 
+    path('<id>/get_specification_of_product/', views.get_specification_of_product)
 ]
