@@ -682,7 +682,7 @@ class Email_Validation(models.Model):
 
 class Audit_Log(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    user_id = models.IntegerField()
+    user_id = models.CharField(max_length=11)
     action = models.CharField(max_length=100)
     parameter_in = models.TextField()
     parameter_out = models.TextField()
@@ -792,6 +792,7 @@ class Product_Analytics(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 class Search_History(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     search_category = models.CharField(max_length=25)
@@ -799,3 +800,12 @@ class Search_History(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+class Shopping_Cart(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id =  models.CharField(max_length=36)
+    product_id =  models.CharField(max_length=36)
+    product_spec_id =  models.CharField(max_length=36)
+    product_shipment_id =  models.CharField(max_length=36)
+    quantity =  models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
