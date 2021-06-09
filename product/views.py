@@ -5192,7 +5192,7 @@ def product_analytics_pages_keyword(request,mode): #userid
 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).order_by('-created_at') 
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word).order_by('-created_at') 
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId)).order_by('-created_at')
                         for i in range(len(products)):
@@ -5299,7 +5299,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).order_by('-created_at') 
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word).order_by('-created_at') 
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId)).order_by('-created_at')
                         
@@ -5461,7 +5461,7 @@ def product_analytics_pages_keyword(request,mode): #userid
 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
 
@@ -5616,7 +5616,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         
@@ -5772,7 +5772,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
@@ -5919,7 +5919,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
@@ -6074,7 +6074,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
@@ -6214,7 +6214,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         # shop=models.Shop.objects.get(id=id)
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
@@ -6374,7 +6374,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         
@@ -6528,7 +6528,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
                         if key_word !='':
                             print("keyword")
-                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
                         else: 
                             products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
