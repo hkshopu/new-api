@@ -5151,9 +5151,9 @@ def product_analytics_pages_keyword(request,mode): #userid
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'data': []
+        'data': {'categoryDesc':'','productsList':[]}
     }
-    
+    # productsList=[]
     if request.method == 'POST':
         if responseData['status'] == 0:
             user_id=request.POST.get('user_id','')
@@ -5161,21 +5161,40 @@ def product_analytics_pages_keyword(request,mode): #userid
             
             key_word=request.POST.get('key_word', '')
             category_id=request.POST.get('category_id','')
-            if category_id=='':
-                categoryId=''
-            else:
+            sub_category_id=request.POST.get('sub_category_id','')
+            # print(key_word)
+            categoryDesc=''
+            if category_id=='' and sub_category_id=='' :
+                categoryId=0
+                subCategoryId=0
+                categoryDesc=''
+                
+            elif sub_category_id=='' :
+                subCategoryId=0
                 categoryId=category_id
                 category_desc=models.Product_Category.objects.get(id=category_id)
                 categoryDesc=category_desc.c_product_category
-            # print(key_word)
+                key_word=''
+            elif category_id=='': 
+                categoryId=0
+                subCategoryId=sub_category_id
+                category_sub_desc=models.Product_Sub_Category.objects.get(id=sub_category_id)
+                categoryDesc=category_sub_desc.c_product_sub_category
+                key_word=''
+
+            responseData['data'].update({'categoryDesc':categoryDesc})
             if int(max_seq)==0:                 
                 if mode=="new":
                     print("new")
                     if user_id=='' or user_id is None or user_id=="":
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).filter(product_category_id__contains=categoryId).order_by('-created_at') 
 
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word).order_by('-created_at') 
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId)).order_by('-created_at')
                         for i in range(len(products)):
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y')      
                             if products[i].product_spec_on=='y':
@@ -5255,7 +5274,9 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage)
+                            # responseData['data'].update(productFirstPage)
+                            # productsList.append(productFirstPage)
+                            responseData['data']["productsList"].append(productFirstPage)
                         if categoryDesc=='':
                             models.Search_History.objects.create(
                                                 id=uuid.uuid4(),
@@ -5274,9 +5295,14 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word).filter(product_category_id=categoryId).order_by('-created_at')#.filter(like__gt=0) 
+                        
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word).order_by('-created_at') 
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId)).order_by('-created_at')
+                        
                         for i in range(len(products)):   
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y') 
                             if products[i].product_spec_on=='y':
@@ -5412,7 +5438,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage)
+                            responseData['data']["productsList"].append(productFirstPage)
                         if categoryDesc=='':
                             models.Search_History.objects.create(
                                                 id=uuid.uuid4(),
@@ -5431,9 +5457,14 @@ def product_analytics_pages_keyword(request,mode): #userid
                     if user_id=='' or user_id is None or user_id=="":
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
+                        # models.Product_Analytics.objects.filter(user_id=user_id).delete() 
 
-                        
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
+
                         for i in range(len(products)):  
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y')     
                             if products[i].product_spec_on=='y':
@@ -5573,7 +5604,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage)         
+                            responseData['data']["productsList"].append(productFirstPage)       
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -5583,7 +5614,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         
                         for i in range(len(products)):   
                             productPics=models.Selected_Product_Pic.objects.filter(product_id=products[i].id).filter(cover='y')
@@ -5723,7 +5758,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage) 
+                            responseData['data']["productsList"].append(productFirstPage) 
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -5735,9 +5770,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                     if user_id=='' or user_id is None or user_id=="":
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-
-
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -5869,7 +5906,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage)         
+                            responseData['data']["productsList"].append(productFirstPage)       
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -5880,7 +5917,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -5912,6 +5953,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -5960,6 +6002,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                             'product_spec_on':product.product_spec_on,
                                             'shop_id':productShopId.id,
                                             'shop_title':productShopId.shop_title,
+                                            'liked':'N',
                                             'rating':0
                                         }
 
@@ -6015,7 +6058,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage)
+                            responseData['data']["productsList"].append(productFirstPage)
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -6029,9 +6072,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                     if user_id=='' or user_id is None or user_id=="":
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        # products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
-
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.order_by('-price')[:12]#.filter(like__gt=0) 
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6157,7 +6202,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage)         
+                            responseData['data']["productsList"].append(productFirstPage)         
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -6167,7 +6212,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         print("userID登入")
                         # shop=models.Shop.objects.get(id=id)
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word) 
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6310,7 +6359,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage) 
+                            responseData['data']["productsList"].append(productFirstPage)
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -6323,7 +6372,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                         # shop=models.Shop.objects.get(id=id)
                         user_tempID=uuid.uuid4()
                         models.Product_Analytics.objects.filter(user_id=user_tempID).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.filter(like__gt=0) 
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         
                         getProductID=[]
                         getShopID=[]
@@ -6463,7 +6516,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage) 
+                            responseData['data']["productsList"].append(productFirstPage) 
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -6473,7 +6526,11 @@ def product_analytics_pages_keyword(request,mode): #userid
                     else:
                         
                         models.Product_Analytics.objects.filter(user_id=user_id).delete() 
-                        products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_category_id__contains=categoryId).filter(product_title__contains=key_word)#.filter(like__gt=0) 
+                        if key_word !='':
+                            print("keyword")
+                            products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__icontains=key_word)
+                        else: 
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6630,7 +6687,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                                     'liked':productAnalytic.liked,
                                     'category_desc' : categoryDesc
                                     }
-                            responseData['data'].append(productFirstPage) 
+                            responseData['data']["productsList"].append(productFirstPage)
                         models.Search_History.objects.create(
                                             id=uuid.uuid4(),
                                             search_category='product',
@@ -6644,44 +6701,25 @@ def product_analytics_pages_keyword(request,mode): #userid
                 pageSize=12
                 pageStart=int(max_seq)*pageSize
                 pageEnd=pageStart+pageSize-1
-                if user_id=='' or user_id is None or user_id=="":
-                    productAnalytics=models.Product_Analytics.objects.filter(user_id__isnull=True).filter(seq__gte=pageStart).filter(seq__lte=pageEnd).order_by('seq')
-                    for productAnalytic in productAnalytics:
-                        productInfo = {
-                                    'id': productAnalytic.id,
-                                    'product_id': productAnalytic.product_id,
-                                    'user_id': productAnalytic.user_id,
-                                    'page_id' : int(max_seq)+1, 
-                                    'seq':productAnalytic.seq,
-                                    'pic_path':productAnalytic.pic_path,
-                                    'product_title':productAnalytic.product_title,
-                                    'shop_title':productAnalytic.shop_title,
-                                    'min_price':productAnalytic.min_price,
-                                    'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked,
-                                    'category_desc' : categoryDesc
-                                    }
-                        responseData['data'].append(productInfo)
-                    responseData['ret_val'] = '取得商品分頁資訊'
-                else : #login
-                    productAnalytics=models.Product_Analytics.objects.filter(user_id=user_id).filter(seq__range=(pageStart,pageEnd)).order_by('seq')
-                    for productAnalytic in productAnalytics:
-                        productInfo = {
-                                    'id': productAnalytic.id,
-                                    'user_id': productAnalytic.user_id,
-                                    'page_id' : int(max_seq)+1,
-                                    'product_id': productAnalytic.product_id, 
-                                    'seq':productAnalytic.seq,
-                                    'pic_path':productAnalytic.pic_path,
-                                    'product_title':productAnalytic.product_title,
-                                    'shop_title':productAnalytic.shop_title,
-                                    'min_price':productAnalytic.min_price,
-                                    'max_price':productAnalytic.max_price,
-                                    'liked':productAnalytic.liked,
-                                    'category_desc' : categoryDesc
-                                    }
-                        responseData['data'].append(productInfo)
-                    responseData['ret_val'] = '取得商品分頁資訊'
+                productAnalytics=models.Product_Analytics.objects.filter(user_id=user_id).filter(seq__range=(pageStart,pageEnd)).order_by('seq')
+                for productAnalytic in productAnalytics:
+                    productInfo = {
+                                'id': productAnalytic.id,
+                                'user_id': productAnalytic.user_id,
+                                'page_id' : int(max_seq)+1,
+                                'product_id': productAnalytic.product_id, 
+                                'seq':productAnalytic.seq,
+                                'pic_path':productAnalytic.pic_path,
+                                'product_title':productAnalytic.product_title,
+                                'shop_title':productAnalytic.shop_title,
+                                'min_price':productAnalytic.min_price,
+                                'max_price':productAnalytic.max_price,
+                                'liked':productAnalytic.liked,
+                                'category_desc' : categoryDesc
+                                }
+                    responseData['data']["productsList"].append(productInfo)
+                    # responseData['data'].append(productInfo)
+                responseData['ret_val'] = '取得商品分頁資訊'
 
     return JsonResponse(responseData)
 #取得類似推薦商品
