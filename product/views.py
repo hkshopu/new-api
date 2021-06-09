@@ -7676,7 +7676,7 @@ def get_specification_of_product(request, id):
     response_data = {
         'status': 0, 
         'ret_val': '', 
-        'data': []
+        'data': {}
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
@@ -7688,16 +7688,20 @@ def get_specification_of_product(request, id):
 
         if response_data['status'] == 0:
             specifications = models.Product_Spec.objects.filter(product_id=product.id)
+            response_data['data']['id'] = []
+            response_data['data']['spec_desc_1'] = []
+            response_data['data']['spec_desc_2'] = []
+            response_data['data']['spec_dec_1_items'] = []
+            response_data['data']['spec_dec_2_items'] = []
+            response_data['data']['price'] = []
+            response_data['data']['quantity'] = []
             for specification in specifications:
-                response_data['data'].append({
-                    'id': specification.id, 
-                    'product_id': specification.product_id, 
-                    'spec_desc_1': specification.spec_desc_1, 
-                    'spec_desc_2': specification.spec_desc_2, 
-                    'spec_dec_1_items': specification.spec_dec_1_items, 
-                    'spec_dec_2_items': specification.spec_dec_2_items, 
-                    'price': specification.price, 
-                    'quantity': specification.quantity
-                })
+                response_data['data']['id'].append(specification.id)
+                response_data['data']['spec_desc_1'].append(specification.spec_desc_1)
+                response_data['data']['spec_desc_2'].append(specification.spec_desc_2)
+                response_data['data']['spec_dec_1_items'].append(specification.spec_dec_1_items)
+                response_data['data']['spec_dec_2_items'].append(specification.spec_dec_2_items)
+                response_data['data']['price'].append(specification.price)
+                response_data['data']['quantity'].append(specification.quantity)
             response_data['ret_val'] = '取得產品規格成功!'
     return JsonResponse(response_data)
