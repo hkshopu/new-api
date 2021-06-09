@@ -6214,7 +6214,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                             print("keyword")
                             products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
                         else: 
-                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_title__contains=key_word) | Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter( Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
@@ -6528,7 +6528,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                             print("keyword")
                             products = models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(product_title__contains=key_word)
                         else: 
-                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_title__contains=key_word) | Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
+                            products= models.Product.objects.filter(product_status='active').filter(is_delete='N').filter(Q(product_sub_category_id=subCategoryId) | Q(product_category_id=categoryId))
                         getProductID=[]
                         getShopID=[]
                         for product in products:
