@@ -790,6 +790,7 @@ class Product_Analytics(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 class Search_History(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     search_category = models.CharField(max_length=25)
@@ -797,3 +798,12 @@ class Search_History(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+class Shopping_Cart(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id =  models.CharField(max_length=36)
+    product_id =  models.CharField(max_length=36)
+    product_spec_id =  models.CharField(max_length=36)
+    product_shipment_id =  models.CharField(max_length=36)
+    quantity =  models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
