@@ -18,5 +18,8 @@ urlpatterns = [
     path('like_product/', views.like_product),
     path('<shop_id>/<mode>/shop_product_analytics/', views.shop_product_analytics),
     path('<mode>/product_analytics_pages/', views.product_analytics_pages),
-    path('<mode>/product_analytics_pages_keyword/', views.product_analytics_pages_keyword)
+    path('<mode>/product_analytics_pages_keyword/', views.product_analytics_pages_keyword),
+    path('similar_product_list/', views.similar_product_list),
+    path('same_shop_product/', views.same_shop_product),
+    path('<id>/get_product_rating_details_for_buyer/', views.get_product_rating_details_for_buyer)
 ]
