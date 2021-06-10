@@ -7586,6 +7586,7 @@ def like_product(request):
         #------------
     return JsonResponse(response_data)
 
+#加入購物車
 def add_shopping_cart(request):
     # 回傳資料
     response_data = {
@@ -7598,6 +7599,11 @@ def add_shopping_cart(request):
         product_id= request.POST.get('product_id', '')
         product_spec_id = request.POST.get('product_spec_id', '')
         quantity=request.POST.get('quantity', '')
+
+        if quantity=='':
+            quantity=1
+        else : 
+            quantity=quantity
 
         if response_data['status']==0:
             models.Shopping_Cart.objects.create(
