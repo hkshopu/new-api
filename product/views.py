@@ -7397,7 +7397,7 @@ def same_shop_product(request):
                                 shopFollowerCount=models.Shop_Follower.objects.filter(shop_id=productShopId.id).count()
                                 shopRatings=models.Shop_Rate.objects.filter(shop_id=productShopId.id).values('shop_id').annotate(rating=Avg('rating'))
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,                                    
                                     'product_description': product.product_description, 
@@ -7474,7 +7474,7 @@ def same_shop_product(request):
                                 shopFollowerCount=models.Shop_Follower.objects.filter(shop_id=productShopId.id).count()
                                 shopRatings=models.Shop_Rate.objects.filter(shop_id=productShopId.id).values('shop_id').annotate(rating=Avg('rating'))
                                 productInfo = {
-                                    'id': product.id,
+                                    'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
                                     'product_title': product.product_title,                                    
                                     'product_description': product.product_description, 
