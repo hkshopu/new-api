@@ -6769,7 +6769,7 @@ def similar_product_list(request):
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
-                                    'liked':'N',
+                                    # 'liked':'N',
                                     'rating':0
                                     # 'price' : productSpec.price
                                 }
@@ -6826,7 +6826,7 @@ def similar_product_list(request):
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
-                                    'liked':'N',
+                                    # 'liked':'N',
                                     'rating':0
                                     # 'price' : productSpec.price
                                 }
@@ -6882,7 +6882,7 @@ def similar_product_list(request):
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N',
+                                        # 'liked':'N',
                                         'rating':0
                                         # 'price' : productSpec.price
                                     }
@@ -6939,7 +6939,7 @@ def similar_product_list(request):
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N',
+                                        # 'liked':'N',
                                         'rating':0
                                         # 'price' : productSpec.price
                                     }
@@ -7005,7 +7005,7 @@ def similar_product_list(request):
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
-                                    'liked':'N',
+                                    # 'liked':'N',
                                     'rating':0
                                 }
 
@@ -7028,11 +7028,11 @@ def similar_product_list(request):
                                 productInfo.update({'max_quantity':max(quantity_range)})
                                 productInfo.update({'sum_quantity': sum(quantity_sum)}) 
 
-                                for productLike in productLikes:
-                                    if productLike.product_id==product.id :
-                                        productInfo.update({'liked': 'Y'})
-                                    else:
-                                        productInfo.update({'liked': 'N'})
+                                # for productLike in productLikes:
+                                #     if productLike.product_id==product.id :
+                                #         productInfo.update({'liked': 'Y'})
+                                #     else:
+                                #         productInfo.update({'liked': 'N'})
 
                                 for productOverall in productOveralls:   
                                     if productOverall["product_id"]==product.id :
@@ -7065,7 +7065,7 @@ def similar_product_list(request):
                                     'product_spec_on':product.product_spec_on,
                                     'shop_id':productShopId.id,
                                     'shop_title':productShopId.shop_title,
-                                    'liked':'N',
+                                    # 'liked':'N',
                                     'rating':0
                                 }
 
@@ -7075,11 +7075,11 @@ def similar_product_list(request):
                                 productInfo.update({'max_quantity':product.quantity})
                                 productInfo.update({'sum_quantity':product.quantity})
                                 
-                                for productLike in productLikes:
-                                    if productLike.product_id==product.id :
-                                        productInfo.update({'liked': 'Y'})
-                                    else:
-                                        productInfo.update({'liked': 'N'})
+                                # for productLike in productLikes:
+                                #     if productLike.product_id==product.id :
+                                #         productInfo.update({'liked': 'Y'})
+                                #     else:
+                                #         productInfo.update({'liked': 'N'})
                                 
                                 for productOverall in productOveralls:   
                                     if productOverall["product_id"]==product.id :
@@ -7126,7 +7126,7 @@ def similar_product_list(request):
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N',
+                                        # 'liked':'N',
                                         'rating':0
                                         # 'price' : productSpec.price
                                     }
@@ -7183,7 +7183,7 @@ def similar_product_list(request):
                                         'product_spec_on':product.product_spec_on,
                                         'shop_id':productShopId.id,
                                         'shop_title':productShopId.shop_title,
-                                        'liked':'N',
+                                        # 'liked':'N',
                                         'rating':0
                                         # 'price' : productSpec.price
                                     }
