@@ -7689,19 +7689,32 @@ def get_specification_of_product(request, id):
         if response_data['status'] == 0:
             specifications = models.Product_Spec.objects.filter(product_id=product.id)
             response_data['data']['id'] = []
-            response_data['data']['spec_desc_1'] = []
-            response_data['data']['spec_desc_2'] = []
-            response_data['data']['spec_dec_1_items'] = []
-            response_data['data']['spec_dec_2_items'] = []
+            response_data['data']['spec_desc_1'] = specifications[0].spec_desc_1 if len(specifications) > 0 else ''
+            response_data['data']['spec_desc_2'] = specifications[0].spec_desc_2 if len(specifications) > 0 else ''
             response_data['data']['price'] = []
             response_data['data']['quantity'] = []
+            used_spec_dec_1_items, used_spec_dec_2_items = [], []
             for specification in specifications:
-                response_data['data']['id'].append(specification.id)
-                response_data['data']['spec_desc_1'].append(specification.spec_desc_1)
-                response_data['data']['spec_desc_2'].append(specification.spec_desc_2)
-                response_data['data']['spec_dec_1_items'].append(specification.spec_dec_1_items)
-                response_data['data']['spec_dec_2_items'].append(specification.spec_dec_2_items)
-                response_data['data']['price'].append(specification.price)
-                response_data['data']['quantity'].append(specification.quantity)
+                if specification.spec_dec_1_items not in used_spec_dec_1_items:
+                    used_spec_dec_1_items.append(specification.spec_dec_1_items)
+                if specification.spec_dec_2_items not in used_spec_dec_2_items:
+                    used_spec_dec_2_items.append(specification.spec_dec_2_items)
+            response_data['data']['spec_dec_1_items'] = used_spec_dec_1_items
+            response_data['data']['spec_dec_2_items'] = used_spec_dec_2_items
+            while len(used_spec_dec_1_items) != len(used_spec_dec_2_items):
+                if len(used_spec_dec_1_items) < len(used_spec_dec_2_items):
+                    used_spec_dec_1_items.append(used_spec_dec_1_items[0])
+                else:
+                    used_spec_dec_2_items.append(used_spec_dec_2_items[0])
+            for i in range(len(used_spec_dec_1_items)):
+                specific_data_of_id, specific_data_of_price, specific_data_of_quantity = [], [], []
+                specific_data_of_specifications = models.Product_Spec.objects.filter(product_id=product.id, spec_dec_1_items=used_spec_dec_1_items[i], spec_dec_2_items=used_spec_dec_2_items[i]).values('id', 'price', 'quantity')
+                for specific_data_of_specification in specific_data_of_specifications:
+                    specific_data_of_id.append(specific_data_of_specification['id'])
+                    specific_data_of_price.append(specific_data_of_specification['price'])
+                    specific_data_of_quantity.append(specific_data_of_specification['quantity'])
+                response_data['data']['id'].append(specific_data_of_id)
+                response_data['data']['price'].append(specific_data_of_price)
+                response_data['data']['quantity'].append(specific_data_of_quantity)
             response_data['ret_val'] = '取得產品規格成功!'
     return JsonResponse(response_data)
