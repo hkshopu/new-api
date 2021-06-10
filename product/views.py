@@ -7738,7 +7738,7 @@ def get_specification_of_product(request, id):
             response_data['data']['spec_dec_2_items'] = used_spec_dec_2_items
             for i in range(len(spec_dec_1_items)):
                 specific_data_of_id, specific_data_of_price, specific_data_of_quantity = [], [], []
-                specific_data_of_specifications = models.Product_Spec.objects.filter(product_id=product.id, spec_dec_1_items=spec_dec_1_items[i], spec_dec_2_items=spec_dec_2_items[i]).values('id', 'price', 'quantity')
+                specific_data_of_specifications = models.Product_Spec.objects.filter(product_id=product.id, spec_dec_1_items=spec_dec_1_items[i]).values('id', 'price', 'quantity')
                 for specific_data_of_specification in specific_data_of_specifications:
                     specific_data_of_id.append(specific_data_of_specification['id'])
                     specific_data_of_price.append(specific_data_of_specification['price'])
