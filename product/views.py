@@ -7733,11 +7733,6 @@ def get_specification_of_product(request, id):
                     used_spec_dec_2_items.append(specification.spec_dec_2_items)
             response_data['data']['spec_dec_1_items'] = used_spec_dec_1_items
             response_data['data']['spec_dec_2_items'] = used_spec_dec_2_items
-            while len(used_spec_dec_1_items) != len(used_spec_dec_2_items):
-                if len(used_spec_dec_1_items) < len(used_spec_dec_2_items):
-                    used_spec_dec_1_items.append(used_spec_dec_1_items[0])
-                else:
-                    used_spec_dec_2_items.append(used_spec_dec_2_items[0])
             for i in range(len(used_spec_dec_1_items)):
                 specific_data_of_id, specific_data_of_price, specific_data_of_quantity = [], [], []
                 specific_data_of_specifications = models.Product_Spec.objects.filter(product_id=product.id, spec_dec_1_items=used_spec_dec_1_items[i]).values('id', 'price', 'quantity')
