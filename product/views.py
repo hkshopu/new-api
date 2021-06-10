@@ -7585,6 +7585,38 @@ def like_product(request):
           
         #------------
     return JsonResponse(response_data)
+
+def add_shopping_cart(request):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method=='POST':
+        user_id= request.POST.get('user_id', '')
+        product_id= request.POST.get('product_id', '')
+        product_spec_id = request.POST.get('product_spec_id', '')
+        quantity=request.POST.get('quantity', '')
+
+        if response_data['status']==0:
+            models.Shopping_Cart.objects.create(
+                    id=uuid.uuid4(),
+                    user_id=user_id,
+                    product_id=product_id,
+                    product_spec_id=product_spec_id,
+                    quantity=quantity
+            )
+            cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
+            if(len(cart_check))==0:
+                response_data['ret_val'] = '購物車新增失敗!'
+            else:
+                response_data['ret_val'] = '購物車新增成功!'
+    return JsonResponse(response_data)
+
+#購物車清單
+def shopping_cart_item(request,user_id): #user_id
+    pass
 #=================
 
 def spec_test(request):
