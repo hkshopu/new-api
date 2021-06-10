@@ -7725,22 +7725,20 @@ def get_specification_of_product(request, id):
             response_data['data']['spec_desc_2'] = specifications[0].spec_desc_2 if len(specifications) > 0 else ''
             response_data['data']['price'] = []
             response_data['data']['quantity'] = []
+            spec_dec_1_items, spec_dec_2_items = [], []
             used_spec_dec_1_items, used_spec_dec_2_items = [], []
             for specification in specifications:
+                spec_dec_1_items.append(specification.spec_dec_1_items)
+                spec_dec_2_items.append(specification.spec_dec_2_items)
                 if specification.spec_dec_1_items not in used_spec_dec_1_items:
                     used_spec_dec_1_items.append(specification.spec_dec_1_items)
                 if specification.spec_dec_2_items not in used_spec_dec_2_items:
                     used_spec_dec_2_items.append(specification.spec_dec_2_items)
             response_data['data']['spec_dec_1_items'] = used_spec_dec_1_items
             response_data['data']['spec_dec_2_items'] = used_spec_dec_2_items
-            while len(used_spec_dec_1_items) != len(used_spec_dec_2_items):
-                if len(used_spec_dec_1_items) < len(used_spec_dec_2_items):
-                    used_spec_dec_1_items.append(used_spec_dec_1_items[0])
-                else:
-                    used_spec_dec_2_items.append(used_spec_dec_2_items[0])
-            for i in range(len(used_spec_dec_1_items)):
+            for i in range(len(spec_dec_1_items)):
                 specific_data_of_id, specific_data_of_price, specific_data_of_quantity = [], [], []
-                specific_data_of_specifications = models.Product_Spec.objects.filter(product_id=product.id, spec_dec_1_items=used_spec_dec_1_items[i], spec_dec_2_items=used_spec_dec_2_items[i]).values('id', 'price', 'quantity')
+                specific_data_of_specifications = models.Product_Spec.objects.filter(product_id=product.id, spec_dec_1_items=spec_dec_1_items[i], spec_dec_2_items=spec_dec_2_items[i]).values('id', 'price', 'quantity')
                 for specific_data_of_specification in specific_data_of_specifications:
                     specific_data_of_id.append(specific_data_of_specification['id'])
                     specific_data_of_price.append(specific_data_of_specification['price'])
