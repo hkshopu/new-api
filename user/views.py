@@ -752,9 +752,12 @@ def topProductDetail(request, user_id='', product_id=''):
             tempData['category'] = models.Product_Category.objects.get(id=product.product_category_id).c_product_category + '>' + models.Product_Sub_Category.objects.get(id=product.product_sub_category_id).c_product_sub_category
             rating = models.Product_Rate.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating__avg']
             tempData['average_rating'] = 0 if rating is None else rating
-            min_max_num = models.Product_Spec.objects.filter(product_id=product_id).aggregate(min_price=Min('price'), max_price=Max('price'), min_quantity=Min('quantity'), max_quantity=Max('quantity'))
-            for k in min_max_num:
-                tempData[k] = 0 if min_max_num[k] is None else min_max_num[k]
+            min_max_spec = models.Product_Spec.objects.filter(product_id=product_id).aggregate(min_price=Min('price'), max_price=Max('price'), min_quantity=Min('quantity'), max_quantity=Max('quantity'))
+            for k in min_max_spec:
+                tempData[k] = min_max_spec[k] if min_max_spec[k] is not None else product.product_price if 'price' in k else product.quantity
+            min_max_shipment = models.Product_Shipment_Method.objects.filter(product_id=product_id, onoff='on').aggregate(min_shipment=Min('price'), max_shipment=Max('price'))
+            for k in min_max_shipment:
+                tempData[k] = min_max_shipment[k]
             selling_count = models.Shop_Order_Details.objects.filter(product_id=product_id).aggregate(selling_count=Sum('purchasing_qty'))['selling_count']
             tempData['selling_count'] = 0 if selling_count is None else selling_count
             liked_count = models.Product_Liked.objects.filter(product_id=product_id).aggregate(liked_count=Count('user_id'))['liked_count']
