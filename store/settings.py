@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'a$c1&43w!jc0y##2x^)gldtz(l^gg+fpos#%%ev*$&c)lb995k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'store',
         'USER': 'root',
         'PASSWORD': '1@3$qWeR',
-        'HOST': '/cloudsql/hkshopu:asia-east2:hkshopu',
+        'HOST': 'peppy-booth-311912:asia-east2:hkshopu',
         'PORT': '3306',
         'OPTIONS': {
                     'charset': 'utf8mb4',
