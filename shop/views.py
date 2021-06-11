@@ -1882,7 +1882,7 @@ def get_shop_analytics_in_pages(request):
                 rating_of_products = []
                 data_of_products = []
                 products_of_highest_ratings = []
-                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N').values('id')
+                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N', product_status='active').values('id')
                 for product in products:
                     sum_of_product_ratings = 0
                     average_of_product_ratings = 0
@@ -1985,14 +1985,15 @@ def get_shop_analytics_with_keyword_in_pages(request):
     response_data = {
         'status': 0, 
         'ret_val': '', 
-        'data': []
+        'data': {}
     }
     if request.method == 'POST':
-        # 欄位資料
+        # 欄位資料(keyword 與 product_category_id 擇一出現)
         user_id = request.POST.get('user_id', 0)
         mode = request.POST.get('mode', '')
         max_seq = request.POST.get('max_seq', 0)
         keyword = request.POST.get('keyword', '')
+        product_category_id = request.POST.get('product_category_id', 0)
 
         if response_data['status'] == 0:
             if user_id:
@@ -2003,17 +2004,40 @@ def get_shop_analytics_with_keyword_in_pages(request):
             else:
                 user_id_for_shop_analytics = uuid.uuid4()
 
+        if not(keyword) and not(product_category_id):
+            response_data['status'] = -2
+            response_data['ret_val'] = '關鍵字與產品分類必須擇一填寫!'
+
         if response_data['status'] == 0:
-            data_of_shops = []
+            data_of_shops = [] # 商店資料
+            product_category_description = '' # 產品分類描述
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
             seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
                 models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
+            # 搜尋
             if keyword:
                 shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
-            else:
-                shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
+                models.Search_History.objects.create(
+                    id=uuid.uuid4(), 
+                    search_category='shop', 
+                    keyword=keyword
+                )
+            if product_category_id:
+                id_of_shops = []
+                products = models.Product.objects.filter(is_delete='N', product_status='active', product_category_id=product_category_id).values('shop_id')
+                for product in products:
+                    if product['shop_id'] not in id_of_shops:
+                        id_of_shops.append(product['shop_id'])
+                shops = models.Shop.objects.filter(is_delete='N', id__in=id_of_shops).values('id', 'shop_title', 'shop_icon', 'created_at')
+                product_categories = models.Product_Category.objects.filter(id=product_category_id).values('c_product_category')
+                product_category_description += product_categories[0]['c_product_category'] if len(product_categories) > 0 else ''
+                models.Search_History.objects.create(
+                    id=uuid.uuid4(), 
+                    search_category='product', 
+                    keyword=product_category_description
+                )
             for shop in shops:
                 # 商店平均評價
                 sum_of_shop_ratings = 0
@@ -2036,7 +2060,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 rating_of_products = []
                 data_of_products = []
                 products_of_highest_ratings = []
-                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N').values('id')
+                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N', product_status='active').values('id')
                 for product in products:
                     sum_of_product_ratings = 0
                     average_of_product_ratings = 0
@@ -2092,12 +2116,6 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
             if mode == '':
                 data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
-            # 將搜尋紀錄寫入 search_history 資料表
-            models.Search_History.objects.create(
-                id=uuid.uuid4(), 
-                search_category='shop', 
-                keyword=keyword
-            )
             # 將商店資訊寫入 shop_analytics 資料表
             for i in range(len(data_of_shops)):
                 seq += 1
@@ -2117,9 +2135,11 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     follower_count=data_of_shops[i]['follower_count']
                 )
             # 回傳資料
+            response_data['data']['product_category_description'] = product_category_description
+            response_data['data']['shops'] = []
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(12 * int(max_seq) + 1, 12 * int(max_seq) + 12)).order_by('seq')
             for shop_analytic in shop_analytics:
-                response_data['data'].append({
+                response_data['data']['shops'].append({ 
                     'user_id': shop_analytic.user_id, 
                     'shop_id': shop_analytic.shop_id, 
                     'seq': shop_analytic.seq, 
