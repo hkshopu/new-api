@@ -7622,8 +7622,136 @@ def add_shopping_cart(request):
 
 #購物車清單
 def shopping_cart_item(request,user_id): #user_id
-    pass
-#=================
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shoppingCarts=models.Shopping_Cart.objects.filter(user_id=user_id)
+            # products = models.Product.objects.filter(is_delete='N',product_status='active',shop_id=productsShopId.shop_id).filter(~Q(id=product_id))[:3]
+            getProductID=[]
+            getShopID=[]
+            getSpecID=[]
+            for shoppingCart in shoppingCarts:
+                getProductID.append(shoppingCart.product_id)
+                if shoppingCart.product_spec_id=='':
+                    pass
+                else :
+                    getSpecID.append(shoppingCart.product_spec_id)
+            print(getSpecID)
+            productsShopId=models.Product.objects.filter(id__in=getProductID)
+            for shopId in productsShopId:
+                getShopID.append(shopId.shop_id)
+
+            shops=models.Shop.objects.filter(id__in=getShopID)
+            for shop in shops:
+                cartList={
+                    'shop_id':0,
+                    'shop_title':"",
+                    'shop_icon':"",
+                    'productList':[]
+                }
+                products=models.Product.objects.filter(id__in=getProductID)
+                cartList.update({"shop_id":shop.id})
+                cartList.update({"shop_title":shop.shop_title})
+                cartList.update({"shop_icon":shop.shop_icon})
+                
+                for product in products:
+                    if shop.id==product.shop_id:
+                        if product.product_spec_on=='y':
+                            shipmentList=[]
+                            productPics=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
+                            productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id)
+
+                            productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
+                            specList=[]
+                            for productSpec in productSpecs:
+                                cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=productSpec.id)
+                                spec_final={
+                                    "shopping_cart_item_id":cartID.id,
+                                    "spec_desc_1":productSpec.spec_desc_1,
+                                    "spec_desc_2":productSpec.spec_desc_2,
+                                    "spec_dec_1_items":productSpec.spec_dec_1_items,
+                                    "spec_dec_2_items":productSpec.spec_dec_2_items,
+                                    "spec_price":productSpec.price,
+                                    "spec_quantity":productSpec.quantity,
+                                    }
+                                specList.append(spec_final)
+                            for productShipment in productShipments:
+                                # shipment_final=productShipment.shipment_desc+","+str(productShipment.price) #可能會影響計算(str)
+                                shipment_final={
+                                    "shipment_desc":productShipment.shipment_desc,
+                                    "shipment_price":productShipment.price
+                                }
+                                shipmentList.append(shipment_final)
+
+                            productList={
+                                "product_id":product.id,
+                                "product_title":product.product_title,
+                                "product_pic":productPics.product_pic,
+                                "shipmentList":shipmentList,
+                                "product_spec":specList
+                            }
+
+                            cartList["productList"].append(productList)
+                        else : 
+                            print("spec=n")
+                            shipmentList=[]
+                            productPics=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
+                            productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id)
+
+                            productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
+                            specList=[]
+                            cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id='')
+                            spec_final={
+                                    "shopping_cart_item_id":cartID.id,
+                                    "spec_desc_1":'',
+                                    "spec_desc_2":'',
+                                    "spec_dec_1_items":'',
+                                    "spec_dec_2_items":'',
+                                    "spec_price":product.product_price,
+                                    "spec_quantity":product.quantity
+                                    }
+                            specList.append(spec_final)
+                            # for productSpec in productSpecs:
+                                
+                            #     spec_final={
+                            #         "shopping_cart_item_id":cartID.id,
+                            #         "spec_desc_1":productSpec.spec_desc_1,
+                            #         "spec_desc_2":productSpec.spec_desc_2,
+                            #         "spec_dec_1_items":productSpec.spec_dec_1_items,
+                            #         "spec_dec_2_items":productSpec.spec_dec_2_items,
+                            #         "spec_price":productSpec.price,
+                            #         "spec_quantity":productSpec.quantity,
+                            #         }
+                            #     specList.append(spec_final)
+                            for productShipment in productShipments:
+                                # shipment_final=productShipment.shipment_desc+","+str(productShipment.price) #可能會影響計算(str)
+                                shipment_final={
+                                    "shipment_desc":productShipment.shipment_desc,
+                                    "shipment_price":productShipment.price
+                                }
+                                shipmentList.append(shipment_final)
+
+                            productList={
+                                "product_id":product.id,
+                                "product_title":product.product_title,
+                                "product_pic":productPics.product_pic,
+                                "shipmentList":shipmentList,
+                                "product_spec":specList
+                            }
+
+                            cartList["productList"].append(productList)
+
+
+                responseData['data'].append(cartList)   
+
+            responseData['ret_val'] = '已取得商品清單!'
+    return JsonResponse(responseData)
 
 def spec_test(request):
     response_data = {
