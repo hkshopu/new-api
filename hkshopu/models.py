@@ -1,4 +1,5 @@
 # _*_ encoding: utf-8 _*_
+from django.core.exceptions import ValidationError
 from django.db import models
 import re
 
@@ -159,6 +160,12 @@ class Shop(models.Model):
         
         return ret_code, ret_description
 
+class Shop_Clicked(models.Model):
+    id = models.TextField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Category(models.Model):
     c_shop_category = models.CharField(max_length=50)
@@ -401,6 +408,11 @@ class Shop_Address(models.Model):
                     ret_code, ret_description = err_code, '房(室)名稱格式錯誤!'
         return  ret_code, ret_description
 
+class Shop_Advertisement(models.Model):
+    shop_id = models.PositiveIntegerField()
+    pic_path = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Bank_Account(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
@@ -451,9 +463,15 @@ class Shop_Bank_Account(models.Model):
         
 
 class Shop_Rate(models.Model):
+    def validator_between_one_and_five(value):
+        if value<1 or value>5:
+            raise ValidationError(
+                '%s is not between 1 and 5'%value,
+                params={'value': value},
+            )
     shop_id = models.PositiveIntegerField()
     user_id = models.PositiveIntegerField()
-    rating = models.FloatField()
+    rating = models.FloatField(validators=[validator_between_one_and_five])
     comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -467,11 +485,11 @@ class Shop_Rate(models.Model):
         elif param is 'rating':
             pass
             if not(re.match('^\d+$', param)):
-                ret_code, ret_desciprtion = err_code, '格式錯誤!'
+                ret_code, ret_description = err_code, '格式錯誤!'
         elif param is 'comment':
             pass
             if not(re.match('^[()\w\s]+$', param)):
-                ret_code, ret_desciprtion = err_code, '格式錯誤!'
+                ret_code, ret_description = err_code, '格式錯誤!'
         return ret_code, ret_description
 
 
@@ -578,12 +596,6 @@ class Product(models.Model):
 
         return ret_code, ret_description
   
-class Product_Liked(models.Model):
-    id = models.CharField(primary_key=True, max_length=36)
-    product_id = models.PositiveIntegerField()
-    user_id = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Category(models.Model):
     c_product_category = models.CharField(max_length=50)
@@ -645,6 +657,22 @@ class Selected_Product_Pic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     cover= models.CharField(max_length=2)
 
+class Shop_Analytics(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=255)
+    seq = models.PositiveIntegerField()
+    pic_path_1 = models.CharField(max_length=255)
+    pic_path_2 = models.CharField(max_length=255)
+    pic_path_3 = models.CharField(max_length=255)
+    shop_name = models.CharField(max_length=50)
+    shop_icon = models.CharField(max_length=255)
+    rating = models.FloatField()
+    followed = models.CharField(max_length=1)
+    follower_count = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Email_Validation(models.Model):
     user_id = models.PositiveIntegerField()
     email = models.CharField(max_length=50)
@@ -654,7 +682,7 @@ class Email_Validation(models.Model):
 
 class Audit_Log(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    user_id = models.IntegerField()
+    user_id = models.CharField(max_length=11)
     action = models.CharField(max_length=100)
     parameter_in = models.TextField()
     parameter_out = models.TextField()
@@ -673,6 +701,7 @@ class Product_Rate(models.Model):
     user_id = models.PositiveIntegerField()
     product_id = models.PositiveIntegerField()
     rating = models.PositiveIntegerField()
+    comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -689,10 +718,12 @@ class Product_Spec(models.Model):
     product_id = models.PositiveIntegerField()
     spec_desc_1 = models.CharField(max_length=255)
     spec_desc_2 = models.CharField(max_length=255)
-    spec_dec_1_items= models.CharField(max_length=255)
-    spec_dec_2_items= models.CharField(max_length=255)
-    price=models.PositiveIntegerField()
-    quantity= models.PositiveIntegerField()
+    spec_dec_1_items = models.CharField(max_length=255)
+    spec_dec_2_items = models.CharField(max_length=255)
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Shipment_Method(models.Model):
     product_id = models.PositiveIntegerField()
@@ -702,9 +733,79 @@ class Product_Shipment_Method(models.Model):
     shop_id=models.PositiveIntegerField()
 
 class Shop_Order(models.Model):
+    id = models.TextField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
+    user_id = models.PositiveIntegerField()
+    status = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Shop_Order_Details(models.Model):
+    id = models.TextField(primary_key=True, max_length=36)
+    order_id = models.TextField(max_length=36)
     product_id = models.PositiveIntegerField()
-    amount = models.PositiveIntegerField()
-    status = models.CharField(max_length=20)
+    unit_price = models.FloatField()
+    purchasing_qty = models.PositiveIntegerField()
+    logistic_fee = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Liked(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    product_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+class Product_Browsed(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    product_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Clicked(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    product_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Shop_Browsed(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id = models.PositiveIntegerField()
+    user_id = models.CharField(max_length=36)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Product_Analytics(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id = models.CharField(max_length=36)
+    seq = models.PositiveIntegerField()
+    product_id= models.PositiveIntegerField()
+    pic_path= models.CharField( max_length=255)
+    product_title= models.CharField( max_length=255)
+    shop_title = models.CharField(max_length=255)
+    min_price= models.PositiveIntegerField()
+    max_price= models.PositiveIntegerField()
+    liked= models.CharField(max_length=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Search_History(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    search_category = models.CharField(max_length=25)
+    keyword = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+class Shopping_Cart(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id =  models.CharField(max_length=36)
+    product_id =  models.CharField(max_length=36)
+    product_spec_id =  models.CharField(max_length=36)
+    product_shipment_id =  models.CharField(max_length=36)
+    quantity =  models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

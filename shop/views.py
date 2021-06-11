@@ -7,6 +7,7 @@ from django.db.models import Sum
 from django.db import transaction
 from django.core.files.storage import FileSystemStorage
 from hkshopu import models
+from operator import attrgetter, itemgetter
 import re
 import datetime
 import math
@@ -15,6 +16,7 @@ import os
 from utils.upload_tools import upload_file
 from utils.upload_tools import delete_file
 import json
+import requests
 # Create your views here.
 
 # 新增商店頁面
@@ -313,19 +315,19 @@ def update(request, id):
 
         if response_data['status'] == 0:
             try:
-                shop = models.Shop.objects.get(id=id,is_delete='N')
+                shop = models.Shop.objects.get(id=id, is_delete='N')
             except:
                 response_data['status'] = -1
                 response_data['ret_val'] = '找不到此商店編號的商店!'
 
         if response_data['status'] == 0:
-            if not(address_id):
-                if address_name or address_country_code or address_phone or address_is_phone_show or address_area or address_district or address_road or address_number or address_other or address_floor or address_room:
+            if address_id is None:
+                if (address_name is not None) or (address_country_code is not None) or (address_phone is not None) or (address_is_phone_show is not None) or (address_area is not None) or (address_district is not None) or (address_road is not None) or (address_number is not None) or (address_other is not None) or (address_floor is not None) or (address_room is not None):
                     response_data['status'] = -2
                     response_data['ret_val'] = '未填寫商店地址編號!'
 
         if response_data['status'] == 0:
-            if address_id:
+            if address_id is not None:
                 try:
                     shop_address = models.Shop_Address.objects.get(id=address_id)
                 except:
@@ -336,13 +338,15 @@ def update(request, id):
             if shop_title == '':
                 response_data['status'] = -6
                 response_data['ret_val'] = '商店標題不可為空!'
-            elif len(shop_title)>50:
-                response_data['status'] = -6
-                response_data['ret_val'] = '商店標題長度過長'
-
 
         if response_data['status'] == 0:
-            if shop_icon:
+            if shop_title:
+                if not(re.match('^.{1,50}$', shop_title)):
+                    response_data['status'] = -8
+                    response_data['ret_val'] = '商店標題長度過長!'
+
+        if response_data['status'] == 0:
+            if shop_icon is not None:
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_icon.name))):
                     response_data['status'] = -7
                     response_data['ret_val'] = '商店小圖格式錯誤!'
@@ -356,187 +360,187 @@ def update(request, id):
         #                 break
 
         if response_data['status'] == 0:
-            if shop_pic:
+            if shop_pic is not None:
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(shop_pic.name))):
                     response_data['status'] = -9
                     response_data['ret_val'] = '商店主圖格式錯誤!'
 
         if response_data['status'] == 0:
-            if paypal:
+            if paypal is not None:
                 if not(re.match('^\w+$', paypal)) or len(paypal)>50:
                     response_data['status'] = -10
                     response_data['ret_val'] = 'PayPal 格式錯誤!'
 
         if response_data['status'] == 0:
-            if visa:
+            if visa is not None:
                 if not(re.match('^\w+$', visa)) or len(visa)>50:
                     response_data['status'] = -11
                     response_data['ret_val'] = 'Visa 格式錯誤!'
 
         if response_data['status'] == 0:
-            if master:
+            if master is not None:
                 if not(re.match('^\w+$', master)) or len(master)>50:
                     response_data['status'] = -12
                     response_data['ret_val'] = 'Master 格式錯誤!'
 
         if response_data['status'] == 0:
-            if apple:
+            if apple is not None:
                 if not(re.match('^\w+$', apple)) or len(apple)>50:
                     response_data['status'] = -13
                     response_data['ret_val'] = 'Apple 格式錯誤!'
 
         if response_data['status'] == 0:
-            if android:
+            if android is not None:
                 if not(re.match('^\w+$', android)) or len(android)>50:
                     response_data['status'] = -14
                     response_data['ret_val'] = 'Android 格式錯誤!'
 
         if response_data['status'] == 0:
-            if is_ship_free:
+            if is_ship_free is not None:
                 if not(re.match('^(Y|N)$', is_ship_free)):
                     response_data['status'] = -15
                     response_data['ret_val'] = '是否免運費格式錯誤!'
 
         if response_data['status'] == 0:
-            if ship_by_product:
+            if ship_by_product is not None:
                 if not(re.match('^(Y|N)$', ship_by_product)):
                     response_data['status'] = -16
                     response_data['ret_val'] = '運費由商品設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if ship_free_quota:
+            if ship_free_quota is not None:
                 if not(re.match('^\d+$', ship_free_quota)):
                     response_data['status'] = -17
                     response_data['ret_val'] = '免運費訂單價格格式錯誤!'
 
         if response_data['status'] == 0:
-            if fix_ship_fee:
+            if fix_ship_fee is not None:
                 if not(re.match('^\d+$', fix_ship_fee)):
                     response_data['status'] = -18
                     response_data['ret_val'] = '運費訂價格式錯誤!'
 
         if response_data['status'] == 0:
-            if fix_ship_fee_from:
+            if fix_ship_fee_from is not None:
                 if not(re.match('^\d+$', fix_ship_fee_from)):
                     response_data['status'] = -19
                     response_data['ret_val'] = '訂單價格由格式錯誤!'
 
         if response_data['status'] == 0:
-            if fix_ship_fee_to:
+            if fix_ship_fee_to is not None:
                 if not(re.match('^\d+$', fix_ship_fee_to)):
                     response_data['status'] = -20
                     response_data['ret_val'] = '訂單價格至格式錯誤!'
 
         if response_data['status'] == 0:
-            if discount_by_amount:
+            if discount_by_amount is not None:
                 if not(re.match('^\d+$', discount_by_amount)):
                     response_data['status'] = -21
                     response_data['ret_val'] = '價格折扣格式錯誤!'
 
         if response_data['status'] == 0:
-            if discount_by_percent:
+            if discount_by_percent is not None:
                 if not(re.match('^\d+$', discount_by_percent)):
                     response_data['status'] = -22
                     response_data['ret_val'] = '百分比折扣格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_name:
+            if address_name is not None:
                 if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', address_name)) or len(address_name)>50:
                     response_data['status'] = -27
                     response_data['ret_val'] = '姓名/公司名稱格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_country_code:
+            if address_country_code is not None:
                 if not(re.match('^[0-9]{3}$', address_country_code)):
                     response_data['status'] = -28
                     response_data['ret_val'] = '國碼格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_phone:
+            if address_phone is not None:
                 if not(re.match('^\d+$', address_phone)):
                     response_data['status'] = -29
                     response_data['ret_val'] = '電話號碼格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_is_phone_show:
+            if address_is_phone_show is not None:
                 if not(re.match('^\w+$', address_is_phone_show)) or len(address_is_phone_show)>1:
                     response_data['status'] = -30
                     response_data['ret_val'] = '顯示在店鋪簡介格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_area:
+            if address_area is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_area)) or len(address_area)>50:
                     response_data['status'] = -31
                     response_data['ret_val'] = '地域格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_district:
+            if address_district is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_district)) or len(address_district)>50:
                     response_data['status'] = -32
                     response_data['ret_val'] = '地區格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_road:
+            if address_road is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_road)) or len(address_road)>50:
                     response_data['status'] = -33
                     response_data['ret_val'] = '街道名稱格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_number:
+            if address_number is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_number)) or len(address_number)>50:
                     response_data['status'] = -34
                     response_data['ret_val'] = '街道門牌格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_other:
+            if address_other is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_other)) or len(address_other)>50:
                     response_data['status'] = -35
                     response_data['ret_val'] = '其他地址格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_floor:
+            if address_floor is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_floor)) or len(address_floor)>50:
                     response_data['status'] = -36
                     response_data['ret_val'] = '樓層格式錯誤!'
 
         if response_data['status'] == 0:
-            if address_room:
+            if address_room is not None:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', address_room)) or len(address_room)>50:
                     response_data['status'] = -37
                     response_data['ret_val'] = '房(室)名稱格式錯誤!'
 
         if response_data['status'] == 0:
-            if background_pic:
+            if background_pic is not None:
                 if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(background_pic.name))):
                     response_data['status'] = -38
                     response_data['ret_val'] = '背景圖片格式錯誤!'
 
         if response_data['status'] == 0:
-            if shop_email:
+            if shop_email is not None:
                 if not(re.match('[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+', shop_email)):
                     response_data['status'] = -39
                     response_data['ret_val'] = '商店電子郵件格式錯誤!'
 
         if response_data['status'] == 0:
-            if email_on:
+            if email_on is not None:
                 if not(re.match('^(Y|N)$', email_on)):
                     response_data['status'] = -40
                     response_data['ret_val'] = '電子郵件開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if facebook_on:
+            if facebook_on is not None:
                 if not(re.match('^(Y|N)$', facebook_on)):
                     response_data['status'] = -41
                     response_data['ret_val'] = 'Facebook 開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if instagram_on:
+            if instagram_on is not None:
                 if not(re.match('^(Y|N)$', instagram_on)):
                     response_data['status'] = -42
                     response_data['ret_val'] = 'Instagram 開啟設定格式錯誤!'
 
         if response_data['status'] == 0:
-            if shop_title:
+            if shop_title is not None:
                 if shop.shop_name_updated_at:
                     now = datetime.datetime.now()
                     if (now - shop.shop_name_updated_at).days < 30:
@@ -550,7 +554,7 @@ def update(request, id):
                 response_data['ret_val'] = '此商店名稱已存在，請選擇其他名稱!'
 
         if response_data['status'] == 0:
-            if shop_phone:
+            if shop_phone is not None:
                 if not(re.match('^\d+$', shop_phone)):
                     response_data['status'] = -29
                     response_data['ret_val'] = '電話號碼格式錯誤!'
@@ -1606,30 +1610,533 @@ def get_simple_info_of_specific_shop(request, id):
             response_data['data']['long_description'] = shop.long_description
             response_data['ret_val'] = '取得單一商店簡要資訊成功!'
     return JsonResponse(response_data)
-# 取得推薦的熱門商店
-def get_recommended_shop(request):
+# 取得推薦熱門商店列表
+def get_recommended_shops(request):
     response_data = {
         'status': 0, 
         'ret_val': '', 
         'data': []
     }
-    if request.method == 'GET':
-        shops = models.Shop.objects.values('id', 'shop_icon', 'shop_title')
-        for shop in shops:
-            sum_of_shop_ratings = 0
-            average_of_shop_ratings = 0
-            shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id).values('rating')
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', 0)
+
+        if response_data['status'] == 0:
+            if user_id:
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -1
+                    response_data['ret_val'] = '使用者編號格式錯誤!'
+
+        if response_data['status'] == 0:
+            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_icon', 'shop_title')[:8]
+            if len(shops) == 0:
+                response_data['status'] = -2
+                response_data['ret_val'] = '目前暫無商店!'
+
+        if response_data['status'] == 0:
+            for shop in shops:
+                rating_of_products = []
+                products_of_highest_ratings = []
+                data_of_products = []
+                product_pics = []
+                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N').values('id')
+                for product in products:
+                    sum_of_product_ratings = 0
+                    average_of_product_ratings = 0
+                    product_ratings = models.Product_Rate.objects.filter(product_id=product['id'])
+                    for product_rating in product_ratings:
+                        sum_of_product_ratings += product_rating.rating
+                    if len(product_ratings) > 0:
+                        average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
+                    data_of_products.append({
+                        'product_id': product['id'], 
+                        'average_of_product_ratings': average_of_product_ratings
+                    })
+                    rating_of_products.append(average_of_product_ratings)
+                for i in range(3):
+                    for j in range(len(data_of_products)):
+                        if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
+                            products_of_highest_ratings.append(data_of_products[j]['product_id'])
+                            rating_of_products.pop(j)
+                            data_of_products.pop(j)
+                            break
+                for products_of_highest_rating in products_of_highest_ratings:
+                    selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
+                    if len(selected_product_pics) > 0:
+                        product_pics.append(selected_product_pics[0]['product_pic'])
+                sum_of_shop_ratings = 0
+                average_of_shop_ratings = 0
+                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
+                for shop_rating in shop_ratings:
+                    sum_of_shop_ratings += shop_rating['rating']
+                if len(shop_ratings) > 0:
+                    average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id)
+                data = {
+                    'shop_id': shop['id'], 
+                    'shop_icon': shop['shop_icon'], 
+                    'shop_title': shop['shop_title'], 
+                    'shop_average_ratings': average_of_shop_ratings, 
+                    'shop_followed': 'N' if len(shop_followers) == 0 else 'Y', 
+                    'product_pics': product_pics
+                }
+                response_data['data'].append(data)
+                # 寫入 shop_browsed 資料表
+                models.Shop_Browsed.objects.create(
+                    id=uuid.uuid4(), 
+                    shop_id=shop['id'], 
+                    user_id=user_id
+                )
+            response_data['ret_val'] = '取得推薦熱門商店列表成功!'
+    return JsonResponse(response_data)
+# 取得推薦單一熱門商店
+def get_specific_recommended_shop(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', 0)
+
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商店!'
+
+        if response_data['status'] == 0:
+            if user_id:
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -2
+                    response_data['ret_val'] = '使用者編號格式錯誤!'
+
+        if response_data['status'] == 0:
+            sum_of_shop_ratings = 0 # 商店評分總和
+            average_of_shop_ratings = 0 # 商店平均評分
+            sum_of_sales = 0 # 總銷售量
+            # 商店平均評分
+            shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop.id)
+            shop_rating_nums = len(shop_ratings) # 商店評分人數
             for shop_rating in shop_ratings:
                 sum_of_shop_ratings += shop_rating.rating
-            if len(shop_ratings) > 0:
-                average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+            if shop_rating_nums > 0:
+                average_of_shop_ratings = sum_of_shop_ratings / shop_rating_nums
+            # 產品數量
+            products_of_shop = models.Product.objects.filter(shop_id=shop.id)
+            product_nums_of_shop = len(products_of_shop)
+            # 關注人數
             shop_followers = models.Shop_Follower.objects.filter(shop_id=shop.id)
-            data = {
-                'shop_icon': shop.shop_icon, 
-                'shop_title': shop.shop_title, 
-                'shop_average_rating': average_of_shop_ratings, 
-                'shop_followers_qty': len(shop_followers)
-            }
-            response_data['data'].append(data)
-        response_data['ret_val'] = '取得推薦的熱門商店成功!'
+            follower_nums_of_shop = len(shop_followers)
+            # 總銷售量
+            orders = models.Shop_Order.objects.filter(shop_id=shop.id)
+            for order in orders:
+                order_details = models.Shop_Order_Details.objects.filter(order_id=order.id)
+                for order_detail in order_details:
+                    sum_of_sales += order_detail.purchasing_qty
+
+            response_data['data']['shop_id'] = shop.id
+            response_data['data']['shop_title'] = shop.shop_title
+            response_data['data']['shop_icon'] = shop.shop_icon
+            response_data['data']['long_description'] = shop.long_description
+            response_data['data']['background_pic'] = shop.background_pic
+            response_data['data']['average_of_shop_ratings'] = average_of_shop_ratings
+            response_data['data']['shop_rating_nums'] = shop_rating_nums
+            response_data['data']['product_nums_of_shop'] = product_nums_of_shop
+            response_data['data']['follower_nums_of_shop'] = follower_nums_of_shop
+            response_data['data']['sum_of_sales'] = sum_of_sales
+            # 寫入 shop_clicked 資料表
+            models.Shop_Clicked.objects.create(
+                id=uuid.uuid4(), 
+                shop_id=shop.id, 
+                user_id=user_id
+            )
+            response_data['ret_val'] = '取得推薦單一熱門商店成功!'
+    return JsonResponse(response_data)
+# 取得單一商店簡要資訊(買家)
+def get_simple_info_of_specific_shop_for_buyer(request, id):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            try:
+                shop = models.Shop.objects.get(id=id)
+            except:
+                response_data['status'] = -1
+                response_data['ret_val'] = '找不到此商店!'
+
+        if response_data['status'] == 0:
+            shop_addresses = models.Shop_Address.objects.filter(shop_id=shop.id, is_address_show='Y', is_default='Y')
+
+            response_data['data']['shop_id'] = shop.id
+            response_data['data']['shop_icon'] = shop.shop_icon
+            response_data['data']['shop_title'] = shop.shop_title
+            response_data['data']['background_pic'] = shop.background_pic
+            if shop.address_is_phone_show == 'Y':
+                response_data['data']['address_phone'] = shop.address_phone
+            else:
+                response_data['data']['address_phone'] = ''
+            if shop.email_on == 'Y':
+                response_data['data']['shop_email'] = shop.shop_email
+            else:
+                response_data['data']['shop_email'] = ''
+            response_data['data']['shop_address'] = {}
+            if len(shop_addresses) > 0:
+                response_data['data']['shop_address']['country_code'] = shop_addresses[0].country_code
+                response_data['data']['shop_address']['area'] = shop_addresses[0].area
+                response_data['data']['shop_address']['district'] = shop_addresses[0].district
+                response_data['data']['shop_address']['road'] = shop_addresses[0].road
+                response_data['data']['shop_address']['number'] = shop_addresses[0].number
+                response_data['data']['shop_address']['other'] = shop_addresses[0].other
+                response_data['data']['shop_address']['floor'] = shop_addresses[0].floor
+                response_data['data']['shop_address']['room'] = shop_addresses[0].room
+            else:
+                response_data['data']['shop_address']['country_code'] = ''
+                response_data['data']['shop_address']['area'] = ''
+                response_data['data']['shop_address']['district'] = ''
+                response_data['data']['shop_address']['road'] = ''
+                response_data['data']['shop_address']['number'] = ''
+                response_data['data']['shop_address']['other'] = ''
+                response_data['data']['shop_address']['floor'] = ''
+                response_data['data']['shop_address']['room'] = ''
+            response_data['data']['long_description'] = shop.long_description
+            response_data['ret_val'] = '取得單一商店簡要資訊(買家)成功!'
+    return JsonResponse(response_data)
+
+# 取得廣告Banner
+def getAdvertisementBanner(request):
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        shop_advertisement_attr = [
+            "shop_id",
+            "pic_path"
+        ]
+        ads = models.Shop_Advertisement.objects.all()
+        for ad in ads:
+            tempAd = {}
+            for attr in shop_advertisement_attr:
+                if hasattr(ad,attr):
+                    tempAd[attr] = getattr(ad,attr)
+            responseData['data'].append(tempAd)
+        
+        responseData['ret_val'] = '已找到商店廣告資料!'
+    return JsonResponse(responseData)
+# 取得商店分頁資料
+def get_shop_analytics_in_pages(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', 0)
+        mode = request.POST.get('mode', '')
+        max_seq = request.POST.get('max_seq', 0)
+
+        if response_data['status'] == 0:
+            if user_id:
+                user_id_for_shop_analytics = user_id
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -1
+                    response_data['ret_val'] = '會員編號格式錯誤!'
+            else:
+                user_id_for_shop_analytics = uuid.uuid4()
+
+        if response_data['status'] == 0:
+            data_of_shops = []
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
+            seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
+            if max_seq == 0:
+                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
+                seq = 0
+            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
+            for shop in shops:
+                # 商店平均評價
+                sum_of_shop_ratings = 0
+                average_of_shop_ratings = 0
+                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
+                for shop_rating in shop_ratings:
+                    sum_of_shop_ratings += shop_rating['rating']
+                if len(shop_ratings) > 0:
+                    average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+                # 商店追蹤者數量
+                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id']).values('id')
+                quantities_of_shop_followers = len(shop_followers)
+                # 使用者是否追蹤
+                shop_is_followed = 'N'
+                shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id).values('id')
+                if len(shop_followers_of_current_user) > 0:
+                    shop_is_followed = 'Y'
+                # 前三熱門產品圖片
+                product_pics = []
+                rating_of_products = []
+                data_of_products = []
+                products_of_highest_ratings = []
+                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N').values('id')
+                for product in products:
+                    sum_of_product_ratings = 0
+                    average_of_product_ratings = 0
+                    product_ratings = models.Product_Rate.objects.filter(product_id=product['id']).values('rating')
+                    for product_rating in product_ratings:
+                        sum_of_product_ratings += product_rating['rating']
+                    if len(product_ratings) > 0:
+                        average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
+                    rating_of_products.append(average_of_product_ratings)
+                    data_of_products.append({
+                        'product_id': product['id'], 
+                        'average_of_product_ratings': average_of_product_ratings
+                    })
+                for i in range(3):
+                    for j in range(len(data_of_products)):
+                        if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
+                            products_of_highest_ratings.append(data_of_products[j]['product_id'])
+                            rating_of_products.pop(j)
+                            data_of_products.pop(j)
+                            break
+                for products_of_highest_rating in products_of_highest_ratings:
+                    selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
+                    if len(selected_product_pics) > 0:
+                        product_pics.append(selected_product_pics[0]['product_pic'])
+                # 商店總銷售量
+                sum_of_purchasing_qty = 0
+                shop_orders = models.Shop_Order.objects.filter(shop_id=shop['id']).values('id')
+                for shop_order in shop_orders:
+                    shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
+                    for shop_order_detail in shop_order_details:
+                        sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
+                # 資料整理
+                data_of_shops.append({
+                    'shop_id': shop['id'], 
+                    'user_id': user_id_for_shop_analytics, 
+                    'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
+                    'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
+                    'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
+                    'shop_name': shop['shop_title'], 
+                    'shop_icon': shop['shop_icon'], 
+                    'rating': average_of_shop_ratings, 
+                    'followed': shop_is_followed, 
+                    'follower_count': quantities_of_shop_followers, 
+                    'created_at': shop['created_at'], 
+                    'sum_of_purchasing_qty': sum_of_purchasing_qty
+                })
+            # 排序
+            if mode == 'overall':
+                data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
+            if mode == 'new':
+                data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
+            if mode == 'top sale':
+                data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
+            if mode == '':
+                data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
+            # 將商店資訊寫入 shop_analytics 資料表
+            for i in range(len(data_of_shops)):
+                seq += 1
+                data_of_shops[i]['seq'] = seq
+                models.Shop_Analytics.objects.create(
+                    id=uuid.uuid4(), 
+                    shop_id=data_of_shops[i]['shop_id'], 
+                    user_id=data_of_shops[i]['user_id'], 
+                    seq=data_of_shops[i]['seq'], 
+                    pic_path_1=data_of_shops[i]['pic_path_1'], 
+                    pic_path_2=data_of_shops[i]['pic_path_2'], 
+                    pic_path_3=data_of_shops[i]['pic_path_3'], 
+                    shop_name=data_of_shops[i]['shop_name'], 
+                    shop_icon=data_of_shops[i]['shop_icon'], 
+                    rating=data_of_shops[i]['rating'], 
+                    followed=data_of_shops[i]['followed'], 
+                    follower_count=data_of_shops[i]['follower_count']
+                )
+            # 回傳資料
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(12 * int(max_seq) + 1, 12 * int(max_seq) + 12)).order_by('seq')
+            for shop_analytic in shop_analytics:
+                response_data['data'].append({
+                    'user_id': shop_analytic.user_id, 
+                    'shop_id': shop_analytic.shop_id, 
+                    'seq': shop_analytic.seq, 
+                    'pic_path_1': shop_analytic.pic_path_1, 
+                    'pic_path_2': shop_analytic.pic_path_2, 
+                    'pic_path_3': shop_analytic.pic_path_3, 
+                    'shop_name': shop_analytic.shop_name, 
+                    'shop_icon': shop_analytic.shop_icon, 
+                    'rating': shop_analytic.rating, 
+                    'followed': shop_analytic.followed, 
+                    'follower_count': shop_analytic.follower_count
+                })
+                # 寫 log 到 shop_browsed 資料表
+                models.Shop_Browsed.objects.create(
+                    id=uuid.uuid4(), 
+                    shop_id=shop_analytic.shop_id, 
+                    user_id=user_id
+                )
+            response_data['ret_val'] = '取得商店分頁資料成功!'
+    return JsonResponse(response_data)
+# 取得商店搜尋分頁資料
+def get_shop_analytics_with_keyword_in_pages(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', 0)
+        mode = request.POST.get('mode', '')
+        max_seq = request.POST.get('max_seq', 0)
+        keyword = request.POST.get('keyword', '')
+
+        if response_data['status'] == 0:
+            if user_id:
+                user_id_for_shop_analytics = user_id
+                if not(re.match('^\d+$', user_id)):
+                    response_data['status'] = -1
+                    response_data['ret_val'] = '會員編號格式錯誤!'
+            else:
+                user_id_for_shop_analytics = uuid.uuid4()
+
+        if response_data['status'] == 0:
+            data_of_shops = []
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
+            seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
+            if max_seq == 0:
+                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
+                seq = 0
+            if keyword:
+                shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
+            else:
+                shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
+            for shop in shops:
+                # 商店平均評價
+                sum_of_shop_ratings = 0
+                average_of_shop_ratings = 0
+                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
+                for shop_rating in shop_ratings:
+                    sum_of_shop_ratings += shop_rating['rating']
+                if len(shop_ratings) > 0:
+                    average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+                # 商店追蹤者數量
+                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id']).values('id')
+                quantities_of_shop_followers = len(shop_followers)
+                # 使用者是否追蹤
+                shop_is_followed = 'N'
+                shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id).values('id')
+                if len(shop_followers_of_current_user) > 0:
+                    shop_is_followed = 'Y'
+                # 前三熱門產品圖片
+                product_pics = []
+                rating_of_products = []
+                data_of_products = []
+                products_of_highest_ratings = []
+                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N').values('id')
+                for product in products:
+                    sum_of_product_ratings = 0
+                    average_of_product_ratings = 0
+                    product_ratings = models.Product_Rate.objects.filter(product_id=product['id']).values('rating')
+                    for product_rating in product_ratings:
+                        sum_of_product_ratings += product_rating['rating']
+                    if len(product_ratings) > 0:
+                        average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
+                    rating_of_products.append(average_of_product_ratings)
+                    data_of_products.append({
+                        'product_id': product['id'], 
+                        'average_of_product_ratings': average_of_product_ratings
+                    })
+                for i in range(3):
+                    for j in range(len(data_of_products)):
+                        if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
+                            products_of_highest_ratings.append(data_of_products[j]['product_id'])
+                            rating_of_products.pop(j)
+                            data_of_products.pop(j)
+                            break
+                for products_of_highest_rating in products_of_highest_ratings:
+                    selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
+                    if len(selected_product_pics) > 0:
+                        product_pics.append(selected_product_pics[0]['product_pic'])
+                # 商店總銷售量
+                sum_of_purchasing_qty = 0
+                shop_orders = models.Shop_Order.objects.filter(shop_id=shop['id']).values('id')
+                for shop_order in shop_orders:
+                    shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
+                    for shop_order_detail in shop_order_details:
+                        sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
+                # 資料整理
+                data_of_shops.append({
+                    'shop_id': shop['id'], 
+                    'user_id': user_id_for_shop_analytics, 
+                    'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
+                    'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
+                    'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
+                    'shop_name': shop['shop_title'], 
+                    'shop_icon': shop['shop_icon'], 
+                    'rating': average_of_shop_ratings, 
+                    'followed': shop_is_followed, 
+                    'follower_count': quantities_of_shop_followers, 
+                    'created_at': shop['created_at'], 
+                    'sum_of_purchasing_qty': sum_of_purchasing_qty
+                })
+            # 排序
+            if mode == 'overall':
+                data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
+            if mode == 'new':
+                data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
+            if mode == 'top sale':
+                data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
+            if mode == '':
+                data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
+            # 將搜尋紀錄寫入 search_history 資料表
+            models.Search_History.objects.create(
+                id=uuid.uuid4(), 
+                search_category='shop', 
+                keyword=keyword
+            )
+            # 將商店資訊寫入 shop_analytics 資料表
+            for i in range(len(data_of_shops)):
+                seq += 1
+                data_of_shops[i]['seq'] = seq
+                models.Shop_Analytics.objects.create(
+                    id=uuid.uuid4(), 
+                    shop_id=data_of_shops[i]['shop_id'], 
+                    user_id=data_of_shops[i]['user_id'], 
+                    seq=data_of_shops[i]['seq'], 
+                    pic_path_1=data_of_shops[i]['pic_path_1'], 
+                    pic_path_2=data_of_shops[i]['pic_path_2'], 
+                    pic_path_3=data_of_shops[i]['pic_path_3'], 
+                    shop_name=data_of_shops[i]['shop_name'], 
+                    shop_icon=data_of_shops[i]['shop_icon'], 
+                    rating=data_of_shops[i]['rating'], 
+                    followed=data_of_shops[i]['followed'], 
+                    follower_count=data_of_shops[i]['follower_count']
+                )
+            # 回傳資料
+            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(12 * int(max_seq) + 1, 12 * int(max_seq) + 12)).order_by('seq')
+            for shop_analytic in shop_analytics:
+                response_data['data'].append({
+                    'user_id': shop_analytic.user_id, 
+                    'shop_id': shop_analytic.shop_id, 
+                    'seq': shop_analytic.seq, 
+                    'pic_path_1': shop_analytic.pic_path_1, 
+                    'pic_path_2': shop_analytic.pic_path_2, 
+                    'pic_path_3': shop_analytic.pic_path_3, 
+                    'shop_name': shop_analytic.shop_name, 
+                    'shop_icon': shop_analytic.shop_icon, 
+                    'rating': shop_analytic.rating, 
+                    'followed': shop_analytic.followed, 
+                    'follower_count': shop_analytic.follower_count
+                })
+                # 寫 log 到 shop_browsed 資料表
+                models.Shop_Browsed.objects.create(
+                    id=uuid.uuid4(), 
+                    shop_id=shop_analytic.shop_id, 
+                    user_id=user_id
+                )
+            response_data['ret_val'] = '取得商店搜尋分頁資料成功!'
     return JsonResponse(response_data)

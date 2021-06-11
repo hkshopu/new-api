@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.db.models import Q, Avg, Min, Max, Count, Sum
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template, render_to_string
 from django.contrib.auth.hashers import make_password
 from passlib.handlers.django import django_pbkdf2_sha256
 from django.core import mail
 from django.utils.html import strip_tags
-from django.db.models import Q
 from hkshopu import models
+import uuid
 import datetime
 import re
 import random
@@ -16,6 +16,11 @@ import random
 # 會員註冊頁面
 def register(request):
     template = get_template('register.html')
+    html = template.render()
+    return HttpResponse(html)
+# 測試邀請電子郵件頁面
+def page_of_invitation_email(request):
+    template = get_template('invitation_testing_mail.html')
     html = template.render()
     return HttpResponse(html)
 # 檢查電子郵件是否已存在
@@ -656,11 +661,145 @@ def sned_invitation_testing_mail(request):
 
         if response_data['status'] == 0:
             subject = 'HKShopU - 參與測試邀請'
-            body = render_to_string('invitation_testing_mail.html')
+            html_message = render_to_string('invitation_testing_mail.html')
+            message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'
-            bcc = email
-            email_message = mail.EmailMessage(subject=subject, body=body, from_email=from_email, bcc=bcc)
-            email_message.content_subtype = 'html'
-            email_message.send()
+            for x in email:
+                mail.send_mail(subject=subject, message=message, from_email=from_email,recipient_list=[x] , html_message=html_message)
             response_data['ret_val'] = '發送參與測試邀請電子郵件成功!'
     return JsonResponse(response_data)
+
+# 收藏商店
+def followShop(request, user_id='', shop_id=''):
+    response_data = {
+        'status': 0, 
+        'ret_val': '',
+        'data': []
+    }
+    if request.method=='POST':
+
+        follow = request.POST.get('follow')
+
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            response_data['status'], response_data['ret_val'] = -1, '尚未登入'
+        
+        if response_data['status'] == 0:
+            try:
+                models.Shop.objects.get(id=shop_id)
+            except:
+                response_data['status'], response_data['ret_val'] = -2, '無此商店編號'
+        
+        if response_data['status'] == 0:
+            if follow != 'Y' and follow != 'N':
+                response_data['status'], response_data['ret_val'] = -4, 'follow只能為Y|N'
+
+
+        if response_data['status'] == 0:
+            follows = models.Shop_Follower.objects.filter(shop_id=shop_id, follower_id=user_id)
+            try:                
+                if follow == 'Y' and len(follows)==0:
+                    models.Shop_Follower.objects.create(
+                        id=uuid.uuid4(),                
+                        shop_id=shop_id,
+                        follower_id=user_id
+                    )
+                    response_data['ret_val'] = '收藏成功'
+                elif follow=='N' and len(follows)>0:
+                    follows.delete()
+                    response_data['ret_val'] = '取消收藏成功'
+            except:
+                response_data['status'], response_data['ret_val'] = -3, '收藏商店錯誤'
+
+
+    
+    return JsonResponse(response_data)
+
+# 推薦商品詳情
+def topProductDetail(request, user_id='', product_id=''):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': []
+    }
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            try:
+                if user_id is not '':
+                    models.User.objects.get(id=user_id)
+            except:
+                responseData['status'], responseData['ret_val'] = -1, '使用者不存在'
+
+        if responseData['status'] == 0:
+            try:
+                product = models.Product.objects.get(id=product_id, is_delete='N')
+            except:
+                responseData['status'], responseData['ret_val'] = -2, '商品不存在'
+        
+        if responseData['status'] == 0:
+            product_attr = [
+                'product_title', # name
+                'new_secondhand',
+                'product_description', # description
+                ]
+            tempData = {}
+            for attr in product_attr:
+                if hasattr(product, attr):
+                    tempData[attr] = getattr(product, attr)
+            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('-cover').values_list('product_pic', flat=True))[0:5]
+            tempData['liked_count'] = len(models.Product_Liked.objects.filter(product_id=product_id))
+            tempData['category'] = models.Product_Category.objects.get(id=product.product_category_id).c_product_category + '>' + models.Product_Sub_Category.objects.get(id=product.product_sub_category_id).c_product_sub_category
+            rating = models.Product_Rate.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating__avg']
+            tempData['average_rating'] = 0 if rating is None else rating
+            min_max_spec = models.Product_Spec.objects.filter(product_id=product_id).aggregate(min_price=Min('price'), max_price=Max('price'), min_quantity=Min('quantity'), max_quantity=Max('quantity'))
+            for k in min_max_spec:
+                tempData[k] = min_max_spec[k] if min_max_spec[k] is not None else product.product_price if 'price' in k else product.quantity
+            min_max_shipment = models.Product_Shipment_Method.objects.filter(product_id=product_id, onoff='on').aggregate(min_shipment=Min('price'), max_shipment=Max('price'))
+            for k in min_max_shipment:
+                tempData[k] = min_max_shipment[k]
+            selling_count = models.Shop_Order_Details.objects.filter(product_id=product_id).aggregate(selling_count=Sum('purchasing_qty'))['selling_count']
+            tempData['selling_count'] = 0 if selling_count is None else selling_count
+            liked_count = models.Product_Liked.objects.filter(product_id=product_id).aggregate(liked_count=Count('user_id'))['liked_count']
+            tempData['liked_count'] = 0 if liked_count is None else liked_count
+            tempData['liked'] = 'Y' if len(models.Product_Liked.objects.filter(user_id=user_id,product_id=product_id))>0 else 'N'
+            tempData['product_spec_on'] = product.product_spec_on
+            tempData['longterm_stock_up'] = product.longterm_stock_up
+            responseData['data'].append(tempData)
+
+            models.Product_Clicked.objects.create(
+                id=uuid.uuid4(),
+                user_id=user_id,
+                product_id=product_id
+            )
+        
+    return JsonResponse(responseData)
+
+# 新增Audit Log
+def auditLog(request, user_id=''):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    if user_id != '':
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '使用者不存在'
+
+    if request.method == 'POST': # insert
+        action = request.POST.get('action', '')
+        parameter_in = request.POST.get('parameter_in', '')
+        parameter_out = request.POST.get('parameter_out', '')
+        models.Audit_Log.objects.create(
+            id = uuid.uuid4(),
+            user_id = user_id,
+            action = action,
+            parameter_in = parameter_in,
+            parameter_out = parameter_out
+        )
+        responseData['ret_val'] = '新增成功'
+
+    return JsonResponse(responseData)
