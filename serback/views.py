@@ -14,6 +14,11 @@ import random
 
 # Create your views here.
 
+# Audit_log 首頁
+def get_all_audit_logs_page(request):
+    template = get_template('audit_log/index.html')
+    html = template.render()
+    return HttpResponse(html)
 # 取得 Audit_log 資料
 def get_all_audit_logs(request):
     response_data = {
