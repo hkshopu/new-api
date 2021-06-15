@@ -1,8 +1,8 @@
-let xhr = new XMLHttpRequest();
-xhr.open('GET', '/serback/get_all_audit_logs/');
-xhr.onreadystatechange = () => {
-    if (this.readyState == 4 && this.status == 200) {
-        let res = JSON.parse(this.responseText);
+$.ajax({
+    url: '/serback/get_all_audit_logs/', 
+    method: 'GET', 
+    dataType: 'JSON', 
+    success: function(res) {
         let txt = '<table>';
         txt += '<thead>';
         txt += '<tr>';
@@ -31,7 +31,6 @@ xhr.onreadystatechange = () => {
         }
         txt += '</tbody>';
         txt += '</table>';
-        document.getElementById('main-content').innerHTML = txt;
+        $('#main-content').html(txt);
     }
-};
-xhr.send();
+});
