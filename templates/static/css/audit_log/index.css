@@ -8,4 +8,5 @@ body {
 #main-content {
     margin: 1rem auto;
     text-align: center;
+    overflow-x: scroll;
 }

@@ -3,7 +3,7 @@ $.ajax({
     method: 'GET', 
     dataType: 'JSON', 
     success: function(res) {
-        let txt = '<table>';
+        let txt = '<table class="table table-striped">';
         txt += '<thead>';
         txt += '<tr>';
         txt += '<th>id</th><th>user_id</th><th>action</th><th>parameter_in</th><th>parameter_out</th><th>created_at</th><th>updated_at</th>';
