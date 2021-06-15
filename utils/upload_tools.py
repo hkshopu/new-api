@@ -12,9 +12,12 @@ from store.settings import DEBUG
 DNS = 'https://storage.googleapis.com/'
 
 if DEBUG:
-    project = 'hkshopu'
-    bucket_name = "hkshopu.appspot.com"
-    service_key = 'utils/hkshopu-1ef39fa54ea8.json'
+    # project = 'hkshopu'
+    # bucket_name = "hkshopu.appspot.com"
+    # service_key = 'utils/hkshopu-1ef39fa54ea8.json'
+    project = 'hkshopu-20700'
+    bucket_name = 'hkshopu-20700.appspot.com'
+    service_key = 'utils/hkshopu-20700-f1ed4e97a237.json'
 else:
     project = 'peppy-booth-311912'
     bucket_name = "peppy-booth-311912.appspot.com"

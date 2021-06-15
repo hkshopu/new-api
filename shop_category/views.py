@@ -7,6 +7,7 @@ from hkshopu import models
 import re
 import datetime
 from utils.upload_tools import upload_file
+import uuid
 # Create your views here.
 
 # 取得商店分類清單
@@ -123,6 +124,7 @@ def save(request):
             new_selected_shop_category_icon_url = upload_file(FILE=selected_shop_category_icon,destination_path=destination_path,suffix='selected')
             # 寫入資料庫
             models.Shop_Category.objects.create(
+                id=uuid.uuid4(),
                 c_shop_category=c_shop_category, 
                 e_shop_category=e_shop_category, 
                 unselected_shop_category_icon=new_unselected_shop_category_icon_url, 

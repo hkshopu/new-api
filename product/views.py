@@ -1188,6 +1188,7 @@ def update(request,id): #product_id
                     # 寫入資料庫(規格)
                 for i in range(len(product_spec_list["product_spec_list"])):
                     models.Product_Spec.objects.create(
+                        id=uuid.uuid4(),
                         product_id=id,
                         spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
                         spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
@@ -1201,6 +1202,7 @@ def update(request,id): #product_id
                 for i in range(len(shipment_method)):
                     if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1209,6 +1211,7 @@ def update(request,id): #product_id
                         )
                     elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1284,6 +1287,7 @@ def update(request,id): #product_id
                 for i in range(len(shipment_method)):
                     if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1292,6 +1296,7 @@ def update(request,id): #product_id
                         )
                     elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1472,6 +1477,7 @@ def save(request):
             if product_spec_on=="y":    
 
                 models.Product.objects.create(
+                    id=uuid.uuid4(),
                     shop_id=shop_id, 
                     product_category_id=product_category_id, 
                     product_sub_category_id=product_sub_category_id, 
@@ -1537,6 +1543,7 @@ def save(request):
                 # 寫入資料庫(規格)
                 for i in range(len(product_spec_list["product_spec_list"])):
                     models.Product_Spec.objects.create(
+                        id=uuid.uuid4(),
                         product_id=getProductID[0]['id'],
                         spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
                         spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
@@ -1547,6 +1554,7 @@ def save(request):
                     )
             elif product_spec_on=="n":   
                 models.Product.objects.create(
+                    id=uuid.uuid4(),
                     shop_id=shop_id, 
                     product_category_id=product_category_id, 
                     product_sub_category_id=product_sub_category_id, 
@@ -1612,6 +1620,7 @@ def save(request):
                 if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
                     
                     models.Product_Shipment_Method.objects.create(
+                        id=uuid.uuid4(),
                         product_id=getProductID[0]['id'],
                         shipment_desc=shipment_method[i]["shipment_desc"],
                         price=shipment_method[i]["price"],
@@ -1621,6 +1630,7 @@ def save(request):
                 elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
                     
                     models.Product_Shipment_Method.objects.create(
+                        id=uuid.uuid4(),
                         product_id=getProductID[0]['id'],
                         shipment_desc=shipment_method[i]["shipment_desc"],
                         price=shipment_method[i]["price"],
