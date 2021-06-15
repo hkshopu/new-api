@@ -2052,7 +2052,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 quantities_of_shop_followers = len(shop_followers)
                 # 使用者是否追蹤
                 shop_is_followed = 'N'
-                shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id).values('id')
+                shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id if user_id else 0).values('id')
                 if len(shop_followers_of_current_user) > 0:
                     shop_is_followed = 'Y'
                 # 前三熱門產品圖片
