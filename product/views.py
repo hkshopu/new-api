@@ -2019,7 +2019,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
 
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2082,7 +2082,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2146,7 +2146,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
 
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2213,7 +2213,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2286,15 +2286,13 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productQuantitys=models.Shop_Order_Details.objects.filter(product_id=product.id).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
                                         'product_description': product.product_description, 
                                         'product_price': product.product_price, 
                                         'shipping_fee': product.shipping_fee, 
-                                        # 'created_at': product.created_at, 
-                                        # 'updated_at': product.updated_at,
                                         'weight':product.weight,
                                         'longterm_stock_up':product.longterm_stock_up,
                                         'new_secondhand':product.new_secondhand,
@@ -2363,15 +2361,13 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productQuantitys=models.Shop_Order_Details.objects.filter(product_id=product.id).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
                                         'product_description': product.product_description, 
                                         'product_price': product.product_price, 
                                         'shipping_fee': product.shipping_fee, 
-                                        # 'created_at': product.created_at, 
-                                        # 'updated_at': product.updated_at,
                                         'weight':product.weight,
                                         'longterm_stock_up':product.longterm_stock_up,
                                         'new_secondhand':product.new_secondhand,
@@ -2444,7 +2440,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     productQuantitys=models.Shop_Order_Details.objects.filter(product_id=product.id).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2522,7 +2518,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     productQuantitys=models.Shop_Order_Details.objects.filter(product_id=product.id).values('product_id').annotate(sale_quantity=Sum('purchasing_qty')).order_by('-sale_quantity')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2601,7 +2597,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
 
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2664,7 +2660,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2729,7 +2725,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
 
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2796,7 +2792,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2869,7 +2865,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
 
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2932,7 +2928,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -2997,7 +2993,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
 
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -3064,7 +3060,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -3138,7 +3134,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -3208,7 +3204,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productShopId=models.Shop.objects.get(id=product.shop_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -3280,7 +3276,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
@@ -3357,7 +3353,7 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
                                     productOveralls=models.Product_Rate.objects.filter(product_id=product.id).values('product_id').annotate(rating=Avg('rating')).order_by('-rating')
                                     productInfo = {
-                                        'id': product.id,
+                                        'product_id': product.id,
                                         'product_category_id': product.product_category_id, 
                                         'product_title': product.product_title,
                                         'quantity': product.quantity, 
