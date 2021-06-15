@@ -7662,11 +7662,19 @@ def shopping_cart_item(request,user_id): #user_id
                             shipmentList=[]
                             productPics=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
                             productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id)
-
                             productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
-                            specList=[]
+               
                             for productSpec in productSpecs:
+                                specList=[]
+                                productList={
+                                "product_id":product.id,
+                                "product_title":product.product_title,
+                                "product_pic":productPics.product_pic,
+                                "shipmentList":shipmentList,
+                                "product_spec":specList
+                                }
                                 cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=productSpec.id)
+                                
                                 spec_final={
                                     "shopping_cart_item_id":cartID.id,
                                     "shopping_cart_quantity":cartID.quantity,
@@ -7678,23 +7686,24 @@ def shopping_cart_item(request,user_id): #user_id
                                     "spec_quantity":productSpec.quantity,
                                     }
                                 specList.append(spec_final)
+                            
+                                cartList["productList"].append(productList)
+
                             for productShipment in productShipments:
-                                # shipment_final=productShipment.shipment_desc+","+str(productShipment.price) #可能會影響計算(str)
                                 shipment_final={
                                     "shipment_desc":productShipment.shipment_desc,
                                     "shipment_price":productShipment.price
                                 }
                                 shipmentList.append(shipment_final)
+                            # productList={
+                            #     "product_id":product.id,
+                            #     "product_title":product.product_title,
+                            #     "product_pic":productPics.product_pic,
+                            #     "shipmentList":shipmentList,
+                            #     "product_spec":specList
+                            # }
 
-                            productList={
-                                "product_id":product.id,
-                                "product_title":product.product_title,
-                                "product_pic":productPics.product_pic,
-                                "shipmentList":shipmentList,
-                                "product_spec":specList
-                            }
-
-                            cartList["productList"].append(productList)
+                            # cartList["productList"].append(productList)
                         else : 
                             print("spec=n")
                             shipmentList=[]
@@ -7715,20 +7724,7 @@ def shopping_cart_item(request,user_id): #user_id
                                     "spec_quantity":product.quantity
                                     }
                             specList.append(spec_final)
-                            # for productSpec in productSpecs:
-                                
-                            #     spec_final={
-                            #         "shopping_cart_item_id":cartID.id,
-                            #         "spec_desc_1":productSpec.spec_desc_1,
-                            #         "spec_desc_2":productSpec.spec_desc_2,
-                            #         "spec_dec_1_items":productSpec.spec_dec_1_items,
-                            #         "spec_dec_2_items":productSpec.spec_dec_2_items,
-                            #         "spec_price":productSpec.price,
-                            #         "spec_quantity":productSpec.quantity,
-                            #         }
-                            #     specList.append(spec_final)
                             for productShipment in productShipments:
-                                # shipment_final=productShipment.shipment_desc+","+str(productShipment.price) #可能會影響計算(str)
                                 shipment_final={
                                     "shipment_desc":productShipment.shipment_desc,
                                     "shipment_price":productShipment.price
@@ -7744,10 +7740,7 @@ def shopping_cart_item(request,user_id): #user_id
                             }
 
                             cartList["productList"].append(productList)
-
-
                 responseData['data'].append(cartList)   
-
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
 
