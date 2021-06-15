@@ -5,7 +5,7 @@ import re
 
 # validator
 def validate_empty_value_to_default(value):
-    if value is '':
+    if value == '':
         return None
 # Create your models here.
 class User(models.Model):
@@ -270,12 +270,12 @@ class Selected_Shop_Category(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if column_name is 'shop_id':
+        if column_name == 'shop_id':
             try:
                 Shop.objects.get(id=param,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '商店編號不存在'
-        elif column_name is 'shop_category_id':
+        elif column_name == 'shop_category_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫商店分類編號!'
             else:
@@ -283,7 +283,7 @@ class Selected_Shop_Category(models.Model):
                     if not(re.match('^\d+$', value)):
                         ret_code, ret_description = err_code, '商店分類格式錯誤!'
                         break
-        elif column_name is 'shop_category_id_json':
+        elif column_name == 'shop_category_id_json':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫商店分類編號!'
             else:
@@ -315,12 +315,12 @@ class Shop_Shipment_Setting(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if column_name is 'shop_id':
+        if column_name == 'shop_id':
             try:
                 Shop.objects.get(id=param,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '無此商店'
-        if column_name is 'shipment_settings':
+        if column_name == 'shipment_settings':
             try:
                 json
             except:
@@ -357,52 +357,52 @@ class Shop_Address(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if param is 'shop_id':
+        if param == 'shop_id':
             try:
                 Shop.objects.get(id=id,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'                
-        elif param is 'name':
+        elif param == 'name':
             if param:
                 if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '姓名/公司名稱格式錯誤!'
-        elif param is 'country_code':
+        elif param == 'country_code':
             if param:
                 if not(re.match('^[\+\d]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '國碼格式錯誤!'
-        elif param is 'phone':
+        elif param == 'phone':
             if param:
                 if not(re.match('^\d+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '電話號碼格式錯誤!'
-        elif param is 'is_phone_show':
+        elif param == 'is_phone_show':
             if param:
                 if not(re.match('^\w+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '顯示在店鋪簡介格式錯誤!'
-        elif param is 'area':
+        elif param == 'area':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '地域格式錯誤!'
-        elif param is 'district':
+        elif param == 'district':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '地區格式錯誤!'
-        elif param is 'road':
+        elif param == 'road':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '街道名稱格式錯誤!'
-        elif param is 'number':
+        elif param == 'number':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '街道門牌格式錯誤!'
-        elif param is 'other':
+        elif param == 'other':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '其他地址格式錯誤!'
-        elif param is 'floor':
+        elif param == 'floor':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '樓層格式錯誤!'
-        elif param is 'room':
+        elif param == 'room':
             if param:
                 if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
                     ret_code, ret_description = err_code, '房(室)名稱格式錯誤!'
@@ -425,12 +425,12 @@ class Shop_Bank_Account(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if param is 'shop_id':
+        if param == 'shop_id':
             try:
                 Shop.objects.get(id=param,is_delete='N')
             except:
                 ret_code, ret_description = err_code, '找不到此商店編號的商店!'
-        elif param is 'bank_account_settings':
+        elif param == 'bank_account_settings':
             try:
                 json
             except:
@@ -438,7 +438,7 @@ class Shop_Bank_Account(models.Model):
             try:
                 bank_account_settings = json.loads(param)
                 for setting in bank_account_settings:
-                    if hasattr(setting, 'id') and setting['id'] is not '':
+                    if hasattr(setting, 'id') and setting['id'] != '':
                         pass
                     else:
                         param = setting['code']
@@ -447,16 +447,16 @@ class Shop_Bank_Account(models.Model):
                         param = setting['account_name']
             except:
                 ret_code, ret_description = err_code, '商店銀行設定格式錯誤!'
-        elif param is 'code':
+        elif param == 'code':
             if not(re.match('^\d+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行代碼格式錯誤!'
-        elif param is 'name':
+        elif param == 'name':
             if not(re.match('^[()\w\s]+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行名稱格式錯誤!'
-        elif param is 'account':
+        elif param == 'account':
             if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行戶名格式錯誤!'
-        elif param is 'account_name':
+        elif param == 'account_name':
             if not(re.match('^[\-\d]+$', param)) or len(param)>50:
                 ret_code, ret_description = err_code, '銀行帳號格式錯誤!'
         return ret_code, ret_description
@@ -478,15 +478,15 @@ class Shop_Rate(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if param is 'shop_id':
+        if param == 'shop_id':
             pass
-        elif param is 'user_id':
+        elif param == 'user_id':
             pass
-        elif param is 'rating':
+        elif param == 'rating':
             pass
             if not(re.match('^\d+$', param)):
                 ret_code, ret_description = err_code, '格式錯誤!'
-        elif param is 'comment':
+        elif param == 'comment':
             pass
             if not(re.match('^[()\w\s]+$', param)):
                 ret_code, ret_description = err_code, '格式錯誤!'
