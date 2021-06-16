@@ -645,7 +645,7 @@ def getUserShopCount(request, id):
             responseData['ret_val'] = '已取得您的商店總數!'
     return JsonResponse(responseData)
 # 發送電子郵件邀請使用者參與測試
-def sned_invitation_testing_mail(request):
+def send_invitation_testing_mail(request):
     response_data = {
         'status': 0, 
         'ret_val': ''
