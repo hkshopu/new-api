@@ -20,6 +20,11 @@
         #navbar {
             margin: 0 auto;
             text-align: center;
+            display: table;
+        }
+        #navbar span {
+            display: table-cell;
+            vertical-align: middle;
         }
         .logo-pic {
             margin-right: 0.25rem;
@@ -216,8 +221,12 @@
 <body>
     <div id="main-content">
         <div id="navbar">
-            <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-pic">
-            <img src="{% static 'images/HKSHOPU.png' %}" alt="Logo text" class="logo-text-pic">
+            <span>
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-pic">
+            </span>
+            <span>
+                <img src="{% static 'images/HKSHOPU.png' %}" alt="Logo text" class="logo-text-pic">
+            </span>
         </div>
     
         <div id="invitation-title-box">
