@@ -69,17 +69,24 @@ def add(request):
             quantity=quantity
 
         if response_data['status']==0:
-            models.Shopping_Cart.objects.create(
-                    id=uuid.uuid4(),
-                    user_id=user_id,
-                    product_id=product_id,
-                    product_spec_id=product_spec_id,
-                    quantity=quantity
-            )
-            cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
-            if(len(cart_check))==0:
-                response_data['ret_val'] = '購物車新增失敗!'
-            else:
+            shoppingCart_checks=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id)
+            if len(shoppingCart_checks)==0:
+                models.Shopping_Cart.objects.create(
+                        id=uuid.uuid4(),
+                        user_id=user_id,
+                        product_id=product_id,
+                        product_spec_id=product_spec_id,
+                        quantity=quantity
+                )
+                cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
+                if(len(cart_check))==0:
+                    response_data['ret_val'] = '購物車新增失敗!'
+                else:
+                    response_data['ret_val'] = '購物車新增成功!'
+            else : 
+                for shoppingCart_check in shoppingCart_checks:
+                    shoppingCart_check.quantity=shoppingCart_check.quantity+int(quantity)
+                    shoppingCart_check.save()
                 response_data['ret_val'] = '購物車新增成功!'
     return JsonResponse(response_data)
 
