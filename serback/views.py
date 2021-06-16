@@ -46,3 +46,33 @@ def get_all_audit_logs(request):
                 })
             response_data['ret_val'] = '取得 Audit_log 資料成功!'
     return JsonResponse(response_data)
+# Shop_Clicked 首頁
+def get_all_shop_clicked_page(request):
+    template = get_template('shop_clicked/index.html')
+    html = template.render()
+    return HttpResponse(html)
+# 取得 Shop_Clicked 資料
+def get_all_shop_clicked(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            datas_of_shop_clicked = models.Shop_Clicked.objects.all()
+            if len(datas_of_shop_clicked) == 0:
+                response_data['status'] = -1
+                response_data['ret_val'] = '暫無資料!'
+
+        if response_data['status'] == 0:
+            for data in datas_of_shop_clicked:
+                response_data['data'].append({
+                    'id': data.id, 
+                    'shop_id': data.shop_id, 
+                    'user_id': data.user_id, 
+                    'created_at': data.created_at, 
+                    'updated_at': data.updated_at
+                })
+            response_data['ret_val'] = '取得 Shop_Clicked 資料成功!'
+    return JsonResponse(response_data)
