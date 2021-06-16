@@ -1853,109 +1853,106 @@ def get_shop_analytics_in_pages(request):
                 user_id_for_shop_analytics = uuid.uuid4()
 
         if response_data['status'] == 0:
-            data_of_shops = []
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
-            seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
-                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
-            shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
-            for shop in shops:
-                # 商店平均評價
-                sum_of_shop_ratings = 0
-                average_of_shop_ratings = 0
-                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
-                for shop_rating in shop_ratings:
-                    sum_of_shop_ratings += shop_rating['rating']
-                if len(shop_ratings) > 0:
-                    average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
-                # 商店追蹤者數量
-                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id']).values('id')
-                quantities_of_shop_followers = len(shop_followers)
-                # 使用者是否追蹤
-                shop_is_followed = 'N'
-                shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id).values('id')
-                if len(shop_followers_of_current_user) > 0:
-                    shop_is_followed = 'Y'
-                # 前三熱門產品圖片
-                product_pics = []
-                rating_of_products = []
-                data_of_products = []
-                products_of_highest_ratings = []
-                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N', product_status='active').values('id')
-                for product in products:
-                    sum_of_product_ratings = 0
-                    average_of_product_ratings = 0
-                    product_ratings = models.Product_Rate.objects.filter(product_id=product['id']).values('rating')
-                    for product_rating in product_ratings:
-                        sum_of_product_ratings += product_rating['rating']
-                    if len(product_ratings) > 0:
-                        average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
-                    rating_of_products.append(average_of_product_ratings)
-                    data_of_products.append({
-                        'product_id': product['id'], 
-                        'average_of_product_ratings': average_of_product_ratings
+                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
+                data_of_shops = []
+                shops = models.Shop.objects.filter(is_delete='N').values('id', 'shop_title', 'shop_icon', 'created_at')
+                for shop in shops:
+                    # 商店平均評價
+                    sum_of_shop_ratings = 0
+                    average_of_shop_ratings = 0
+                    shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
+                    for shop_rating in shop_ratings:
+                        sum_of_shop_ratings += shop_rating['rating']
+                    if len(shop_ratings) > 0:
+                        average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+                    # 商店追蹤者數量
+                    shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id']).values('id')
+                    quantities_of_shop_followers = len(shop_followers)
+                    # 使用者是否追蹤
+                    shop_is_followed = 'N'
+                    shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id).values('id')
+                    if len(shop_followers_of_current_user) > 0:
+                        shop_is_followed = 'Y'
+                    # 前三熱門產品圖片
+                    product_pics = []
+                    rating_of_products = []
+                    data_of_products = []
+                    products_of_highest_ratings = []
+                    products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N', product_status='active').values('id')
+                    for product in products:
+                        sum_of_product_ratings = 0
+                        average_of_product_ratings = 0
+                        product_ratings = models.Product_Rate.objects.filter(product_id=product['id']).values('rating')
+                        for product_rating in product_ratings:
+                            sum_of_product_ratings += product_rating['rating']
+                        if len(product_ratings) > 0:
+                            average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
+                        rating_of_products.append(average_of_product_ratings)
+                        data_of_products.append({
+                            'product_id': product['id'], 
+                            'average_of_product_ratings': average_of_product_ratings
+                        })
+                    for i in range(3):
+                        for j in range(len(data_of_products)):
+                            if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
+                                products_of_highest_ratings.append(data_of_products[j]['product_id'])
+                                rating_of_products.pop(j)
+                                data_of_products.pop(j)
+                                break
+                    for products_of_highest_rating in products_of_highest_ratings:
+                        selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
+                        if len(selected_product_pics) > 0:
+                            product_pics.append(selected_product_pics[0]['product_pic'])
+                    # 商店總銷售量
+                    sum_of_purchasing_qty = 0
+                    shop_orders = models.Shop_Order.objects.filter(shop_id=shop['id']).values('id')
+                    for shop_order in shop_orders:
+                        shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
+                        for shop_order_detail in shop_order_details:
+                            sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
+                    # 資料整理
+                    data_of_shops.append({
+                        'shop_id': shop['id'], 
+                        'user_id': user_id_for_shop_analytics, 
+                        'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
+                        'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
+                        'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
+                        'shop_name': shop['shop_title'], 
+                        'shop_icon': shop['shop_icon'], 
+                        'rating': average_of_shop_ratings, 
+                        'followed': shop_is_followed, 
+                        'follower_count': quantities_of_shop_followers, 
+                        'created_at': shop['created_at'], 
+                        'sum_of_purchasing_qty': sum_of_purchasing_qty
                     })
-                for i in range(3):
-                    for j in range(len(data_of_products)):
-                        if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
-                            products_of_highest_ratings.append(data_of_products[j]['product_id'])
-                            rating_of_products.pop(j)
-                            data_of_products.pop(j)
-                            break
-                for products_of_highest_rating in products_of_highest_ratings:
-                    selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
-                    if len(selected_product_pics) > 0:
-                        product_pics.append(selected_product_pics[0]['product_pic'])
-                # 商店總銷售量
-                sum_of_purchasing_qty = 0
-                shop_orders = models.Shop_Order.objects.filter(shop_id=shop['id']).values('id')
-                for shop_order in shop_orders:
-                    shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
-                    for shop_order_detail in shop_order_details:
-                        sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
-                # 資料整理
-                data_of_shops.append({
-                    'shop_id': shop['id'], 
-                    'user_id': user_id_for_shop_analytics, 
-                    'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
-                    'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
-                    'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
-                    'shop_name': shop['shop_title'], 
-                    'shop_icon': shop['shop_icon'], 
-                    'rating': average_of_shop_ratings, 
-                    'followed': shop_is_followed, 
-                    'follower_count': quantities_of_shop_followers, 
-                    'created_at': shop['created_at'], 
-                    'sum_of_purchasing_qty': sum_of_purchasing_qty
-                })
-            # 排序
-            if mode == 'overall':
-                data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
-            if mode == 'new':
-                data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
-            if mode == 'top sale':
-                data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
-            if mode == '':
-                data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
-            # 將商店資訊寫入 shop_analytics 資料表
-            for i in range(len(data_of_shops)):
-                seq += 1
-                data_of_shops[i]['seq'] = seq
-                models.Shop_Analytics.objects.create(
-                    id=uuid.uuid4(), 
-                    shop_id=data_of_shops[i]['shop_id'], 
-                    user_id=data_of_shops[i]['user_id'], 
-                    seq=data_of_shops[i]['seq'], 
-                    pic_path_1=data_of_shops[i]['pic_path_1'], 
-                    pic_path_2=data_of_shops[i]['pic_path_2'], 
-                    pic_path_3=data_of_shops[i]['pic_path_3'], 
-                    shop_name=data_of_shops[i]['shop_name'], 
-                    shop_icon=data_of_shops[i]['shop_icon'], 
-                    rating=data_of_shops[i]['rating'], 
-                    followed=data_of_shops[i]['followed'], 
-                    follower_count=data_of_shops[i]['follower_count']
-                )
+                # 排序
+                if mode == 'overall':
+                    data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
+                if mode == 'new':
+                    data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
+                if mode == 'top sale':
+                    data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
+                if mode == '':
+                    data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
+                # 將商店資訊寫入 shop_analytics 資料表
+                for i in range(len(data_of_shops)):
+                    seq += 1
+                    models.Shop_Analytics.objects.create(
+                        id=uuid.uuid4(), 
+                        shop_id=data_of_shops[i]['shop_id'], 
+                        user_id=data_of_shops[i]['user_id'], 
+                        seq=seq, 
+                        pic_path_1=data_of_shops[i]['pic_path_1'], 
+                        pic_path_2=data_of_shops[i]['pic_path_2'], 
+                        pic_path_3=data_of_shops[i]['pic_path_3'], 
+                        shop_name=data_of_shops[i]['shop_name'], 
+                        shop_icon=data_of_shops[i]['shop_icon'], 
+                        rating=data_of_shops[i]['rating'], 
+                        followed=data_of_shops[i]['followed'], 
+                        follower_count=data_of_shops[i]['follower_count']
+                    )
             # 回傳資料
             shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics), seq__range=(12 * int(max_seq) + 1, 12 * int(max_seq) + 12)).order_by('seq')
             for shop_analytic in shop_analytics:
@@ -2009,131 +2006,128 @@ def get_shop_analytics_with_keyword_in_pages(request):
             response_data['ret_val'] = '關鍵字與產品分類必須擇一填寫!'
 
         if response_data['status'] == 0:
-            data_of_shops = [] # 商店資料
             product_category_description = '' # 產品分類描述
-            shop_analytics = models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).values('seq').order_by('-seq')
-            seq = shop_analytics[0]['seq'] if len(shop_analytics) > 0 else 0
             if max_seq == 0:
-                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 seq = 0
-            # 搜尋
-            if keyword:
-                shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
-                models.Search_History.objects.create(
-                    id=uuid.uuid4(), 
-                    search_category='shop', 
-                    keyword=keyword
-                )
-            if product_category_id:
-                id_of_shops = []
-                products = models.Product.objects.filter(is_delete='N', product_status='active', product_category_id=product_category_id).values('shop_id')
-                for product in products:
-                    if product['shop_id'] not in id_of_shops:
-                        id_of_shops.append(product['shop_id'])
-                shops = models.Shop.objects.filter(is_delete='N', id__in=id_of_shops).values('id', 'shop_title', 'shop_icon', 'created_at')
-                product_categories = models.Product_Category.objects.filter(id=product_category_id).values('c_product_category')
-                product_category_description += product_categories[0]['c_product_category'] if len(product_categories) > 0 else ''
-                models.Search_History.objects.create(
-                    id=uuid.uuid4(), 
-                    search_category='product', 
-                    keyword=product_category_description
-                )
-            for shop in shops:
-                # 商店平均評價
-                sum_of_shop_ratings = 0
-                average_of_shop_ratings = 0
-                shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
-                for shop_rating in shop_ratings:
-                    sum_of_shop_ratings += shop_rating['rating']
-                if len(shop_ratings) > 0:
-                    average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
-                # 商店追蹤者數量
-                shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id']).values('id')
-                quantities_of_shop_followers = len(shop_followers)
-                # 使用者是否追蹤
-                shop_is_followed = 'N'
-                shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id if user_id else 0).values('id')
-                if len(shop_followers_of_current_user) > 0:
-                    shop_is_followed = 'Y'
-                # 前三熱門產品圖片
-                product_pics = []
-                rating_of_products = []
-                data_of_products = []
-                products_of_highest_ratings = []
-                products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N', product_status='active').values('id')
-                for product in products:
-                    sum_of_product_ratings = 0
-                    average_of_product_ratings = 0
-                    product_ratings = models.Product_Rate.objects.filter(product_id=product['id']).values('rating')
-                    for product_rating in product_ratings:
-                        sum_of_product_ratings += product_rating['rating']
-                    if len(product_ratings) > 0:
-                        average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
-                    rating_of_products.append(average_of_product_ratings)
-                    data_of_products.append({
-                        'product_id': product['id'], 
-                        'average_of_product_ratings': average_of_product_ratings
+                models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
+                data_of_shops = [] # 商店資料
+                # 搜尋
+                if keyword:
+                    shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
+                    models.Search_History.objects.create(
+                        id=uuid.uuid4(), 
+                        search_category='shop', 
+                        keyword=keyword
+                    )
+                if product_category_id:
+                    id_of_shops = []
+                    products = models.Product.objects.filter(is_delete='N', product_status='active', product_category_id=product_category_id).values('shop_id')
+                    for product in products:
+                        if product['shop_id'] not in id_of_shops:
+                            id_of_shops.append(product['shop_id'])
+                    shops = models.Shop.objects.filter(is_delete='N', id__in=id_of_shops).values('id', 'shop_title', 'shop_icon', 'created_at')
+                    product_categories = models.Product_Category.objects.filter(id=product_category_id).values('c_product_category')
+                    product_category_description += product_categories[0]['c_product_category'] if len(product_categories) > 0 else ''
+                    models.Search_History.objects.create(
+                        id=uuid.uuid4(), 
+                        search_category='product', 
+                        keyword=product_category_description
+                    )
+                for shop in shops:
+                    # 商店平均評價
+                    sum_of_shop_ratings = 0
+                    average_of_shop_ratings = 0
+                    shop_ratings = models.Shop_Rate.objects.filter(shop_id=shop['id']).values('rating')
+                    for shop_rating in shop_ratings:
+                        sum_of_shop_ratings += shop_rating['rating']
+                    if len(shop_ratings) > 0:
+                        average_of_shop_ratings = sum_of_shop_ratings / len(shop_ratings)
+                    # 商店追蹤者數量
+                    shop_followers = models.Shop_Follower.objects.filter(shop_id=shop['id']).values('id')
+                    quantities_of_shop_followers = len(shop_followers)
+                    # 使用者是否追蹤
+                    shop_is_followed = 'N'
+                    shop_followers_of_current_user = models.Shop_Follower.objects.filter(shop_id=shop['id'], follower_id=user_id if user_id else 0).values('id')
+                    if len(shop_followers_of_current_user) > 0:
+                        shop_is_followed = 'Y'
+                    # 前三熱門產品圖片
+                    product_pics = []
+                    rating_of_products = []
+                    data_of_products = []
+                    products_of_highest_ratings = []
+                    products = models.Product.objects.filter(shop_id=shop['id'], is_delete='N', product_status='active').values('id')
+                    for product in products:
+                        sum_of_product_ratings = 0
+                        average_of_product_ratings = 0
+                        product_ratings = models.Product_Rate.objects.filter(product_id=product['id']).values('rating')
+                        for product_rating in product_ratings:
+                            sum_of_product_ratings += product_rating['rating']
+                        if len(product_ratings) > 0:
+                            average_of_product_ratings = sum_of_product_ratings / len(product_ratings)
+                        rating_of_products.append(average_of_product_ratings)
+                        data_of_products.append({
+                            'product_id': product['id'], 
+                            'average_of_product_ratings': average_of_product_ratings
+                        })
+                    for i in range(3):
+                        for j in range(len(data_of_products)):
+                            if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
+                                products_of_highest_ratings.append(data_of_products[j]['product_id'])
+                                rating_of_products.pop(j)
+                                data_of_products.pop(j)
+                                break
+                    for products_of_highest_rating in products_of_highest_ratings:
+                        selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
+                        if len(selected_product_pics) > 0:
+                            product_pics.append(selected_product_pics[0]['product_pic'])
+                    # 商店總銷售量
+                    sum_of_purchasing_qty = 0
+                    shop_orders = models.Shop_Order.objects.filter(shop_id=shop['id']).values('id')
+                    for shop_order in shop_orders:
+                        shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
+                        for shop_order_detail in shop_order_details:
+                            sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
+                    # 資料整理
+                    data_of_shops.append({
+                        'shop_id': shop['id'], 
+                        'user_id': user_id_for_shop_analytics, 
+                        'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
+                        'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
+                        'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
+                        'shop_name': shop['shop_title'], 
+                        'shop_icon': shop['shop_icon'], 
+                        'rating': average_of_shop_ratings, 
+                        'followed': shop_is_followed, 
+                        'follower_count': quantities_of_shop_followers, 
+                        'created_at': shop['created_at'], 
+                        'sum_of_purchasing_qty': sum_of_purchasing_qty
                     })
-                for i in range(3):
-                    for j in range(len(data_of_products)):
-                        if max(rating_of_products) == data_of_products[j]['average_of_product_ratings']:
-                            products_of_highest_ratings.append(data_of_products[j]['product_id'])
-                            rating_of_products.pop(j)
-                            data_of_products.pop(j)
-                            break
-                for products_of_highest_rating in products_of_highest_ratings:
-                    selected_product_pics = models.Selected_Product_Pic.objects.filter(product_id=products_of_highest_rating, cover='Y').values('product_pic')
-                    if len(selected_product_pics) > 0:
-                        product_pics.append(selected_product_pics[0]['product_pic'])
-                # 商店總銷售量
-                sum_of_purchasing_qty = 0
-                shop_orders = models.Shop_Order.objects.filter(shop_id=shop['id']).values('id')
-                for shop_order in shop_orders:
-                    shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
-                    for shop_order_detail in shop_order_details:
-                        sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
-                # 資料整理
-                data_of_shops.append({
-                    'shop_id': shop['id'], 
-                    'user_id': user_id_for_shop_analytics, 
-                    'pic_path_1': product_pics[0] if len(product_pics) > 0 else '', 
-                    'pic_path_2': product_pics[1] if len(product_pics) > 1 else '', 
-                    'pic_path_3': product_pics[2] if len(product_pics) > 2 else '', 
-                    'shop_name': shop['shop_title'], 
-                    'shop_icon': shop['shop_icon'], 
-                    'rating': average_of_shop_ratings, 
-                    'followed': shop_is_followed, 
-                    'follower_count': quantities_of_shop_followers, 
-                    'created_at': shop['created_at'], 
-                    'sum_of_purchasing_qty': sum_of_purchasing_qty
-                })
-            # 排序
-            if mode == 'overall':
-                data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
-            if mode == 'new':
-                data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
-            if mode == 'top sale':
-                data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
-            if mode == '':
-                data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
-            # 將商店資訊寫入 shop_analytics 資料表
-            for i in range(len(data_of_shops)):
-                seq += 1
-                data_of_shops[i]['seq'] = seq
-                models.Shop_Analytics.objects.create(
-                    id=uuid.uuid4(), 
-                    shop_id=data_of_shops[i]['shop_id'], 
-                    user_id=data_of_shops[i]['user_id'], 
-                    seq=data_of_shops[i]['seq'], 
-                    pic_path_1=data_of_shops[i]['pic_path_1'], 
-                    pic_path_2=data_of_shops[i]['pic_path_2'], 
-                    pic_path_3=data_of_shops[i]['pic_path_3'], 
-                    shop_name=data_of_shops[i]['shop_name'], 
-                    shop_icon=data_of_shops[i]['shop_icon'], 
-                    rating=data_of_shops[i]['rating'], 
-                    followed=data_of_shops[i]['followed'], 
-                    follower_count=data_of_shops[i]['follower_count']
-                )
+                # 排序
+                if mode == 'overall':
+                    data_of_shops.sort(key=lambda x: (x['rating'], x['shop_name']), reverse=True)
+                if mode == 'new':
+                    data_of_shops.sort(key=lambda x: (x['created_at'], x['shop_name']), reverse=True)
+                if mode == 'top sale':
+                    data_of_shops.sort(key=lambda x: (x['sum_of_purchasing_qty'], x['shop_name']), reverse=True)
+                if mode == '':
+                    data_of_shops.sort(key=lambda x: x['shop_name'], reverse=True)
+                # 將商店資訊寫入 shop_analytics 資料表
+                for i in range(len(data_of_shops)):
+                    seq += 1
+                    models.Shop_Analytics.objects.create(
+                        id=uuid.uuid4(), 
+                        shop_id=data_of_shops[i]['shop_id'], 
+                        user_id=data_of_shops[i]['user_id'], 
+                        seq=seq, 
+                        pic_path_1=data_of_shops[i]['pic_path_1'], 
+                        pic_path_2=data_of_shops[i]['pic_path_2'], 
+                        pic_path_3=data_of_shops[i]['pic_path_3'], 
+                        shop_name=data_of_shops[i]['shop_name'], 
+                        shop_icon=data_of_shops[i]['shop_icon'], 
+                        rating=data_of_shops[i]['rating'], 
+                        followed=data_of_shops[i]['followed'], 
+                        follower_count=data_of_shops[i]['follower_count']
+                    )
             # 回傳資料
             response_data['data']['product_category_description'] = product_category_description
             response_data['data']['shops'] = []
