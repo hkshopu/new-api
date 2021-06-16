@@ -18,15 +18,18 @@
             text-decoration: none;
         }
         #navbar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0 auto;
             text-align: center;
         }
         .logo-pic {
             margin-right: 0.25rem;
-            width: 28.36px;
-            height: 24px;
+            max-width: 28px;
+            max-height: 24px;
+        }
+        .logo-text-pic {
+            margin-left: 0.25rem;
+            max-width: 84px;
+            max-height: 26px;
         }
         #invitation-title-box {
             background: #FFFFFF;
@@ -169,8 +172,12 @@
         }
         @media screen and (min-width: 680px) {
             .logo-pic {
-                width: 39px;
-                height: 34px;
+                max-width: 39px;
+                max-height: 34px;
+            }
+            .logo-text-pic {
+                max-width: 112px;
+                max-height: 35px;
             }
             #invitation-title-box, #invitation-msg-box, #features {
                 width: 600px;
