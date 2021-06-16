@@ -56,6 +56,8 @@ def add(request):
         'data': []
     }
     if request.method=='POST':
+        #重要邏輯 : 如果user重複加入購物車，需判斷 if user_id、product_id、product_spec_id與table 中 data相同，將quanity 加上去或update
+
         user_id= request.POST.get('user_id', '')
         product_id= request.POST.get('product_id', '')
         product_spec_id = request.POST.get('product_spec_id', '')
@@ -138,7 +140,7 @@ def shopping_cart_item(request,user_id): #user_id
                                 "shipmentList":shipmentList,
                                 "product_spec":specList
                                 }
-                                cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=productSpec.id)
+                                cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=productSpec.id,user_id=user_id)
                                 
                                 spec_final={
                                     "shopping_cart_item_id":cartID.id,
@@ -177,7 +179,7 @@ def shopping_cart_item(request,user_id): #user_id
 
                             productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
                             specList=[]
-                            cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id='')
+                            cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=0,user_id=user_id)
                             spec_final={
                                     "shopping_cart_item_id":cartID.id,
                                     "shopping_cart_quantity":cartID.quantity,
