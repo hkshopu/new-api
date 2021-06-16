@@ -48,7 +48,7 @@ def index(request):
     return JsonResponse(responseData)
 
 #加入購物車
-def add_shopping_cart(request):
+def add(request):
     # 回傳資料
     response_data = {
         'status': 0, 
