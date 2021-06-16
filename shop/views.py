@@ -1841,7 +1841,7 @@ def get_shop_analytics_in_pages(request):
         # 欄位資料
         user_id = request.POST.get('user_id', 0)
         mode = request.POST.get('mode', '')
-        max_seq = request.POST.get('max_seq', 0)
+        max_seq = request.POST.get('max_seq', '0')
 
         if response_data['status'] == 0:
             if user_id:
@@ -1853,7 +1853,7 @@ def get_shop_analytics_in_pages(request):
                 user_id_for_shop_analytics = uuid.uuid4()
 
         if response_data['status'] == 0:
-            if max_seq == 0:
+            if max_seq == '0':
                 seq = 0
                 models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 data_of_shops = []
@@ -1988,7 +1988,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
         # 欄位資料(keyword 與 product_category_id 擇一出現)
         user_id = request.POST.get('user_id', 0)
         mode = request.POST.get('mode', '')
-        max_seq = request.POST.get('max_seq', 0)
+        max_seq = request.POST.get('max_seq', '0')
         keyword = request.POST.get('keyword', '')
         product_category_id = request.POST.get('product_category_id', 0)
 
@@ -2007,7 +2007,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
 
         if response_data['status'] == 0:
             product_category_description = '' # 產品分類描述
-            if max_seq == 0:
+            if max_seq == '0':
                 seq = 0
                 models.Shop_Analytics.objects.filter(user_id=str(user_id_for_shop_analytics)).delete()
                 data_of_shops = [] # 商店資料
