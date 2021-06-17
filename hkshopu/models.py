@@ -538,10 +538,11 @@ class Product(models.Model):
         if column_name=='shop_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫商店編號!'
-            elif not(re.match('^\d+$', param)):
-                ret_code, ret_description = err_code, '商店編號格式錯誤!'
             elif not(Shop.objects.get(id=param,is_delete='N').exists()):
                 ret_code, ret_description = err_code, '商店編號不存在!'
+            else:
+                pass
+                #ret_code, ret_description = err_code, '商店編號格式錯誤!'
         elif column_name=='product_category_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫產品分類編號!'
