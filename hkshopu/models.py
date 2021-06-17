@@ -257,7 +257,7 @@ class Shop_Category(models.Model):
 
 class Shop_Sub_Category(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    shop_category_id = models.PositiveIntegerField()
+    shop_category_id = models.CharField(max_length=36)
     c_shop_sub_category = models.CharField(max_length=50)
     e_shop_sub_category = models.CharField(max_length=50)
     unselected_shop_sub_category_icon = models.CharField(max_length=255)
@@ -269,7 +269,7 @@ class Shop_Sub_Category(models.Model):
 class Selected_Shop_Category(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.CharField(max_length=36)
-    shop_category_id = models.PositiveIntegerField()
+    shop_category_id = models.CharField(max_length=36)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def validate_column(column_name, err_code, param):
@@ -508,8 +508,8 @@ class Shipment_default_method(models.Model):
 class Product(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.CharField(max_length=36)
-    product_category_id = models.PositiveIntegerField()
-    product_sub_category_id = models.PositiveIntegerField()
+    product_category_id = models.CharField(max_length=36)
+    product_sub_category_id = models.CharField(max_length=36)
     product_title = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField()
     product_description = models.TextField()
@@ -620,7 +620,7 @@ class Product_Category(models.Model):
 
 class Product_Sub_Category(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    product_category_id = models.PositiveIntegerField()
+    product_category_id = models.CharField(max_length=36)
     c_product_sub_category = models.CharField(max_length=50)
     e_product_sub_category = models.CharField(max_length=50)
     unselected_product_sub_category_icon = models.CharField(max_length=255)
