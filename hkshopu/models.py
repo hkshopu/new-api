@@ -285,7 +285,9 @@ class Selected_Shop_Category(models.Model):
                 ret_code, ret_description = err_code, '未填寫商店分類編號!'
             else:
                 for value in param:
-                    if not(re.match('^\d+$', value)):
+                    try:
+                        Shop_Category.objects.get(id=value)
+                    except:
                         ret_code, ret_description = err_code, '商店分類格式錯誤!'
                         break
         elif column_name is 'shop_category_id_json':
@@ -544,17 +546,23 @@ class Product(models.Model):
         elif column_name=='product_category_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫產品分類編號!'
-            elif not(re.match('^\d+$', param)):
-                ret_code, ret_description = err_code, '產品分類編號格式錯誤!'
             elif not(Product_Category.objects.get(id=param).exists()):
                 ret_code, ret_description = err_code, '產品分類編號不存在!'
+            else:
+                try:
+                    Product_Category.objects.get(id=param)
+                except:
+                    ret_code, ret_description = err_code, '產品分類編號格式錯誤!'
         elif column_name=='product_sub_category_id':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫產品子分類編號!'
-            elif not(re.match('^\d+$', param)):
-                ret_code, ret_description = err_code, '產品子分類編號格式錯誤!'
             elif not(Product_Sub_Category.objects.get(id=param).exists()):
                 ret_code, ret_description = err_code, '產品子分類編號不存在!'
+            else:
+                try:
+                    Product_Sub_Category.objects.get(id=param)
+                except:
+                    ret_code, ret_description = err_code, '產品子分類編號格式錯誤!'
         elif column_name=='product_title':
             if not(param):
                 ret_code, ret_description = err_code, '未填寫產品標題!'
