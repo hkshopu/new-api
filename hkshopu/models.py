@@ -302,7 +302,6 @@ class Selected_Shop_Category(models.Model):
                     json_list = json.loads(param)
                     for item in json_list:
                         try:
-                            int(item)
                             Shop_Category.objects.get(id=item)
                         except:
                             ret_code, ret_description = err_code, '商店分類編號不存在!'
