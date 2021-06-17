@@ -302,20 +302,14 @@ def delete(request):
         'data': []
     }
     if request.method=='POST':
+        shopping_cart_item_id=json.loads(request.POST.get('shopping_cart_item_id'))
 
-        # user_id= request.POST.get('user_id', '')
-        user_id= request.POST.get('user_id', '')
-        product_id=request.POST.get('product_id', '')
-        shopping_cart_item_id=request.POST.get('shopping_cart_item_id', '')
-        
-        
+        getCartID=[]
+        for i in range(len(shopping_cart_item_id["shopping_cart_item_id"])):
+            getCartID.append(shopping_cart_item_id["shopping_cart_item_id"][i])
 
         if response_data['status']==0:
-            if user_id=='' or product_id=='' or shopping_cart_item_id=='':
-                response_data['status']=-1
-                response_data['ret_val'] = '不能為空'
-            else:
-                shoppingCarts=models.Shopping_Cart.objects.get(id=shopping_cart_item_id,user_id=user_id,product_id=product_id).delete()
-                response_data['ret_val'] = '刪除成功'
+            shoppingCarts=models.Shopping_Cart.objects.filter(id__in=getCartID).delete()
+            response_data['ret_val'] = '刪除成功'
 
     return JsonResponse(response_data)
