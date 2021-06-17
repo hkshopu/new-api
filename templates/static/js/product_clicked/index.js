@@ -8,7 +8,7 @@ $(function() {
             txt += '<table class="table table-striped">';
             txt += '<thead>';
             txt += '<tr>';
-            txt += '<th>id</th><th>shop_id</th><th>user_id</th><th>created_at</th><th>updated_at</th>';
+            txt += '<th>id</th><th>product_id</th><th>user_id</th><th>created_at</th><th>updated_at</th>';
             txt += '<tbody>';
             if (res.status == 0) {
                 for (var i in res.data) {
