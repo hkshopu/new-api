@@ -218,91 +218,72 @@ def shopping_cart_item(request,user_id): #user_id
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
 
-#=================
-def spec_test(request):
+def count(request,user_id):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        if responseData['status'] == 0:
+            shoppingCarts=models.Shopping_Cart.objects.filter(user_id=user_id).count()
+
+            cartCount={
+                "cartCount":shoppingCarts
+            }
+            responseData['data'].append(cartCount)
+            responseData['ret_val'] = '已取得商品清單!'
+    return JsonResponse(responseData)
+
+#加入購物車
+def update(request):
+    # 回傳資料
     response_data = {
         'status': 0, 
-        'ret_val': '',
+        'ret_val': '', 
+        'data': []
     }
-    if request.method == 'POST':
-        # 欄位資料
-        product_spec_list=json.loads(request.POST.get('product_spec_list'))
-        print(product_spec_list)
-        print("====================")
-        print(product_spec_list[0])
-        # print(product_spec_list["product_spec_list"][3]["price"])
-        # print(len(product_spec_list["product_spec_list"]))
+    if request.method=='POST':
+
+        # user_id= request.POST.get('user_id', '')
+        shopping_cart_item_id= request.POST.get('shopping_cart_item_id', '')
+        new_quantity=request.POST.get('new_quantity', '')
+        selected_shipment_id=request.POST.get('selected_shipment_id', '')
         
-        # 檢查欄位是否填寫 
-        if response_data['status'] == 0:
-            if product_spec_list[0]["shipment"] is None:
-                response_data['status'] = -1000
-                response_data['ret_val'] = '成功!'
-            else:
-                response_data['status'] = -87
-                response_data['ret_val'] = '失敗!'
+
+        if response_data['status']==0:
+            shoppingCarts=models.Shopping_Cart.objects.get(id=shopping_cart_item_id)
+            
+            if new_quantity=='':
+                shoppingCarts.product_shipment_id=selected_shipment_id
+                shoppingCarts.save()
+                response_data['ret_val'] = '購物車運送方式更新成功!'
+            elif selected_shipment_id=='':
+                shoppingCarts.quantity=new_quantity
+                shoppingCarts.save()
+                response_data['ret_val'] = '購物車數量更新成功!'
     return JsonResponse(response_data)
-
-def pic_conpression(image,width,height):
-    im = Image.open(image)#Key Point
-    print(im.format, im.size, im.mode)
-    new_image=im.resize((width,height))
-    print(new_image)
-
-    pic_io=BytesIO ()
-    new_image.save (pic_io, im.format)
-
-    pic_file=InMemoryUploadedFile (
-    file=pic_io,  field_name=None,  name=image.name,  content_type=image.content_type,  size=image.size,  charset=None
-    )
-    print(pic_file.seek(0)) #must have seek()
-    return pic_file
-
-    #pass
-
-# 圖片壓縮
-def pic_resize(request):
+#加入購物車
+def product_shipment(request,product_id):
+    # 回傳資料
     response_data = {
         'status': 0, 
-        'ret_val': ''
+        'ret_val': '', 
+        'data': []
     }
-    if request.method == 'POST':
+    if request.method=='GET':       
 
-        if response_data['status'] == 0:
+        if response_data['status']==0:
+            shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id)
 
-            productPicURL=[]
-            for filename, product_pic_list in request.FILES.lists():
-                # print(filename)
-                # print(product_pic_list)
-                # name = request.FILES[filename].name
-                # print(name)
-                for index,f in enumerate(product_pic_list):
-                    if index==0:
-                        for i in range(3):
-                            if i ==0: #L     
-                                productPicURL.append(upload_file(pic_conpression(f,150,150),'images/img_compression/',suffix="img"))
-                            elif i==1: #M
-                                productPicURL.append(upload_file(pic_conpression(f,100,100),'images/img_compression/',suffix="img"))
-                            elif i==2: #S
-                                productPicURL.append(upload_file(pic_conpression(f,50,50),'images/img_compression/',suffix="img"))       
-                    else: 
-                        productPicURL.append(upload_file(f,'images/img_NoCompression/',suffix="img"))
-            #處理圖片&cover
-            print(productPicURL)
-            for index,product_pic_url in enumerate(productPicURL):            
-                # 寫入資料庫
-                if index==0 or index==1 or index==2:
-                    models.Selected_Product_Pic.objects.create(
-                        product_id=5282, 
-                        product_pic=product_pic_url,
-                        cover="y"
-                    )
-                else :
-                    models.Selected_Product_Pic.objects.create(
-                        product_id=5282, 
-                        product_pic=product_pic_url,
-                        cover="n"
-                    )
-            response_data['status'] = 0
-            response_data['ret_val'] = '圖片壓縮成功!'
+            for shipment in shipments:
+                shipmentList={
+                    "shipment_id":shipment.id,
+                    "shipment_desc":shipment.shipment_desc,
+                    "shipment_price":shipment.price
+                }
+                response_data["data"].append(shipmentList)
+
+            response_data['ret_val'] = '運費取得成功!'
     return JsonResponse(response_data)
