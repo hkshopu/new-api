@@ -827,6 +827,7 @@ def delete(request, id):
     if request.method == 'DELETE':
         try:
             shop = models.Shop.objects.get(id=id,is_delete='N')
+            products=models.Product.objects.filter(shop_id=id)
         except:
             responseData['status'], responseData['status'] = -1, '無此商店'
         if responseData['status'] == 0:
@@ -837,6 +838,11 @@ def delete(request, id):
         if responseData['status'] == 0:
             shop.is_delete='Y'
             shop.save()
+            
+            for product in products:
+                product.is_delete='Y'
+                product.save()
+            
             responseData['ret_val'] = '刪除成功'
     return JsonResponse(responseData)
     
