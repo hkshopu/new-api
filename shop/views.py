@@ -2013,7 +2013,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 data_of_shops = [] # 商店資料
                 # 搜尋
                 if keyword:
-                    shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__contains=keyword) | Q(shop_description__contains=keyword) | Q(long_description__contains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
+                    shops = models.Shop.objects.filter(is_delete='N').filter(Q(shop_title__icontains=keyword) | Q(shop_description__icontains=keyword) | Q(long_description__icontains=keyword)).values('id', 'shop_title', 'shop_icon', 'created_at')
                     models.Search_History.objects.create(
                         id=uuid.uuid4(), 
                         search_category='shop', 
