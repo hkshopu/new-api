@@ -276,7 +276,7 @@ def product_shipment(request,product_id):
     if request.method=='GET':       
 
         if response_data['status']==0:
-            shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id)
+            shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id,onoff='on')
 
             for shipment in shipments:
                 shipmentList={
