@@ -233,7 +233,7 @@ def count(request,user_id):
                 "cartCount":shoppingCarts
             }
             responseData['data'].append(cartCount)
-            responseData['ret_val'] = '已取得商品清單!'
+            responseData['ret_val'] = '已取得購物車數量!'
     return JsonResponse(responseData)
 
 #更新購物車
