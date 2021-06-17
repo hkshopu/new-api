@@ -152,6 +152,7 @@ def shopping_cart_item(request,user_id): #user_id
                                 spec_final={
                                     "shopping_cart_item_id":cartID.id,
                                     "shopping_cart_quantity":cartID.quantity,
+                                    "product_spec_id":productSpec.id,
                                     "spec_desc_1":productSpec.spec_desc_1,
                                     "spec_desc_2":productSpec.spec_desc_2,
                                     "spec_dec_1_items":productSpec.spec_dec_1_items,
@@ -165,6 +166,7 @@ def shopping_cart_item(request,user_id): #user_id
 
                             for productShipment in productShipments:
                                 shipment_final={
+                                    "product_shipment_id":productShipment.id,
                                     "shipment_desc":productShipment.shipment_desc,
                                     "shipment_price":productShipment.price
                                 }
@@ -190,6 +192,7 @@ def shopping_cart_item(request,user_id): #user_id
                             spec_final={
                                     "shopping_cart_item_id":cartID.id,
                                     "shopping_cart_quantity":cartID.quantity,
+                                    "product_spec_id":'',
                                     "spec_desc_1":'',
                                     "spec_desc_2":'',
                                     "spec_dec_1_items":'',
@@ -200,6 +203,7 @@ def shopping_cart_item(request,user_id): #user_id
                             specList.append(spec_final)
                             for productShipment in productShipments:
                                 shipment_final={
+                                    "product_shipment_id":productShipment.id,
                                     "shipment_desc":productShipment.shipment_desc,
                                     "shipment_price":productShipment.price
                                 }
