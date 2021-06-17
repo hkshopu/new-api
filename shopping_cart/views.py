@@ -288,3 +288,30 @@ def product_shipment(request,product_id):
 
             response_data['ret_val'] = '運送方式取得成功!'
     return JsonResponse(response_data)
+
+#刪除購物車
+def delete(request):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method=='POST':
+
+        # user_id= request.POST.get('user_id', '')
+        user_id= request.POST.get('user_id', '')
+        product_id=request.POST.get('product_id', '')
+        shopping_cart_item_id=request.POST.get('shopping_cart_item_id', '')
+        
+        
+
+        if response_data['status']==0:
+            if user_id=='' or product_id=='' or shopping_cart_item_id=='':
+                response_data['status']==-1
+                response_data['ret_val'] = '不能為空'
+            else:
+                shoppingCarts=models.Shopping_Cart.objects.get(id=shopping_cart_item_id,user_id=user_id,product_id=product_id).delete()
+                response_data['ret_val'] = '刪除成功'
+
+    return JsonResponse(response_data)

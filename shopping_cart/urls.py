@@ -8,4 +8,5 @@ urlpatterns = [
     path('<user_id>/count/', views.count),
     path('update/', views.update),
     path('<product_id>/product_shipment/', views.product_shipment),
+    path('delete/', views.delete),
 ]
