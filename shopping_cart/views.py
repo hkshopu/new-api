@@ -217,7 +217,7 @@ def shopping_cart_item(request,user_id): #user_id
                 responseData['data'].append(cartList)   
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
-
+#取得購物車數量
 def count(request,user_id):
     # 回傳資料
     responseData = {
@@ -236,7 +236,7 @@ def count(request,user_id):
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
 
-#加入購物車
+#更新購物車
 def update(request):
     # 回傳資料
     response_data = {
@@ -264,7 +264,8 @@ def update(request):
                 shoppingCarts.save()
                 response_data['ret_val'] = '購物車數量更新成功!'
     return JsonResponse(response_data)
-#加入購物車
+
+#取得商品運送方式
 def product_shipment(request,product_id):
     # 回傳資料
     response_data = {
@@ -285,5 +286,5 @@ def product_shipment(request,product_id):
                 }
                 response_data["data"].append(shipmentList)
 
-            response_data['ret_val'] = '運費取得成功!'
+            response_data['ret_val'] = '運送方式取得成功!'
     return JsonResponse(response_data)
