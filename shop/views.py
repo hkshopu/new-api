@@ -2152,6 +2152,5 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     shop_id=shop_analytic.shop_id, 
                     user_id=user_id
                 )
-            response_data['data']['quantity_of_shop'] = len(shops)
             response_data['ret_val'] = '取得商店搜尋分頁資料成功!'
     return JsonResponse(response_data)
