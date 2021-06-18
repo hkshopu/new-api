@@ -828,3 +828,10 @@ class User_Address(models.Model):
     is_default =  models.CharField(max_length=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Payment_Method(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    payment_desc = models.CharField(max_length=50, null=True)
+    is_default = models.CharField(max_length=1, null=True, default='N')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
