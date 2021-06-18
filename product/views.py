@@ -1386,17 +1386,23 @@ def save(request):
                 response_data['ret_val'] = '未填寫產品運費!'
         # 驗證各欄位格式是否正確
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', shop_id)):
+            try:
+                models.Shop.objects.get(id=shop_id)
+            except:
                 response_data['status'] = -8
                 response_data['ret_val'] = '商店編號格式錯誤!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_category_id)):
+            try:
+                models.Product_Category.objects.get(id=product_category_id)
+            except:
                 response_data['status'] = -9
                 response_data['ret_val'] = '產品分類編號格式錯誤!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_sub_category_id)):
+            try:
+                models.Product_Sub_Category.objects.get(id=product_sub_category_id)
+            except:
                 response_data['status'] = -10
                 response_data['ret_val'] = '產品子分類編號格式錯誤!'
 
