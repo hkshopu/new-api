@@ -106,3 +106,33 @@ def get_all_product_clicked(request):
                 })
             response_data['ret_val'] = '取得 Product_Clicked 資料成功!'
     return JsonResponse(response_data)
+# Shop_Browsed 首頁
+def get_all_shop_browsed_page(request):
+    template = get_template('shop_browsed/index.html')
+    html = template.render()
+    return HttpResponse(html)
+# 取得 Shop_Browsed 資料
+def get_all_shop_browsed(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method == 'GET':
+        if response_data['status'] == 0:
+            datas_of_shop_browsed = models.Shop_Browsed.objects.all()
+            if len(datas_of_shop_browsed) == 0:
+                response_data['status'] = -1
+                response_data['ret_val'] = '暫無資料!'
+
+        if response_data['status'] == 0:
+            for data in datas_of_shop_browsed:
+                response_data['data'].append({
+                    'id': data.id, 
+                    'shop_id': data.shop_id, 
+                    'user_id': data.user_id, 
+                    'created_at': data.created_at, 
+                    'updated_at': data.updated_at
+                })
+            response_data['ret_val'] = '取得 Shop_Browsed 資料成功!'
+    return JsonResponse(response_data)
