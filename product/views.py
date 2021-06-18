@@ -1611,12 +1611,14 @@ def save(request):
                     # 寫入資料庫
                     if index==0:
                         models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
                             cover="y"
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
                             cover="n"
