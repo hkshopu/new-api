@@ -1,6 +1,7 @@
-*/__pycache__/*
+__pycache__
 hkshopu/migrations/__pycache__
 utils/hkshopu-1ef39fa54ea8.json
 utils/hkshopu-20700-c554636b943d.json
 vendor/google/cloud/storage/__pycache__
 utils/peppy-booth-311912-0189bdb40f56.json
+utils/hkshopu-20700-f1ed4e97a237.json
