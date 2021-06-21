@@ -13,7 +13,7 @@ def bankCode(request):
     
     if request.method == 'GET':
         keyword = request.GET.get('keyword', '')
-        bank_list = models.Bank_Code.objects.filter(Q(bank_code__icontains=keyword) | Q(bank_name__icontains=keyword)).values('id', 'bank_code', 'bank_name', 'seq').order_by('-seq')
+        bank_list = models.Bank_Code.objects.filter(Q(bank_code__icontains=keyword) | Q(bank_name__icontains=keyword)).values('id', 'bank_code', 'bank_name', 'seq').order_by('seq')
         for row in bank_list:
             temp_obj = {}
             for attr in row:
