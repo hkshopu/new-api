@@ -827,7 +827,56 @@ class User_Address(models.Model):
     is_address_show =  models.CharField(max_length=1)
     is_default =  models.CharField(max_length=1)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+    
+        if param == 'name':
+            if param:
+                if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '姓名/公司名稱格式錯誤!'
+        elif param == 'country_code':
+            if param:
+                if not(re.match('^[\+\d]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '國碼格式錯誤!'
+        elif param == 'phone':
+            if param:
+                if not(re.match('^\d+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '電話號碼格式錯誤!'
+        elif param == 'is_phone_show':
+            if param:
+                if not(re.match('^\w+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '顯示在店鋪簡介格式錯誤!'
+        elif param == 'area':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '地域格式錯誤!'
+        elif param == 'district':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '地區格式錯誤!'
+        elif param == 'road':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '街道名稱格式錯誤!'
+        elif param == 'number':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '街道門牌格式錯誤!'
+        elif param == 'other':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '其他地址格式錯誤!'
+        elif param == 'floor':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '樓層格式錯誤!'
+        elif param == 'room':
+            if param:
+                if not(re.match('^[!@.#$%^&*\+\-\w\s]+$', param)) or len(param)>50:
+                    ret_code, ret_description = err_code, '房(室)名稱格式錯誤!'
+        return  ret_code, ret_description
 
 class Payment_Method(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
