@@ -671,7 +671,7 @@ def send_invitation_testing_mail(request):
             message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'
             for x in email:
-                mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=[x] , html_message=html_message)
+                mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=[x, ] , html_message=html_message)
             response_data['ret_val'] = '發送參與測試邀請電子郵件成功!'
     return JsonResponse(response_data)
 
