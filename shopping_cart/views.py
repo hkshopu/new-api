@@ -313,3 +313,24 @@ def delete(request):
             response_data['ret_val'] = '刪除成功'
 
     return JsonResponse(response_data)
+    
+def buyer_address(request,user_id): 
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+        if response_data['status']==0:
+            userAddresses=models.User_Address.objects.filter(user_id=user_id)
+            for userAddress in userAddresses:
+                addressInfo={
+                    "id":userAddress.id,
+                    "name":userAddress.name,
+                    "phone":userAddress.phone,
+                    "address": userAddress.area + userAddress.district + userAddress.road +userAddress.number + userAddress.floor + userAddress.room
+                }
+                response_data['data'].append(addressInfo)
+
+            response_data['ret_val'] = '買家地址取得成功'
+    return JsonResponse(response_data)
