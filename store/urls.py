@@ -37,5 +37,6 @@ urlpatterns = [
     path('serback/', include('serback.urls')),
     path('shopping_cart/', include('shopping_cart.urls')),
     path('payment/', include('payment.urls')),
-    path('general/', include('general.urls'))
+    path('general/', include('general.urls')), 
+    path('app_version/', include('app_version.urls'))
 ]
