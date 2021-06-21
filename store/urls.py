@@ -36,5 +36,6 @@ urlpatterns = [
     path('shop_score/', include('shop_score.urls')),
     path('serback/', include('serback.urls')),
     path('shopping_cart/', include('shopping_cart.urls')),
-    path('payment/', include('payment.urls'))
+    path('payment/', include('payment.urls')),
+    path('general/', include('general.urls'))
 ]

@@ -835,3 +835,11 @@ class Payment_Method(models.Model):
     is_default = models.CharField(max_length=1, null=True, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Bank_Code(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    bank_code = models.CharField(max_length=3)
+    bank_name = models.CharField(max_length=200)
+    seq = models.IntegerField(max_length=3)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
