@@ -361,6 +361,7 @@ def add_buyer_address(request):
         print(type(user_id))
         print("======")
         if user_id=='' or name=='' or country_code=='' or phone=='' or area=='' or district=='' or road=='' or number=='':
+            responseData['status'] = -11
             responseData['ret_val'] = '未填寫必要欄位!'
             return JsonResponse(responseData)
         if responseData['status'] == 0:
