@@ -644,6 +644,11 @@ def getUserShopCount(request, id):
             responseData['data'].append(shopInfo)
             responseData['ret_val'] = '已取得您的商店總數!'
     return JsonResponse(responseData)
+# 發送電子郵件邀請使用者參與測試頁面
+def send_invitation_testing_mail_page(request):
+    template = get_template('invitation_testing_mail/index.html')
+    html = template.render()
+    return HttpResponse(html)
 # 發送電子郵件邀請使用者參與測試
 def send_invitation_testing_mail(request):
     response_data = {
@@ -652,7 +657,7 @@ def send_invitation_testing_mail(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        email = request.POST.getlist('email', [])
+        email = request.POST.get('email', '')
 
         if response_data['status'] == 0:
             if not(email):
@@ -660,12 +665,13 @@ def send_invitation_testing_mail(request):
                 response_data['ret_val'] = '未填寫電子郵件!'
 
         if response_data['status'] == 0:
+            email = str(email).split(',')
             subject = 'HKShopU - 參與測試邀請'
             html_message = render_to_string('invitation_testing_mail.html')
             message = strip_tags(html_message)
             from_email = 'info@hkshopu.com'
             for x in email:
-                mail.send_mail(subject=subject, message=message, from_email=from_email,recipient_list=[x] , html_message=html_message)
+                mail.send_mail(subject=subject, message=message, from_email=from_email, recipient_list=[x] , html_message=html_message)
             response_data['ret_val'] = '發送參與測試邀請電子郵件成功!'
     return JsonResponse(response_data)
 
