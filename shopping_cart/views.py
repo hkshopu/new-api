@@ -334,3 +334,94 @@ def buyer_address(request,user_id):
 
             response_data['ret_val'] = '買家地址取得成功'
     return JsonResponse(response_data)
+
+#加入購物車
+def add_buyer_address(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method=='POST':
+
+        user_id= request.POST.get('user_id', '')
+        name= request.POST.get('name', '')
+        country_code = request.POST.get('country_code', '')
+        phone=request.POST.get('phone', '')
+        area=request.POST.get('area', '')
+        district=request.POST.get('district', '')
+        road=request.POST.get('road', '')
+        number=request.POST.get('number', '')
+        other=request.POST.get('other', '')
+        floor=request.POST.get('floor', '')
+        room=request.POST.get('room', '')
+        print("======")
+        print(user_id)
+        print(type(user_id))
+        print("======")
+        if user_id=='' or name=='' or country_code=='' or phone=='' or area=='' or district=='' or road=='' or number=='':
+            responseData['ret_val'] = '未填寫必要欄位!'
+            return JsonResponse(responseData)
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('name',-1,name)        
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('phone',-2,phone)        
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('area',-3,area)        
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('district',-4,district)             
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('road',-5,road)        
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('number',-6,number)        
+        # if responseData['status'] == 0:
+        #     responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('road',-7,road)        
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('floor',-7,floor)        
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('room',-8,room)   
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('country_code',-9,country_code)     
+        if responseData['status'] == 0:
+            responseData['status'],responseData['ret_val'] = models.User_Address.validate_column('other',-10,other)         
+
+        if responseData['status']==0:
+            addresses=models.User_Address.objects.filter(user_id=user_id).count()
+            if addresses>0:
+                models.User_Address.objects.create(
+                        id=uuid.uuid4(),
+                        user_id=user_id,
+                        name=name,
+                        phone=phone,
+                        area=area,
+                        district=district,
+                        road=road,
+                        number=number,
+                        floor=floor,
+                        room=room,
+                        country_code=country_code,
+                        other=other,
+                        is_default='N',
+                        is_address_show='N'
+                )
+                responseData['ret_val'] = '買家地址新增成功!'
+            else:
+                models.User_Address.objects.create(
+                        id=uuid.uuid4(),
+                        user_id=user_id,
+                        name=name,
+                        phone=phone,
+                        area=area,
+                        district=district,
+                        road=road,
+                        number=number,
+                        floor=floor,
+                        room=room,
+                        country_code=country_code,
+                        other=other,
+                        is_default='Y',
+                        is_address_show='N'
+                )
+                responseData['ret_val'] = '買家地址新增成功!'
+    return JsonResponse(responseData)
