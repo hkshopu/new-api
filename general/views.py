@@ -8,7 +8,7 @@ def bankCode(request):
     responseData = {
         'status': 0,
         'ret_val': '',
-        'data': {'bank_list':[]}
+        'data': []
     }
     
     if request.method == 'GET':
@@ -18,5 +18,5 @@ def bankCode(request):
             temp_obj = {}
             for attr in row:
                 temp_obj[attr] = row[attr]
-            responseData['data']['bank_list'].append(temp_obj)
+            responseData['data'].append(temp_obj)
     return JsonResponse(responseData)
