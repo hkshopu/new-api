@@ -33,5 +33,6 @@ urlpatterns = [
     path('selected_product_pic/', include('selected_product_pic.urls')), 
     path('selected_shop_category/', include('selected_shop_category.urls')),
     path('shop_sub_category/', include('shop_sub_category.urls')),
-    path('shop_score/', include('shop_score.urls'))
+    path('shop_score/', include('shop_score.urls')),
+    path('general/', include('general.urls'))
 ]
