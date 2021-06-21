@@ -17,8 +17,8 @@ urlpatterns = [
     path('getUserListProcess/', views.getUserListProcess), 
     path('<id>/show/', views.show),
     path('<id>/shopCount/', views.getUserShopCount), 
-    path('send_invitation_testing_mail_page/', views.send_invitation_testing_mail_page), 
-    path('send_invitation_testing_mail/', views.send_invitation_testing_mail),
+    path('send_invitation_testing_mail_page/', views.send_invitation_testing_mail_page, name='user.send_invitation_testing_mail_page'), 
+    path('send_invitation_testing_mail/', views.send_invitation_testing_mail, name='user.send_invitation_testing_mail'),
     path('<user_id>/followShop/<shop_id>/', views.followShop),
     path('<user_id>/topProductDetail/<product_id>/', views.topProductDetail),
     path('/topProductDetail/<product_id>/', views.topProductDetail), # if user_id=''
