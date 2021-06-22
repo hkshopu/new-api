@@ -831,7 +831,7 @@ def addPaymentAccount(request, user_id):
             responseData['status'], responseData['ret_val'] = -1, '無此使用者'
         if responseData['status']==0:
             models.User_Payment_Account.objects.filter(user_id=user_id, is_default='Y').update(is_default='N')
-            models.User_Payment_Account.objects.create(
+            payment_account=models.User_Payment_Account.objects.create(
                 id = uuid.uuid4(),
                 payment_type = payment_type,
                 user_id = user_id,
@@ -843,6 +843,7 @@ def addPaymentAccount(request, user_id):
                 contact_email = contact_email,
                 is_default = 'Y'
             )
+            responseData['data']['id'] = payment_account.id
             responseData['ret_val'] = '新增使用者付款方式成功'
 
     return JsonResponse(responseData)
