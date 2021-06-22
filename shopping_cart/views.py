@@ -269,7 +269,7 @@ def shopping_cart_item(request,user_id): #user_id
                 responseData['data'].append(cartList)   
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
-    
+
 #取得購物車數量
 def count(request,user_id):
     # 回傳資料
@@ -303,19 +303,26 @@ def update(request):
         shopping_cart_item_id= request.POST.get('shopping_cart_item_id', '')
         new_quantity=request.POST.get('new_quantity', '')
         selected_shipment_id=request.POST.get('selected_shipment_id', '')
-        
+        selected_user_address_id=request.POST.get('selected_user_address_id', '')
+        selected_payment_id=request.POST.get('selected_payment_id', '')
 
         if response_data['status']==0:
             shoppingCarts=models.Shopping_Cart.objects.get(id=shopping_cart_item_id)
             
-            if new_quantity=='':
-                shoppingCarts.product_shipment_id=selected_shipment_id
-                shoppingCarts.save()
-                response_data['ret_val'] = '購物車運送方式更新成功!'
-            elif selected_shipment_id=='':
+            if selected_shipment_id !='':
+                shoppingCarts.product_shipment_id=selected_shipment_id               
+                # response_data['ret_val'] = '購物車運送方式更新成功!'
+            elif new_quantity !='':
                 shoppingCarts.quantity=new_quantity
-                shoppingCarts.save()
-                response_data['ret_val'] = '購物車數量更新成功!'
+                # shoppingCarts.save()
+                
+            elif selected_user_address_id !='':
+                shoppingCarts.user_address_id =selected_user_address_id
+            elif selected_payment_id !='':
+                shoppingCarts.payment_id =selected_payment_id
+
+            shoppingCarts.save()
+            response_data['ret_val'] = '購物車更新成功!'
     return JsonResponse(response_data)
 
 #取得商品運送方式
