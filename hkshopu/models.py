@@ -859,3 +859,10 @@ class User_Payment_Account(models.Model):
     is_default = models.CharField(max_length=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class App_Version(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    app_type = models.CharField(max_length=10, null=True)
+    version_number = models.CharField(max_length=10, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
