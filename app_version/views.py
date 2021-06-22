@@ -20,9 +20,9 @@ def get_latest_app_version_number(request):
         'ret_val': '', 
         'data': {}
     }
-    if request.method == 'GET':
+    if request.method == 'POST':
         # 欄位資料
-        app_type = request.GET.get('app_type', '')
+        app_type = request.POST.get('app_type', '')
 
         if response_data['status'] == 0:
             app_versions = models.App_Version.objects.filter(app_type=app_type).values('version_number')
