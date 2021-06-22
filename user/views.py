@@ -808,3 +808,41 @@ def auditLog(request, user_id=''):
         responseData['ret_val'] = '新增成功'
 
     return JsonResponse(responseData)
+
+def addPaymentAccount(request, user_id):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    if request.method == 'POST':
+        payment_type = request.POST.get('payment_type','')
+        bank_code = request.POST.get('bank_code','')
+        bank_name = request.POST.get('bank_name','')
+        contact_type = request.POST.get('contact_type','')
+        phone_country_code = request.POST.get('phone_country_code','')
+        phone_number = request.POST.get('phone_number','')
+        contact_email = request.POST.get('contact_email','')
+
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此使用者'
+        if responseData['status']==0:
+            models.User_Payment_Account.objects.filter(user_id=user_id, is_default='Y').update(is_default='N')
+            models.User_Payment_Account.objects.create(
+                id = uuid.uuid4(),
+                payment_type = payment_type,
+                user_id = user_id,
+                bank_code = bank_code,
+                bank_name = bank_name,
+                contact_type = contact_type,
+                phone_country_code = phone_country_code,
+                phone_number = phone_number,
+                contact_email = contact_email,
+                is_default = 'Y'
+            )
+            responseData['ret_val'] = '新增使用者付款方式成功'
+
+    return JsonResponse(responseData)

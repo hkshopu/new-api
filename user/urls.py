@@ -22,5 +22,6 @@ urlpatterns = [
     path('<user_id>/topProductDetail/<product_id>/', views.topProductDetail),
     path('/topProductDetail/<product_id>/', views.topProductDetail), # if user_id=''
     path('<user_id>/auditLog/', views.auditLog),
-    path('/auditLog/', views.auditLog) # if user_id=''
+    path('/auditLog/', views.auditLog), # if user_id=''
+    path('<user_id>/addPaymentAccount/', views.addPaymentAccount)
 ]
