@@ -882,6 +882,7 @@ class Payment_Method(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     payment_desc = models.CharField(max_length=50, null=True)
     is_default = models.CharField(max_length=1, null=True, default='N')
+    button_path = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
