@@ -70,19 +70,43 @@ def add(request):
 
         if response_data['status']==0:
             shoppingCart_checks=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id)
+            user_address_id=models.User_Address.objects.filter(user_id=user_id,is_default='Y')
+            payment_id=models.Payment_Method.objects.get(is_default='Y')
+            shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id,onoff='on').order_by('price')[:1]
+            # print(shipments)
             if len(shoppingCart_checks)==0:
-                models.Shopping_Cart.objects.create(
-                        id=uuid.uuid4(),
-                        user_id=user_id,
-                        product_id=product_id,
-                        product_spec_id=product_spec_id,
-                        quantity=quantity
-                )
-                cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
-                if(len(cart_check))==0:
-                    response_data['ret_val'] = '購物車新增失敗!'
+                if len(user_address_id)==0:
+                    models.Shopping_Cart.objects.create(
+                            id=uuid.uuid4(),
+                            user_id=user_id,
+                            product_id=product_id,
+                            product_spec_id=product_spec_id,
+                            quantity=quantity,
+                            # user_address_id=user_address_id.id,
+                            payment_id=payment_id.id,
+                            product_shipment_id=shipments[0].id
+                    )
+                    cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
+                    if(len(cart_check))==0:
+                        response_data['ret_val'] = '購物車新增失敗!'
+                    else:
+                        response_data['ret_val'] = '購物車新增成功!'
                 else:
-                    response_data['ret_val'] = '購物車新增成功!'
+                    models.Shopping_Cart.objects.create(
+                            id=uuid.uuid4(),
+                            user_id=user_id,
+                            product_id=product_id,
+                            product_spec_id=product_spec_id,
+                            quantity=quantity,
+                            user_address_id=user_address_id[0].id,
+                            payment_id=payment_id.id,
+                            product_shipment_id=shipments[0].id
+                    )
+                    cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
+                    if(len(cart_check))==0:
+                        response_data['ret_val'] = '購物車新增失敗!'
+                    else:
+                        response_data['ret_val'] = '購物車新增成功!'
             else : 
                 for shoppingCart_check in shoppingCart_checks:
                     shoppingCart_check.quantity=shoppingCart_check.quantity+int(quantity)
@@ -123,13 +147,37 @@ def shopping_cart_item(request,user_id): #user_id
                     'shop_id':0,
                     'shop_title':"",
                     'shop_icon':"",
-                    'productList':[]
+                    'user_address_id':"",
+                    'name_in_address':"",
+                    'address_phone':"",
+                    'address':"",
+                    'productList':[],
+                    'payment_id':"",
+                    'payment_desc':""
                 }
                 products=models.Product.objects.filter(id__in=getProductID)
                 cartList.update({"shop_id":shop.id})
                 cartList.update({"shop_title":shop.shop_title})
                 cartList.update({"shop_icon":shop.shop_icon})
-                
+                try:
+                    address=models.User_Address.objects.get(user_id=user_id,is_default='Y')
+                except models.User_Address.DoesNotExist:
+                    address = None
+
+                if address:
+                    cartList.update({"user_address_id":address.id})
+                    cartList.update({"name_in_address":address.name})
+                    cartList.update({"address_phone":address.phone})
+                    cartList.update({"address":address.area+address.district+address.road+address.number+address.floor+address.room})
+
+                try:
+                    payment=models.Payment_Method.objects.get(is_default='Y')
+                except models.Payment_Method.DoesNotExist:
+                    payment = None
+                if payment:
+                    cartList.update({"payment_id":payment.id})
+                    cartList.update({"payment_desc":payment.payment_desc})
+
                 for product in products:
                     if shop.id==product.shop_id:
                         if product.product_spec_on=='y':
@@ -221,6 +269,7 @@ def shopping_cart_item(request,user_id): #user_id
                 responseData['data'].append(cartList)   
             responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
+    
 #取得購物車數量
 def count(request,user_id):
     # 回傳資料
