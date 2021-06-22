@@ -15,5 +15,6 @@ nav {
     z-index: 99;
 }
 main {
+    margin-top: 72px;
     text-align: center;
 }
