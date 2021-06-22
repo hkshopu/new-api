@@ -298,31 +298,29 @@ def update(request):
         'data': []
     }
     if request.method=='POST':
-
-        # user_id= request.POST.get('user_id', '')
-        shopping_cart_item_id= request.POST.get('shopping_cart_item_id', '')
+        shopping_cart_item_id=json.loads(request.POST.get('shopping_cart_item_id'))
         new_quantity=request.POST.get('new_quantity', '')
         selected_shipment_id=request.POST.get('selected_shipment_id', '')
         selected_user_address_id=request.POST.get('selected_user_address_id', '')
         selected_payment_id=request.POST.get('selected_payment_id', '')
+        getCartID=[]
+        for i in range(len(shopping_cart_item_id["shopping_cart_item_id"])):
+            getCartID.append(shopping_cart_item_id["shopping_cart_item_id"][i])
 
         if response_data['status']==0:
-            shoppingCarts=models.Shopping_Cart.objects.get(id=shopping_cart_item_id)
-            
-            if selected_shipment_id !='':
-                shoppingCarts.product_shipment_id=selected_shipment_id               
-                # response_data['ret_val'] = '購物車運送方式更新成功!'
-            elif new_quantity !='':
-                shoppingCarts.quantity=new_quantity
-                # shoppingCarts.save()
-                
-            elif selected_user_address_id !='':
-                shoppingCarts.user_address_id =selected_user_address_id
-            elif selected_payment_id !='':
-                shoppingCarts.payment_id =selected_payment_id
+            shoppingCarts=models.Shopping_Cart.objects.filter(id__in=getCartID)
+            for shoppingCart in shoppingCarts:
+                if selected_shipment_id !='':
+                    shoppingCart.product_shipment_id=selected_shipment_id               
+                elif new_quantity !='':
+                    shoppingCart.quantity=new_quantity      
+                elif selected_user_address_id !='':
+                    shoppingCart.user_address_id =selected_user_address_id
+                elif selected_payment_id !='':
+                    shoppingCart.payment_id =selected_payment_id
 
-            shoppingCarts.save()
-            response_data['ret_val'] = '購物車更新成功!'
+                shoppingCart.save()
+                response_data['ret_val'] = '購物車更新成功!'
     return JsonResponse(response_data)
 
 #取得商品運送方式
