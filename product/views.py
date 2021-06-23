@@ -747,7 +747,7 @@ def product_info(request,id): #product_id
                
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
             productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
-            productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0])
+            productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0]).order_by('spec_dec_1_items', 'spec_dec_2_items')
             productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
             
             for product in products:       
