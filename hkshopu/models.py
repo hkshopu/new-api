@@ -937,3 +937,14 @@ class User_Rate(models.Model):
     comment =  models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class FPS_Order_Transaction(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    order_id = models.CharField(max_length=36)
+    user_payment_account_id = models.CharField(max_length=36)
+    target_delivery_date = models.DateField()
+    target_delivery_time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
