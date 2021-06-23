@@ -928,3 +928,12 @@ class User_Payment_Account(models.Model):
     is_default = models.CharField(max_length=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class User_Rate(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id =  models.CharField(max_length=36)
+    user_id =  models.CharField(max_length=36)
+    rating =  models.FloatField()
+    comment =  models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
