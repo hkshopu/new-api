@@ -833,14 +833,38 @@ def user_id_validation(request):
             response_data['ret_val'] = '該使用者存在!'
     return JsonResponse(response_data)
 
-def addPaymentAccount(request, user_id):
+def addPaymentAccount(request, user_id='', id=''):
     responseData = {
         'status': 0,
         'ret_val': '',
         'data': {}
     }
+    if request.method == 'GET':
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此使用者'
+        if responseData['status'] == 0:
+            payment_account_attr = [
+                'id',
+                'payment_type',
+                'bank_code',
+                'bank_name',
+                'contact_type',
+                'phone_country_code',
+                'phone_number',
+                'contact_email'
+            ]
+            payment_accounts = models.User_Payment_Account.objects.filter(user_id=user_id).order_by('-is_default')
+            responseData['data'] = []
+            for account in payment_accounts:
+                temp_data = {}
+                for attr in payment_account_attr:
+                    if hasattr(account, attr):
+                        temp_data[attr] = getattr(account, attr)
+                responseData['data'].append(temp_data)
 
-    if request.method == 'POST':
+    elif request.method == 'POST': # add
         payment_type = request.POST.get('payment_type','')
         bank_code = request.POST.get('bank_code','')
         bank_name = request.POST.get('bank_name','')
@@ -853,8 +877,21 @@ def addPaymentAccount(request, user_id):
             models.User.objects.get(id=user_id)
         except:
             responseData['status'], responseData['ret_val'] = -1, '無此使用者'
-        if responseData['status']==0:
-            models.User_Payment_Account.objects.filter(user_id=user_id, is_default='Y').update(is_default='N')
+        if responseData['status'] == 0:
+            if contact_type == 'email' and contact_email == '':
+                responseData['status'], responseData['ret_val'] = -2, 'contact_email為必填'
+            elif contact_type == 'phone':
+                if phone_number == '':
+                    responseData['status'], responseData['ret_val'] = -3, 'phone_number為必填'
+                elif len(phone_number) != 8:
+                    responseData['status'], responseData['ret_val'] = -4, 'phone_number長度只能為8'
+
+        if responseData['status'] == 0:
+            if len(models.User_Payment_Account.objects.filter(user_id=user_id, is_default='Y'))==0:
+                is_default='Y'
+            else:
+                is_default='N'
+            
             payment_account=models.User_Payment_Account.objects.create(
                 id = uuid.uuid4(),
                 payment_type = payment_type,
@@ -865,9 +902,30 @@ def addPaymentAccount(request, user_id):
                 phone_country_code = phone_country_code,
                 phone_number = phone_number,
                 contact_email = contact_email,
-                is_default = 'Y'
+                is_default = is_default
             )
             responseData['data']['id'] = payment_account.id
             responseData['ret_val'] = '新增使用者付款方式成功'
-
+            
+    elif request.method == 'PATCH': # default account
+        try:
+            models.User_Payment_Account.objects.get(id=id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此付款方式ID'
+        if responseData['status'] == 0:
+            payment_account = models.User_Payment_Account.objects.get(id=id)
+            models.User_Payment_Account.objects.filter(user_id=payment_account.user_id, is_default='Y').update(is_default='N')
+            payment_account.is_default = 'Y'
+            payment_account.save()
+            responseData['ret_val'] = '設定預設付款方式成功'
+    elif request.method == 'DELETE': # delete
+        try:
+            models.User_Payment_Account.objects.get(id=id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此付款方式ID'
+        if responseData['status'] == 0:
+            models.User_Payment_Account.objects.get(id=id).delete()
+            responseData['ret_val'] = '刪除預設付款方式成功'
+        
+            
     return JsonResponse(responseData)
