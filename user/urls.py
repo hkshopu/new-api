@@ -26,5 +26,6 @@ urlpatterns = [
     path('<user_id>/addPaymentAccount/', views.addPaymentAccount), 
     path('user_id_validation/', views.user_id_validation),
     path('<user_id>/addPaymentAccount/', views.addPaymentAccount),
-    path('<user_id>/addPaymentAccount/<id>/', views.addPaymentAccount)
+    path('<user_id>/addPaymentAccount/<id>/', views.addPaymentAccount),
+    path('addPaymentAccount/<id>/', views.addPaymentAccount)
 ]
