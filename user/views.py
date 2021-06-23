@@ -1,7 +1,7 @@
 from django.db.models import Q, Avg, Min, Max, Count, Sum
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import get_template, render_to_string
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 from passlib.handlers.django import django_pbkdf2_sha256
 from django.core import mail
 from django.utils.html import strip_tags
@@ -928,4 +928,63 @@ def addPaymentAccount(request, user_id='', id=''):
             responseData['ret_val'] = '刪除預設付款方式成功'
         
             
+    return JsonResponse(responseData)
+
+def update_detail(request):
+    responseData = {
+            'status': 0,
+            'ret_val': '',
+            'data': {}
+        }
+  
+    if request.method=='POST':
+        user_id= request.POST.get('user_id', '')
+        user_name= request.POST.get('user_name', '')
+        gender=request.POST.get('gender', '')
+        birthday=request.POST.get('birthday', '')
+        phone=request.POST.get('phone', '')
+        facebook_on_off=request.POST.get('facebook_on_off', '')
+        instagram_on_off=request.POST.get('instagram_on_off', '')
+
+        old_password=request.POST.get('old_password', '')
+        new_password=request.POST.get('new_password', '')
+
+        users=models.User.objects.filter(id=user_id)
+        # if responseData['status'] == 0:
+        #     if not(re.match('^(?!.*[^\x21-\x7e])(?=.{8,16})(?=.*[\W])(?=.*[a-zA-Z])(?=.*\d).*$', new_password)):
+        #         responseData['status'] = -1
+        #         responseData['ret_val'] = '新密碼格式錯誤!'
+        print(make_password(old_password))
+        print("============")
+        print(check_password(old_password,users[0].password))
+        if responseData['status']==0:
+            for user in users:
+                if user_name !='':
+                    user.account_name=user_name               
+                elif gender !='':
+                    user.gender=gender      
+                elif birthday !='':
+                    user.birthday =birthday
+                elif phone !='':
+                    user.phone =phone
+                elif old_password !='':
+                    if check_password(old_password,users[0].password):
+                        responseData['status'] = 0
+                        responseData['ret_val'] = '輸入值與舊密碼一致'
+                        return JsonResponse(responseData)
+                    else : 
+                        responseData['status'] = -1
+                        responseData['ret_val'] = '輸入值與舊密碼不一致'
+                        return JsonResponse(responseData)
+                elif new_password !='':
+                    if not(re.match('^(?!.*[^\x21-\x7e])(?=.{8,16})(?=.*[\W])(?=.*[a-zA-Z])(?=.*\d).*$', new_password)):
+                        responseData['status'] = -2
+                        responseData['ret_val'] = '新密碼格式錯誤!'
+                        return JsonResponse(responseData)
+                    else:
+                        user.password =make_password(new_password)
+                
+                user.save()
+                responseData['ret_val'] = '使用者資訊更新成功!'
+
     return JsonResponse(responseData)
