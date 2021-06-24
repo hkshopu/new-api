@@ -733,7 +733,8 @@ class Product_Shipment_Method(models.Model):
     shop_id=models.PositiveIntegerField()
 
 class Shop_Order(models.Model):
-    id = models.TextField(primary_key=True, max_length=36)
+    id = models.CharField(primary_key=True, max_length=36)
+    order_number = models.CharField(max_length=25)
     shop_id = models.PositiveIntegerField()
     user_id = models.PositiveIntegerField()
     user_address_id = models.CharField(max_length=36)
@@ -753,9 +754,16 @@ class Shop_Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Shop_Order_Details(models.Model):
-    id = models.TextField(primary_key=True, max_length=36)
+    id = models.CharField(primary_key=True, max_length=36)
     order_id = models.TextField(max_length=36)
     product_id = models.PositiveIntegerField()
+    product_spec_id = models.PositiveIntegerField()
+    product_shipment_id = models.PositiveIntegerField()
+    product_description = models.TextField()
+    spec_desc_1 = models.CharField(max_length=255, null=True)
+    spec_desc_2 = models.CharField(max_length=255, null=True)
+    spec_dec_1_items = models.CharField(max_length=255, null=True)
+    spec_dec_2_items = models.CharField(max_length=255, null=True)
     unit_price = models.FloatField()
     purchasing_qty = models.PositiveIntegerField()
     logistic_fee = models.FloatField()
