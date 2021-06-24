@@ -768,6 +768,7 @@ class Shop_Order_Details(models.Model):
     spec_dec_1_items = models.CharField(max_length=255, null=True)
     spec_dec_2_items = models.CharField(max_length=255, null=True)
     unit_price = models.FloatField()
+    quantity = models.PositiveIntegerField()
     purchasing_qty = models.PositiveIntegerField()
     logistic_fee = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
