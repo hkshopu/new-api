@@ -922,3 +922,37 @@ class Bank_Code(models.Model):
     seq = models.IntegerField(max_length=3)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class User_Payment_Account(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    payment_type = models.CharField(max_length=10)
+    user_id = models.CharField(max_length=36)
+    bank_code = models.CharField(max_length=3)
+    bank_name = models.CharField(max_length=200)
+    contact_type = models.CharField(max_length=25)
+    phone_country_code = models.CharField(max_length=5, null=True)
+    phone_number = models.CharField(max_length=10, null=True)
+    contact_email = models.CharField(max_length=50, null=True)
+    is_default = models.CharField(max_length=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class User_Rate(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id =  models.CharField(max_length=36)
+    user_id =  models.CharField(max_length=36)
+    rating =  models.FloatField()
+    comment =  models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class FPS_Order_Transaction(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    order_id = models.CharField(max_length=36)
+    user_payment_account_id = models.CharField(max_length=36)
+    target_delivery_date = models.DateField()
+    target_delivery_time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
