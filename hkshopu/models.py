@@ -761,7 +761,7 @@ class Shop_Order_Details(models.Model):
     order_id = models.TextField(max_length=36)
     product_id = models.PositiveIntegerField()
     product_spec_id = models.PositiveIntegerField()
-    product_shipment_id = models.PositiveIntegerField()
+    product_shipment_id = models.CharField(max_length=36)
     product_description = models.TextField()
     spec_desc_1 = models.CharField(max_length=255, null=True)
     spec_desc_2 = models.CharField(max_length=255, null=True)
