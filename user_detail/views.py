@@ -235,8 +235,8 @@ def browsed_count(request,user_id):
         'data': []
     } 
     if request.method=='GET':
-        follow=models.Product_Browsed.objects.filter(user_id=user_id).count()
-        responseData['data'] =follow
+        browse=models.Product_Browsed.objects.filter(user_id=user_id).values('product_id').annotate(Count('product_id')).count()
+        responseData['data'] =browse
         responseData['ret_val'] = '買家足跡數量取得成功'
 
     return JsonResponse(responseData)   
@@ -254,12 +254,12 @@ def user_browsed(request):
             browses=models.Product_Browsed.objects.filter(user_id=user_id)
             getProductID=[]
             for browse in browses:
-                getProductID.append(browses.product_id)
+                getProductID.append(browse.product_id)
                 # sellerName=models.User.objects.get(id=rate.user_id)
 
             products=models.Product.objects.filter(id__in=getProductID).filter(product_title__icontains=keyword)
             productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')  
-            for browse in browses:
+            for product in products:
                 if product.product_spec_on=='y':
                     for productPic in productPics:
                         # for productSpec in productSpecs:    
