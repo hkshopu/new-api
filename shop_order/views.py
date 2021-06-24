@@ -17,17 +17,17 @@ def convert_shopping_cart_items_to_order(request):
     }
     if request.method == 'POST':
         # 欄位資料
-        shopping_cart_item_id = request.POST.getlist('shopping_cart_item_id', [])
+        shopping_cart_id = request.POST.getlist('shopping_cart_id', [])
 
         if response_data['status'] == 0:
-            if not(shopping_cart_item_id):
+            if not(shopping_cart_id):
                 response_data['status'] = -1
                 response_data['ret_val'] = '未填寫購物車編號!'
 
         if response_data['status'] == 0:
             # 購物車資訊
             datas_of_shopping_cart = []
-            shopping_carts = models.Shopping_Cart.objects.filter(id__in=shopping_cart_item_id).values('user_id', 'product_id', 'product_spec_id', 'product_shipment_id', 'quantity', 'user_address_id', 'payment_id')
+            shopping_carts = models.Shopping_Cart.objects.filter(id__in=shopping_cart_id).values('user_id', 'product_id', 'product_spec_id', 'product_shipment_id', 'quantity', 'user_address_id', 'payment_id')
             for shopping_cart in shopping_carts:
                 products = models.Product.objects.filter(id=shopping_cart['product_id']).values('shop_id')
                 datas_of_shopping_cart.append({
@@ -94,17 +94,17 @@ def convert_shopping_cart_items_to_order(request):
                 for data_of_shopping_cart in datas_of_shopping_cart:
                     if data_of_shopping_cart['shop_id'] == data_of_shop_order['shop_id'] and data_of_shopping_cart['product_shipment_id'] == data_of_shop_order['product_shipment_id']:
                         products = models.Product.objects.filter(id=data_of_shopping_cart['product_id']).values('product_description', 'product_price')
-                        specs = models.Product_Spec.objects.filter(id=data_of_shopping_cart['product_spec_id']).values('spec_desc_1', 'spec_desc_2', 'spec_dec_1_items', 'spec_dec_2_items')
+                        product_specs = models.Product_Spec.objects.filter(id=data_of_shopping_cart['product_spec_id']).values('spec_desc_1', 'spec_desc_2', 'spec_dec_1_items', 'spec_dec_2_items')
                         models.Shop_Order_Details.objects.create(
                             id=uuid.uuid4(), 
                             order_id=data_of_shop_order['id'], 
                             product_id=data_of_shopping_cart['product_id'], 
                             product_description=products[0]['product_description'] if len(products) > 0 else '', 
                             product_spec_id=data_of_shopping_cart['product_spec_id'], 
-                            spec_desc_1=specs[0]['spec_desc_1'] if len(specs) > 0 else '', 
-                            spec_desc_2=specs[0]['spec_desc_2'] if len(specs) > 0 else '', 
-                            spec_dec_1_items=specs[0]['spec_dec_1_items'] if len(specs) > 0 else '', 
-                            spec_dec_2_items=specs[0]['spec_dec_2_items'] if len(specs) > 0 else '', 
+                            spec_desc_1=product_specs[0]['spec_desc_1'] if len(product_specs) > 0 else '', 
+                            spec_desc_2=product_specs[0]['spec_desc_2'] if len(product_specs) > 0 else '', 
+                            spec_dec_1_items=product_specs[0]['spec_dec_1_items'] if len(product_specs) > 0 else '', 
+                            spec_dec_2_items=product_specs[0]['spec_dec_2_items'] if len(product_specs) > 0 else '', 
                             quantity=data_of_shopping_cart['quantity'], 
                             unit_price=products[0]['product_price'] if len(products) > 0 else 0, 
                             product_shipment_id=data_of_shopping_cart['product_shipment_id'], 
