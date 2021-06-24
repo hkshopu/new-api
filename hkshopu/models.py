@@ -498,6 +498,7 @@ class Shipment_default_method(models.Model):
     onoff = models.CharField(max_length=50)
 
 class Product(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
     shop_id = models.PositiveIntegerField()
     product_category_id = models.PositiveIntegerField()
     product_sub_category_id = models.PositiveIntegerField()
@@ -715,6 +716,7 @@ class Shop_Score(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Spec(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
     product_id = models.PositiveIntegerField()
     spec_desc_1 = models.CharField(max_length=255)
     spec_desc_2 = models.CharField(max_length=255)
@@ -726,6 +728,7 @@ class Product_Spec(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Product_Shipment_Method(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
     product_id = models.PositiveIntegerField()
     shipment_desc = models.CharField(max_length=255)
     price = models.PositiveIntegerField()
