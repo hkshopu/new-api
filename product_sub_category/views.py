@@ -18,7 +18,10 @@ def index(request):
 
     if request.method == 'GET':
         if response_data['status'] == 0:
-            product_sub_category_list = models.Product_Sub_Category.objects.all()
+            product_category = models.Product_Category.objects.all().order_by('product_category_seq')
+            product_sub_category_list = []
+            for category in product_category:
+                product_sub_category_list += models.Product_Sub_Category.objects.filter(product_category_id=category.id).order_by('product_sub_category_seq')
             if len(product_sub_category_list) == 0:
                 response_data['status'] = 1
                 response_data['ret_val'] = '您尚未新增任何產品子分類!'

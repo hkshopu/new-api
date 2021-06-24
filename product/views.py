@@ -746,7 +746,7 @@ def product_info(request,id): #product_id
                 getProductID.append(product.id)
                
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
+            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0]).order_by('seq')
             productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0]).order_by('spec_dec_1_items', 'spec_dec_2_items')
             productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
             
@@ -840,7 +840,7 @@ def product_info_forAndroid(request,id): #product_id
             
             if products[0].product_spec_on=='y':
                 
-                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id).order_by('seq')
                 productSpecs=models.Product_Spec.objects.filter(product_id=id)
                 productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
                 productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
@@ -1011,7 +1011,7 @@ def product_info_forAndroid(request,id): #product_id
                 responseData['ret_val'] = '已取得商品資訊!'
             elif products[0].product_spec_on=='n':
                 
-                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id).order_by('seq')
                 productSpecs=models.Product_Spec.objects.filter(product_id=id)
                 productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
                 productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
@@ -1175,14 +1175,16 @@ def update(request,id): #product_id
                             id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
                     
                 models.Product_Spec.objects.filter(product_id=id).delete()
@@ -1264,14 +1266,16 @@ def update(request,id): #product_id
                             id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
                     
                 # models.Product_Spec.objects.filter(product_id=id).delete()
@@ -1541,14 +1545,16 @@ def save(request):
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
             #----------------
                 
@@ -1620,14 +1626,16 @@ def save(request):
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
             
             for i in range(len(shipment_method)):

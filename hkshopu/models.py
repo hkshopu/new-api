@@ -680,7 +680,8 @@ class Selected_Product_Pic(models.Model):
     product_pic = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    cover= models.CharField(max_length=2)
+    cover = models.CharField(max_length=2)
+    seq = models.IntegerField()
 
 class Shop_Analytics(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
