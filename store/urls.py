@@ -38,5 +38,6 @@ urlpatterns = [
     path('shopping_cart/', include('shopping_cart.urls')),
     path('payment/', include('payment.urls')),
     path('general/', include('general.urls')), 
-    path('app_version/', include('app_version.urls'))
+    path('app_version/', include('app_version.urls')), 
+    path('shop_order/', include('shop_order.urls'))
 ]
