@@ -318,8 +318,8 @@ def user_browsed(request):
                             }
                             #responseData['data'].append(productInfo)    
                             # responseData['data']['price'] = {}
-                            likeInfo.update({'min_price':product.product_price}) 
-                            likeInfo.update({'max_price':product.product_price}) 
+                            browsedInfo.update({'min_price':product.product_price}) 
+                            browsedInfo.update({'max_price':product.product_price}) 
 
                             for productLike in productLikes:
                                 if productLike.product_id==product.id :
