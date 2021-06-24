@@ -63,7 +63,7 @@ def convert_shopping_cart_items_to_order(request):
                         'product_shipment_desc': product_shipment_methods[0]['shipment_desc'] if len(product_shipment_methods) > 0 else '', 
                         'status': 'Pending Payment', 
                         'payment_id': data_of_shopping_cart['payment_id'], 
-                        'payment_desc': payment_methods[0]['payment_desc'], 
+                        'payment_desc': payment_methods[0]['payment_desc'] if len(payment_methods) > 0 else '', 
                         'waybill_number': '', 
                         'user_address_id': data_of_shopping_cart['user_address_id'], 
                         'name_in_address': user_addresses[0]['name'] if len(user_addresses) > 0 else '', 
