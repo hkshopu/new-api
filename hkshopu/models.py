@@ -653,15 +653,16 @@ class Selected_Product_Color(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Selected_Product_Size(models.Model):
+class Product_Size(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    product_id = models.CharField(max_length=36)
-    size_id = models.PositiveIntegerField()
+    c_product_size = models.CharField(max_length=50)
+    e_product_size = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Selected_Product_Size(models.Model):
-    product_id = models.PositiveIntegerField()
+    id = models.CharField(primary_key=True, max_length=36)
+    product_id = models.CharField(max_length=36)
     size_id = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

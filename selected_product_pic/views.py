@@ -35,7 +35,9 @@ def save(request):
                 response_data['ret_val'] = '未上傳產品圖片!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_id)):
+            try:
+                models.Product.objects.get(id=product_id)
+            except:
                 response_data['status'] = -3
                 response_data['ret_val'] = '產品編號格式錯誤!'
 
@@ -54,7 +56,7 @@ def save(request):
                 response_data['ret_val'] = '該產品編號錯誤或不存在!'
 
         if response_data['status'] == 0:
-            for product_pic in product_pic_list:
+            for index,product_pic in enumerate(product_pic_list):
                 # 自訂圖片檔名
                 now = datetime.datetime.now()
                 product_pic_name = str(product_pic.name).split('.')[0]
@@ -67,7 +69,8 @@ def save(request):
                 models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                     product_id=product_id, 
-                    product_pic=product_pic_fullname
+                    product_pic=product_pic_fullname,
+                    seq=index
                 )
             response_data['ret_val'] = '新增產品圖片成功!'
     return JsonResponse(response_data)

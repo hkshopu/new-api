@@ -18,7 +18,7 @@ def index(request):
 
     if request.method == 'GET':
         if response_data['status'] == 0:
-            product_category_list = models.Product_Category.objects.all()
+            product_category_list = models.Product_Category.objects.all().order_by('product_category_seq')
             if len(product_category_list) == 0:
                 response_data['status'] = 1
                 response_data['ret_val'] = '您尚未新增任何產品分類!'
@@ -52,7 +52,7 @@ def get_product_sub_category_list_of_specific_product_category(request, id):
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
-            product_sub_categories = models.Product_Sub_Category.objects.filter(product_category_id=id)
+            product_sub_categories = models.Product_Sub_Category.objects.filter(product_category_id=id).order_by('product_sub_category_seq')
             if len(product_sub_categories) == 0:
                 response_data['status'] = 1
                 response_data['ret_val'] = '此商品分類尚未建立子分類!'

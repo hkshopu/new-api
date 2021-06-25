@@ -1441,7 +1441,7 @@ def get_product_average_rating_of_specific_shop(request, id):
 
         if response_data['status'] == 0:
             sum_of_rating = 0
-            shop_product_ratings = models.Shop_Product_Rating.objects.filter(shop_id=id)
+            shop_product_ratings = models.Product_Rate.objects.filter(shop_id=id)
             for shop_product_rating in shop_product_ratings:
                 sum_of_rating += shop_product_rating.rating
             response_data['average_rating'] = round(sum_of_rating / len(shop_product_ratings))
@@ -1629,7 +1629,9 @@ def get_recommended_shops(request):
 
         if response_data['status'] == 0:
             if user_id:
-                if not(re.match('^\d+$', user_id)):
+                try:
+                    models.User.objects.get(id=user_id)
+                except:
                     response_data['status'] = -1
                     response_data['ret_val'] = '使用者編號格式錯誤!'
 
@@ -1715,7 +1717,9 @@ def get_specific_recommended_shop(request, id):
 
         if response_data['status'] == 0:
             if user_id:
-                if not(re.match('^\d+$', user_id)):
+                try:
+                    models.User.objects.get(id=user_id)
+                except:
                     response_data['status'] = -2
                     response_data['ret_val'] = '使用者編號格式錯誤!'
 
@@ -1852,7 +1856,9 @@ def get_shop_analytics_in_pages(request):
         if response_data['status'] == 0:
             if user_id:
                 user_id_for_shop_analytics = user_id
-                if not(re.match('^\d+$', user_id)):
+                try:
+                    models.User.objects.get(id=user_id)
+                except:
                     response_data['status'] = -1
                     response_data['ret_val'] = '會員編號格式錯誤!'
             else:
@@ -2001,7 +2007,9 @@ def get_shop_analytics_with_keyword_in_pages(request):
         if response_data['status'] == 0:
             if user_id:
                 user_id_for_shop_analytics = user_id
-                if not(re.match('^\d+$', user_id)):
+                try:
+                    models.User.objects.get(id=user_id)
+                except:
                     response_data['status'] = -1
                     response_data['ret_val'] = '會員編號格式錯誤!'
             else:

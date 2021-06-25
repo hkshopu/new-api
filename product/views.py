@@ -746,8 +746,8 @@ def product_info(request,id): #product_id
                 getProductID.append(product.id)
                
             # productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')     
-            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0])
-            productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0])
+            productPics=models.Selected_Product_Pic.objects.filter(product_id=getProductID[0]).order_by('seq')
+            productSpecs=models.Product_Spec.objects.filter(product_id=getProductID[0]).order_by('spec_dec_1_items', 'spec_dec_2_items')
             productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
             
             for product in products:       
@@ -840,7 +840,7 @@ def product_info_forAndroid(request,id): #product_id
             
             if products[0].product_spec_on=='y':
                 
-                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id).order_by('seq')
                 productSpecs=models.Product_Spec.objects.filter(product_id=id)
                 productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
                 productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
@@ -1011,7 +1011,7 @@ def product_info_forAndroid(request,id): #product_id
                 responseData['ret_val'] = '已取得商品資訊!'
             elif products[0].product_spec_on=='n':
                 
-                productPics=models.Selected_Product_Pic.objects.filter(product_id=id)
+                productPics=models.Selected_Product_Pic.objects.filter(product_id=id).order_by('seq')
                 productSpecs=models.Product_Spec.objects.filter(product_id=id)
                 productShipments=models.Product_Shipment_Method.objects.filter(product_id=id)
                 productCategorys=models.Product_Category.objects.filter(id=getCategoryID[0])
@@ -1172,15 +1172,19 @@ def update(request,id): #product_id
                     # 寫入資料庫
                     if index==0:
                         models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
                     
                 models.Product_Spec.objects.filter(product_id=id).delete()
@@ -1188,6 +1192,7 @@ def update(request,id): #product_id
                     # 寫入資料庫(規格)
                 for i in range(len(product_spec_list["product_spec_list"])):
                     models.Product_Spec.objects.create(
+                        id=uuid.uuid4(),
                         product_id=id,
                         spec_desc_1=product_spec_list["product_spec_list"][i]["spec_desc_1"],
                         spec_desc_2=product_spec_list["product_spec_list"][i]["spec_desc_2"],
@@ -1201,6 +1206,7 @@ def update(request,id): #product_id
                 for i in range(len(shipment_method)):
                     if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1209,6 +1215,7 @@ def update(request,id): #product_id
                         )
                     elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1256,15 +1263,19 @@ def update(request,id): #product_id
                     # 寫入資料庫
                     if index==0:
                         models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id, 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
                     
                 # models.Product_Spec.objects.filter(product_id=id).delete()
@@ -1284,6 +1295,7 @@ def update(request,id): #product_id
                 for i in range(len(shipment_method)):
                     if shipment_method[i]["onoff"]=="on" or shipment_method[i]["onoff"]=="True" or shipment_method[i]["onoff"]==True or shipment_method[i]["onoff"]=="true":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1292,6 +1304,7 @@ def update(request,id): #product_id
                         )
                     elif shipment_method[i]["onoff"]=="off" or shipment_method[i]["onoff"]=="False" or shipment_method[i]["onoff"]==False or shipment_method[i]["onoff"]=="false":
                         models.Product_Shipment_Method.objects.create(
+                            id=uuid.uuid4(),
                             product_id=id,
                             shipment_desc=shipment_method[i]["shipment_desc"],
                             price=shipment_method[i]["price"],
@@ -1381,17 +1394,23 @@ def save(request):
                 response_data['ret_val'] = '未填寫產品運費!'
         # 驗證各欄位格式是否正確
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', shop_id)):
+            try:
+                models.Shop.objects.get(id=shop_id)
+            except:
                 response_data['status'] = -8
                 response_data['ret_val'] = '商店編號格式錯誤!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_category_id)):
+            try:
+                models.Product_Category.objects.get(id=product_category_id)
+            except:
                 response_data['status'] = -9
                 response_data['ret_val'] = '產品分類編號格式錯誤!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_sub_category_id)):
+            try:
+                models.Product_Sub_Category.objects.get(id=product_sub_category_id)
+            except:
                 response_data['status'] = -10
                 response_data['ret_val'] = '產品子分類編號格式錯誤!'
 
@@ -1526,14 +1545,16 @@ def save(request):
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
             #----------------
                 
@@ -1605,14 +1626,16 @@ def save(request):
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="y"
+                            cover="y",
+                            seq=index
                         )
                     else :
                         models.Selected_Product_Pic.objects.create(
                             id=uuid.uuid4(),
                             product_id=getProductID[0]['id'], 
                             product_pic=product_pic_url,
-                            cover="n"
+                            cover="n",
+                            seq=index
                         )
             
             for i in range(len(shipment_method)):
