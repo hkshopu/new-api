@@ -110,6 +110,8 @@ def convert_shopping_cart_items_to_order(request):
                             product_shipment_id=data_of_shopping_cart['product_shipment_id'], 
                             logistic_fee=0
                         )
+            # 刪除原先購物車中的資料
+            models.Shopping_Cart.objects.filter(id__in=shopping_cart_id).delete()
             response_data['data'] = datas_of_shop_order
             response_data['ret_val'] = '取得訂單資訊成功!'
     return JsonResponse(response_data)
