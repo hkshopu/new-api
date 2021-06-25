@@ -4,6 +4,7 @@ from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 from hkshopu import models
 import re
+import uuid
 
 # Create your views here.
 
@@ -49,6 +50,7 @@ def save(request):
                 selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shop_id, shop_category_id=value)
                 if len(selected_shop_categories) == 0:
                     models.Selected_Shop_Category.objects.create(
+                        id=uuid.uuid4(),
                         shop_id=shop_id, 
                         shop_category_id=value
                     )

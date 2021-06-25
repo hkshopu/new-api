@@ -7,6 +7,7 @@ import re
 import datetime
 import random
 from django.core.files.storage import FileSystemStorage
+import uuid
 # Create your views here.
 
 # 取得商店子分類清單
@@ -141,6 +142,7 @@ def save(request):
             fs.save(name=new_selected_shop_category_icon_name, content=selected_shop_category_icon)
             # 寫入資料庫
             models.Shop_Sub_Category.objects.create(
+                id=uuid.uuid4(),
                 shop_category_id=shop_category_id,
                 c_shop_sub_category=c_shop_sub_category, 
                 e_shop_sub_category=e_shop_sub_category, 

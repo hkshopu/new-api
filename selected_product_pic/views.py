@@ -7,6 +7,7 @@ from hkshopu import models
 import re
 import datetime
 import math
+import uuid
 
 # Create your views here.
 
@@ -64,6 +65,7 @@ def save(request):
                 fs.save(name=product_pic_fullname, content=product_pic)
                 # 寫入資料庫
                 models.Selected_Product_Pic.objects.create(
+                            id=uuid.uuid4(),
                     product_id=product_id, 
                     product_pic=product_pic_fullname
                 )
