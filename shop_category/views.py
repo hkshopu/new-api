@@ -22,7 +22,7 @@ def index(request):
 
     if request.method == 'GET':
         if responseData['status'] == 0:
-            shopCategories = models.Shop_Category.objects.all()
+            shopCategories = models.Shop_Category.objects.all().order_by('shop_category_seq')
             if len(shopCategories) == 0:
                 responseData['status'] = 1
                 responseData['ret_val'] = '未建立任何商店分類!'
@@ -125,7 +125,7 @@ def save(request):
             new_selected_shop_category_icon_url = upload_file(FILE=selected_shop_category_icon,destination_path=destination_path,suffix='selected')
             # 寫入資料庫
             models.Shop_Category.objects.create(
-                id=uuid.uuid4(), 
+                id=uuid.uuid4(),
                 c_shop_category=c_shop_category, 
                 e_shop_category=e_shop_category, 
                 unselected_shop_category_icon=new_unselected_shop_category_icon_url, 

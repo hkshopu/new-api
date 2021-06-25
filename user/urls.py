@@ -29,3 +29,4 @@ urlpatterns = [
     path('<user_id>/addPaymentAccount/<id>/', views.addPaymentAccount),
     path('addPaymentAccount/<id>/', views.addPaymentAccount),
 ]
+]

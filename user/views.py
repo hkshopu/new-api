@@ -758,7 +758,7 @@ def topProductDetail(request, user_id='', product_id=''):
             for attr in product_attr:
                 if hasattr(product, attr):
                     tempData[attr] = getattr(product, attr)
-            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('-cover').values_list('product_pic', flat=True))[0:5]
+            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('seq').values_list('product_pic', flat=True))[0:5]
             tempData['liked_count'] = len(models.Product_Liked.objects.filter(product_id=product_id))
             tempData['category'] = models.Product_Category.objects.get(id=product.product_category_id).c_product_category + '>' + models.Product_Sub_Category.objects.get(id=product.product_sub_category_id).c_product_sub_category
             rating = models.Product_Rate.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating__avg']
@@ -814,29 +814,6 @@ def auditLog(request, user_id=''):
         responseData['ret_val'] = '新增成功'
 
     return JsonResponse(responseData)
-# 使用者編號驗證
-def user_id_validation(request):
-    response_data = {
-        'status': 0, 
-        'ret_val': '', 
-        'data': {}
-    }
-    if request.method == 'POST':
-        # 欄位資料
-        user_id = request.POST.get('user_id', '')
-
-        if response_data['status'] == 0:
-            try:
-                user = models.User.objects.get(id=user_id)
-            except:
-                response_data['data']['is_exists'] = 'N'
-                response_data['status'] = -1
-                response_data['ret_val'] = '該使用者不存在!'
-
-        if response_data['status'] == 0:
-            response_data['data']['is_exists'] = 'Y'
-            response_data['ret_val'] = '該使用者存在!'
-    return JsonResponse(response_data)
 
 def addPaymentAccount(request, user_id='', id=''):
     responseData = {
@@ -934,3 +911,27 @@ def addPaymentAccount(request, user_id='', id=''):
         
             
     return JsonResponse(responseData)
+
+# 使用者編號驗證
+def user_id_validation(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', '')
+
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(id=user_id)
+            except:
+                response_data['data']['is_exists'] = 'N'
+                response_data['status'] = -1
+                response_data['ret_val'] = '該使用者不存在!'
+
+        if response_data['status'] == 0:
+            response_data['data']['is_exists'] = 'Y'
+            response_data['ret_val'] = '該使用者存在!'
+    return JsonResponse(response_data)
