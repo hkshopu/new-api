@@ -198,6 +198,7 @@ def registerProcess(request):
                 
         if responseData['status'] == 0:
             models.User.objects.create(
+                id=uuid.uuid4(),
                 account_name=accountName, 
                 email=email, 
                 password=make_password(password), 
@@ -259,6 +260,7 @@ def generateAndSendValidationCodeProcess(request):
                 user_validation.save()
             except:
                 models.Email_Validation.objects.create(
+                    id=uuid.uuid4(),
                     user_id=user.id, 
                     email=user.email, 
                     validation_code=rand_str
@@ -381,6 +383,7 @@ def socialLoginProcess(request):
                     responseData['status'] = 1
                 except:
                     models.User.objects.create(
+                        id=uuid.uuid4(),
                         google_account=googleAccount, 
                         email=email
                     )
@@ -399,6 +402,7 @@ def socialLoginProcess(request):
                     responseData['status'] = 2
                 except:
                     models.User.objects.create(
+                        id=uuid.uuid4(),
                         facebook_account=facebookAccount, 
                         email=email
                     )
@@ -423,6 +427,7 @@ def socialLoginProcess(request):
                         responseData['status'] = 3
                     except:
                         models.User.objects.create(
+                            id=uuid.uuid4(),
                             apple_account=appleAccount, 
                             email=email
                         )

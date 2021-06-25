@@ -4,7 +4,7 @@ from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 from hkshopu import models
 import re
-
+import uuid
 # Create your views here.
 
 # 新增選擇的產品顏色頁面
@@ -74,6 +74,7 @@ def save(request):
         if response_data['status'] == 0:
             for color_id in color_id_list:
                 models.Selected_Product_Color.objects.create(
+                    id=uuid.uuid4(),
                     product_id=product_id, 
                     color_id=color_id
                 )

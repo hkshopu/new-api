@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'store',
         'USER': 'root',
         'PASSWORD': '1@3$qWeR',
-        'HOST': '/cloudsql/hkshopu:asia-east2:hkshopu',
+        'HOST': '34.92.130.135',
         'PORT': '3306',
         'OPTIONS': {
                     'charset': 'utf8mb4',

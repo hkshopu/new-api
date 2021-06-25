@@ -4,7 +4,7 @@ from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 from hkshopu import models
 import re
-
+import uuid
 # Create your views here.
 
 def save(request):
@@ -68,6 +68,7 @@ def save(request):
         if response_data['status'] == 0:
             for size_id in size_id_list:
                 models.Selected_Product_Size.objects.create(
+                    id=uuid.uuid4(),
                     product_id=product_id, 
                     size_id=size_id
                 )

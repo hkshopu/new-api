@@ -194,6 +194,7 @@ def save(request):
                 # This code executes inside a transaction.
                 # 新增商店
                 new_shop = models.Shop.objects.create(
+                    id = uuid.uuid4(),                    
                     user_id=userId,  
                     shop_title=shopTitle, 
                     shop_icon=shopIconURL, 
@@ -249,6 +250,7 @@ def save(request):
                     selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=new_shop.id, shop_category_id=value)
                     if (len(selected_shop_categories) == 0 and value != 0):
                         models.Selected_Shop_Category.objects.create(
+                            id=uuid.uuid4(),
                             shop_id=new_shop.id,
                             shop_category_id=value
                         )
@@ -257,6 +259,7 @@ def save(request):
                 # 新增商店運輸設定
                 for shipment_default_method in shipment_default_methods:
                     models.Shop_Shipment_Setting.objects.create(
+                        id=uuid.uuid4(),
                         shop_id=new_shop.id, 
                         shipment_desc=shipment_default_method.shipment_default_desc, 
                         onoff=shipment_default_method.onoff
@@ -885,6 +888,7 @@ def updateSelectedShopCategory(request,id):
                     if len(models.Selected_Shop_Category.objects.filter(shop_id=id,shop_category_id=category_id)) is 0: # insert
                         print('insert')
                         models.Selected_Shop_Category.objects.create(
+                            id=uuid.uuid4(),
                             shop_id=id,
                             shop_category_id=category_id
                         )
@@ -1311,6 +1315,7 @@ def shipmentSettings(request, id):
             # 建立資料
             for setting in shipment_settings:
                 models.Shop_Shipment_Setting.objects.create(
+                    id=uuid.uuid4(),
                     shop_id=id,
                     shipment_desc=setting['shipment_desc'],
                     onoff=setting['onoff']
@@ -1366,6 +1371,7 @@ def setShipmnetSettings(request, id):
                     row_count = len(shop_shipment_settings)
                     if row_count is 0: # insert
                         models.Shop_Shipment_Setting.objects.create(
+                            id=uuid.uuid4(),
                             shop_id=id,
                             shipment_desc=setting['shipment_desc'],
                             onoff=setting['onoff']
