@@ -227,3 +227,129 @@ def user_followed(request):
 
             responseData['ret_val'] = '買家關注店鋪取得成功'
     return JsonResponse(responseData) 
+
+def browsed_count(request,user_id): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+        browse=models.Product_Browsed.objects.filter(user_id=user_id).values('product_id').annotate(Count('product_id')).count()
+        responseData['data'] =browse
+        responseData['ret_val'] = '買家足跡數量取得成功'
+
+    return JsonResponse(responseData)   
+
+def user_browsed(request): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='POST':
+        user_id= request.POST.get('user_id', '')
+        keyword=request.POST.get('keyword', '')
+        if responseData['status']==0:
+            browses=models.Product_Browsed.objects.filter(user_id=user_id)
+            getProductID=[]
+            for browse in browses:
+                getProductID.append(browse.product_id)
+                # sellerName=models.User.objects.get(id=rate.user_id)
+
+            products=models.Product.objects.filter(id__in=getProductID).filter(product_title__icontains=keyword)
+            productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')  
+            for product in products:
+                if product.product_spec_on=='y':
+                    for productPic in productPics:
+                        # for productSpec in productSpecs:    
+                        if product.id==productPic.product_id : 
+                            productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                            productShopId=models.Shop.objects.get(id=product.shop_id)
+                            productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
+
+                            browsedInfo = {
+                                'product_id': product.id,
+                                'product_title': product.product_title,
+                                'product_description': product.product_description, 
+                                'product_price': product.product_price, 
+                                'pic_path':productPic.product_pic,
+                                'shop_id':productShopId.id,
+                                'shop_title':productShopId.shop_title,
+                                'liked':'N'
+                            }
+                            v = []
+                            price_range=[]
+                            quantity_range=[]
+                            quantity_sum=[]
+                            for obj in productSpecs:
+                                v.append(getattr(obj,'price'))
+                                price_range.append(getattr(obj,'price'))
+                                quantity_range.append(getattr(obj,'quantity'))
+                                quantity_sum.append(getattr(obj,'quantity'))
+                            min_price=min(price_range)
+                            max_price=max(price_range)
+                            browsedInfo.update({'min_price':min_price})   
+                            browsedInfo.update({'max_price':max_price})  
+
+                            for productLike in productLikes:
+                                if productLike.product_id==product.id :
+                                    browsedInfo.update({'liked': 'Y'})
+                                else:
+                                    browsedInfo.update({'liked': 'N'})
+                            responseData['data'].append(browsedInfo)
+
+                elif product.product_spec_on=='n':   
+                    for productPic in productPics:
+                        # for productSpec in productSpecs:    
+                        if product.id==productPic.product_id : 
+                            # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
+                            productShopId=models.Shop.objects.get(id=product.shop_id)
+                            productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=user_id)
+                            browsedInfo = {
+                                'product_id': product.id,
+                                'product_title': product.product_title,
+                                'product_description': product.product_description, 
+                                'product_price': product.product_price, 
+                                'pic_path':productPic.product_pic,
+                                'shop_id':productShopId.id,
+                                'shop_title':productShopId.shop_title,
+                                'liked':'N'
+                            }
+                            #responseData['data'].append(productInfo)    
+                            # responseData['data']['price'] = {}
+                            browsedInfo.update({'min_price':product.product_price}) 
+                            browsedInfo.update({'max_price':product.product_price}) 
+
+                            for productLike in productLikes:
+                                if productLike.product_id==product.id :
+                                    browsedInfo.update({'liked': 'Y'})
+                                else:
+                                    browsedInfo.update({'liked': 'N'})
+                            responseData['data'].append(browsedInfo) 
+
+            responseData['ret_val'] = '買家足跡取得成功'
+    return JsonResponse(responseData)
+
+def show(request,user_id): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+        if responseData['status']==0:
+            user=models.User.objects.get(id=user_id)
+            userInfo={
+                    "user_id":user.id,
+                    "name":user.account_name,
+                    "gender":user.gender,
+                    "birthday":user.birthday,
+                    "phone":user.phone,
+                    "email":user.email,
+                    # "shop_rate":shop.id,
+                }
+            responseData['data'].append(userInfo) 
+
+            responseData['ret_val'] = '買家資訊取得成功'
+    return JsonResponse(responseData) 
