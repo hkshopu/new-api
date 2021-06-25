@@ -1472,6 +1472,7 @@ def save(request):
             if product_spec_on=="y":    
 
                 models.Product.objects.create(
+                    id=uuid.uuid4(),
                     shop_id=shop_id, 
                     product_category_id=product_category_id, 
                     product_sub_category_id=product_sub_category_id, 
@@ -1547,6 +1548,7 @@ def save(request):
                     )
             elif product_spec_on=="n":   
                 models.Product.objects.create(
+                    id=uuid.uuid4(),
                     shop_id=shop_id, 
                     product_category_id=product_category_id, 
                     product_sub_category_id=product_sub_category_id, 
