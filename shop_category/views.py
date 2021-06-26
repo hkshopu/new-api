@@ -21,7 +21,7 @@ def index(request):
 
     if request.method == 'GET':
         if responseData['status'] == 0:
-            shopCategories = models.Shop_Category.objects.all()
+            shopCategories = models.Shop_Category.objects.all().order_by('shop_category_seq')
             if len(shopCategories) == 0:
                 responseData['status'] = 1
                 responseData['ret_val'] = '未建立任何商店分類!'
