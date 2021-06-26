@@ -454,17 +454,17 @@ class Shop_Bank_Account(models.Model):
                         param = setting['account_name']
             except:
                 ret_code, ret_description = err_code, '商店銀行設定格式錯誤!'
-        elif param is 'code':
-            if not(re.match('^\d+$', param)) or len(param)>50:
+        elif param == 'code':
+            if not(re.match('^\d{1,50}$', param)):
                 ret_code, ret_description = err_code, '銀行代碼格式錯誤!'
-        elif param is 'name':
-            if not(re.match('^[()\w\s]+$', param)) or len(param)>50:
+        elif param == 'name':
+            if not(re.match('^[()\w\s]{1,50}$', param)):
                 ret_code, ret_description = err_code, '銀行名稱格式錯誤!'
-        elif param is 'account':
-            if not(re.match('^[!@.#$%)(^&*\+\-\w\s]+$', param)) or len(param)>50:
+        elif param == 'account':
+            if not(re.match('^[!@.#$%)(^&*\+\-\w\s]{1,50}$', param)):
                 ret_code, ret_description = err_code, '銀行戶名格式錯誤!'
-        elif param is 'account_name':
-            if not(re.match('^[\-\d]+$', param)) or len(param)>50:
+        elif param == 'account_name':
+            if not(re.match('^[\-\d]{1,50}$', param)):
                 ret_code, ret_description = err_code, '銀行帳號格式錯誤!'
         return ret_code, ret_description
         
