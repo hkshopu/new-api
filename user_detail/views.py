@@ -45,13 +45,18 @@ def update_detail(request):
             for user in users:
                 if user_name !='':
                     if not(re.match('^[A-Za-z]{3,45}$', accountName)):
-                        responseData['status'] = -5
+                        responseData['status'] = -6
                         responseData['ret_val'] = '用戶名稱格式錯誤!'
                         return JsonResponse(responseData)
                     else:
                         user.account_name=user_name               
                 elif gender !='':
-                    user.gender=gender      
+                    if not(re.match('^[M|F|O]{1}$', gender)):
+                        responseData['status'] = -5
+                        responseData['ret_val'] = '性別格式錯誤!'
+                        return JsonResponse(responseData)
+                    else :
+                        user.gender=gender      
                 elif birthday !='':
                     if not(re.match('^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$', birthday)):
                         responseData['status'] = -3
