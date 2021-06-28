@@ -4,6 +4,7 @@ from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 from hkshopu import models
 import re
+import uuid
 
 # Create your views here.
 
@@ -29,13 +30,17 @@ def save(request):
                 response_data['ret_val'] = '未填寫商店分類編號!'
         # 檢查欄位格式是否正確
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', shop_id)):
+            try:
+                models.Shop.objects.get(id=shop_id)
+            except:
                 response_data['status'] = -3
                 response_data['ret_val'] = '商店編號格式錯誤!'
 
         if response_data['status'] == 0:
             for value in shop_category_id:
-                if not(re.match('^\d+$', value)):
+                try:
+                    models.Shop_Category.objects.get(id=value)
+                except:
                     response_data['status'] = -4
                     response_data['ret_val'] = '商店分類編號格式錯誤!'
                     break
@@ -49,6 +54,7 @@ def save(request):
                 selected_shop_categories = models.Selected_Shop_Category.objects.filter(shop_id=shop_id, shop_category_id=value)
                 if len(selected_shop_categories) == 0:
                     models.Selected_Shop_Category.objects.create(
+                        id=uuid.uuid4(),
                         shop_id=shop_id, 
                         shop_category_id=value
                     )

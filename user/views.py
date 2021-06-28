@@ -198,6 +198,7 @@ def registerProcess(request):
                 
         if responseData['status'] == 0:
             models.User.objects.create(
+                id=uuid.uuid4(),
                 account_name=accountName, 
                 email=email, 
                 password=make_password(password), 
@@ -259,6 +260,7 @@ def generateAndSendValidationCodeProcess(request):
                 user_validation.save()
             except:
                 models.Email_Validation.objects.create(
+                    id=uuid.uuid4(),
                     user_id=user.id, 
                     email=user.email, 
                     validation_code=rand_str
@@ -381,6 +383,7 @@ def socialLoginProcess(request):
                     responseData['status'] = 1
                 except:
                     models.User.objects.create(
+                        id=uuid.uuid4(),
                         google_account=googleAccount, 
                         email=email
                     )
@@ -399,6 +402,7 @@ def socialLoginProcess(request):
                     responseData['status'] = 2
                 except:
                     models.User.objects.create(
+                        id=uuid.uuid4(),
                         facebook_account=facebookAccount, 
                         email=email
                     )
@@ -423,6 +427,7 @@ def socialLoginProcess(request):
                         responseData['status'] = 3
                     except:
                         models.User.objects.create(
+                            id=uuid.uuid4(),
                             apple_account=appleAccount, 
                             email=email
                         )
@@ -747,7 +752,7 @@ def topProductDetail(request, user_id='', product_id=''):
             for attr in product_attr:
                 if hasattr(product, attr):
                     tempData[attr] = getattr(product, attr)
-            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('-cover').values_list('product_pic', flat=True))[0:5]
+            tempData['pic'] = list(models.Selected_Product_Pic.objects.filter(product_id=product_id).order_by('seq').values_list('product_pic', flat=True))[0:5]
             tempData['liked_count'] = len(models.Product_Liked.objects.filter(product_id=product_id))
             tempData['category'] = models.Product_Category.objects.get(id=product.product_category_id).c_product_category + '>' + models.Product_Sub_Category.objects.get(id=product.product_sub_category_id).c_product_sub_category
             rating = models.Product_Rate.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating__avg']
@@ -803,3 +808,124 @@ def auditLog(request, user_id=''):
         responseData['ret_val'] = '新增成功'
 
     return JsonResponse(responseData)
+
+def addPaymentAccount(request, user_id='', id=''):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+    if request.method == 'GET':
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此使用者'
+        if responseData['status'] == 0:
+            payment_account_attr = [
+                'id',
+                'payment_type',
+                'bank_code',
+                'bank_name',
+                'contact_type',
+                'phone_country_code',
+                'phone_number',
+                'contact_email'
+            ]
+            payment_accounts = models.User_Payment_Account.objects.filter(user_id=user_id).order_by('-is_default')
+            responseData['data'] = []
+            for account in payment_accounts:
+                temp_data = {}
+                for attr in payment_account_attr:
+                    if hasattr(account, attr):
+                        temp_data[attr] = getattr(account, attr)
+                responseData['data'].append(temp_data)
+
+    elif request.method == 'POST': # add
+        payment_type = request.POST.get('payment_type','')
+        bank_code = request.POST.get('bank_code','')
+        bank_name = request.POST.get('bank_name','')
+        contact_type = request.POST.get('contact_type','')
+        phone_country_code = request.POST.get('phone_country_code','')
+        phone_number = request.POST.get('phone_number','')
+        contact_email = request.POST.get('contact_email','')
+
+        try:
+            models.User.objects.get(id=user_id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此使用者'
+        if responseData['status'] == 0:
+            if contact_type == 'email' and contact_email == '':
+                responseData['status'], responseData['ret_val'] = -2, 'contact_email為必填'
+            elif contact_type == 'phone':
+                if phone_number == '':
+                    responseData['status'], responseData['ret_val'] = -3, 'phone_number為必填'
+                elif len(phone_number) != 8:
+                    responseData['status'], responseData['ret_val'] = -4, 'phone_number長度只能為8'
+
+        if responseData['status'] == 0:
+            if len(models.User_Payment_Account.objects.filter(user_id=user_id, is_default='Y'))==0:
+                is_default='Y'
+            else:
+                is_default='N'
+            
+            payment_account=models.User_Payment_Account.objects.create(
+                id = uuid.uuid4(),
+                payment_type = payment_type,
+                user_id = user_id,
+                bank_code = bank_code,
+                bank_name = bank_name,
+                contact_type = contact_type,
+                phone_country_code = phone_country_code,
+                phone_number = phone_number,
+                contact_email = contact_email,
+                is_default = is_default
+            )
+            responseData['data']['id'] = payment_account.id
+            responseData['ret_val'] = '新增使用者付款方式成功'
+            
+    elif request.method == 'PATCH': # default account
+        try:
+            models.User_Payment_Account.objects.get(id=id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此付款方式ID'
+        if responseData['status'] == 0:
+            payment_account = models.User_Payment_Account.objects.get(id=id)
+            models.User_Payment_Account.objects.filter(user_id=payment_account.user_id, is_default='Y').update(is_default='N')
+            payment_account.is_default = 'Y'
+            payment_account.save()
+            responseData['ret_val'] = '設定預設付款方式成功'
+    elif request.method == 'DELETE': # delete
+        try:
+            models.User_Payment_Account.objects.get(id=id)
+        except:
+            responseData['status'], responseData['ret_val'] = -1, '無此付款方式ID'
+        if responseData['status'] == 0:
+            models.User_Payment_Account.objects.get(id=id).delete()
+            responseData['ret_val'] = '刪除預設付款方式成功'
+        
+            
+    return JsonResponse(responseData)
+
+# 使用者編號驗證
+def user_id_validation(request):
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': {}
+    }
+    if request.method == 'POST':
+        # 欄位資料
+        user_id = request.POST.get('user_id', '')
+
+        if response_data['status'] == 0:
+            try:
+                user = models.User.objects.get(id=user_id)
+            except:
+                response_data['data']['is_exists'] = 'N'
+                response_data['status'] = -1
+                response_data['ret_val'] = '該使用者不存在!'
+
+        if response_data['status'] == 0:
+            response_data['data']['is_exists'] = 'Y'
+            response_data['ret_val'] = '該使用者存在!'
+    return JsonResponse(response_data)

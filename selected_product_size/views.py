@@ -4,6 +4,7 @@ from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 from hkshopu import models
 import re
+import uuid
 
 # Create your views here.
 
@@ -30,13 +31,17 @@ def save(request):
                 response_data['ret_val'] = '未填寫產品尺寸編號!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_id)):
+            try:
+                models.Product.objects.get(id=product_id)
+            except:
                 response_data['status'] = -3
                 response_data['ret_val'] = '產品編號格式錯誤!'
 
         if response_data['status'] == 0:
             for size_id in size_id_list:
-                if not(re.match('^\d+$', size_id)):
+                try:
+                    models.Product_Size.objects.get(id=size_id)
+                except:
                     response_data['status'] = -4
                     response_data['ret_val'] = '產品尺寸編號格式錯誤!'
                     break
@@ -68,6 +73,7 @@ def save(request):
         if response_data['status'] == 0:
             for size_id in size_id_list:
                 models.Selected_Product_Size.objects.create(
+                    id=uuid.uuid4(),
                     product_id=product_id, 
                     size_id=size_id
                 )

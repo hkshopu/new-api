@@ -7,6 +7,7 @@ import re
 import datetime
 import random
 from django.core.files.storage import FileSystemStorage
+import uuid
 # Create your views here.
 
 # 取得商店子分類清單
@@ -18,7 +19,10 @@ def index(request):
     }
     if request.method == 'GET':
         if response_data['status'] == 0:
-            shop_sub_categories = models.Shop_Sub_Category.objects.all()
+            shop_categories = models.Shop_Category.objects.all().order_by('shop_category_seq')
+            shop_sub_categories = []
+            for category in shop_categories:
+                shop_sub_categories += models.Shop_Sub_Category.objects.filter(shop_category_id=category.id).order_by('shop_sub_category_seq')
             if len(shop_sub_categories) == 0:
                 response_data['status'] = 1
                 response_data['ret_val'] = '您尚未建立任何商店子分類!'
@@ -30,7 +34,9 @@ def index(request):
                     'shop_category_id': shop_sub_category.shop_category_id, 
                     'c_shop_sub_category': shop_sub_category.c_shop_sub_category, 
                     'e_shop_sub_category': shop_sub_category.e_shop_sub_category, 
-                    'shop_sub_category_icon': shop_sub_category.shop_sub_category_icon, 
+                    'unselected_shop_sub_category_icon': shop_sub_category.unselected_shop_sub_category_icon, 
+                    'selected_shop_sub_category_icon': shop_sub_category.selected_shop_sub_category_icon, 
+                    'shop_sub_category_seq': shop_sub_category.shop_sub_category_seq, 
                     'created_at': shop_sub_category.created_at, 
                     'updated_at': shop_sub_category.updated_at
                 }
@@ -141,6 +147,7 @@ def save(request):
             fs.save(name=new_selected_shop_category_icon_name, content=selected_shop_category_icon)
             # 寫入資料庫
             models.Shop_Sub_Category.objects.create(
+                id=uuid.uuid4(),
                 shop_category_id=shop_category_id,
                 c_shop_sub_category=c_shop_sub_category, 
                 e_shop_sub_category=e_shop_sub_category, 

@@ -22,5 +22,10 @@ urlpatterns = [
     path('<user_id>/topProductDetail/<product_id>/', views.topProductDetail),
     path('/topProductDetail/<product_id>/', views.topProductDetail), # if user_id=''
     path('<user_id>/auditLog/', views.auditLog),
-    path('/auditLog/', views.auditLog) # if user_id=''
+    path('/auditLog/', views.auditLog), # if user_id=''
+    path('<user_id>/addPaymentAccount/', views.addPaymentAccount), 
+    path('user_id_validation/', views.user_id_validation),
+    path('<user_id>/addPaymentAccount/', views.addPaymentAccount),
+    path('<user_id>/addPaymentAccount/<id>/', views.addPaymentAccount),
+    path('addPaymentAccount/<id>/', views.addPaymentAccount)
 ]

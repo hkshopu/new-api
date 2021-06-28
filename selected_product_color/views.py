@@ -4,6 +4,7 @@ from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 from hkshopu import models
 import re
+import uuid
 
 # Create your views here.
 
@@ -36,13 +37,17 @@ def save(request):
                 response_data['ret_val'] = '未填寫產品顏色編號!'
 
         if response_data['status'] == 0:
-            if not(re.match('^\d+$', product_id)):
+            try:
+                models.Product.objects.get(id=product_id)
+            except:
                 response_data['status'] = -3
                 response_data['ret_val'] = '產品編號格式錯誤!'
 
         if response_data['status'] == 0:
             for color_id in color_id_list:
-                if not(re.match('^\d+$', color_id)):
+                try:
+                    models.Product_Color.objects.get(id=color_id)
+                except:
                     response_data['status'] = -4
                     response_data['ret_val'] = '產品顏色編號格式錯誤!'
                     break
@@ -74,6 +79,7 @@ def save(request):
         if response_data['status'] == 0:
             for color_id in color_id_list:
                 models.Selected_Product_Color.objects.create(
+                    id=uuid.uuid4(),
                     product_id=product_id, 
                     color_id=color_id
                 )
