@@ -13,7 +13,7 @@ import random
 
 # Create your views here.
 
-# 會員註冊頁面
+# 更改會員
 def update_detail(request):
     responseData = {
             'status': 0,
@@ -44,13 +44,33 @@ def update_detail(request):
         if responseData['status']==0:
             for user in users:
                 if user_name !='':
-                    user.account_name=user_name               
+                    if not(re.match('^[A-Za-z]{3,45}$', accountName)):
+                        responseData['status'] = -6
+                        responseData['ret_val'] = '用戶名稱格式錯誤!'
+                        return JsonResponse(responseData)
+                    else:
+                        user.account_name=user_name               
                 elif gender !='':
-                    user.gender=gender      
+                    if not(re.match('^[M|F|O]{1}$', gender)):
+                        responseData['status'] = -5
+                        responseData['ret_val'] = '性別格式錯誤!'
+                        return JsonResponse(responseData)
+                    else :
+                        user.gender=gender      
                 elif birthday !='':
-                    user.birthday =birthday
+                    if not(re.match('^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$', birthday)):
+                        responseData['status'] = -3
+                        responseData['ret_val'] = '出生日期格式錯誤!'
+                        return JsonResponse(responseData)
+                    else:
+                        user.birthday =birthday
                 elif phone !='':
-                    user.phone =phone
+                    if not(re.match('^[0-9]{8,10}$', phone)):
+                        responseData['status'] = -4
+                        responseData['ret_val'] = '手機號碼格式錯誤!'
+                        return JsonResponse(responseData)
+                    else:
+                        user.phone =phone
                 elif old_password !='':
                     if check_password(old_password,users[0].password):
                         responseData['status'] = 0
