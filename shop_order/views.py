@@ -25,11 +25,19 @@ def convert_shopping_cart_items_to_order(request):
                 response_data['ret_val'] = '未填寫購物車編號!'
 
         if response_data['status'] == 0:
-            # 購物車資訊
-            datas_of_shopping_cart = []
             shopping_carts = models.Shopping_Cart.objects.filter(id__in=shopping_cart_id).values('user_id', 'product_id', 'product_spec_id', 'product_shipment_id', 'quantity', 'user_address_id', 'payment_id')
             for shopping_cart in shopping_carts:
-                products = models.Product.objects.filter(id=shopping_cart['product_id']).values('shop_id')
+                sellable_products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gt=0).values('id')
+                if len(sellable_products) == 0:
+                    response_data['status'] = -2
+                    response_data['ret_val'] = '產品暫無庫存!'
+                    break
+
+        if response_data['status'] == 0:
+            # 購物車資訊
+            datas_of_shopping_cart = []
+            for shopping_cart in shopping_carts:
+                products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gt=0).values('shop_id')
                 datas_of_shopping_cart.append({
                     'user_id': shopping_cart['user_id'], 
                     'product_id': shopping_cart['product_id'], 
