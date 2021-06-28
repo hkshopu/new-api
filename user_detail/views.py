@@ -45,7 +45,7 @@ def update_detail(request):
             for user in users:
                 if user_name !='':
                     if not(re.match('^[A-Za-z]{3,45}$', accountName)):
-                        responseData['status'] = -1
+                        responseData['status'] = -5
                         responseData['ret_val'] = '用戶名稱格式錯誤!'
                         return JsonResponse(responseData)
                     else:
