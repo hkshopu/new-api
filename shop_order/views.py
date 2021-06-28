@@ -25,13 +25,27 @@ def convert_shopping_cart_items_to_order(request):
                 response_data['ret_val'] = '未填寫購物車編號!'
 
         if response_data['status'] == 0:
+            unsellable_products = []
             shopping_carts = models.Shopping_Cart.objects.filter(id__in=shopping_cart_id).values('user_id', 'product_id', 'product_spec_id', 'product_shipment_id', 'quantity', 'user_address_id', 'payment_id')
             for shopping_cart in shopping_carts:
-                sellable_products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gt=0).values('id')
+                if shopping_cart['product_spec_id'] == '':
+                    sellable_products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gt=shopping_cart['quantity']).values('id')
+                else:
+                    sellable_products = models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id'], quantity__gt=shopping_cart['quantity']).values('id')
                 if len(sellable_products) == 0:
-                    response_data['status'] = -2
-                    response_data['ret_val'] = '產品暫無庫存!'
-                    break
+                    products = models.Product.objects.filter(id=shopping_cart['product_id']).values('product_description')
+                    product_specs = models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id']).values('spec_desc_1', 'spec_desc_2', 'spec_dec_1_items', 'spec_dec_2_items')
+                    unsellable_products.append({
+                        'product_description': products[0]['product_description'] if len(products) > 0 else '', 
+                        'spec_desc_1': product_specs[0]['spec_desc_1'] if len(product_specs) > 0 else '', 
+                        'spec_desc_2': product_specs[0]['spec_desc_2'] if len(product_specs) > 0 else '', 
+                        'spec_dec_1_items': product_specs[0]['spec_dec_1_items'] if len(product_specs) > 0 else '', 
+                        'spec_dec_2_items': product_specs[0]['spec_dec_2_items'] if len(product_specs) > 0 else ''
+                    })
+            if len(unsellable_products) > 0:
+                response_data['data'] = unsellable_products
+                response_data['status'] = -2
+                response_data['ret_val'] = '產品庫存量不足!'
 
         if response_data['status'] == 0:
             # 購物車資訊
