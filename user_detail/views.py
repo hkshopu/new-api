@@ -124,7 +124,7 @@ def user_liked(request):
                 getProductID.append(like.product_id)
                 # sellerName=models.User.objects.get(id=rate.user_id)
 
-            products=models.Product.objects.filter(id__in=getProductID).filter(product_title__icontains=keyword)
+            products=models.Product.objects.filter(id__in=getProductID).filter(product_title__icontains=keyword).filter(is_delete='N')
             productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')  
             for product in products:
                 if product.product_spec_on=='y':
@@ -212,7 +212,7 @@ def user_followed(request):
                 getShopID.append(follow.shop_id)
                 # sellerName=models.User.objects.get(id=rate.user_id)
 
-            shops=models.Shop.objects.filter(id__in=getShopID).filter(shop_title__icontains=keyword) 
+            shops=models.Shop.objects.filter(id__in=getShopID).filter(shop_title__icontains=keyword).filter(is_delete='N')
             for shop in shops:
                 followCount=models.Shop_Follower.objects.filter(shop_id=shop.id).count()
                 shopInfo={
@@ -257,7 +257,7 @@ def user_browsed(request):
                 getProductID.append(browse.product_id)
                 # sellerName=models.User.objects.get(id=rate.user_id)
 
-            products=models.Product.objects.filter(id__in=getProductID).filter(product_title__icontains=keyword)
+            products=models.Product.objects.filter(id__in=getProductID).filter(product_title__icontains=keyword).filter(is_delete='N')
             productPics=models.Selected_Product_Pic.objects.filter(product_id__in=getProductID).filter(cover='y')  
             for product in products:
                 if product.product_spec_on=='y':
