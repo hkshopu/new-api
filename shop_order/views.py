@@ -37,7 +37,7 @@ def convert_shopping_cart_items_to_order(request):
             # 購物車資訊
             datas_of_shopping_cart = []
             for shopping_cart in shopping_carts:
-                products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gt=0).values('shop_id')
+                products = models.Product.objects.filter(id=shopping_cart['product_id']).values('shop_id')
                 datas_of_shopping_cart.append({
                     'user_id': shopping_cart['user_id'], 
                     'product_id': shopping_cart['product_id'], 
