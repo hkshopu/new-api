@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'a$c1&43w!jc0y##2x^)gldtz(l^gg+fpos#%%ev*$&c)lb995k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -41,11 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hkshopu',
     'corsheaders',
-    'ddrr',
 ]
 
 MIDDLEWARE = [
-    'ddrr.middleware.DebugRequestsResponses',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -155,19 +153,3 @@ CORS_ALLOW_HEADERS = [
     'x-csrf-token',
     'x-requested-with'
 ]
-
-DDRR = {
-    "ENABLE_REQUESTS": True,  # enable request logging
-    "ENABLE_RESPONSES": True,  # enable response logging
-    "LEVEL": "DEBUG",  # ddrr log level
-    "PRETTY_PRINT": False,  # pretty-print JSON and XML
-    "REQUEST_TEMPLATE_NAME": "ddrr/default-request.html",  # request log template name
-    "REQUEST_TEMPLATE": None,  # request log template string (overrides template name)
-    "RESPONSE_TEMPLATE_NAME": "ddrr/default-response.html",  # response log template name
-    "RESPONSE_TEMPLATE": None,  # response log template string (overrides template name)
-    "REQUEST_HANDLER": logging.StreamHandler(),  # request log handler
-    "RESPONSE_HANDLER": logging.StreamHandler(),  # response log handler
-    "ENABLE_COLORS": True,  # enable colors if terminal supports it
-    "LIMIT_BODY": None,  # limit request/response body output to X chars
-    "DISABLE_DJANGO_SERVER_LOG": False,  # disable default django server log
-}
