@@ -183,7 +183,7 @@ def shopping_cart_item(request,user_id): #user_id
                         if product.product_spec_on=='y':
                             shipmentList=[]
                             productPics=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
-                            productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id)
+                            productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id).filter(onoff='on')
                             productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
                
                             for productSpec in productSpecs:
@@ -208,7 +208,8 @@ def shopping_cart_item(request,user_id): #user_id
                                     "spec_price":productSpec.price,
                                     "spec_quantity":productSpec.quantity,
                                     }
-                                specList.append(spec_final)
+                                # cartList.update({"shop_id":shop.id})
+                                productList.update({"product_spec":spec_final})
                             
                                 cartList["productList"].append(productList)
 
@@ -219,35 +220,17 @@ def shopping_cart_item(request,user_id): #user_id
                                     "shipment_price":productShipment.price
                                 }
                                 shipmentList.append(shipment_final)
-                            # productList={
-                            #     "product_id":product.id,
-                            #     "product_title":product.product_title,
-                            #     "product_pic":productPics.product_pic,
-                            #     "shipmentList":shipmentList,
-                            #     "product_spec":specList
-                            # }
 
-                            # cartList["productList"].append(productList)
                         else : 
                             print("spec=n")
                             shipmentList=[]
                             productPics=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
-                            productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id)
+                            productShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id).filter(onoff='on')
 
                             productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
                             specList=[]
                             cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=0,user_id=user_id)
-                            spec_final={
-                                    "shopping_cart_item_id":cartID.id,
-                                    "shopping_cart_quantity":cartID.quantity,
-                                    "product_spec_id":'',
-                                    "spec_desc_1":'',
-                                    "spec_desc_2":'',
-                                    "spec_dec_1_items":'',
-                                    "spec_dec_2_items":'',
-                                    "spec_price":product.product_price,
-                                    "spec_quantity":product.quantity
-                                    }
+                            
                             specList.append(spec_final)
                             for productShipment in productShipments:
                                 shipment_final={
@@ -264,7 +247,18 @@ def shopping_cart_item(request,user_id): #user_id
                                 "shipmentList":shipmentList,
                                 "product_spec":specList
                             }
-
+                            spec_final={
+                                    "shopping_cart_item_id":cartID.id,
+                                    "shopping_cart_quantity":cartID.quantity,
+                                    "product_spec_id":'',
+                                    "spec_desc_1":'',
+                                    "spec_desc_2":'',
+                                    "spec_dec_1_items":'',
+                                    "spec_dec_2_items":'',
+                                    "spec_price":product.product_price,
+                                    "spec_quantity":product.quantity
+                                }
+                            productList.update({"product_spec":spec_final})
                             cartList["productList"].append(productList)
                 responseData['data'].append(cartList)   
             responseData['ret_val'] = '已取得商品清單!'
