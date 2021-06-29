@@ -1018,3 +1018,9 @@ class Keyword_ad_setting_detail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Rate_Pic(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    rate_id = models.CharField(max_length=36)
+    path = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
