@@ -51,7 +51,8 @@ def convert_shopping_cart_items_to_order(request):
             # 購物車資訊
             datas_of_shopping_cart = []
             for shopping_cart in shopping_carts:
-                products = models.Product.objects.filter(id=shopping_cart['product_id']).values('shop_id')
+                products = models.Product.objects.filter(id=shopping_cart['product_id']).values('shop_id', 'quantity')
+                product_specs = models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id']).values('quantity')
                 datas_of_shopping_cart.append({
                     'user_id': shopping_cart['user_id'], 
                     'product_id': shopping_cart['product_id'], 
@@ -60,8 +61,13 @@ def convert_shopping_cart_items_to_order(request):
                     'quantity': shopping_cart['quantity'], 
                     'user_address_id': shopping_cart['user_address_id'], 
                     'payment_id': shopping_cart['payment_id'], 
-                    'shop_id': products[0]['shop_id'] if len(products) > 0 else 0
+                    'shop_id': products[0]['shop_id'] if len(products) > 0 else ''
                 })
+                # 更新產品庫存
+                if shopping_cart['product_spec_id'] == '':
+                    models.Product.objects.filter(id=shopping_cart['product_id']).update(quantity=products[0]['quantity'] - shopping_cart['quantity'])
+                else:
+                    models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id']).update(quantity=product_specs[0]['quantity'] - shopping_cart['quantity'])
             # 寫入 shop_order 資料表
             datas_of_shop_order = []
             for data_of_shopping_cart in datas_of_shopping_cart:
