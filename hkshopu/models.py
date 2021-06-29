@@ -732,6 +732,7 @@ class Product_Rate(models.Model):
     comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    spec_id = models.CharField(max_length=36)
     
 class Shop_Score(models.Model):
     user_id = models.CharField(max_length=36)
