@@ -32,7 +32,8 @@ class User(models.Model):
     activated = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    pic=models.CharField(max_length=255)
+    
 class Shop(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     user_id = models.CharField(max_length=36)
