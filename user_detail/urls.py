@@ -11,4 +11,5 @@ urlpatterns = [
     path('<user_id>/browsed_count/', views.browsed_count),  
     path('user_browsed/', views.user_browsed),  
     path('<user_id>/show/', views.show),     
+    path('add_pic/', views.add_pic), 
 ]

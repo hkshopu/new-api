@@ -10,8 +10,42 @@ import uuid
 import datetime
 import re
 import random
-
+from utils.upload_tools import upload_file , delete_file
 # Create your views here.
+
+#新增會員圖片
+def add_pic(request):
+    # 回傳資料
+    response_data = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+    if request.method=='POST':
+
+        user_id= request.POST.get('user_id', '')
+        user_pic = request.FILES.get('user_pic')
+        if response_data['status']==0:
+            user=models.User.objects.get(id=user_id)
+            if user.pic=='' or user.pic is None:
+                # 上傳圖片
+                destination_path = 'images/user/'
+                userPic = upload_file(FILE=user_pic,destination_path=destination_path,suffix='icon')
+                user.pic=userPic
+                user.save()
+                response_data['ret_val'] = '使用者照片新增成功!'
+                
+            else:
+                delete_file(user.pic)
+                user.pic=''
+                user.save() 
+                # 上傳圖片
+                destination_path = 'images/user/'
+                userPic = upload_file(FILE=user_pic,destination_path=destination_path,suffix='icon')
+                user.pic=userPic
+                user.save()
+                response_data['ret_val'] = '使用者照片新增成功!'
+    return JsonResponse(response_data)
 
 # 更改會員
 def update_detail(request):
