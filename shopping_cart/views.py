@@ -229,7 +229,7 @@ def shopping_cart_item(request,user_id): #user_id
 
                             productSpecs=models.Product_Spec.objects.filter(id__in=getSpecID).filter(product_id=product.id)
                             specList=[]
-                            cartID=models.Shopping_Cart.objects.get(product_id=product.id,product_spec_id=0,user_id=user_id)
+                            cartID=models.Shopping_Cart.objects.get(product_id=product.id,user_id=user_id)
                             
                             specList.append(spec_final)
                             for productShipment in productShipments:
