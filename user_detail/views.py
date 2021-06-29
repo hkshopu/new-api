@@ -402,6 +402,7 @@ def show(request,user_id):
                     "birthday":user.birthday,
                     "phone":user.phone,
                     "email":user.email,
+                    "pic":user.pic
                     # "shop_rate":shop.id,
                 }
             responseData['data'].append(userInfo) 
