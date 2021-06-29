@@ -989,7 +989,7 @@ class Order_Error(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     shopping_cart_id = models.CharField(max_length=36)
     product_id = models.CharField(max_length=36)
-    product_specification_id = models.CharField(max_length=36)
+    product_specification_id = models.CharField(max_length=36, null=True)
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
