@@ -29,9 +29,9 @@ def convert_shopping_cart_items_to_order(request):
             shopping_carts = models.Shopping_Cart.objects.filter(id__in=shopping_cart_id).values('user_id', 'product_id', 'product_spec_id', 'product_shipment_id', 'quantity', 'user_address_id', 'payment_id')
             for shopping_cart in shopping_carts:
                 if shopping_cart['product_spec_id'] == '':
-                    sellable_products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gt=shopping_cart['quantity']).values('id')
+                    sellable_products = models.Product.objects.filter(id=shopping_cart['product_id'], quantity__gte=shopping_cart['quantity']).values('id')
                 else:
-                    sellable_products = models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id'], quantity__gt=shopping_cart['quantity']).values('id')
+                    sellable_products = models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id'], quantity__gte=shopping_cart['quantity']).values('id')
                 if len(sellable_products) == 0:
                     products = models.Product.objects.filter(id=shopping_cart['product_id']).values('product_description')
                     product_specs = models.Product_Spec.objects.filter(id=shopping_cart['product_spec_id']).values('spec_desc_1', 'spec_desc_2', 'spec_dec_1_items', 'spec_dec_2_items')
