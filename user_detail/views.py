@@ -34,7 +34,7 @@ def add_pic(request):
                 user.pic=userPic
                 user.save()
                 response_data['ret_val'] = '使用者照片新增成功!'
-                
+                response_data['data'].append(user.pic)
             else:
                 delete_file(user.pic)
                 user.pic=''
@@ -45,6 +45,7 @@ def add_pic(request):
                 user.pic=userPic
                 user.save()
                 response_data['ret_val'] = '使用者照片新增成功!'
+                response_data['data'].append(user.pic)
     return JsonResponse(response_data)
 
 # 更改會員
