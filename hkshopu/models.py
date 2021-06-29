@@ -993,3 +993,27 @@ class Order_Error(models.Model):
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Keyword_ad_setting_header(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user_id = models.CharField(max_length=36)
+    ad_type = models.CharField(max_length=10)
+    budget_type = models.CharField(max_length=10)
+    budget_amount = models.PositiveIntegerField(null=True)
+    ad_period_type = models.CharField(max_length=10)
+    start_datetime = models.DateTimeField(null=True)
+    end_datetime = models.DateTimeField(null=True)
+    status = models.CharField(max_length=36)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Keyword_ad_setting_detail(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    ad_setting_header_id = models.CharField(max_length=36)
+    shop_id = models.CharField(max_length=36, null=True)
+    product_id = models.CharField(max_length=36, null=True)
+    keyword = models.CharField(max_length=200)
+    keyword_bid = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+

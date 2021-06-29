@@ -376,7 +376,8 @@ def buyer_address(request,user_id):
                     "id":userAddress.id,
                     "name":userAddress.name,
                     "phone":userAddress.phone,
-                    "address": userAddress.area + userAddress.district + userAddress.road +userAddress.number + userAddress.floor + userAddress.room
+                    "address": userAddress.area + userAddress.district + userAddress.road +userAddress.number + userAddress.floor + userAddress.room,
+                    "is_default":userAddress.is_default
                 }
                 response_data['data'].append(addressInfo)
 
