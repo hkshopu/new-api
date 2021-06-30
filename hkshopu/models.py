@@ -1017,3 +1017,18 @@ class Keyword_ad_setting_detail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Country_Shop_Setting(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    country_code = models.CharField(max_length=2)
+    shop_code = models.CharField(max_length=5)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Shop_Order_Setting(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    shop_id = models.CharField(max_length=36)
+    country_code = models.CharField(max_length=2)
+    shop_code = models.CharField(max_length=5)
+    order_number = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
