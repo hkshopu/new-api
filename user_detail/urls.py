@@ -12,4 +12,5 @@ urlpatterns = [
     path('user_browsed/', views.user_browsed),  
     path('<user_id>/show/', views.show),     
     path('add_pic/', views.add_pic), 
+    path('userAddress_isDefault/', views.userAddress_isDefault), 
 ]

@@ -409,3 +409,28 @@ def show(request,user_id):
 
             responseData['ret_val'] = '買家資訊取得成功'
     return JsonResponse(responseData) 
+
+# 更新預設買家地址 is_default
+def userAddress_isDefault(request): 
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        user_id= request.POST.get('user_id', '')
+        user_address_id = request.POST.get('user_address_id', '')
+
+        user_address_default_olds=models.User_Address.objects.filter(user_id=user_id)
+        for user_address_default_old in user_address_default_olds:
+            user_address_default_old.is_default='N'
+            user_address_default_old.save()
+
+        user_address_default=models.User_Address.objects.get(id=user_address_id)
+        user_address_default.is_default='Y'
+        user_address_default.save()
+
+        responseData['status'] =0
+        responseData['ret_val'] = '預設買家地址設定成功!'
+
+    return JsonResponse(responseData)
