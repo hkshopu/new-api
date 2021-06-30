@@ -732,6 +732,7 @@ class Product_Rate(models.Model):
     comment = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    spec_id = models.CharField(max_length=36)
     
 class Shop_Score(models.Model):
     user_id = models.CharField(max_length=36)
@@ -1030,5 +1031,10 @@ class Shop_Order_Setting(models.Model):
     country_code = models.CharField(max_length=2)
     shop_code = models.CharField(max_length=5)
     order_number = models.PositiveIntegerField()
+    
+class Rate_Pic(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    rate_id = models.CharField(max_length=36)
+    path = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
