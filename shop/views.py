@@ -264,6 +264,20 @@ def save(request):
                         shipment_desc=shipment_default_method.shipment_default_desc, 
                         onoff=shipment_default_method.onoff
                     )
+                # 寫入 shop_order_setting 資料表
+                country_shop_setting = models.Country_Shop_Setting.objects.filter(country_code='HK').values('shop_code').first()
+                shop = models.Shop.objects.values('id').order_by('-created_at').first()
+                models.Shop_Order_Setting.objects.create(
+                    id=uuid.uuid4(), 
+                    shop_id=shop['id'], 
+                    country_code='HK', 
+                    shop_code=country_shop_setting['shop_code'], 
+                    order_number=0
+                )
+                # 更新 country_shop_setting 資料表
+                models.Country_Shop_Setting.objects.filter(country_code='HK').update(
+                    shop_code='%0X' % (int(country_shop_setting['shop_code'], 16) + 1)
+                )
             responseData['ret_val'] = '商店與選擇商店分類新增成功!'
     return JsonResponse(responseData)
 # 更新商店
