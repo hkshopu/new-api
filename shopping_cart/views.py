@@ -370,7 +370,7 @@ def buyer_address(request,user_id):
     } 
     if request.method=='GET':
         if response_data['status']==0:
-            userAddresses=models.User_Address.objects.filter(user_id=user_id)
+            userAddresses=models.User_Address.objects.filter(user_id=user_id).order_by('-is_default')
             for userAddress in userAddresses:
                 addressInfo={
                     "id":userAddress.id,
