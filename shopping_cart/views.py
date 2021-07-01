@@ -218,16 +218,19 @@ def shopping_cart_item(request,user_id): #user_id
 
                                 # print(selectedShipment)
                                 if selectedShipment[0]=='':
-                                    shipment_final={
-                                    "product_shipment_id":'',
-                                    "shipment_desc":'',
-                                    "shipment_price":''
-                                    }
-                                    # shipmentList.append(shipment_final)
-                                    productList.update({"selected_shipment":shipment_final})
+                                    defaultShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id,onoff='on')[:1]
+                                    for defaultShipment in defaultShipments:
+                                        shipment_final={
+                                        "product_shipment_id":defaultShipment.id,
+                                        "shipment_desc":defaultShipment.shipment_desc,
+                                        "shipment_price":defaultShipment.price
+                                        }
+                                        # shipmentList.append(shipment_final)
+                                        productList.update({"selected_shipment":shipment_final})
                                 else: 
                                     
                                     shipment=models.Product_Shipment_Method.objects.get(id=selectedShipment[0])
+                                    # print(type(shipment.price))
                                     shipment_final={
                                     "product_shipment_id":shipment.id,
                                     "shipment_desc":shipment.shipment_desc,
@@ -266,15 +269,19 @@ def shopping_cart_item(request,user_id): #user_id
                             for productShipment in productShipments:
                                 selectedShipment.append(productShipment.product_shipment_id)
                             if selectedShipment[0]=='':
-                                shipment_final={
-                                "product_shipment_id":'',
-                                "shipment_desc":'',
-                                "shipment_price":''
-                                }
-                                productList.update({"selected_shipment":shipment_final})
+                                defaultShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id,onoff='on')[:1]
+                                for defaultShipment in defaultShipments:
+                                    shipment_final={
+                                    "product_shipment_id":defaultShipment.id,
+                                    "shipment_desc":defaultShipment.shipment_desc,
+                                    "shipment_price":defaultShipment.price
+                                    }
+                                    # shipmentList.append(shipment_final)
+                                    productList.update({"selected_shipment":shipment_final})
                             else: 
                                 
                                 shipment=models.Product_Shipment_Method.objects.get(id=selectedShipment[0])
+                                # print(type(shipment.price))
                                 shipment_final={
                                 "product_shipment_id":shipment.id,
                                 "shipment_desc":shipment.shipment_desc,
