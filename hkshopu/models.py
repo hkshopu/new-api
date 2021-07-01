@@ -783,6 +783,7 @@ class Shop_Order(models.Model):
     status = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    order_number = models.CharField(max_length=25)
 
 class Shop_Order_Details(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
@@ -801,7 +802,6 @@ class Shop_Order_Details(models.Model):
     logistic_fee = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    order_number = models.CharField(max_length=25)
 
 class Product_Liked(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
