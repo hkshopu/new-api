@@ -362,7 +362,7 @@ def product_shipment(request,product_id):
 
             for shipment in shipments:
                 shipmentList={
-                    "shipment_id":shipment.id,
+                    "product_shipment_id":shipment.id,
                     "shipment_desc":shipment.shipment_desc,
                     "shipment_price":shipment.price
                 }
