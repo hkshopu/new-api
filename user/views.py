@@ -757,6 +757,7 @@ def topProductDetail(request, user_id='', product_id=''):
         if responseData['status'] == 0:
             product_attr = [
                 'product_title', # name
+                'shop_id',
                 'new_secondhand',
                 'product_description', # description
                 ]
