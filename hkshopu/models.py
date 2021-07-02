@@ -865,6 +865,7 @@ class Shopping_Cart(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user_address_id=  models.CharField(max_length=36)
     payment_id=  models.CharField(max_length=36)
+    shop_id=models.CharField(max_length=36)
 
 class User_Address(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
