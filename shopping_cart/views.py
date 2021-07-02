@@ -218,7 +218,7 @@ def shopping_cart_item(request,user_id): #user_id
 
                                 # print(selectedShipment)
                                 if selectedShipment[0]=='':
-                                    defaultShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id,onoff='on')[:1]
+                                    defaultShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id,onoff='on').order_by('price')[:1]
                                     for defaultShipment in defaultShipments:
                                         shipment_final={
                                         "product_shipment_id":defaultShipment.id,
@@ -269,7 +269,7 @@ def shopping_cart_item(request,user_id): #user_id
                             for productShipment in productShipments:
                                 selectedShipment.append(productShipment.product_shipment_id)
                             if selectedShipment[0]=='':
-                                defaultShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id,onoff='on')[:1]
+                                defaultShipments=models.Product_Shipment_Method.objects.filter(product_id=product.id,onoff='on').order_by('price')[:1]
                                 for defaultShipment in defaultShipments:
                                     shipment_final={
                                     "product_shipment_id":defaultShipment.id,
