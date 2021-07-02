@@ -784,6 +784,7 @@ class Shop_Order(models.Model):
     status = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    order_number = models.CharField(max_length=25)
 
 class Shop_Order_Details(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
@@ -1073,5 +1074,14 @@ class Rate_Pic(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     rate_id = models.CharField(max_length=36)
     path = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Order_Rate(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    order_id = models.CharField(max_length=36)
+    logistics  = models.FloatField()
+    service = models.FloatField()
+    anonymous = models.CharField(max_length=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
