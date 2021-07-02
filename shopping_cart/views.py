@@ -62,6 +62,7 @@ def add(request):
         product_id= request.POST.get('product_id', '')
         product_spec_id = request.POST.get('product_spec_id', '')
         quantity=request.POST.get('quantity', '')
+        shop_id=request.POST.get('shop_id', '')
         # product_shipment_id=request.POST.get('product_shipment_id', '')
         if quantity=='':
             quantity=1
@@ -69,7 +70,7 @@ def add(request):
             quantity=quantity
 
         if response_data['status']==0:
-            shoppingCart_checks=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id)
+            shoppingCart_checks=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,shop_id=shop_id)
             user_address_id=models.User_Address.objects.filter(user_id=user_id,is_default='Y')
             payment_id=models.Payment_Method.objects.get(is_default='Y')
             shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id,onoff='on').order_by('price')[:1]
@@ -84,9 +85,10 @@ def add(request):
                             quantity=quantity,
                             # user_address_id=user_address_id.id,
                             payment_id=payment_id.id,
-                            product_shipment_id=shipments[0].id
+                            product_shipment_id=shipments[0].id,
+                            shop_id=shop_id
                     )
-                    cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
+                    cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity,shop_id=shop_id)
                     if(len(cart_check))==0:
                         response_data['ret_val'] = '購物車新增失敗!'
                     else:
@@ -100,9 +102,10 @@ def add(request):
                             quantity=quantity,
                             user_address_id=user_address_id[0].id,
                             payment_id=payment_id.id,
-                            product_shipment_id=shipments[0].id
+                            product_shipment_id=shipments[0].id,
+                            shop_id=shop_id
                     )
-                    cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity)
+                    cart_check=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,quantity=quantity,shop_id=shop_id)
                     if(len(cart_check))==0:
                         response_data['ret_val'] = '購物車新增失敗!'
                     else:
