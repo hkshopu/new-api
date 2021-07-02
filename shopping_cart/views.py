@@ -380,14 +380,26 @@ def delete(request):
         'data': []
     }
     if request.method=='POST':
-        shopping_cart_item_id=json.loads(request.POST.get('shopping_cart_item_id'))
+        # shopping_cart_item_id=json.loads(request.POST.get('shopping_cart_item_id'))
 
-        getCartID=[]
-        for i in range(len(shopping_cart_item_id["shopping_cart_item_id"])):
-            getCartID.append(shopping_cart_item_id["shopping_cart_item_id"][i])
+        # getCartID=[]
+        # for i in range(len(shopping_cart_item_id["shopping_cart_item_id"])):
+        #     getCartID.append(shopping_cart_item_id["shopping_cart_item_id"][i])
 
-        if response_data['status']==0:
-            shoppingCarts=models.Shopping_Cart.objects.filter(id__in=getCartID).delete()
+
+        # if response_data['status']==0:
+        #     shoppingCarts=models.Shopping_Cart.objects.filter(id__in=getCartID).delete()
+        user_id= request.POST.get('user_id', '')
+        shop_id= request.POST.get('shop_id', '')
+        shopping_cart_item_id= request.POST.get('shopping_cart_item_id', '')
+        if user_id !='' and shop_id=='':
+            models.Shopping_Cart.objects.filter(user_id=user_id).delete()
+            response_data['ret_val'] = '刪除成功'
+        elif shop_id !='' and shopping_cart_item_id=='' :
+            models.Shopping_Cart.objects.filter(shop_id=shop_id,user_id=user_id).delete()
+            response_data['ret_val'] = '刪除成功'
+        elif shopping_cart_item_id !='' :
+            models.Shopping_Cart.objects.filter(id=shopping_cart_item_id).delete()
             response_data['ret_val'] = '刪除成功'
 
     return JsonResponse(response_data)
