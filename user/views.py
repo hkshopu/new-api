@@ -1143,17 +1143,6 @@ def updateKeywordAdSetting(request, keyword_ad_setting_header_id=''):
                 responseData['status'], responseData['ret_val'] = -99, '更新失敗'
     
     return JsonResponse(responseData)
-def keywordSearchCount(request, keyword):
-    responseData = {
-        'status': 0,
-        'ret_val': '',
-        'data': {}    
-    }
-
-    if request.method == 'GET':
-        search_count = len(models.Search_History.objects.filter(keyword=keyword))
-        responseData['data']['search_count'], responseData['ret_val'] = search_count, '取得成功'
-    return JsonResponse(responseData)
 
 def keywordAdRanking(request, keyword, keyword_bid):
     responseData = {

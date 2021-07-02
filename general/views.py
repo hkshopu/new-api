@@ -20,3 +20,15 @@ def bankCode(request):
                 temp_obj[attr] = row[attr]
             responseData['data'].append(temp_obj)
     return JsonResponse(responseData)
+
+def keywordSearchCount(request, keyword):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}    
+    }
+
+    if request.method == 'GET':
+        search_count = len(models.Search_History.objects.filter(keyword=keyword))
+        responseData['data']['search_count'], responseData['ret_val'] = search_count, '取得成功'
+    return JsonResponse(responseData)
