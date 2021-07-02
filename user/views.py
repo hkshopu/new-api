@@ -420,22 +420,26 @@ def socialLoginProcess(request):
                     responseData['ret_val'] = '已使用 Apple 帳戶登入!'
                     responseData['status'] = 3
                 except:
-                    try:
-                        user = models.User.objects.get(email=email)
-                        user.apple_account = appleAccount
-                        user.save()
-                        responseData['user_id'] = user.id
-                        responseData['ret_val'] = '已使用 Apple 帳戶登入!'
-                        responseData['status'] = 3
-                    except:
-                        models.User.objects.create(
-                            id=uuid.uuid4(),
-                            apple_account=appleAccount, 
-                            email=email
-                        )
-                        responseData['user_id'] = models.User.objects.order_by('-updated_at')[0].id
-                        responseData['ret_val'] = '已使用 Apple 帳戶註冊!'
-                        responseData['status'] = -3
+                    if email != '':
+                        try:
+                            user = models.User.objects.get(email=email)
+                            user.apple_account = appleAccount
+                            user.save()
+                            responseData['user_id'] = user.id
+                            responseData['ret_val'] = '已使用 Apple 帳戶登入!'
+                            responseData['status'] = 3
+                        except:
+                            models.User.objects.create(
+                                id=uuid.uuid4(),
+                                apple_account=appleAccount, 
+                                email=email
+                            )
+                            responseData['user_id'] = models.User.objects.order_by('-updated_at')[0].id
+                            responseData['ret_val'] = '已使用 Apple 帳戶註冊!'
+                            responseData['status'] = -3
+                    else:
+                        responseData['ret_val'] = 'Social Login Error'
+                        responseData['status'] = -4
     return JsonResponse(responseData)
 # 忘記密碼
 def forgetPasswordProcess(request):
