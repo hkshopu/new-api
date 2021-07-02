@@ -1,4 +1,5 @@
 # _*_ encoding: utf-8 _*_
+from datetime import datetime
 from django.core.exceptions import ValidationError
 from django.db import models
 import re
@@ -1005,17 +1006,52 @@ class Keyword_ad_setting_header(models.Model):
     ad_period_type = models.CharField(max_length=10)
     start_datetime = models.DateTimeField(null=True)
     end_datetime = models.DateTimeField(null=True)
-    status = models.CharField(max_length=36)
+    status = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def validate_column(column_name, err_code, param):
+        ret_code = 0
+        ret_description = ''
+        if column_name == 'ad_type':
+            if not(param):
+                ret_code, ret_description = err_code, 'ad_type不能為空'
+            elif param not in ['product', 'shop']:
+                ret_code, ret_description = err_code, 'ad_type應為 product 或 shop'
+        elif column_name == 'budget_type':
+            if not(param):
+                ret_code, ret_description = err_code, 'budget_type不能為空'
+            elif param not in ['unlimit', 'total', 'day']:
+                ret_code, ret_description = err_code, 'budget_type應為 unlimit 或 total 或 day'
+        elif column_name == 'budget_amount':
+            if param and float(param)<0:
+                ret_code, ret_description = err_code, 'budget_amount不能為負'
+        elif column_name == 'ad_period_type':
+            if not(param):
+                ret_code, ret_description = err_code, 'ad_period_type不能為空'
+            elif param not in ['unlimit', 'custom']:
+                ret_code, ret_description = err_code, 'ad_period_type應為 unlimit 或 custom'
+        elif column_name == 'start_datetime':
+            if param:
+                try:
+                    datetime.strptime(param, '%Y-%m-%d %H:%M:%S')
+                except:
+                    ret_code, ret_description = err_code, 'start_datetime應為YYYY-MM-DD hh:mm:ss'
+        elif column_name == 'end_datetime':
+            if param:
+                try:
+                    datetime.strptime(param, '%Y-%m-%d %H:%M:%S')
+                except:
+                    ret_code, ret_description = err_code, 'end_datetime應為YYYY-MM-DD hh:mm:ss'
+
+        return ret_code, ret_description
 
 class Keyword_ad_setting_detail(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    ad_setting_header_id = models.CharField(max_length=36)
+    keyword_ad_setting_header_id = models.CharField(max_length=36)
     shop_id = models.CharField(max_length=36, null=True)
     product_id = models.CharField(max_length=36, null=True)
     keyword = models.CharField(max_length=200)
-    keyword_bid = models.PositiveIntegerField()
+    keyword_bid = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

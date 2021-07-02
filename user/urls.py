@@ -28,4 +28,6 @@ urlpatterns = [
     path('<user_id>/addPaymentAccount/', views.addPaymentAccount),
     path('<user_id>/addPaymentAccount/<id>/', views.addPaymentAccount),
     path('addPaymentAccount/<id>/', views.addPaymentAccount),
+    path('<user_id>/keywordAdSetting/', views.keywordAdSetting),
+    path('updateKeywordAdSetting/<keyword_ad_setting_header_id>/', views.updateKeywordAdSetting),
 ]
