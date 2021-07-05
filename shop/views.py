@@ -2128,7 +2128,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     for shop_order in shop_orders:
                         shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
                         for shop_order_detail in shop_order_details:
-                            sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
+                            sum_of_purchasing_qty += shop_order_detail['purchasing_qty'] if shop_order_detail['purchasing_qty'] != None else 0
                     # 資料整理
                     data_of_shops.append({
                         'shop_id': shop['id'], 
