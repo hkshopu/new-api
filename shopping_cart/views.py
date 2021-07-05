@@ -395,13 +395,13 @@ def delete(request):
         user_id= request.POST.get('user_id', '')
         shop_id= request.POST.get('shop_id', '')
         shopping_cart_item_id= request.POST.get('shopping_cart_item_id', '')
-        if user_id !='' and shop_id=='':
+        if user_id !='' and shop_id=='' and shopping_cart_item_id=='':
             models.Shopping_Cart.objects.filter(user_id=user_id).delete()
             response_data['ret_val'] = '刪除成功'
         elif shop_id !='' and shopping_cart_item_id=='' :
             models.Shopping_Cart.objects.filter(shop_id=shop_id,user_id=user_id).delete()
             response_data['ret_val'] = '刪除成功'
-        elif shopping_cart_item_id !='' :
+        elif user_id !='' and shop_id=='' and shopping_cart_item_id !='' :
             models.Shopping_Cart.objects.filter(id=shopping_cart_item_id).delete()
             response_data['ret_val'] = '刪除成功'
 
