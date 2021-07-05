@@ -419,12 +419,13 @@ def profile(request,user_id):
     if request.method=='GET':
         if responseData['status']==0:
             user=models.User.objects.get(id=user_id)
-            rate=models.User_Rate.objects.filter(user_id=id).count()
+            rate=models.User_Rate.objects.filter(user_id=user_id).aggregate(Avg('rating'))
+            print(rate)
             userInfo={
                     "user_id":user.id,
                     "name":user.account_name,
                     "pic":user.pic,
-                    "rating":rate
+                    "rating":rate["rating__avg"]
                     # "shop_rate":shop.id,
                 }
             responseData['data'].append(userInfo) 
