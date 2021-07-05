@@ -275,9 +275,7 @@ def save(request):
                     order_number=0
                 )
                 # 更新 country_shop_setting 資料表
-                models.Country_Shop_Setting.objects.filter(country_code='HK').update(
-                    shop_code='%0X' % (int(country_shop_setting['shop_code'], 16) + 1)
-                )
+                shop_code = country_shop_setting['shop_code']
             responseData['ret_val'] = '商店與選擇商店分類新增成功!'
     return JsonResponse(responseData)
 # 更新商店
