@@ -410,6 +410,28 @@ def show(request,user_id):
             responseData['ret_val'] = '買家資訊取得成功'
     return JsonResponse(responseData) 
 
+def profile(request,user_id): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+        if responseData['status']==0:
+            user=models.User.objects.get(id=user_id)
+            rate=models.User_Rate.objects.filter(user_id=id).count()
+            userInfo={
+                    "user_id":user.id,
+                    "name":user.account_name,
+                    "pic":user.pic,
+                    "rating":rate
+                    # "shop_rate":shop.id,
+                }
+            responseData['data'].append(userInfo) 
+
+            responseData['ret_val'] = '買家資訊取得成功'
+    return JsonResponse(responseData) 
+
 # 更新預設買家地址 is_default
 def userAddress_isDefault(request): 
     # 回傳資料
