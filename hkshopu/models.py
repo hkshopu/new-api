@@ -999,9 +999,10 @@ class Order_Error(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Keyword_ad_setting_header(models.Model):
+class Ad_Setting_Header(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     user_id = models.CharField(max_length=36)
+    ad_category = models.CharField(max_length=20)
     ad_type = models.CharField(max_length=10)
     budget_type = models.CharField(max_length=10)
     budget_amount = models.PositiveIntegerField(null=True)
@@ -1014,7 +1015,12 @@ class Keyword_ad_setting_header(models.Model):
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
-        if column_name == 'ad_type':
+        if column_name == 'category':
+            if not(param):
+                ret_code, ret_description = err_code, 'category不能為空'
+            elif param not in ['keyword', 'recommend', 'store']:
+                ret_code, ret_description = err_code, 'category應為 keyword 或 recommend 或 store'
+        elif column_name == 'ad_type':
             if not(param):
                 ret_code, ret_description = err_code, 'ad_type不能為空'
             elif param not in ['product', 'shop']:
@@ -1047,13 +1053,14 @@ class Keyword_ad_setting_header(models.Model):
 
         return ret_code, ret_description
 
-class Keyword_ad_setting_detail(models.Model):
+class Ad_Setting_Detail(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    keyword_ad_setting_header_id = models.CharField(max_length=36)
+    ad_setting_header_id = models.CharField(max_length=36)
+    ad_img = models.CharField(max_length=255)
     shop_id = models.CharField(max_length=36, null=True)
     product_id = models.CharField(max_length=36, null=True)
-    keyword = models.CharField(max_length=200)
-    keyword_bid = models.FloatField()
+    keyword = models.CharField(max_length=200, null=True)
+    bid = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

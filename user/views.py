@@ -7,6 +7,7 @@ from django.core import mail
 from django.utils.html import strip_tags
 from django.db import transaction
 from hkshopu import models
+from utils.upload_tools import upload_file
 import uuid
 import datetime
 import re
@@ -943,212 +944,6 @@ def user_id_validation(request):
             response_data['ret_val'] = '該使用者存在!'
     return JsonResponse(response_data)
 
-def keywordAdSetting(request, user_id=''):
-    responseData = {
-        'status': 0,
-        'ret_val': '',
-        'data': {}
-    }
-
-    if request.method == 'POST':
-        ad_type = request.POST.get('ad_type')
-        budget_type = request.POST.get('budget_type')
-        budget_amount = request.POST.get('budget_amount')
-        ad_period_type = request.POST.get('ad_period_type')
-        start_datetime = request.POST.get('start_datetime')
-        end_datetime = request.POST.get('end_datetime')
-        details = request.POST.get('details') # json type
-
-        if responseData['status'] == 0:
-            try:
-                models.User.objects.get(id=user_id)
-            except:
-                responseData['status'], responseData['ret_val'] = -1, '使用者不存在'
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('ad_type', -2, ad_type)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('budget_type', -3, budget_type)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('budget_amount', -4, budget_amount)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('ad_period_type', -5, ad_period_type)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('start_datetime', -6, start_datetime)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('end_datetime', -7, end_datetime)
-        if responseData['status'] == 0:
-            if start_datetime >= end_datetime:
-                responseData['status'], responseData['ret_val'] = -8, 'start_datetime需小於end_datetime'
-        if responseData['status'] == 0:
-            try:
-                details = json.loads(details)
-            except:
-                responseData['status'], responseData['ret_val'] = -9, 'JSON解析錯誤'        
-        if responseData['status'] == 0:
-            for detail in details:                
-                if 'shop_id' not in detail or detail['shop_id'] == '':
-                    detail['shop_id'] = None
-                if 'product_id' not in detail or detail['product_id'] == '': 
-                    detail['product_id'] = None
-                    if not detail['shop_id']:
-                        responseData['status'], responseData['ret_val'] = -12, 'product_id, shop_id 至少需要其中一個'
-                        break
-                if not detail['product_id'] and not models.Shop.objects.filter(id=detail['shop_id']).exists():
-                    responseData['status'], responseData['ret_val'] = -10, 'shop_id不存在 -> '+str(detail['shop_id'])
-                if not detail['shop_id'] and not models.Product.objects.filter(id=detail['product_id']).exists():
-                    responseData['status'], responseData['ret_val'] = -11, 'product_id不存在 -> '+str(detail['product_id'])
-
-                if 'keyword' not in detail or detail['keyword'] == '':
-                    responseData['status'], responseData['ret_val'] = -13, 'keyword不能為空'
-                    break
-                try:
-                    if float(detail['keyword_bid']) < 0:
-                        raise ValueError
-                except: # catch KeyError & ValueError & TypeError
-                    responseData['status'], responseData['ret_val'] = -14, 'keyword_bid只能為非負數'
-                    break
-        
-        if responseData['status'] == 0:
-            if budget_type == 'unlimit': budget_amount = None
-            if ad_period_type == 'unlimit': start_datetime = end_datetime = None
-            status = 'running'
-            try:
-                with transaction.atomic():
-                    keyword_ad_setting_header = models.Keyword_ad_setting_header.objects.create(
-                        id=uuid.uuid4(),
-                        user_id=user_id,
-                        ad_type=ad_type,
-                        budget_type=budget_type,
-                        budget_amount=budget_amount,
-                        ad_period_type=ad_period_type,
-                        start_datetime=start_datetime,
-                        end_datetime=end_datetime,
-                        status=status
-                    )
-                    for detail in details:
-                        models.Keyword_ad_setting_detail.objects.create(
-                            id=uuid.uuid4(),
-                            keyword_ad_setting_header_id=keyword_ad_setting_header.id,
-                            shop_id=detail['shop_id'],
-                            product_id=detail['product_id'],
-                            keyword=detail['keyword'],
-                            keyword_bid=detail['keyword_bid']
-                        )
-                        print(detail['keyword_bid'])
-                responseData['ret_val'] = '新增成功'
-                responseData['data']['id'] = keyword_ad_setting_header.id
-            except:
-                responseData['status'], responseData['ret_val'] = -99, '新增失敗'
-    elif request.method == 'GET':
-        pass
-    return JsonResponse(responseData)
-
-def updateKeywordAdSetting(request, keyword_ad_setting_header_id=''):
-    responseData = {
-        'status': 0,
-        'ret_val': '',
-        'data': {}
-    }
-    if request.method == 'POST':
-        ad_type = request.POST.get('ad_type')
-        budget_type = request.POST.get('budget_type')
-        budget_amount = request.POST.get('budget_amount')
-        ad_period_type = request.POST.get('ad_period_type')
-        start_datetime = request.POST.get('start_datetime')
-        end_datetime = request.POST.get('end_datetime')
-        details = request.POST.get('details') # json type
-
-        if responseData['status'] == 0:
-            try:
-                models.Keyword_ad_setting_header.objects.get(id=keyword_ad_setting_header_id)
-            except:
-                responseData['status'], responseData['ret_val'] = -1, '廣告不存在'
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('ad_type', -2, ad_type)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('budget_type', -3, budget_type)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('budget_amount', -4, budget_amount)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('ad_period_type', -5, ad_period_type)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('start_datetime', -6, start_datetime)
-        if responseData['status'] == 0:
-            responseData['status'], responseData['ret_val'] = models.Keyword_ad_setting_header.validate_column('end_datetime', -7, end_datetime)
-        if responseData['status'] == 0:
-            if start_datetime and end_datetime and start_datetime >= end_datetime:
-                responseData['status'], responseData['ret_val'] = -8, 'start_datetime需小於end_datetime'
-        if responseData['status'] == 0:
-            try:
-                details = json.loads(details)
-            except:
-                responseData['status'], responseData['ret_val'] = -9, 'JSON解析錯誤'        
-        if responseData['status'] == 0:
-            for detail in details:                
-                if 'shop_id' not in detail or detail['shop_id'] == '':
-                    detail['shop_id'] = None
-                if 'product_id' not in detail or detail['product_id'] == '': 
-                    detail['product_id'] = None
-                    if not detail['shop_id']:
-                        responseData['status'], responseData['ret_val'] = -12, 'product_id, shop_id 至少需要其中一個'
-                        break
-                if not detail['product_id'] and not models.Shop.objects.filter(id=detail['shop_id']).exists():
-                    responseData['status'], responseData['ret_val'] = -10, 'shop_id不存在 -> '+str(detail['shop_id'])
-                if not detail['shop_id'] and not models.Product.objects.filter(id=detail['product_id']).exists():
-                    responseData['status'], responseData['ret_val'] = -11, 'product_id不存在 -> '+str(detail['product_id'])
-
-                if 'keyword' not in detail or detail['keyword'] == '':
-                    responseData['status'], responseData['ret_val'] = -13, 'keyword不能為空'
-                    break
-                try:
-                    if float(detail['keyword_bid']) < 0:
-                        raise ValueError
-                except: # catch KeyError & ValueError & TypeError
-                    responseData['status'], responseData['ret_val'] = -14, 'keyword_bid只能為非負數'
-                    break
-        if responseData['status'] == 0:
-            if budget_type == 'unlimit': budget_amount = None
-            if ad_period_type == 'unlimit': start_datetime = end_datetime = None
-            
-            try:
-                with transaction.atomic():
-                    models.Keyword_ad_setting_header.objects.filter(id=keyword_ad_setting_header_id).update(
-                        ad_type=ad_type, 
-                        budget_type=budget_type, 
-                        budget_amount=budget_amount, 
-                        ad_period_type=ad_period_type, 
-                        start_datetime=start_datetime, 
-                        end_datetime=end_datetime
-                    )
-                    keyword_ad_setting_detail_delete = models.Keyword_ad_setting_detail.objects.filter(keyword_ad_setting_header_id=keyword_ad_setting_header_id)
-                    for detail in details:
-                        keyword_ad_setting_detail = models.Keyword_ad_setting_detail.objects.filter(keyword_ad_setting_header_id=keyword_ad_setting_header_id, keyword=detail['keyword'])
-                        row_count = len(keyword_ad_setting_detail)
-                        if row_count == 0:
-                            models.Keyword_ad_setting_detail.objects.create(
-                                id=uuid.uuid4(),
-                                keyword_ad_setting_header_id=keyword_ad_setting_header_id,
-                                shop_id=detail['shop_id'],
-                                product_id=detail['product_id'],
-                                keyword=detail['keyword'],
-                                keyword_bid=detail['keyword_bid']
-                            )
-                        elif row_count == 1:
-                            models.Keyword_ad_setting_detail.objects.filter(id=keyword_ad_setting_header_id, keyword=detail['keyword']).update(
-                                shop_id=detail['shop_id'],
-                                product_id=detail['product_id'],
-                                keyword=detail['keyword'],
-                                keyword_bid=detail['keyword_bid']
-                            )
-                        keyword_ad_setting_detail_delete = keyword_ad_setting_detail_delete.filter(~Q(keyword=detail['keyword']))
-                    if len(keyword_ad_setting_detail_delete) > 0:
-                        keyword_ad_setting_detail_delete.delete()
-                responseData['ret_val'] = '更新成功'                
-            except:
-                responseData['status'], responseData['ret_val'] = -99, '更新失敗'
-    
-    return JsonResponse(responseData)
-
 def keywordAdRanking(request, keyword, keyword_bid):
     responseData = {
         'status': 0,
@@ -1157,7 +952,373 @@ def keywordAdRanking(request, keyword, keyword_bid):
     }
 
     if request.method == 'GET':
-        keyword_bid_ranking = len(models.Keyword_ad_setting_detail.objects.filter(keyword=keyword, keyword_bid__gt=keyword_bid))+1
-        responseData['data']['keyword_bid_ranking'], responseData['ret_val'] = keyword_bid_ranking, '取得成功'
+        bid_ranking = len(models.Ad_Setting_Detail.objects.filter(keyword=keyword, bid__gt=keyword_bid))+1
+        responseData['data']['keyword_bid_ranking'], responseData['ret_val'] = bid_ranking, '取得成功'
     
+    return JsonResponse(responseData)
+
+def adSetting(request, user_id='', ad_category='', ad_type='',):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+    
+    if request.method == 'POST': # CREATE Ad Setting
+        budget_type = request.POST.get('budget_type')
+        budget_amount = request.POST.get('budget_amount')
+        ad_period_type = request.POST.get('ad_period_type')
+        start_datetime = request.POST.get('start_datetime')
+        end_datetime = request.POST.get('end_datetime')
+        details = request.POST.get('details') # json type
+        #/*
+        # general validation
+        if responseData['status'] == 0:
+            try:
+                models.User.objects.get(id=user_id)
+            except:
+                responseData['status'], responseData['ret_val'] = -1, '使用者不存在'
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('ad_type', -2, ad_type)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('budget_type', -3, budget_type)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('budget_amount', -4, budget_amount)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('ad_period_type', -5, ad_period_type)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('start_datetime', -6, start_datetime)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('end_datetime', -7, end_datetime)
+        if responseData['status'] == 0:
+            if ad_period_type=='custom' and start_datetime >= end_datetime:
+                responseData['status'], responseData['ret_val'] = -8, 'start_datetime需小於end_datetime'
+        if responseData['status'] == 0:
+            try:
+                details = json.loads(details)
+            except:
+                responseData['status'], responseData['ret_val'] = -9, 'JSON解析錯誤'
+        if responseData['status'] == 0:
+            for detail in details:
+                if 'shop_id' not in detail or detail['shop_id'] == '':
+                    detail['shop_id'] = None
+                if 'product_id' not in detail or detail['product_id'] == '': 
+                    detail['product_id'] = None                        
+                    if not detail['shop_id']:
+                        responseData['status'], responseData['ret_val'] = -12, 'product_id, shop_id 至少需要其中一個'
+                        break
+                if not detail['product_id'] and not models.Shop.objects.filter(id=detail['shop_id']).exists():
+                    responseData['status'], responseData['ret_val'] = -10, 'shop_id不存在 -> '+str(detail['shop_id'])
+                if not detail['shop_id'] and not models.Product.objects.filter(id=detail['product_id']).exists():
+                    responseData['status'], responseData['ret_val'] = -11, 'product_id不存在 -> '+str(detail['product_id'])
+
+                if 'keyword' not in detail or detail['keyword'] == '':                    
+                    if ad_category == 'keyword':                    
+                        responseData['status'], responseData['ret_val'] = -13, 'keyword不能為空'
+                        break
+                    else:
+                        detail['keyword'] = None
+
+                try:
+                    if float(detail['bid']) < 0:
+                        raise ValueError
+                except: # catch KeyError & ValueError & TypeError
+                    responseData['status'], responseData['ret_val'] = -14, 'bid只能為非負數'
+                    break
+        #*/
+        #/*
+        # default action
+        if budget_type == 'unlimit': budget_amount = None
+        if ad_period_type == 'unlimit': start_datetime = end_datetime = None
+        status = 'running'
+        #*/
+
+        if ad_category == 'keyword':
+            #/*
+            # custom validation
+            # 
+            #*/
+            if responseData['status'] == 0:
+                try:
+                    with transaction.atomic():
+                        keyword_ad_setting_header = models.Ad_Setting_Header.objects.create(
+                            id=uuid.uuid4(),
+                            user_id=user_id,
+                            ad_category=ad_category,
+                            ad_type=ad_type,
+                            budget_type=budget_type,
+                            budget_amount=budget_amount,
+                            ad_period_type=ad_period_type,
+                            start_datetime=start_datetime,
+                            end_datetime=end_datetime,
+                            status=status
+                        )
+                        for detail in details:
+                            models.Ad_Setting_Detail.objects.create(
+                                id=uuid.uuid4(),
+                                ad_setting_header_id=keyword_ad_setting_header.id,
+                                shop_id=detail['shop_id'],
+                                product_id=detail['product_id'],
+                                keyword=detail['keyword'],
+                                bid=detail['bid']
+                            )
+                    responseData['ret_val'] = '新增成功'
+                    responseData['data']['id'] = keyword_ad_setting_header.id
+                except:
+                    responseData['status'], responseData['ret_val'] = -99, '新增失敗'
+        elif ad_category == 'recommend':
+            #/*
+            # custom validation
+            # 
+            #*/
+            if responseData['status'] == 0:
+                try:
+                    with transaction.atomic():
+                        recommend_header = models.Ad_Setting_Header.objects.create(
+                            id=uuid.uuid4(),
+                            user_id=user_id,
+                            ad_category=ad_category,
+                            ad_type=ad_type,
+                            budget_type=budget_type,
+                            budget_amount=budget_amount,
+                            ad_period_type=ad_period_type,
+                            start_datetime=start_datetime,
+                            end_datetime=end_datetime,
+                            status=status
+                        )
+                        models.Ad_Setting_Detail.objects.create(
+                            id=uuid.uuid4(),
+                            ad_setting_header_id=recommend_header.id,
+                            shop_id=details[0]['shop_id'],
+                            product_id=details[0]['product_id'],
+                            keyword=details[0]['keyword'],
+                            bid=details[0]['bid']
+                        )
+                    responseData['ret_val'] = '新增成功'
+                    responseData['data']['id'] = recommend_header.id
+                    pass
+                except:
+                    responseData['status'], responseData['ret_val'] = -99, '新增失敗'
+        elif ad_category == 'store':
+            #/*
+            # custom validation
+            ad_img = request.FILES.get('ad_img')
+            if not ad_img:
+                responseData['status'], responseData['ret_val'] = -15, 'ad_img不可為空'
+            elif not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(ad_img.name))):
+                responseData['status'], responseData['ret_val'] = -16, 'ad_img 應為 gif|png|jpg|jpeg'                
+            #*/
+            if responseData['status'] == 0:
+                img_url = upload_file(ad_img,'images/ad/',suffix="ad_img")
+                try:
+                    with transaction.atomic():
+                        store_header = models.Ad_Setting_Header.objects.create(
+                            id=uuid.uuid4(),
+                            user_id=user_id,
+                            ad_category=ad_category,
+                            ad_type=ad_type,
+                            budget_type=budget_type,
+                            budget_amount=budget_amount,
+                            ad_period_type=ad_period_type,
+                            start_datetime=start_datetime,
+                            end_datetime=end_datetime,
+                            status=status
+                        )
+                        models.Ad_Setting_Detail.objects.create(
+                            id=uuid.uuid4(),
+                            ad_setting_header_id=store_header.id,
+                            ad_img=img_url,
+                            shop_id=details[0]['shop_id'],
+                            product_id=details[0]['product_id'],
+                            keyword=details[0]['keyword'],
+                            bid=details[0]['bid']
+                        )
+                    responseData['ret_val'] = '新增成功'
+                    responseData['data']['id'] = store_header.id
+                    pass
+                except:
+                    responseData['status'], responseData['ret_val'] = -99, '新增失敗'
+                
+    elif request.method == 'GET':
+        if ad_category == 'keyword':
+            pass
+        elif ad_category == 'recommend':
+            pass
+        elif ad_category == 'store':
+            pass
+    return JsonResponse(responseData)
+
+def updateAdSetting(request, ad_category='', ad_type='', ad_setting_header_id=''):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    if request.method == 'POST': # UPDATE Ad Setting
+        budget_type = request.POST.get('budget_type')
+        budget_amount = request.POST.get('budget_amount')
+        ad_period_type = request.POST.get('ad_period_type')
+        start_datetime = request.POST.get('start_datetime')
+        end_datetime = request.POST.get('end_datetime')
+        details = request.POST.get('details') # json type
+        #/*
+        # general validation
+        if responseData['status'] == 0:
+            try:
+                models.Ad_Setting_Header.objects.get(id=ad_setting_header_id)
+            except:
+                responseData['status'], responseData['ret_val'] = -1, '廣告不存在'
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('ad_type', -2, ad_type)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('budget_type', -3, budget_type)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('budget_amount', -4, budget_amount)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('ad_period_type', -5, ad_period_type)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('start_datetime', -6, start_datetime)
+        if responseData['status'] == 0:
+            responseData['status'], responseData['ret_val'] = models.Ad_Setting_Header.validate_column('end_datetime', -7, end_datetime)
+        if responseData['status'] == 0:
+            if ad_period_type=='custom' and start_datetime >= end_datetime:
+                responseData['status'], responseData['ret_val'] = -8, 'start_datetime需小於end_datetime'
+        if responseData['status'] == 0:
+            try:
+                details = json.loads(details)
+            except:
+                responseData['status'], responseData['ret_val'] = -9, 'JSON解析錯誤'        
+        if responseData['status'] == 0:
+            for detail in details:
+                if 'shop_id' not in detail or detail['shop_id'] == '':
+                    detail['shop_id'] = None
+                if 'product_id' not in detail or detail['product_id'] == '': 
+                    detail['product_id'] = None
+                    if not detail['shop_id']:
+                        responseData['status'], responseData['ret_val'] = -12, 'product_id, shop_id 至少需要其中一個'
+                        break
+                if not detail['product_id'] and not models.Shop.objects.filter(id=detail['shop_id']).exists():
+                    responseData['status'], responseData['ret_val'] = -10, 'shop_id不存在 -> '+str(detail['shop_id'])
+                if not detail['shop_id'] and not models.Product.objects.filter(id=detail['product_id']).exists():
+                    responseData['status'], responseData['ret_val'] = -11, 'product_id不存在 -> '+str(detail['product_id'])
+
+                if 'keyword' not in detail or detail['keyword'] == '':                    
+                    if ad_category == 'keyword':                    
+                        responseData['status'], responseData['ret_val'] = -13, 'keyword不能為空'
+                        break
+                    else:
+                        detail['keyword'] = None
+                try:
+                    if float(detail['bid']) < 0:
+                        raise ValueError
+                except: # catch KeyError & ValueError & TypeError
+                    responseData['status'], responseData['ret_val'] = -14, 'bid只能為非負數'
+                    break
+        #*/        
+        #/*
+        # default action
+        if budget_type == 'unlimit': budget_amount = None
+        if ad_period_type == 'unlimit': start_datetime = end_datetime = None
+        status = 'running'
+        #*/
+
+        if ad_category == 'keyword':
+            #/*
+            # custom validation
+            # 
+            #*/
+            if responseData['status'] == 0:        
+                with transaction.atomic():
+                    models.Ad_Setting_Header.objects.filter(id=ad_setting_header_id).update(
+                        budget_type=budget_type, 
+                        budget_amount=budget_amount, 
+                        ad_period_type=ad_period_type, 
+                        start_datetime=start_datetime, 
+                        end_datetime=end_datetime
+                    )
+                    keyword_ad_setting_detail_delete = models.Ad_Setting_Detail.objects.filter(ad_setting_header_id=ad_setting_header_id)
+                    for detail in details:
+                        keyword_ad_setting_detail = models.Ad_Setting_Detail.objects.filter(ad_setting_header_id=ad_setting_header_id, keyword=detail['keyword'])
+                        row_count = len(keyword_ad_setting_detail)
+                        if row_count == 0:
+                            models.Ad_Setting_Detail.objects.create(
+                                id=uuid.uuid4(),
+                                ad_setting_header_id=ad_setting_header_id,
+                                shop_id=detail['shop_id'],
+                                product_id=detail['product_id'],
+                                keyword=detail['keyword'],
+                                bid=detail['bid']
+                            )
+                        elif row_count == 1:
+                            models.Ad_Setting_Detail.objects.filter(id=ad_setting_header_id, keyword=detail['keyword']).update(
+                                shop_id=detail['shop_id'],
+                                product_id=detail['product_id'],
+                                keyword=detail['keyword'],
+                                bid=detail['bid']
+                            )
+                        keyword_ad_setting_detail_delete = keyword_ad_setting_detail_delete.filter(~Q(keyword=detail['keyword']))
+                    if len(keyword_ad_setting_detail_delete) > 0:
+                        keyword_ad_setting_detail_delete.delete()
+                responseData['ret_val'] = '更新成功'    
+                try:
+                    pass    
+                except:
+                    responseData['status'], responseData['ret_val'] = -99, '更新失敗'
+        elif ad_category == 'recommend':
+            #/*
+            # custom validation
+            # 
+            #*/
+            if responseData['status'] == 0:
+                try:
+                    with transaction.atomic():
+                        models.Ad_Setting_Header.objects.filter(id=ad_setting_header_id).update(
+                            budget_type=budget_type, 
+                            budget_amount=budget_amount, 
+                            ad_period_type=ad_period_type, 
+                            start_datetime=start_datetime, 
+                            end_datetime=end_datetime
+                        )
+                        models.Ad_Setting_Detail.objects.filter(ad_setting_header_id=ad_setting_header_id).update(
+                            shop_id=details[0]['shop_id'],
+                            product_id=details[0]['product_id'],
+                            keyword=details[0]['keyword'],
+                            bid=details[0]['bid']
+                        )
+                    responseData['ret_val'] = '更新成功'
+                except:
+                    responseData['status'], responseData['ret_val'] = -99, '更新失敗'
+        elif ad_category == 'store':
+            #/*
+            # custom validation
+            ad_img = request.FILES.get('ad_img')
+            if not ad_img:
+                responseData['status'], responseData['ret_val'] = -15, 'img不可為空'
+            elif not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(ad_img.name))):
+                responseData['status'], responseData['ret_val'] = -16, 'img 應為 gif|png|jpg|jpeg'                
+            #*/
+            if responseData['status'] == 0:
+                img_url = upload_file(ad_img,'images/ad/',suffix="ad_img")
+                try:
+                    with transaction.atomic():
+                        models.Ad_Setting_Header.objects.filter(id=ad_setting_header_id).update(
+                            budget_type=budget_type, 
+                            budget_amount=budget_amount, 
+                            ad_period_type=ad_period_type, 
+                            start_datetime=start_datetime, 
+                            end_datetime=end_datetime
+                        )
+                        models.Ad_Setting_Detail.objects.filter(ad_setting_header_id=ad_setting_header_id).update(
+                            ad_img=img_url,
+                            shop_id=details[0]['shop_id'],
+                            product_id=details[0]['product_id'],
+                            keyword=details[0]['keyword'],
+                            bid=details[0]['bid']
+                        )
+                    responseData['ret_val'] = '更新成功'
+                except:
+                    responseData['status'], responseData['ret_val'] = -99, '更新失敗'
+
+
     return JsonResponse(responseData)
