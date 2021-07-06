@@ -67,7 +67,7 @@ def add(request):
         if quantity=='':
             quantity=1
         else : 
-            quantity=quantity
+            quantity=int(quantity)
 
         if response_data['status']==0:
             shoppingCart_checks=models.Shopping_Cart.objects.filter(user_id=user_id,product_id=product_id,product_spec_id=product_spec_id,shop_id=shop_id)
@@ -75,6 +75,27 @@ def add(request):
             payment_id=models.Payment_Method.objects.get(is_default='Y')
             shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id,onoff='on').order_by('price')[:1]
             # print(shipments)
+            count=models.Shop_Order_Details.objects.filter(product_id=product_id).aggregate(Sum('quantity'))
+            order_quantity_sum=count["quantity__sum"]
+            if count["quantity__sum"]==None:
+                order_quantity_sum=0
+            remain_qty=0
+            if product_spec_id=='':
+                remain_product=models.Product.objects.get(id=product_id)
+                remain_qty=remain_product.quantity-order_quantity_sum
+                if (remain_qty-quantity)<0:
+                    response_data['status']=-1
+                    response_data['ret_val'] = '購買數量超過剩餘庫存!'
+                    # response_data['data'].append({"remain_qty":remain_qty})
+                    return JsonResponse(response_data)
+            else:
+                remain_spec=models.Product_Spec.objects.get(id=product_spec_id)
+                remain_qty=remain_spec.quantity-order_quantity_sum
+                if (remain_qty-quantity)<0:
+                    response_data['status']=-1
+                    response_data['ret_val'] = '購買數量超過剩餘庫存!'
+                    # response_data['data'].append({"remain_qty":remain_qty})
+                    return JsonResponse(response_data)
             if len(shoppingCart_checks)==0:
                 if len(user_address_id)==0:
                     models.Shopping_Cart.objects.create(
@@ -92,6 +113,7 @@ def add(request):
                     if(len(cart_check))==0:
                         response_data['ret_val'] = '購物車新增失敗!'
                     else:
+                        # response_data['data'].append(remain_qty-quantity)
                         response_data['ret_val'] = '購物車新增成功!'
                 else:
                     models.Shopping_Cart.objects.create(
@@ -109,6 +131,7 @@ def add(request):
                     if(len(cart_check))==0:
                         response_data['ret_val'] = '購物車新增失敗!'
                     else:
+                        # response_data['data'].append(remain_qty-quantity)
                         response_data['ret_val'] = '購物車新增成功!'
             else : 
                 for shoppingCart_check in shoppingCart_checks:
