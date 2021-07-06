@@ -421,11 +421,15 @@ def profile(request,user_id):
             user=models.User.objects.get(id=user_id)
             rate=models.User_Rate.objects.filter(user_id=user_id).aggregate(Avg('rating'))
             print(rate)
+            if rate["rating__avg"]== None:
+                rating=0
+            else :
+                rating=rate["rating__avg"]
             userInfo={
                     "user_id":user.id,
                     "name":user.account_name,
                     "pic":user.pic,
-                    "rating":rate["rating__avg"]
+                    "rating":rating
                     # "shop_rate":shop.id,
                 }
             responseData['data'].append(userInfo) 

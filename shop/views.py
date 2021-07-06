@@ -275,8 +275,22 @@ def save(request):
                     order_number=0
                 )
                 # 更新 country_shop_setting 資料表
+                shop_code = country_shop_setting['shop_code']
+                new_shop_code = ''
+                char_list_of_shop_code = []
+                digit = 0
+                for x in range(len(shop_code)):
+                    char_list_of_shop_code.append(shop_code[x])
+                for x in range(len(char_list_of_shop_code) - 1, -1, -1):
+                    if digit != 0:
+                        char_list_of_shop_code[x] = chr(ord(char_list_of_shop_code[x]) + digit)
+                        digit = 0
+                    if char_list_of_shop_code[x] > 'Z':
+                        digit = ord(char_list_of_shop_code[x]) // ord('Z')
+                        char_list_of_shop_code[x] = chr(ord(char_list_of_shop_code[x]) - 26)
+                new_shop_code += ''.join(char_list_of_shop_code)
                 models.Country_Shop_Setting.objects.filter(country_code='HK').update(
-                    shop_code='%0X' % (int(country_shop_setting['shop_code'], 16) + 1)
+                    shop_code=new_shop_code
                 )
             responseData['ret_val'] = '商店與選擇商店分類新增成功!'
     return JsonResponse(responseData)
@@ -2114,7 +2128,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     for shop_order in shop_orders:
                         shop_order_details = models.Shop_Order_Details.objects.filter(order_id=shop_order['id']).values('purchasing_qty')
                         for shop_order_detail in shop_order_details:
-                            sum_of_purchasing_qty += shop_order_detail['purchasing_qty']
+                            sum_of_purchasing_qty += shop_order_detail['purchasing_qty'] if shop_order_detail['purchasing_qty'] != None else 0
                     # 資料整理
                     data_of_shops.append({
                         'shop_id': shop['id'], 

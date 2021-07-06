@@ -734,7 +734,6 @@ class Product_Rate(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     spec_id = models.CharField(max_length=36)
-    order_id = models.CharField(max_length=36)
     
 class Shop_Score(models.Model):
     user_id = models.CharField(max_length=36)
