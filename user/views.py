@@ -944,17 +944,24 @@ def user_id_validation(request):
             response_data['ret_val'] = '該使用者存在!'
     return JsonResponse(response_data)
 
-def keywordAdRanking(request, keyword, keyword_bid):
+def adSettingRanking(request, ad_category='', ad_type=''):
     responseData = {
         'status': 0,
         'ret_val': '',
         'data': {}
     }
+    try:
+        if request.method == 'GET':
+            keyword = request.GET.get('keyword')
+            bid = request.GET.get('bid')
+            header_ids = models.Ad_Setting_Header.objects.filter(ad_category=ad_category,ad_type=ad_type)
+            ranking = models.Ad_Setting_Detail.objects.filter(ad_setting_header_id__in=header_ids,bid__gt=bid)
+            if ad_category=='keyword':
+                ranking = ranking.filter(keyword=keyword)
+            responseData['ret_val'], responseData['data']['ranking'] = '成功', len(ranking)
+    except:
+        pass
 
-    if request.method == 'GET':
-        bid_ranking = len(models.Ad_Setting_Detail.objects.filter(keyword=keyword, bid__gt=keyword_bid))+1
-        responseData['data']['keyword_bid_ranking'], responseData['ret_val'] = bid_ranking, '取得成功'
-    
     return JsonResponse(responseData)
 
 def adSetting(request, user_id='', ad_category='', ad_type='',):
