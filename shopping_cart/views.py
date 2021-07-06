@@ -338,10 +338,10 @@ def checkout(request): #user_id
                 print(new_quantity[i]["shopping_cart_item_id"])
                 cart=models.Shopping_Cart.objects.get(user_id=user_id,id=new_quantity[i]["shopping_cart_item_id"])
                 orders=models.Shop_Order.objects.filter(user_id=user_id)
-                getOrderID=[]
-                for order in orders:
-                    getOrderID.append(order.id)
-                count=models.Shop_Order_Details.objects.filter(order_id__in=getOrderID,product_id=cart.product_id,product_spec_id=cart.product_spec_id).aggregate(Sum('quantity'))
+                # getOrderID=[]
+                # for order in orders:
+                #     getOrderID.append(order.id)
+                count=models.Shop_Order_Details.objects.filter(order_id__in=orders,product_id=cart.product_id,product_spec_id=cart.product_spec_id).aggregate(Sum('quantity'))
                 order_quantity_sum=count["quantity__sum"]
                 if count["quantity__sum"]==None:
                     order_quantity_sum=0
@@ -351,8 +351,8 @@ def checkout(request): #user_id
                     if (remain_qty-new_quantity[i]["new_quantity"])<0:
                         responseData['status']=-1                        
                         responseData['ret_val'] = '購買數量超過剩餘庫存!'
-                        responseData['data'].append({"shopping_cart_item_id":cart.id,"remain_qty":remain_qty})
-                        return JsonResponse(responseData)
+                        responseData['data'].append({"shopping_cart_item_id":cart.id,"remain_qty":remain_qty,"shop_id":cart.shop_id})
+                        # return JsonResponse(responseData)
                     else:
                         cart.quantity=new_quantity[i]["new_quantity"]
                         cart.save()
@@ -363,8 +363,8 @@ def checkout(request): #user_id
                     if (remain_qty-new_quantity[i]["new_quantity"])<0:
                         responseData['status']=-1
                         responseData['ret_val'] = '購買數量超過剩餘庫存!'
-                        responseData['data'].append({"shopping_cart_item_id":cart.id,"remain_qty":remain_qty})
-                        return JsonResponse(responseData)
+                        responseData['data'].append({"shopping_cart_item_id":cart.id,"remain_qty":remain_qty,"shop_id":cart.shop_id})
+                        # return JsonResponse(responseData)
                     else:
                         cart.quantity=new_quantity[i]["new_quantity"]
                         cart.save()
