@@ -461,3 +461,91 @@ def userAddress_isDefault(request):
         responseData['ret_val'] = '預設買家地址設定成功!'
 
     return JsonResponse(responseData)
+
+def shopping_list(request): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='POST':
+        user_id=request.POST.get('user_id', '')
+        status=request.POST.get('status', '')
+
+    
+        if responseData['status']==0:
+            orders=models.Shop_Order.objects.filter(user_id=user_id,status=status)
+
+            for order in orders:
+                productID=[]
+                shop=models.Shop.objects.get(id=order.shop_id)
+                getProductIDs=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                
+                for getProductID in getProductIDs:
+                    productID.append(getProductID.product_id)
+
+                product=models.Product.objects.get(id=productID[0])
+                product_pic=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
+                product_count=models.Shop_Order_Details.objects.filter(order_id=order.id).count()
+                orderInfo={
+                    "order_id":order.id,
+                    "order_number":order.order_number,
+                    "shop_id":shop.id,
+                    "shop_title":shop.shop_title,
+                    "shop_icon":shop.shop_icon,
+                    "product_pic":product_pic.product_pic,
+                    "count":product_count
+                    # status中文顯示(待收貨、已完成...等)? if status =='xxx': return status="中文"
+                }
+                responseData['data'].append(orderInfo) 
+
+            responseData['ret_val'] = '買家資訊取得成功'
+    return JsonResponse(responseData) 
+
+def order_detail(request,order_id): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+        if responseData['status']==0:
+            order=models.Shop_Order.objects.get(id=order_id)
+            shop=models.Shop.objects.get(id=order.shop_id)
+            subtotal=0
+            orderInfo={
+                "status":order.status,
+                "shipment_info":order.product_shipment_desc,
+                "name_in_address":order.name_in_address, 
+                "phone":order.phone,
+                "full_address":order.full_address,
+                "shop_id":shop.id,
+                "shop_title":shop.shop_title, 
+                "productList":[],
+                "subtotal":0, #小計，由後端計算，有多個商品加總
+                # "unit_price":order.unit_price,
+                "shipment_price":0,
+                "bill":0, #訂單金額
+                "payment_desc":order.payment_desc,
+                "order_number":order.order_number,
+                "pay_time":order.updated_at #付款時間 (tbc)
+            }
+            orderDetails=models.Shop_Order_Details.objects.filter(order_id=order.id)
+            for orderDetail in orderDetails:
+                productList={
+                    "product_id":orderDetail.product_id,
+                    "product_title":orderDetail.product_description,
+                    "product_spec_id":orderDetail.product_spec_id,
+                    "spec_desc_1":orderDetail.spec_desc_1,
+                    "spec_desc_2":orderDetail.spec_desc_2,
+                    "spec_dec_1_items":orderDetail.spec_dec_1_items,
+                    "spec_dec_2_items":orderDetail.spec_dec_2_items,
+                    "quantity":orderDetail.quantity #or purchasing_qty (tbc)
+                }
+                subtotal+=orderDetail.quantity*orderDetail.unit_price
+                orderInfo["productList"].append(productList)
+            orderInfo.update({"subtotal":subtotal})
+
+            responseData['data'].append(orderInfo)
+            responseData['ret_val'] = '訂單詳情取得成功'
+    return JsonResponse(responseData) 

@@ -14,4 +14,6 @@ urlpatterns = [
     path('add_pic/', views.add_pic), 
     path('userAddress_isDefault/', views.userAddress_isDefault), 
     path('<user_id>/profile/', views.profile),
+    path('shopping_list/', views.shopping_list), 
+    path('<order_id>/order_detail/', views.order_detail),
 ]
