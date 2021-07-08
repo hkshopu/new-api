@@ -526,6 +526,7 @@ def order_detail(request,order_id):
                 "full_address":order.full_address,
                 "shop_id":shop.id,
                 "shop_title":shop.shop_title, 
+                "shop_icon" : shop.shop_icon,
                 "productList":[],
                 "subtotal":0, #小計，由後端計算，有多個商品加總
                 # "unit_price":order.unit_price,
@@ -537,6 +538,7 @@ def order_detail(request,order_id):
             }
             orderDetails=models.Shop_Order_Details.objects.filter(order_id=order.id)
             for orderDetail in orderDetails:
+                productPic=models.Selected_Product_Pic.objects.get(product_id=orderDetail.product_id,cover='y')
                 productList={
                     "product_id":orderDetail.product_id,
                     "product_title":orderDetail.product_description,
@@ -545,7 +547,8 @@ def order_detail(request,order_id):
                     "spec_desc_2":orderDetail.spec_desc_2,
                     "spec_dec_1_items":orderDetail.spec_dec_1_items,
                     "spec_dec_2_items":orderDetail.spec_dec_2_items,
-                    "quantity":orderDetail.quantity #or purchasing_qty (tbc)
+                    "quantity":orderDetail.quantity, #or purchasing_qty (tbc)
+                    "product_pic":productPic.product_pic
                 }
                 subtotal+=orderDetail.quantity*orderDetail.unit_price
                 orderInfo["productList"].append(productList)
