@@ -784,6 +784,7 @@ class Shop_Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     order_number = models.CharField(max_length=25)
+    payment_at = models.DateTimeField()
 
 class Shop_Order_Details(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
