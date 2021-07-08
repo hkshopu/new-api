@@ -5511,7 +5511,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     for productAnalytic in productAnalytics:
                         productFirstPage = {
                                 'id': productAnalytic.id,
-                                'user_id': productAnalytic.final_user_id,
+                                'user_id': productAnalytic.user_id,
                                 'page_id' : int(max_seq)+1,
                                 'product_id': productAnalytic.product_id, 
                                 'seq':productAnalytic.seq,
@@ -5663,7 +5663,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     for productAnalytic in productAnalytics:
                         productFirstPage = {
                                 'id': productAnalytic.id,
-                                'user_id': productAnalytic.final_user_id,
+                                'user_id': productAnalytic.user_id,
                                 'page_id' : int(max_seq)+1,
                                 'product_id': productAnalytic.product_id, 
                                 'seq':productAnalytic.seq,
@@ -5819,7 +5819,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     for productAnalytic in productAnalytics:
                         productFirstPage = {
                                 'id': productAnalytic.id,
-                                'user_id': productAnalytic.final_user_id,
+                                'user_id': productAnalytic.user_id,
                                 'page_id' : int(max_seq)+1,
                                 'product_id': productAnalytic.product_id, 
                                 'seq':productAnalytic.seq,
@@ -5990,7 +5990,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                     for productAnalytic in productAnalytics:
                         productFirstPage = {
                                 'id': productAnalytic.id,
-                                'user_id': productAnalytic.final_user_id,
+                                'user_id': productAnalytic.user_id,
                                 'page_id' : int(max_seq)+1,
                                 'product_id': productAnalytic.product_id, 
                                 'seq':productAnalytic.seq,
@@ -6020,7 +6020,7 @@ def product_analytics_pages_keyword(request,mode): #userid
                 for productAnalytic in productAnalytics:
                     productInfo = {
                                 'id': productAnalytic.id,
-                                'user_id': productAnalytic.final_user_id,
+                                'user_id': productAnalytic.user_id,
                                 'page_id' : int(max_seq)+1,
                                 'product_id': productAnalytic.product_id, 
                                 'seq':productAnalytic.seq,
