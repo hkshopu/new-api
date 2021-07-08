@@ -30,5 +30,7 @@ urlpatterns = [
     path('addPaymentAccount/<id>/', views.addPaymentAccount),
     path('<user_id>/adSetting/<ad_category>/<ad_type>/', views.adSetting),
     path('updateAdSetting/<ad_category>/<ad_type>/<ad_setting_header_id>/', views.updateAdSetting),
-    path('adSettingRanking/<ad_category>/<ad_type>/', views.adSettingRanking)
+    path('adSettingRanking/<ad_category>/<ad_type>/', views.adSettingRanking),
+    path('sale_list/', views.sale_list), 
+    path('<order_id>/sale_order_detail/', views.sale_order_detail), 
 ]

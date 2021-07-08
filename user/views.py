@@ -1329,3 +1329,105 @@ def updateAdSetting(request, ad_category='', ad_type='', ad_setting_header_id=''
 
 
     return JsonResponse(responseData)
+
+def sale_list(request): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='POST':
+        shop_id=request.POST.get('shop_id', '') #賣家
+        status=request.POST.get('status', '')
+        #logic : 賣家user_id search shop.id、product.id，比對order
+    
+        if responseData['status']==0:
+            orders=models.Shop_Order.objects.filter(shop_id=shop_id,status=status)
+
+            for order in orders:
+                productID=[]
+                sub_total=0
+                getProductIDs=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                
+                for getProductID in getProductIDs:
+                    productID.append(getProductID.product_id)
+
+                product=models.Product.objects.get(id=productID[0])
+                product_pic=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
+                product_count=models.Shop_Order_Details.objects.filter(order_id=order.id).count()
+                user=models.User.objects.get(id=order.user_id)
+                if user.pic==None:
+                    user_pic=""
+                else :
+                    user_pic=user.pic
+                orderInfo={
+                    "order_id":order.id,
+                    "order_number":order.order_number,
+                    "product_pic":product_pic.product_pic,
+                    "count":product_count,
+                    "sub_total":0,
+                    "buyer_id":user.id,
+                    "buyer_name":user.account_name,
+                    "buyer_pic":user_pic,
+                    "shipment_info":order.product_shipment_desc
+                }
+                details=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                for detail in details:
+                    sub_total+=detail.quantity*detail.unit_price+detail.logistic_fee
+                orderInfo["sub_total"]=sub_total
+                
+                responseData['data'].append(orderInfo) 
+
+            responseData['ret_val'] = '訂單資訊取得成功'
+    return JsonResponse(responseData)
+
+def sale_order_detail(request,order_id): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+        if responseData['status']==0:
+            order=models.Shop_Order.objects.get(id=order_id)
+            shop=models.Shop.objects.get(id=order.shop_id)
+            subtotal=0
+            orderInfo={
+                "status":order.status,
+                "shipment_info":order.product_shipment_desc,
+                "name_in_address":order.name_in_address, 
+                "phone":order.phone,
+                "full_address":order.full_address,
+                "shop_id":shop.id,
+                "shop_title":shop.shop_title, 
+                "shop_icon" : shop.shop_icon,
+                "productList":[],
+                "subtotal":0, #小計，由後端計算，有多個商品加總
+                # "unit_price":order.unit_price,
+                "shipment_price":0,
+                "bill":0, #訂單金額
+                "payment_desc":order.payment_desc,
+                "order_number":order.order_number,
+                "pay_time":order.updated_at #付款時間 (tbc)
+            }
+            orderDetails=models.Shop_Order_Details.objects.filter(order_id=order.id)
+            for orderDetail in orderDetails:
+                productPic=models.Selected_Product_Pic.objects.get(product_id=orderDetail.product_id,cover='y')
+                productList={
+                    "product_id":orderDetail.product_id,
+                    "product_title":orderDetail.product_description,
+                    "product_spec_id":orderDetail.product_spec_id,
+                    "spec_desc_1":orderDetail.spec_desc_1,
+                    "spec_desc_2":orderDetail.spec_desc_2,
+                    "spec_dec_1_items":orderDetail.spec_dec_1_items,
+                    "spec_dec_2_items":orderDetail.spec_dec_2_items,
+                    "quantity":orderDetail.quantity, #or purchasing_qty (tbc)
+                    "product_pic":productPic.product_pic
+                }
+                subtotal+=orderDetail.quantity*orderDetail.unit_price
+                orderInfo["productList"].append(productList)
+            orderInfo.update({"subtotal":subtotal})
+
+            responseData['data'].append(orderInfo)
+            responseData['ret_val'] = '訂單詳情取得成功'
+    return JsonResponse(responseData)  
