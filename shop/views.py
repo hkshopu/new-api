@@ -2044,7 +2044,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
             else:
                 user_id_for_shop_analytics = uuid.uuid4()
 
-        if not(keyword) and not(product_category_id):
+        if not(keyword) and not(product_category_id) and not(product_sub_category_id):
             response_data['status'] = -2
             response_data['ret_val'] = '關鍵字與產品分類必須擇一填寫!'
 
