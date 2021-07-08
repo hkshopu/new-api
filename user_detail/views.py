@@ -478,6 +478,7 @@ def shopping_list(request):
 
             for order in orders:
                 productID=[]
+                sub_total=0
                 shop=models.Shop.objects.get(id=order.shop_id)
                 getProductIDs=models.Shop_Order_Details.objects.filter(order_id=order.id)
                 
@@ -497,6 +498,10 @@ def shopping_list(request):
                     "count":product_count
                     # status中文顯示(待收貨、已完成...等)? if status =='xxx': return status="中文"
                 }
+                details=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                for detail in details:
+                    sub_total+=detail.quantity*detail.unit_price+detail.logistic_fee
+                orderInfo["sub_total"]=sub_total
                 responseData['data'].append(orderInfo) 
 
             responseData['ret_val'] = '買家資訊取得成功'
