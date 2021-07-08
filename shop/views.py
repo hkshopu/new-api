@@ -2031,6 +2031,7 @@ def get_shop_analytics_with_keyword_in_pages(request):
         max_seq = request.POST.get('max_seq', '0')
         keyword = request.POST.get('keyword', '')
         product_category_id = request.POST.get('product_category_id', 0)
+        product_sub_category_id= request.POST.get('product_sub_category_id', 0)
 
         if response_data['status'] == 0:
             if user_id:
@@ -2070,6 +2071,20 @@ def get_shop_analytics_with_keyword_in_pages(request):
                     shops = models.Shop.objects.filter(is_delete='N', id__in=id_of_shops).values('id', 'shop_title', 'shop_icon', 'created_at')
                     product_categories = models.Product_Category.objects.filter(id=product_category_id).values('c_product_category')
                     product_category_description += product_categories[0]['c_product_category'] if len(product_categories) > 0 else ''
+                    models.Search_History.objects.create(
+                        id=uuid.uuid4(), 
+                        search_category='product', 
+                        keyword=product_category_description
+                    )
+                if product_sub_category_id:
+                    id_of_shops = []
+                    products = models.Product.objects.filter(is_delete='N', product_status='active', product_sub_category_id=product_sub_category_id).values('shop_id')
+                    for product in products:
+                        if product['shop_id'] not in id_of_shops:
+                            id_of_shops.append(product['shop_id'])
+                    shops = models.Shop.objects.filter(is_delete='N', id__in=id_of_shops).values('id', 'shop_title', 'shop_icon', 'created_at')
+                    product_sub_categories = models.Product_Sub_Category.objects.filter(id=product_sub_category_id).values('c_product_sub_category')
+                    product_category_description += product_sub_categories[0]['c_product_sub_category'] if len(product_sub_categories) > 0 else ''
                     models.Search_History.objects.create(
                         id=uuid.uuid4(), 
                         search_category='product', 
@@ -2196,3 +2211,4 @@ def get_shop_analytics_with_keyword_in_pages(request):
                 )
             response_data['ret_val'] = '取得商店搜尋分頁資料成功!'
     return JsonResponse(response_data)
+
