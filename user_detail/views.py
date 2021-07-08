@@ -390,22 +390,45 @@ def show(request,user_id):
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'data': []
+        'data': {}
     } 
     if request.method=='GET':
         if responseData['status']==0:
             user=models.User.objects.get(id=user_id)
+            if user.pic==None:
+                pic=""  
+            else :
+                pic=user.pic
+            if user.account_name==None:
+                account_name=""
+            else:
+                account_name=user.account_name
+            if user.gender==None:
+                gender=""
+            else:
+                gender=user.gender
+            if user.birthday==None:
+                birthday=""
+            else:
+                birthday=user.birthday
+            if user.phone==None:
+                phone=""
+            else:
+                phone=user.phone
+            if user.email==None:
+                email=""
+            else:
+                email=user.email
             userInfo={
                     "user_id":user.id,
-                    "name":user.account_name,
-                    "gender":user.gender,
-                    "birthday":user.birthday,
-                    "phone":user.phone,
-                    "email":user.email,
-                    "pic":user.pic
-                    # "shop_rate":shop.id,
+                    "name":account_name,
+                    "gender":gender,
+                    "birthday":birthday,
+                    "phone":phone,
+                    "email":email,
+                    "pic":pic
                 }
-            responseData['data'].append(userInfo) 
+            responseData.update({'data':userInfo}) 
 
             responseData['ret_val'] = '買家資訊取得成功'
     return JsonResponse(responseData) 
@@ -414,7 +437,7 @@ def profile(request,user_id):
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'data': []
+        'data': {}
     } 
     if request.method=='GET':
         if responseData['status']==0:
@@ -425,14 +448,22 @@ def profile(request,user_id):
                 rating=0
             else :
                 rating=rate["rating__avg"]
+            if user.pic==None:
+                pic=""  
+            else :
+                pic=user.pic
+            if user.account_name==None:
+                account_name=""
+            else :
+                account_name=user.account_name
             userInfo={
                     "user_id":user.id,
-                    "name":user.account_name,
-                    "pic":user.pic,
+                    "name":account_name,
+                    "pic":pic,
                     "rating":rating
                     # "shop_rate":shop.id,
-                }
-            responseData['data'].append(userInfo) 
+            }
+            responseData.update({'data':userInfo}) 
 
             responseData['ret_val'] = '買家資訊取得成功'
     return JsonResponse(responseData) 
