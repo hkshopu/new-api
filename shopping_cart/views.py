@@ -377,7 +377,7 @@ def count(request,user_id):
     responseData = {
         'status': 0, 
         'ret_val': '', 
-        'data': []
+        'data': {}
     }
     if request.method == 'GET':
         if responseData['status'] == 0:
@@ -386,10 +386,9 @@ def count(request,user_id):
             cartCount={
                 "cartCount":shoppingCarts
             }
-            responseData['data'].append(cartCount)
-            responseData['ret_val'] = '已取得購物車數量!'
+            responseData['data']=cartCount
+            responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
-
 #更新購物車
 def update(request):
     # 回傳資料
