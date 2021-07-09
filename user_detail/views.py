@@ -579,7 +579,8 @@ def order_detail(request,order_id):
                     "spec_dec_1_items":orderDetail.spec_dec_1_items,
                     "spec_dec_2_items":orderDetail.spec_dec_2_items,
                     "quantity":orderDetail.quantity, #or purchasing_qty (tbc)
-                    "product_pic":productPic.product_pic
+                    "product_pic":productPic.product_pic,
+                    "price":orderDetail.unit_price
                 }
                 subtotal+=orderDetail.quantity*orderDetail.unit_price
                 orderInfo["productList"].append(productList)
