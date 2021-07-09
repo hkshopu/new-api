@@ -866,6 +866,7 @@ class Shopping_Cart(models.Model):
     user_address_id=  models.CharField(max_length=36)
     payment_id=  models.CharField(max_length=36)
     shop_id=models.CharField(max_length=36)
+    is_delete=models.CharField(max_length=1)
 
 class User_Address(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
