@@ -1078,6 +1078,8 @@ class Shop_Order_Setting(models.Model):
     country_code = models.CharField(max_length=2)
     shop_code = models.CharField(max_length=5)
     order_number = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 class Rate_Pic(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
