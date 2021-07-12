@@ -607,6 +607,7 @@ def covert_shopping_cart(request):
         status=request.POST.get('status', '') #tbc 預設是Pending Payment?
     
         if responseData['status']==0:
+            deleteOrderList=[]
             for i in range (len(shopping_cart)):
                 shop=models.Shop.objects.get(id=shopping_cart[i]["shop_id"])
                 user=models.User.objects.get(id=user_id)
@@ -636,7 +637,8 @@ def covert_shopping_cart(request):
                     payment_id=shopping_cart[i]["payment_id"]
                     # payment_at=
                     )
-                    responseData['data'].append(order_id.id)
+                    
+                    print(order_id.id)
                     for j in range(len(shopping_cart[i]["productList"])):
                         if shopping_cart[i]["productList"][j]["product_shipment_id"]==distinctShipment[k]:
                             cart=models.Shopping_Cart.objects.get(id=shopping_cart[i]["productList"][j]["shopping_cart_item_id"])
@@ -644,9 +646,11 @@ def covert_shopping_cart(request):
                             cart.quantity=shopping_cart[i]["productList"][j]["shopping_cart_quantity"]
                             cart.product_shipment_id=shopping_cart[i]["productList"][j]["product_shipment_id"]
                             cart.save()
-                            order=models.Shop_Order.objects.get(id=order_id.id)
 
+                            order=models.Shop_Order.objects.get(id=order_id.id)
                             product=models.Product.objects.get(id=cart.product_id)
+                            if product.product_status=='draft':
+                                deleteOrderList.append(order_id.id)
                             if cart.product_spec_id=='':
                                 spec_desc_1=''
                                 spec_desc_2=''
@@ -676,7 +680,13 @@ def covert_shopping_cart(request):
                                 quantity=shopping_cart[i]["productList"][j]["shopping_cart_quantity"],
                                 logistic_fee=0
                             )
+                                
                         else:
-                            pass
+                            pass #依照運送方式區分訂單order
+            models.Shop_Order.objects.filter(id__in=deleteOrderList).delete()
+            models.Shop_Order_Details.objects.filter(order_id__in=deleteOrderList).delete()      
+            orders=models.Shop_Order.objects.filter(user_id=user_id)
+            for order in orders:
+                responseData['data'].append(order.id)          
             responseData['ret_val'] = '訂單新增成功'
     return JsonResponse(responseData) 
