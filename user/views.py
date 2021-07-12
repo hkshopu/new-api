@@ -840,10 +840,12 @@ def paymentAccount(request, user_id='', id=''):
                 'payment_type',
                 'bank_code',
                 'bank_name',
+                'bank_account_name',
                 'contact_type',
                 'phone_country_code',
                 'phone_number',
-                'contact_email'
+                'contact_email',
+                'is_default'
             ]
             payment_accounts = models.User_Payment_Account.objects.filter(user_id=user_id).order_by('-is_default')
             responseData['data'] = []
@@ -858,6 +860,7 @@ def paymentAccount(request, user_id='', id=''):
         payment_type = request.POST.get('payment_type','')
         bank_code = request.POST.get('bank_code','')
         bank_name = request.POST.get('bank_name','')
+        bank_account_name = request.POST.get('bank_account_name', '')
         contact_type = request.POST.get('contact_type','')
         phone_country_code = request.POST.get('phone_country_code','')
         phone_number = request.POST.get('phone_number','')
@@ -890,6 +893,7 @@ def paymentAccount(request, user_id='', id=''):
                 user_id = user_id,
                 bank_code = bank_code,
                 bank_name = bank_name,
+                bank_account_name = bank_account_name,
                 contact_type = contact_type,
                 phone_country_code = phone_country_code,
                 phone_number = phone_number,
