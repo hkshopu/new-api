@@ -632,9 +632,11 @@ def covert_shopping_cart(request):
                     phone=userAddress.phone,
                     full_address=userAddress.area + userAddress.district + userAddress.road +userAddress.number + userAddress.floor + userAddress.room,
                     user_address_id=shopping_cart[i]["user_address_id"],
-                    payment_id=distinctShipment[k],
+                    product_shipment_id=distinctShipment[k],
+                    payment_id=shopping_cart[i]["payment_id"]
                     # payment_at=
                     )
+                    responseData['data'].append(order_id.id)
                     for j in range(len(shopping_cart[i]["productList"])):
                         if shopping_cart[i]["productList"][j]["product_shipment_id"]==distinctShipment[k]:
                             cart=models.Shopping_Cart.objects.get(id=shopping_cart[i]["productList"][j]["shopping_cart_item_id"])
