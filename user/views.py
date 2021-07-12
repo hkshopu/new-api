@@ -823,7 +823,7 @@ def auditLog(request, user_id=''):
 
     return JsonResponse(responseData)
 
-def addPaymentAccount(request, user_id='', id=''):
+def paymentAccount(request, user_id='', id=''):
     responseData = {
         'status': 0,
         'ret_val': '',
@@ -862,6 +862,7 @@ def addPaymentAccount(request, user_id='', id=''):
         phone_country_code = request.POST.get('phone_country_code','')
         phone_number = request.POST.get('phone_number','')
         contact_email = request.POST.get('contact_email','')
+        is_default = request.POST.get('is_default', 'N')
 
         try:
             models.User.objects.get(id=user_id)
@@ -876,12 +877,7 @@ def addPaymentAccount(request, user_id='', id=''):
                 elif len(phone_number) != 8:
                     responseData['status'], responseData['ret_val'] = -4, 'phone_number長度只能為8'
 
-        if responseData['status'] == 0:
-            if len(models.User_Payment_Account.objects.filter(user_id=user_id, is_default='Y'))==0:
-                is_default='Y'
-            else:
-                is_default='N'
-            
+        if responseData['status'] == 0:            
             payment_account=models.User_Payment_Account.objects.create(
                 id = uuid.uuid4(),
                 payment_type = payment_type,

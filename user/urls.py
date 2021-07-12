@@ -25,9 +25,9 @@ urlpatterns = [
     path('<user_id>/auditLog/', views.auditLog),
     path('/auditLog/', views.auditLog), # if user_id=''
     path('user_id_validation/', views.user_id_validation),
-    path('<user_id>/addPaymentAccount/', views.addPaymentAccount),
-    path('<user_id>/addPaymentAccount/<id>/', views.addPaymentAccount),
-    path('addPaymentAccount/<id>/', views.addPaymentAccount),
+    path('<user_id>/paymentAccount/', views.paymentAccount),
+    path('<user_id>/paymentAccount/<id>/', views.paymentAccount),
+    path('paymentAccount/<id>/', views.paymentAccount),
     path('<user_id>/adSetting/<ad_category>/<ad_type>/', views.adSetting),
     path('updateAdSetting/<ad_category>/<ad_type>/<ad_setting_header_id>/', views.updateAdSetting),
     path('adSettingRanking/<ad_category>/<ad_type>/', views.adSettingRanking),
