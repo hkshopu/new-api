@@ -965,6 +965,7 @@ class User_Payment_Account(models.Model):
     user_id = models.CharField(max_length=36)
     bank_code = models.CharField(max_length=3)
     bank_name = models.CharField(max_length=200)
+    bank_account_name = models.CharField(max_length=100)
     contact_type = models.CharField(max_length=25)
     phone_country_code = models.CharField(max_length=5, null=True)
     phone_number = models.CharField(max_length=10, null=True)
