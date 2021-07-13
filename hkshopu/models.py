@@ -87,9 +87,6 @@ class Shop(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_delete = models.CharField(max_length=1, default='N')      
-    actual_deliver_at   = models.DateTimeField()
-    estimated_deliver_at= models.DateTimeField()
-    actual_finished_at  = models.DateTimeField()
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
@@ -788,6 +785,9 @@ class Shop_Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     order_number = models.CharField(max_length=25)
     payment_at = models.DateTimeField()
+    actual_deliver_at   = models.DateTimeField()
+    estimated_deliver_at= models.DateTimeField()
+    actual_finished_at  = models.DateTimeField()
 
 class Shop_Order_Details(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
