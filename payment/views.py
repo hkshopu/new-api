@@ -73,3 +73,56 @@ def confirmFPSOrderTransaction(request):
                 models.Shop_Order.objects.filter(id=order_id).update(status='Pending Delivery')
             responseData['ret_val'] = '確認成功'
     return JsonResponse(responseData)
+
+def paymentProcess(request):    
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    if request.method == 'POST':
+
+        hkshopu_order_number = request.POST.get('hkshopu_order_number')
+        paypal_payer_id = request.POST.get('paypal_payer_id')
+        paypal_transaction_id = request.POST.get('paypal_transaction_id')
+
+        if hkshopu_order_number and paypal_payer_id and paypal_transaction_id:
+            try:
+                models.Shop_Order.objects.get(order_number=hkshopu_order_number)
+            except:
+                responseData['status'], responseData['ret_val'] = -1, 'order_number不存在'
+            
+            paypal_transaction = models.Paypal_Transactions.objects.create(
+                id=uuid.uuid4(),
+                order_number=hkshopu_order_number,
+                paypal_transaction_id=paypal_transaction_id,
+                paypal_payer_id=paypal_payer_id
+            )
+            responseData['ret_val'], responseData['data']['id'] = '成功', paypal_transaction.id
+
+    return JsonResponse(responseData)
+
+def paypalWebHooks(request):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    if request.method == 'GET':
+        pass
+
+    return JsonResponse(responseData)
+
+def createOrder(request):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+
+    
+
+    return JsonResponse(responseData)
+

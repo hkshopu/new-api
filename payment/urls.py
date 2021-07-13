@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     path('method/', views.method),
-    path('confirmFPSOrderTransaction/', views.confirmFPSOrderTransaction)
+    path('confirmFPSOrderTransaction/', views.confirmFPSOrderTransaction),
+    path('paymentProcess/', views.paymentProcess)
 ]
