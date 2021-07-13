@@ -86,7 +86,10 @@ class Shop(models.Model):
     hkshopu_event_notification = models.CharField(max_length=1, null=True, default='Y')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_delete = models.CharField(max_length=1, default='N')        
+    is_delete = models.CharField(max_length=1, default='N')      
+    actual_deliver_at   = models.DateTimeField()
+    estimated_deliver_at= models.DateTimeField()
+    actual_finished_at  = models.DateTimeField()
     def validate_column(column_name, err_code, param):
         ret_code = 0
         ret_description = ''
