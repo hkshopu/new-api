@@ -5870,6 +5870,8 @@ def same_shop_product(request):
 
                                 shopFollowerCount=models.Shop_Follower.objects.filter(shop_id=productShopId.id).count()
                                 shopRatings=models.Shop_Rate.objects.filter(shop_id=productShopId.id).values('shop_id').annotate(rating=Avg('rating'))
+                                shopFollows=models.Shop_Follower.objects.filter(follower_id=user_id,shop_id=productShopId.id)
+                                
                                 productInfo = {
                                     'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
@@ -5888,7 +5890,8 @@ def same_shop_product(request):
                                     'shop_rating':0,
                                     'followed':'N'
                                 }
-
+                                if len(shopFollows) >0:
+                                    productInfo.update({'followed':'Y'}) 
                                 v = []
                                 price_range=[]
                                 quantity_range=[]
@@ -5947,6 +5950,7 @@ def same_shop_product(request):
                                 
                                 shopFollowerCount=models.Shop_Follower.objects.filter(shop_id=productShopId.id).count()
                                 shopRatings=models.Shop_Rate.objects.filter(shop_id=productShopId.id).values('shop_id').annotate(rating=Avg('rating'))
+                                shopFollows=models.Shop_Follower.objects.filter(follower_id=user_id,shop_id=productShopId.id)
                                 productInfo = {
                                     'product_id': product.id,
                                     'product_category_id': product.product_category_id, 
@@ -5965,6 +5969,9 @@ def same_shop_product(request):
                                     'shop_rating':0,
                                     'followed':'N'
                                 }
+
+                                if len(shopFollows) >0:
+                                    productInfo.update({'followed':'Y'}) 
 
                                 productInfo.update({'min_price':product.product_price}) 
                                 productInfo.update({'max_price':product.product_price}) 
