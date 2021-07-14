@@ -502,7 +502,7 @@ def buyer_address(request,user_id):
             response_data['ret_val'] = '買家地址取得成功'
     return JsonResponse(response_data)
 
-#加入購物車
+#新增買家地址
 def add_buyer_address(request):
     # 回傳資料
     responseData = {
@@ -527,7 +527,7 @@ def add_buyer_address(request):
         print(user_id)
         print(type(user_id))
         print("======")
-        if user_id=='' or name=='' or country_code=='' or phone=='' or area=='' or district=='' or road=='' or number=='':
+        if user_id=='' or name=='' or country_code=='' or phone=='' or area=='' or district=='' or road=='': #or number=='':
             responseData['status'] = -11
             responseData['ret_val'] = '未填寫必要欄位!'
             return JsonResponse(responseData)
