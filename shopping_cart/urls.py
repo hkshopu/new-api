@@ -13,4 +13,5 @@ urlpatterns = [
     path('add_buyer_address/', views.add_buyer_address),
     path('checkout/', views.checkout),
     path('covert_shopping_cart/', views.covert_shopping_cart),
+    path('delete_user_address/', views.delete_user_address),
 ]

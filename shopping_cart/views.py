@@ -594,6 +594,27 @@ def add_buyer_address(request):
                 responseData['ret_val'] = '買家地址新增成功!'
     return JsonResponse(responseData)
 
+# 刪除買家地址
+def delete_user_address(request): #id : uuid(column)
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': ''
+    }
+    if request.method == 'POST':
+        address_id= request.POST.get('address_id', '')
+        if responseData['status'] == 0:
+            models.User_Address.objects.filter(id=address_id).delete()
+            address_delete=models.User_Address.objects.filter(id=address_id)
+            if len(address_delete)==0:
+                responseData['status'] = 0
+                responseData['ret_val'] = '刪除買家地址成功!'
+            else:
+                responseData['status'] = -1
+                responseData['ret_val'] = '刪除買家地址失敗!'
+
+    return JsonResponse(responseData)
+
 #購物車轉換成訂單
 def covert_shopping_cart(request): 
     responseData = {
