@@ -341,7 +341,7 @@ def checkout(request): #user_id
                 # getOrderID=[]
                 # for order in orders:
                 #     getOrderID.append(order.id)
-                count=models.Shop_Order_Details.objects.filter(order_id__in=orders,product_id=cart.product_id,product_spec_id=cart.product_spec_id).aggregate(Sum('quantity'))
+                count=models.Shop_Order_Details.objects.filter(shop_order_id__in=orders,product_id=cart.product_id,product_spec_id=cart.product_spec_id).aggregate(Sum('quantity'))
                 order_quantity_sum=count["quantity__sum"]
                 if count["quantity__sum"]==None:
                     order_quantity_sum=0
@@ -688,7 +688,7 @@ def covert_shopping_cart(request):
 
                             models.Shop_Order_Details.objects.create(
                                 id=uuid.uuid4(),
-                                order_id=order.id,
+                                shop_order_id=order.id,
                                 product_id=cart.product_id,
                                 product_spec_id=cart.product_spec_id,
                                 product_shipment_id=shopping_cart[i]["productList"][j]["product_shipment_id"],
@@ -705,7 +705,7 @@ def covert_shopping_cart(request):
                         else:
                             pass #依照運送方式區分訂單order
             models.Shop_Order.objects.filter(id__in=deleteOrderList).delete()
-            models.Shop_Order_Details.objects.filter(order_id__in=deleteOrderList).delete()      
+            models.Shop_Order_Details.objects.filter(shop_order_id__in=deleteOrderList).delete()      
             orders=models.Shop_Order.objects.filter(user_id=user_id)
             for order in orders:
                 responseData['data'].append(order.id)          
