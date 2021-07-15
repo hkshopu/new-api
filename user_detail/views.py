@@ -511,14 +511,14 @@ def shopping_list(request):
                 productID=[]
                 sub_total=0
                 shop=models.Shop.objects.get(id=order.shop_id)
-                getProductIDs=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                getProductIDs=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
                 
                 for getProductID in getProductIDs:
                     productID.append(getProductID.product_id)
 
                 product=models.Product.objects.get(id=productID[0])
                 product_pic=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
-                product_count=models.Shop_Order_Details.objects.filter(order_id=order.id).count()
+                product_count=models.Shop_Order_Details.objects.filter(shop_order_id=order.id).count()
                 orderInfo={
                     "order_id":order.id,
                     "order_number":order.order_number,
@@ -529,7 +529,7 @@ def shopping_list(request):
                     "count":product_count
                     # status中文顯示(待收貨、已完成...等)? if status =='xxx': return status="中文"
                 }
-                details=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                details=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
                 for detail in details:
                     sub_total+=detail.quantity*detail.unit_price+detail.logistic_fee
                 orderInfo["sub_total"]=sub_total
@@ -567,7 +567,7 @@ def order_detail(request,order_id):
                 "order_number":order.order_number,
                 "pay_time":order.updated_at #付款時間 (tbc)
             }
-            orderDetails=models.Shop_Order_Details.objects.filter(order_id=order.id)
+            orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
                 productPic=models.Selected_Product_Pic.objects.get(product_id=orderDetail.product_id,cover='y')
                 productList={
