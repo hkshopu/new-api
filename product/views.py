@@ -1509,7 +1509,10 @@ def product_analytics(request,id): #userid
                                 productInfo.update({'min_quantity':min(quantity_range)}) 
                                 productInfo.update({'max_quantity':max(quantity_range)})
                                 productInfo.update({'sum_quantity': sum(quantity_sum)}) 
-                                responseData['data'].append(productInfo)
+                                if sum(quantity_sum) <=0 :
+                                    break
+                                else:
+                                    responseData['data'].append(productInfo)
 
                                 models.Product_Browsed.objects.create(
                                     id=uuid.uuid4(),
@@ -1520,47 +1523,49 @@ def product_analytics(request,id): #userid
                         for productPic in productPics:
                             # for productSpec in productSpecs:    
                             if product.id==productPic.product_id : 
-                                # productSpecs=models.Product_Spec.objects.filter(product_id=product.id)
-                                productShopId=models.Shop.objects.get(id=product.shop_id)
-                                productInfo = {
-                                    'product_id': product.id,
-                                    'product_category_id': product.product_category_id, 
-                                    'product_title': product.product_title,
-                                    'quantity': product.quantity, 
-                                    'product_description': product.product_description, 
-                                    'product_price': product.product_price, 
-                                    'shipping_fee': product.shipping_fee, 
-                                    'created_at': product.created_at, 
-                                    'updated_at': product.updated_at,
-                                    'weight':product.weight,
-                                    'longterm_stock_up':product.longterm_stock_up,
-                                    'new_secondhand':product.new_secondhand,
-                                    'length':product.length,
-                                    'width':product.width,
-                                    'height':product.height,
-                                    'like':product.like,
-                                    'seen':product.seen,
-                                    'sold_quantity':product.sold_quantity,
-                                    'product_status':product.product_status,
-                                    'pic_path':productPic.product_pic,
-                                    'product_spec_on':product.product_spec_on,
-                                    'shop_id':productShopId.id,
-                                    'shop_title':productShopId.shop_title,
-                                    'liked':'N'
-                                    # 'price' : productSpec.price
-                                }
-                                #responseData['data'].append(productInfo)    
-                                # responseData['data']['price'] = {}
-                                productInfo.update({'min_price':product.product_price}) 
-                                productInfo.update({'max_price':product.product_price}) 
-                                productInfo.update({'min_quantity':product.quantity}) 
-                                productInfo.update({'max_quantity':product.quantity})
-                                productInfo.update({'sum_quantity':product.quantity})
-                                responseData['data'].append(productInfo) 
-                                models.Product_Browsed.objects.create(
-                                    id=uuid.uuid4(),
-                                    product_id=product.id
-                                )            
+                                if product.quantity<=0:
+                                    break
+                                else:
+                                    productShopId=models.Shop.objects.get(id=product.shop_id)
+                                    productInfo = {
+                                        'product_id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_status':product.product_status,
+                                        'pic_path':productPic.product_pic,
+                                        'product_spec_on':product.product_spec_on,
+                                        'shop_id':productShopId.id,
+                                        'shop_title':productShopId.shop_title,
+                                        'liked':'N'
+                                        # 'price' : productSpec.price
+                                    }
+                                    #responseData['data'].append(productInfo)    
+                                    # responseData['data']['price'] = {}
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
+                                    productInfo.update({'min_quantity':product.quantity}) 
+                                    productInfo.update({'max_quantity':product.quantity})
+                                    productInfo.update({'sum_quantity':product.quantity})
+                                    responseData['data'].append(productInfo) 
+                                    models.Product_Browsed.objects.create(
+                                        id=uuid.uuid4(),
+                                        product_id=product.id
+                                    )            
 
                 responseData['ret_val'] = '已取得商品清單!'
             else:
@@ -1637,7 +1642,10 @@ def product_analytics(request,id): #userid
                                     else:
                                         productInfo.update({'liked': 'N'})
 
-                                responseData['data'].append(productInfo)
+                                if sum(quantity_sum) <=0 :
+                                    break
+                                else:
+                                    responseData['data'].append(productInfo)
 
                                 models.Product_Browsed.objects.create(
                                     id=uuid.uuid4(),
@@ -1648,56 +1656,58 @@ def product_analytics(request,id): #userid
                     elif product.product_spec_on=='n':   
                         for productPic in productPics:  
                             if product.id==productPic.product_id : 
-                                
-                                productShopId=models.Shop.objects.get(id=product.shop_id)
-                                productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
-                                
-                                productInfo = {
-                                    'product_id': product.id,
-                                    'product_category_id': product.product_category_id, 
-                                    'product_title': product.product_title,
-                                    'quantity': product.quantity, 
-                                    'product_description': product.product_description, 
-                                    'product_price': product.product_price, 
-                                    'shipping_fee': product.shipping_fee, 
-                                    'created_at': product.created_at, 
-                                    'updated_at': product.updated_at,
-                                    'weight':product.weight,
-                                    'longterm_stock_up':product.longterm_stock_up,
-                                    'new_secondhand':product.new_secondhand,
-                                    'length':product.length,
-                                    'width':product.width,
-                                    'height':product.height,
-                                    'like':product.like,
-                                    'seen':product.seen,
-                                    'sold_quantity':product.sold_quantity,
-                                    'product_status':product.product_status,
-                                    'pic_path':productPic.product_pic,
-                                    'product_spec_on':product.product_spec_on,
-                                    'shop_id':productShopId.id,
-                                    'shop_title':productShopId.shop_title,
-                                    'liked':'N'
-                                }
+                                if product.quantity<=0:
+                                    break
+                                else:
+                                    productShopId=models.Shop.objects.get(id=product.shop_id)
+                                    productLikes=models.Product_Liked.objects.filter(product_id=product.id).filter(user_id=id)
+                                    
+                                    productInfo = {
+                                        'product_id': product.id,
+                                        'product_category_id': product.product_category_id, 
+                                        'product_title': product.product_title,
+                                        'quantity': product.quantity, 
+                                        'product_description': product.product_description, 
+                                        'product_price': product.product_price, 
+                                        'shipping_fee': product.shipping_fee, 
+                                        'created_at': product.created_at, 
+                                        'updated_at': product.updated_at,
+                                        'weight':product.weight,
+                                        'longterm_stock_up':product.longterm_stock_up,
+                                        'new_secondhand':product.new_secondhand,
+                                        'length':product.length,
+                                        'width':product.width,
+                                        'height':product.height,
+                                        'like':product.like,
+                                        'seen':product.seen,
+                                        'sold_quantity':product.sold_quantity,
+                                        'product_status':product.product_status,
+                                        'pic_path':productPic.product_pic,
+                                        'product_spec_on':product.product_spec_on,
+                                        'shop_id':productShopId.id,
+                                        'shop_title':productShopId.shop_title,
+                                        'liked':'N'
+                                    }
 
-                                productInfo.update({'min_price':product.product_price}) 
-                                productInfo.update({'max_price':product.product_price}) 
-                                productInfo.update({'min_quantity':product.quantity}) 
-                                productInfo.update({'max_quantity':product.quantity})
-                                productInfo.update({'sum_quantity':product.quantity})
-                                
-                                for productLike in productLikes:
-                                    if productLike.product_id==product.id :
-                                        productInfo.update({'liked': 'Y'})
-                                    else:
-                                        productInfo.update({'liked': 'N'})
+                                    productInfo.update({'min_price':product.product_price}) 
+                                    productInfo.update({'max_price':product.product_price}) 
+                                    productInfo.update({'min_quantity':product.quantity}) 
+                                    productInfo.update({'max_quantity':product.quantity})
+                                    productInfo.update({'sum_quantity':product.quantity})
+                                    
+                                    for productLike in productLikes:
+                                        if productLike.product_id==product.id :
+                                            productInfo.update({'liked': 'Y'})
+                                        else:
+                                            productInfo.update({'liked': 'N'})
 
-                                responseData['data'].append(productInfo)
+                                    responseData['data'].append(productInfo)
 
-                                models.Product_Browsed.objects.create(
-                                    id=uuid.uuid4(),
-                                    product_id=product.id, 
-                                    user_id=id
-                                )      
+                                    models.Product_Browsed.objects.create(
+                                        id=uuid.uuid4(),
+                                        product_id=product.id, 
+                                        user_id=id
+                                    )      
                
                 responseData['ret_val'] = '已取得商品清單!'
     return JsonResponse(responseData)
