@@ -75,23 +75,23 @@ def add(request):
             payment_id=models.Payment_Method.objects.get(is_default='Y')
             shipments=models.Product_Shipment_Method.objects.filter(product_id=product_id,onoff='on').order_by('price')[:1]
             # print(shipments)
-            count=models.Shop_Order_Details.objects.filter(product_id=product_id).aggregate(Sum('quantity'))
-            order_quantity_sum=count["quantity__sum"]
-            if count["quantity__sum"]==None:
-                order_quantity_sum=0
-            remain_qty=0
+            # count=models.Shop_Order_Details.objects.filter(product_id=product_id).aggregate(Sum('quantity'))
+            # order_quantity_sum=count["quantity__sum"]
+            # if count["quantity__sum"]==None:
+            #     order_quantity_sum=0
+            # remain_qty=0
             if product_spec_id=='':
                 remain_product=models.Product.objects.get(id=product_id)
-                remain_qty=remain_product.quantity-order_quantity_sum
-                if (remain_qty-quantity)<0:
+                # remain_qty=remain_product.quantity-order_quantity_sum
+                if (remain_product.quantity)<=0:
                     response_data['status']=-1
                     response_data['ret_val'] = '購買數量超過剩餘庫存!'
                     # response_data['data'].append({"remain_qty":remain_qty})
                     return JsonResponse(response_data)
             else:
                 remain_spec=models.Product_Spec.objects.get(id=product_spec_id)
-                remain_qty=remain_spec.quantity-order_quantity_sum
-                if (remain_qty-quantity)<0:
+                # remain_qty=remain_spec.quantity-order_quantity_sum
+                if (remain_spec.quantity)<=0:
                     response_data['status']=-1
                     response_data['ret_val'] = '購買數量超過剩餘庫存!'
                     # response_data['data'].append({"remain_qty":remain_qty})
