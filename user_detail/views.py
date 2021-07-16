@@ -586,6 +586,6 @@ def order_detail(request,order_id):
                 orderInfo["productList"].append(productList)
             orderInfo.update({"subtotal":subtotal})
 
-            responseData['data'].append(orderInfo)
+            responseData['data']=orderInfo
             responseData['ret_val'] = '訂單詳情取得成功'
     return JsonResponse(responseData) 
