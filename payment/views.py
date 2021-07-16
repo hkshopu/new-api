@@ -4,6 +4,8 @@ from hkshopu import models
 from datetime import datetime
 from django.db import transaction
 import uuid
+import json
+from datetime import datetime
 
 # Create your views here.
 
@@ -109,20 +111,88 @@ def paypalWebHooks(request):
         'ret_val': '',
         'data': {}
     }
-
-    if request.method == 'GET':
-        pass
+    print('--------------------------------------------------')
+    #print(request.body)
+    f = open("paypalWebHooks.txt", "a")
+    data = json.loads(request.body)
+    print(data['event_type']+'\n')
+    f.write(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+'\n')
+    f.write('ID: '+data['id']+'\n')
+    f.write('event_type: '+ data['event_type']+'\n')
+    f.write('summary: '+data['summary']+'\n')
+    f.write(json.dumps(data))
+    f.write('\n--------------------------------------------------\n\n')
+    f.close()
+    print('--------------------------------------------------')
 
     return JsonResponse(responseData)
-
-def createOrder(request):
+def paypalWebHooks_COC(request):
     responseData = {
         'status': 0,
         'ret_val': '',
         'data': {}
     }
+    print('--------------------------------------------------')
+    print('CHECKOUT.ORDER.COMPLETED\n')
+    #print(request.body)
+    f = open("paypalWebHooks_COC.txt", "a")
+    f.write(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+'\n')
+    f.write(json.dumps(json.loads(request.body)))
+    f.write('\n--------------------------------------------------\n\n')
+    f.close()
+    print('--------------------------------------------------')
 
-    
+    return JsonResponse(responseData)
+def paypalWebHooks_COA(request):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+    print('--------------------------------------------------')
+    print('CHECKOUT.ORDER.APPROVED\n')
+    f = open("paypalWebHooks_COA.txt", "a")
+    f.write(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+'\n')
+    f.write(json.dumps(json.loads(request.body)))
+    f.write('\n--------------------------------------------------\n\n')
+    f.close()
+    print('--------------------------------------------------')
+
+    return JsonResponse(responseData)
+def paypalWebHooks_PSC(request):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+    print('--------------------------------------------------')
+    print('PAYMENT.SALE.COMPLETED\n')
+    f = open("paypalWebHooks_PSC.txt", "a")
+    f.write(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+'\n')
+    f.write(json.dumps(json.loads(request.body)))
+    f.write('\n--------------------------------------------------\n\n')
+    f.close()
+    print('--------------------------------------------------')
+
+    return JsonResponse(responseData)
+def paypalWebHooks_POC(request):
+    responseData = {
+        'status': 0,
+        'ret_val': '',
+        'data': {}
+    }
+    print('--------------------------------------------------')
+    print('PAYMENT.ORDER.CANCELLED\n')
+    f = open("paypalWebHooks_POC.txt", "a")
+    f.write(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+'\n')
+    f.write(json.dumps(json.loads(request.body)))
+    f.write('\n--------------------------------------------------\n\n')
+    f.close()
+    print('--------------------------------------------------')
 
     return JsonResponse(responseData)
 
+# CHECKOUT.ORDER.COMPLETED
+# CHECKOUT.ORDER.APPROVED
+# PAYMENT.SALE.COMPLETED
+# PAYMENT.ORDER.CANCELLED
