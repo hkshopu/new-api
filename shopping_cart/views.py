@@ -637,11 +637,13 @@ def covert_shopping_cart(request):
                     #判斷是否有庫存
                     if product.product_spec_on=='y':
                         spec_quantity=models.Product_Spec.objects.get(id=cart.product_spec_id)
-                        if spec_quantity.quantity <= 0:
+                        checkStock=spec_quantity.quantity -cart.quantity
+                        if spec_quantity.quantity == 0 or checkStock <0 :
                             bool=True
                             outOfStock.append(cart.id)
                     else :
-                        if product.quantity==0:
+                        checkStock=product.quantity -cart.quantity
+                        if product.quantity==0 or checkStock <0:
                             bool=True
                             outOfStock.append(cart.id)
                     #判斷下架
@@ -705,6 +707,8 @@ def covert_shopping_cart(request):
                                     spec_dec_1_items=''
                                     spec_dec_2_items=''
                                     unit_price=product.product_price
+                                    product.quantity= product.quantity-cart.quantity
+                                    product.save()
                                 else:
                                     spec=models.Product_Spec.objects.get(id=cart.product_spec_id)
                                     spec_desc_1=spec.spec_desc_1
@@ -712,6 +716,8 @@ def covert_shopping_cart(request):
                                     spec_dec_1_items=spec.spec_dec_1_items
                                     spec_dec_2_items=spec.spec_dec_2_items
                                     unit_price=spec.price
+                                    spec.quantity=spec.quantity-cart.quantity
+                                    spec.save()
 
                                 models.Shop_Order_Details.objects.create(
                                     id=uuid.uuid4(),
