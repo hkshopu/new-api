@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 import re
 
+from django.db.models.fields import FloatField
+
 # validator
 def validate_empty_value_to_default(value):
     if value == '':
@@ -1098,5 +1100,17 @@ class Order_Rate(models.Model):
     logistics  = models.FloatField()
     service = models.FloatField()
     anonymous = models.CharField(max_length=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Paypal_Transactions(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    order_number = models.CharField(max_length=25)
+    paypal_transaction_id = models.CharField(max_length=20)
+    paypal_payer_id = models.CharField(max_length=15)
+    transaction_amount = models.FloatField()
+    transaction_currency_code = models.CharField(max_length=5)
+    fee_amount = models.CharField(max_length=10)
+    fee_currency_code = models.CharField(max_length=5)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
