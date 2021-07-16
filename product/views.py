@@ -1793,7 +1793,11 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productInfo.update({'min_quantity':min(quantity_range)}) 
                                     productInfo.update({'max_quantity':max(quantity_range)})
                                     productInfo.update({'sum_quantity': sum(quantity_sum)}) 
-                                    responseData['data'].append(productInfo)
+
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -1834,14 +1838,16 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'rating':0
                                         # 'price' : productSpec.price
                                     }
-                                    #responseData['data'].append(productInfo)    
-                                    # responseData['data']['price'] = {}
+
                                     productInfo.update({'min_price':product.product_price}) 
                                     productInfo.update({'max_price':product.product_price}) 
                                     productInfo.update({'min_quantity':product.quantity}) 
                                     productInfo.update({'max_quantity':product.quantity})
                                     productInfo.update({'sum_quantity':product.quantity})
-                                    responseData['data'].append(productInfo) 
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
                                         product_id=product.id
@@ -1922,7 +1928,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'liked': 'N'})
 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -1976,7 +1985,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'liked': 'N'})
 
-                                    responseData['data'].append(productInfo)
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2018,6 +2030,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'product_description': product.product_description, 
                                         'product_price': product.product_price, 
                                         'shipping_fee': product.shipping_fee, 
+                                        # 'created_at': product.created_at, 
+                                        # 'updated_at': product.updated_at,
                                         'weight':product.weight,
                                         'longterm_stock_up':product.longterm_stock_up,
                                         'new_secondhand':product.new_secondhand,
@@ -2070,7 +2084,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                             productInfo.update({'productQuantity': productQuantity["sale_quantity"]})
                                         else:
                                             productInfo.update({'productQuantity': 0})
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2093,6 +2110,8 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         'product_description': product.product_description, 
                                         'product_price': product.product_price, 
                                         'shipping_fee': product.shipping_fee, 
+                                        # 'created_at': product.created_at, 
+                                        # 'updated_at': product.updated_at,
                                         'weight':product.weight,
                                         'longterm_stock_up':product.longterm_stock_up,
                                         'new_secondhand':product.new_secondhand,
@@ -2132,7 +2151,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'productQuantity': 0})
 
-                                    responseData['data'].append(productInfo) 
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
                                         product_id=product.id
@@ -2227,7 +2249,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                             
                                             productInfo.update({'productQuantity': 0})
 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2292,7 +2317,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                             
                                             productInfo.update({'productQuantity': 0})
 
-                                    responseData['data'].append(productInfo)
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2371,7 +2399,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productInfo.update({'min_quantity':min(quantity_range)}) 
                                     productInfo.update({'max_quantity':max(quantity_range)})
                                     productInfo.update({'sum_quantity': sum(quantity_sum)}) 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2419,7 +2450,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productInfo.update({'min_quantity':product.quantity}) 
                                     productInfo.update({'max_quantity':product.quantity})
                                     productInfo.update({'sum_quantity':product.quantity})
-                                    responseData['data'].append(productInfo) 
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
                                         product_id=product.id
@@ -2501,7 +2535,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'liked': 'N'})
 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2555,7 +2592,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'liked': 'N'})
 
-                                    responseData['data'].append(productInfo)
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2639,7 +2679,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productInfo.update({'min_quantity':min(quantity_range)}) 
                                     productInfo.update({'max_quantity':max(quantity_range)})
                                     productInfo.update({'sum_quantity': sum(quantity_sum)}) 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2687,7 +2730,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                     productInfo.update({'min_quantity':product.quantity}) 
                                     productInfo.update({'max_quantity':product.quantity})
                                     productInfo.update({'sum_quantity':product.quantity})
-                                    responseData['data'].append(productInfo) 
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
                                         product_id=product.id
@@ -2769,7 +2815,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'liked': 'N'})
 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2823,7 +2872,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'liked': 'N'})
 
-                                    responseData['data'].append(productInfo)
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2914,7 +2966,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'rating': 0})
 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -2969,7 +3024,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             productInfo.update({'rating': 0})
 
-                                    responseData['data'].append(productInfo) 
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
                                         product_id=product.id
@@ -3062,7 +3120,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                             
                                             productInfo.update({'rating': 0})
 
-                                    responseData['data'].append(productInfo)
+                                    if sum(quantity_sum)==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
@@ -3127,8 +3188,10 @@ def shop_product_analytics(request,shop_id,mode): #userid
                                         else:
                                             
                                             productInfo.update({'rating': 0})
-
-                                    responseData['data'].append(productInfo)
+                                    if product.quantity==0:
+                                        break
+                                    else:
+                                        responseData['data'].append(productInfo)
 
                                     models.Product_Browsed.objects.create(
                                         id=uuid.uuid4(),
