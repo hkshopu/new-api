@@ -1353,14 +1353,14 @@ def sale_list(request):
             for order in orders:
                 productID=[]
                 sub_total=0
-                getProductIDs=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                getProductIDs=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
                 
                 for getProductID in getProductIDs:
                     productID.append(getProductID.product_id)
 
                 product=models.Product.objects.get(id=productID[0])
                 product_pic=models.Selected_Product_Pic.objects.get(product_id=product.id,cover='y')
-                product_count=models.Shop_Order_Details.objects.filter(order_id=order.id).count()
+                product_count=models.Shop_Order_Details.objects.filter(shop_order_id=order.id).count()
                 user=models.User.objects.get(id=order.user_id)
                 if user.pic==None:
                     user_pic=""
@@ -1377,7 +1377,7 @@ def sale_list(request):
                     "buyer_pic":user_pic,
                     "shipment_info":order.product_shipment_desc
                 }
-                details=models.Shop_Order_Details.objects.filter(order_id=order.id)
+                details=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
                 for detail in details:
                     sub_total+=detail.quantity*detail.unit_price+detail.logistic_fee
                 orderInfo["sub_total"]=sub_total
@@ -1416,7 +1416,7 @@ def sale_order_detail(request,order_id):
                 "order_number":order.order_number,
                 "pay_time":order.updated_at #付款時間 (tbc)
             }
-            orderDetails=models.Shop_Order_Details.objects.filter(order_id=order.id)
+            orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
                 productPic=models.Selected_Product_Pic.objects.get(product_id=orderDetail.product_id,cover='y')
                 productList={
@@ -1436,4 +1436,4 @@ def sale_order_detail(request,order_id):
 
             responseData['data'].append(orderInfo)
             responseData['ret_val'] = '訂單詳情取得成功'
-    return JsonResponse(responseData)  
+    return JsonResponse(responseData) 
