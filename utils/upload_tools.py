@@ -14,7 +14,7 @@ DNS = 'https://storage.googleapis.com/'
 if DEBUG:
     project = 'hkshopu'
     bucket_name = "hkshopu.appspot.com"
-    service_key = 'utils/hkshopu-1ef39fa54ea8.json'
+    service_key = 'utils/hkshopu-8c719ce2e5fb.json'
 else:
     project = 'peppy-booth-311912'
     bucket_name = "peppy-booth-311912.appspot.com"
