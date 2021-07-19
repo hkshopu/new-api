@@ -79,7 +79,7 @@ def update_detail(request):
         if responseData['status']==0:
             for user in users:
                 if user_name !='':
-                    if not(re.match('^[A-Za-z]{3,45}$', user_name)):
+                    if not(re.match('^[A-Za-z\u4e00-\u9fa5]{1,45}$', user_name)):
                         responseData['status'] = -6
                         responseData['ret_val'] = '用戶名稱格式錯誤!'
                         return JsonResponse(responseData)
@@ -549,6 +549,14 @@ def order_detail(request,order_id):
             order=models.Shop_Order.objects.get(id=order_id)
             shop=models.Shop.objects.get(id=order.shop_id)
             subtotal=0
+            if order.payment_at is None or order.payment_at=='':
+                order.payment_at=''
+            if order.actual_deliver_at is None or order.actual_deliver_at=='':
+                order.actual_deliver_at=''
+            if order.estimated_deliver_at is None or order.estimated_deliver_at=='':
+                order.estimated_deliver_at=''
+            if order.actual_finished_at is None or order.actual_finished_at=='':
+                order.actual_finished_at=''
             orderInfo={
                 "status":order.status,
                 "shipment_info":order.product_shipment_desc,
@@ -565,7 +573,10 @@ def order_detail(request,order_id):
                 "bill":0, #訂單金額
                 "payment_desc":order.payment_desc,
                 "order_number":order.order_number,
-                "pay_time":order.updated_at #付款時間 (tbc)
+                "payment_at":order.payment_at,
+                "actual_deliver_at":order.actual_deliver_at,
+                "estimated_deliver_at":order.estimated_deliver_at,
+                "actual_finished_at":order.actual_finished_at
             }
             orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
