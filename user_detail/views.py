@@ -549,6 +549,14 @@ def order_detail(request,order_id):
             order=models.Shop_Order.objects.get(id=order_id)
             shop=models.Shop.objects.get(id=order.shop_id)
             subtotal=0
+            if order.payment_at is None or order.payment_at=='':
+                order.payment_at=''
+            if order.actual_deliver_at is None or order.actual_deliver_at=='':
+                order.actual_deliver_at=''
+            if order.estimated_deliver_at is None or order.estimated_deliver_at=='':
+                order.estimated_deliver_at=''
+            if order.actual_finished_at is None or order.actual_finished_at=='':
+                order.actual_finished_at=''
             orderInfo={
                 "status":order.status,
                 "shipment_info":order.product_shipment_desc,
@@ -568,7 +576,7 @@ def order_detail(request,order_id):
                 "payment_at":order.payment_at,
                 "actual_deliver_at":order.actual_deliver_at,
                 "estimated_deliver_at":order.estimated_deliver_at,
-                "actual_finished_at":order.payment_at
+                "actual_finished_at":order.actual_finished_at
             }
             orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
