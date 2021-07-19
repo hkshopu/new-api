@@ -565,7 +565,10 @@ def order_detail(request,order_id):
                 "bill":0, #訂單金額
                 "payment_desc":order.payment_desc,
                 "order_number":order.order_number,
-                "pay_time":order.updated_at #付款時間 (tbc)
+                "payment_at":order.payment_at,
+                "actual_deliver_at":order.actual_deliver_at,
+                "estimated_deliver_at":order.estimated_deliver_at,
+                "actual_finished_at":order.payment_at
             }
             orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
