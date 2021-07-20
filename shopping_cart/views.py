@@ -616,6 +616,8 @@ def delete_user_address(request): #id : uuid(column)
     return JsonResponse(responseData)
 
 #購物車轉換成訂單
+from datetime import datetime
+from datetime import date
 def covert_shopping_cart(request): 
     responseData = {
         'status': 0, 
@@ -689,7 +691,22 @@ def covert_shopping_cart(request):
                         product_shipment_desc=shipment.shipment_desc #運送方式名稱
                         # payment_at=
                         )
-                        
+                        d1 = order_id.created_at.strftime("%Y%m%d")
+                        # print("d1 =", d1)
+                        order_setting=models.Shop_Order_Setting.objects.get(shop_id=shop.id)
+                        if order_setting.order_number >=1 and order_setting.order_number<=9:
+                            lpad='0000'
+                        elif order_setting.order_number >=10 and order_setting.order_number<=99:
+                            lpad='000'
+                        elif order_setting.order_number >=100 and order_setting.order_number<=999:
+                            lpad='00'
+                        elif order_setting.order_number >=1000 and order_setting.order_number<=9999:
+                            lpad='0'
+                        order_id.order_number=order_setting.country_code+order_setting.shop_code+lpad+str(order_setting.order_number)+str(d1)
+                        order_id.save()
+                        order_setting.order_number=order_setting.order_number+1
+                        order_setting.save()
+
                         print(order_id.id)
                         for j in range(len(shopping_cart[i]["productList"])):
                             if shopping_cart[i]["productList"][j]["product_shipment_id"]==distinctShipment[k]:
@@ -738,4 +755,49 @@ def covert_shopping_cart(request):
                             else:
                                 pass #依照運送方式區分訂單order       
                 responseData['ret_val'] = '訂單新增成功'
+    return JsonResponse(responseData) 
+
+#購物車轉換成訂單
+def shop_code(request): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='POST':
+        # user_id=request.POST.get('user_id', '')
+        # shopping_cart=json.loads(request.POST.get('shopping_cart'))
+        # status=request.POST.get('status', '') #tbc 預設是Pending Payment?
+        if responseData['status']==0: 
+            shops=models.Shop.objects.all()
+            chr1=65
+            chr2=65
+            chr3=65
+            chr4=65
+            chr5=65
+
+            num=1
+            for shop in shops:
+                models.Shop_Order_Setting.objects.create(
+                    id=uuid.uuid4(),
+                    shop_id=shop.id,
+                    country_code='HK',
+                    shop_code=chr(chr1)+chr(chr2)+chr(chr3)+chr(chr4)+chr(chr5),
+                    order_number=num
+                )
+                chr5+=1
+                if chr5>90:
+                    chr4+=1
+                    chr5=65
+                if chr4>90:
+                    chr3+=1
+                    chr4=65
+                if chr3>90:
+                    chr2+=1
+                    chr3=65
+                if chr2>90:
+                    chr1+=1
+                    chr2=65
+                num+=1
+            responseData['ret_val'] = 'shop_code新增成功'
     return JsonResponse(responseData) 
