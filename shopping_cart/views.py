@@ -783,7 +783,7 @@ def shop_code(request):
                     shop_id=shop.id,
                     country_code='HK',
                     shop_code=chr(chr1)+chr(chr2)+chr(chr3)+chr(chr4)+chr(chr5),
-                    order_number=num
+                    order_number=1
                 )
                 chr5+=1
                 if chr5>90:
@@ -798,6 +798,6 @@ def shop_code(request):
                 if chr2>90:
                     chr1+=1
                     chr2=65
-                num+=1
+                
             responseData['ret_val'] = 'shop_code新增成功'
     return JsonResponse(responseData) 
