@@ -15,7 +15,6 @@ from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from mimetypes import guess_type as guess_mime_type
-from utils.upload_tools import upload_file_from_path
 from bs4 import BeautifulSoup
 import re
 

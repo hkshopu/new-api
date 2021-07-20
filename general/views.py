@@ -5,7 +5,6 @@ from django.db.models import Q
 from utils.gmail import gmail_authenticate
 from utils.gmail import search_messages
 from utils.gmail import read_message
-from utils.upload_tools import check_file_exists
 import datetime
 
 
