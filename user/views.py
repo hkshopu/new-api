@@ -1427,6 +1427,7 @@ def sale_order_detail(request,order_id):
                     "spec_desc_2":orderDetail.spec_desc_2,
                     "spec_dec_1_items":orderDetail.spec_dec_1_items,
                     "spec_dec_2_items":orderDetail.spec_dec_2_items,
+                    "price":orderDetail.unit_price,
                     "quantity":orderDetail.quantity, #or purchasing_qty (tbc)
                     "product_pic":productPic.product_pic
                 }
@@ -1436,4 +1437,4 @@ def sale_order_detail(request,order_id):
 
             responseData['data']=orderInfo
             responseData['ret_val'] = '訂單詳情取得成功'
-    return JsonResponse(responseData)  
+    return JsonResponse(responseData)   
