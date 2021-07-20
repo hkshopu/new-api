@@ -91,9 +91,11 @@ def parse_parts(service, parts, folder_name, msg):
             if mimeType == "text/plain":
                 # if the email part is text plain
                 if data:
-                    text = urlsafe_b64decode(data).decode()
+                    pass
+                    #text = urlsafe_b64decode(data).decode()
                     #print(text)
                     #parts_content += text
+                    #parts_content['plain_text'] = text
             elif mimeType == "text/html":
                 # if the email part is an HTML content
                 # save the HTML file and optionally open it in the browser
@@ -111,8 +113,9 @@ def parse_parts(service, parts, folder_name, msg):
                 #parts_content += urlsafe_b64decode(data).decode()
                 # parsing data
                 html_str = urlsafe_b64decode(data).decode()
-                soup = BeautifulSoup(html_str)
-                rating_selector = "div.gmail_quote div table tbody tr td font table tbody tr td table tbody tr td table tbody tr td font"
+                soup = BeautifulSoup(html_str,features="html.parser")
+                #rating_selector = "table tbody tr td font table tbody tr td table tbody tr td table tbody tr td font"
+                selector = 'font'
                 # content = []
                 # for i in soup.select(rating_selector):
                 #     for j in i.text.split(','):
@@ -120,7 +123,7 @@ def parse_parts(service, parts, folder_name, msg):
                 # content = [re.sub('[\n\t\r +]+', ' ', i.text) for i in soup.select(rating_selector)]#[0]
                 matches = ['Account Nickname', 'As of', 'Credit Amount', 'Paying Bank', 'Reference Number', 'Hang Seng Bank Limited']
                 parts_content['parsed_html_data'] = {}
-                for i in soup.select(rating_selector):
+                for i in soup.select(selector):
                     snippet = re.sub('[\n\t\r +]+', ' ', i.text)
                     if all(x in snippet for x in matches):
                         for match_str in matches:
@@ -172,6 +175,7 @@ def read_message(service, message_id):
     payload = msg['payload']
     headers = payload.get("headers")
     parts = payload.get("parts")
+    body = payload.get('body')
     folder_name = "email" + os.sep
     mail_data = {}
     if headers:
@@ -212,6 +216,14 @@ def read_message(service, message_id):
                 #print("Date:", value)
                 mail_data["Date"] = value
                 #mail_data += "Date: " + value + '\n'
+    # if 'data' in body:
+    #     print(urlsafe_b64decode(body['data']).decode())
+    # else: print()
+    if not parts:
+        parts = []
+        parts.append(payload)
+        #print(urlsafe_b64decode(body.get("data")).decode())
+    # if message_id['id'] == '17ac22ae16b61f9d':
     mail_data['body'] = parse_parts(service, parts, folder_name, msg)
     #mail_data += parse_parts(service, parts, folder_name, msg) + '\n'
     #print("="*50)
