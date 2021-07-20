@@ -291,7 +291,7 @@ def save(request):
                     shop_code02=ord(shop_codes[1])+1
                 if shop_code02>90:
                     shop_code01=ord(shop_codes[0])+1
-                shop_code=shop_code01+shop_code02+shop_code03+shop_code04+shop_code05
+                shop_code=chr(shop_code01)+chr(shop_code02)+chr(shop_code03)+chr(shop_code04)+chr(shop_code05)
                 models.Shop_Order_Setting.objects.create(
                     id=uuid.uuid4(), 
                     shop_id=shop['id'], 
