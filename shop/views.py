@@ -283,18 +283,22 @@ def save(request):
                     shop_codes=order_setting.shop_code
 
                 shop_code05=ord(shop_codes[4])+1
+                shop_code04=ord(shop_codes[3])
+                shop_code03=ord(shop_codes[2])
+                shop_code02=ord(shop_codes[1])
+                shop_code01=ord(shop_codes[0])
                 if shop_code05>90:
-                    shop_code04=ord(shop_codes[3])+1
+                    shop_code04+=1
                 if shop_code04>90 :
-                    shop_code03=ord(shop_codes[2])+1
+                    shop_code03+=1
                 if shop_code03>90 :
-                    shop_code02=ord(shop_codes[1])+1
+                    shop_code02+=1
                 if shop_code02>90:
-                    shop_code01=ord(shop_codes[0])+1
+                    shop_code01+=1
                 shop_code=chr(shop_code01)+chr(shop_code02)+chr(shop_code03)+chr(shop_code04)+chr(shop_code05)
                 models.Shop_Order_Setting.objects.create(
                     id=uuid.uuid4(), 
-                    shop_id=shop['id'], 
+                    shop_id=new_shop.id, 
                     country_code='HK', 
                     shop_code=shop_code, 
                     order_number=1
