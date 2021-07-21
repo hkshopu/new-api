@@ -585,17 +585,17 @@ def order_detail(request,order_id):
             messages=models.Order_Message.objects.get(order_status=order.status)
             #傳中文 or 英文
             if order.status=='Pending Payment': 
-                buyer_message='待付款\r\n\r\n'+messages.buyer_message_template.replace('<status>','')
+                buyer_message='待付款'+messages.buyer_message_template.replace('<status>','')
 
             if order.status=='Pending Delivery': 
                 d1 = order.estimated_deliver_at.strftime("%d/%m/%Y")
                 print("d1 =", d1)
-                buyer_message='待發貨\r\n\r\n'+messages.buyer_message_template.replace('<status>','').replace('<estimate_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+                buyer_message='待發貨'+messages.buyer_message_template.replace('<status>','').replace('<estimate_delivery_date>','').replace('前到貨','')+d1+'前到貨'
 
             if order.status=='Pending Good Receive': 
                 d1 = order.actual_deliver_at.strftime("%d/%m/%Y")
                 print("d1 =", d1)
-                buyer_message='待收貨\r\n\r\n'+messages.buyer_message_template.replace('<status>','').replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+                buyer_message='待收貨'+messages.buyer_message_template.replace('<status>','').replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
 
             if order.status=='Completed': 
                 buyer_message=messages.buyer_message_template
