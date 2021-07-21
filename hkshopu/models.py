@@ -1118,6 +1118,7 @@ class Paypal_Transactions(models.Model):
 class Order_Message(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     order_status = models.CharField(max_length=255)
-    message_template = models.CharField(max_length=255)
+    buyer_message_template = models.TextField()
+    shop_message_template = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
