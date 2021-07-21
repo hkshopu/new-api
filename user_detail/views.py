@@ -538,6 +538,8 @@ def shopping_list(request):
             responseData['ret_val'] = '買家資訊取得成功'
     return JsonResponse(responseData) 
 
+from datetime import datetime
+from datetime import date
 def order_detail(request,order_id): 
     responseData = {
         'status': 0, 
@@ -548,6 +550,7 @@ def order_detail(request,order_id):
         if responseData['status']==0:
             order=models.Shop_Order.objects.get(id=order_id)
             shop=models.Shop.objects.get(id=order.shop_id)
+
             subtotal=0
             if order.payment_at is None or order.payment_at=='':
                 order.payment_at=''
@@ -557,6 +560,7 @@ def order_detail(request,order_id):
                 order.estimated_deliver_at=''
             if order.actual_finished_at is None or order.actual_finished_at=='':
                 order.actual_finished_at=''
+
             orderInfo={
                 "status":order.status,
                 "shipment_info":order.product_shipment_desc,
@@ -576,8 +580,36 @@ def order_detail(request,order_id):
                 "payment_at":order.payment_at,
                 "actual_deliver_at":order.actual_deliver_at,
                 "estimated_deliver_at":order.estimated_deliver_at,
-                "actual_finished_at":order.actual_finished_at
+                "actual_finished_at":order.actual_finished_at,
             }
+            messages=models.Order_Message.objects.get(order_status=order.status)
+            #傳中文 or 英文
+            if order.status=='Pending Payment': 
+                buyer_message='待付款'+messages.buyer_message_template.replace('<status>','')
+
+            if order.status=='Pending Delivery': 
+                d1 = order.estimated_deliver_at.strftime("%d/%m/%Y")
+                print("d1 =", d1)
+                buyer_message='待發貨'+messages.buyer_message_template.replace('<status>','').replace('<estimate_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+
+            if order.status=='Pending Good Receive': 
+                d1 = order.actual_deliver_at.strftime("%d/%m/%Y")
+                print("d1 =", d1)
+                buyer_message='待收貨'+messages.buyer_message_template.replace('<status>','').replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+
+            if order.status=='Completed': 
+                buyer_message=messages.buyer_message_template
+                # order.status
+            if order.status=='Cancelled': 
+                buyer_message=''
+                # order.status
+            if order.status=='Refunded': 
+                buyer_message=''
+                # order.status
+            orderInfo["buyer_message"]=buyer_message
+            
+
+
             orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
                 productPic=models.Selected_Product_Pic.objects.get(product_id=orderDetail.product_id,cover='y')
