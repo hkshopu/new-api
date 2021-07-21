@@ -39,6 +39,5 @@ urlpatterns = [
     path('general/', include('general.urls')), 
     path('app_version/', include('app_version.urls')), 
     path('shop_order/', include('shop_order.urls')), 
-    path('user_detail/', include('user_detail.urls')),
-    path('paypal/', include('paypal.urls'))
+    path('user_detail/', include('user_detail.urls'))
 ]

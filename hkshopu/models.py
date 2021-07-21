@@ -1106,8 +1106,8 @@ class Order_Rate(models.Model):
 class Paypal_Transactions(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     order_number = models.CharField(max_length=25)
-    paypal_transaction_id = models.CharField(max_length=20)
-    paypal_payer_id = models.CharField(max_length=15)
+    paypal_transaction_id = models.CharField(max_length=30)
+    paypal_payer_id = models.CharField(max_length=15, null=True)
     transaction_amount = models.FloatField()
     transaction_currency_code = models.CharField(max_length=5)
     fee_amount = models.CharField(max_length=10)
