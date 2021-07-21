@@ -270,12 +270,19 @@ def user_followed(request):
             shops=models.Shop.objects.filter(id__in=getShopID).filter(shop_title__icontains=keyword).filter(is_delete='N')
             for shop in shops:
                 followCount=models.Shop_Follower.objects.filter(shop_id=shop.id).count()
+                products=models.Product.objects.filter(shop_id=shop.id)
+
+                productPics=models.Selected_Product_Pic.objects.filter(product_id__in=products,cover='y')[:3]
+                pic_path=[]
+                for productPic in productPics:
+                    pic_path.append(productPic.product_pic)
                 shopInfo={
                     "shop_id":shop.id,
                     "shop_title":shop.shop_title,
                     "shop_icon":shop.shop_icon,
                     "shop_pic":shop.shop_pic,
                     "follow_count":followCount,
+                    "product_pic":pic_path
                     # "shop_rate":shop.id,
                 }
                 responseData['data'].append(shopInfo) 
