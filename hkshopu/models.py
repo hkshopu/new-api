@@ -785,7 +785,7 @@ class Shop_Order(models.Model):
     status = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    order_number = models.CharField(max_length=25)
+    order_number = models.CharField(max_length=25,unique=True)
     payment_at = models.DateTimeField()
     actual_deliver_at   = models.DateTimeField()
     estimated_deliver_at= models.DateTimeField()
