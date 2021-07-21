@@ -618,6 +618,7 @@ def delete_user_address(request): #id : uuid(column)
 #購物車轉換成訂單
 from datetime import datetime
 from datetime import date
+from django.db import transaction
 def covert_shopping_cart(request): 
     responseData = {
         'status': 0, 
@@ -659,102 +660,108 @@ def covert_shopping_cart(request):
                 return JsonResponse(responseData) 
  
             elif not bool :
+                try:
+                    with transaction.atomic():
+                        for i in range (len(shopping_cart)):
+                            shop=models.Shop.objects.get(id=shopping_cart[i]["shop_id"])
+                            user=models.User.objects.get(id=user_id)
+                            userAddress=models.User_Address.objects.get(id=shopping_cart[i]["user_address_id"])
+                            
+                            shipmentList=[]
+                            for n in range(len(shopping_cart[i]["productList"])):
+                                shipmentList.append(shopping_cart[i]["productList"][n]["product_shipment_id"])
 
-                for i in range (len(shopping_cart)):
-                    shop=models.Shop.objects.get(id=shopping_cart[i]["shop_id"])
-                    user=models.User.objects.get(id=user_id)
-                    userAddress=models.User_Address.objects.get(id=shopping_cart[i]["user_address_id"])
-                    
-                    shipmentList=[]
-                    for n in range(len(shopping_cart[i]["productList"])):
-                        shipmentList.append(shopping_cart[i]["productList"][n]["product_shipment_id"])
+                            distinctShipment=list(set(shipmentList))
 
-                    distinctShipment=list(set(shipmentList))
-
-                    for k in range(len(distinctShipment)):
-                        shipment=models.Product_Shipment_Method.objects.get(id=distinctShipment[k])
-                        order_id=models.Shop_Order.objects.create(
-                        id=uuid.uuid4(),
-                        #order_number=
-                        shop_id=shopping_cart[i]["shop_id"],
-                        shop_name=shop.shop_title,
-                        status=status,
-                        user_id=user_id,
-                        first_name=user.first_name,
-                        last_name=user.last_name,
-                        name_in_address=userAddress.name,
-                        phone=userAddress.phone,
-                        full_address=userAddress.area + userAddress.district + userAddress.road +userAddress.number + userAddress.floor + userAddress.room,
-                        user_address_id=shopping_cart[i]["user_address_id"],
-                        product_shipment_id=distinctShipment[k],
-                        payment_id=shopping_cart[i]["payment_id"],
-                        product_shipment_desc=shipment.shipment_desc #運送方式名稱
-                        # payment_at=
-                        )
-                        d1 = order_id.created_at.strftime("%Y%m%d")
-                        # print("d1 =", d1)
-                        order_setting=models.Shop_Order_Setting.objects.get(shop_id=shop.id)
-                        if order_setting.order_number >=1 and order_setting.order_number<=9:
-                            lpad='0000'
-                        elif order_setting.order_number >=10 and order_setting.order_number<=99:
-                            lpad='000'
-                        elif order_setting.order_number >=100 and order_setting.order_number<=999:
-                            lpad='00'
-                        elif order_setting.order_number >=1000 and order_setting.order_number<=9999:
-                            lpad='0'
-                        order_id.order_number=order_setting.country_code+order_setting.shop_code+lpad+str(order_setting.order_number)+str(d1)
-                        order_id.save()
-                        order_setting.order_number=order_setting.order_number+1
-                        order_setting.save()
-
-                        print(order_id.id)
-                        for j in range(len(shopping_cart[i]["productList"])):
-                            if shopping_cart[i]["productList"][j]["product_shipment_id"]==distinctShipment[k]:
-                                cart=models.Shopping_Cart.objects.get(id=shopping_cart[i]["productList"][j]["shopping_cart_item_id"])
-                                cart.is_delete='Y'
-                                cart.quantity=shopping_cart[i]["productList"][j]["shopping_cart_quantity"]
-                                cart.product_shipment_id=shopping_cart[i]["productList"][j]["product_shipment_id"]
-                                cart.save()
-
-                                order=models.Shop_Order.objects.get(id=order_id.id)
-                                product=models.Product.objects.get(id=cart.product_id)
-                                if cart.product_spec_id=='':
-                                    spec_desc_1=''
-                                    spec_desc_2=''
-                                    spec_dec_1_items=''
-                                    spec_dec_2_items=''
-                                    unit_price=product.product_price
-                                    product.quantity= product.quantity-cart.quantity
-                                    product.save()
-                                else:
-                                    spec=models.Product_Spec.objects.get(id=cart.product_spec_id)
-                                    spec_desc_1=spec.spec_desc_1
-                                    spec_desc_2=spec.spec_desc_2
-                                    spec_dec_1_items=spec.spec_dec_1_items
-                                    spec_dec_2_items=spec.spec_dec_2_items
-                                    unit_price=spec.price
-                                    spec.quantity=spec.quantity-cart.quantity
-                                    spec.save()
-
-                                models.Shop_Order_Details.objects.create(
-                                    id=uuid.uuid4(),
-                                    shop_order_id=order.id,
-                                    product_id=cart.product_id,
-                                    product_spec_id=cart.product_spec_id,
-                                    product_shipment_id=shopping_cart[i]["productList"][j]["product_shipment_id"],
-                                    product_description=product.product_title,
-                                    spec_desc_1=spec_desc_1,
-                                    spec_desc_2=spec_desc_2,
-                                    spec_dec_1_items=spec_dec_1_items,
-                                    spec_dec_2_items=spec_dec_2_items,
-                                    unit_price=unit_price,
-                                    quantity=shopping_cart[i]["productList"][j]["shopping_cart_quantity"],
-                                    logistic_fee=0
+                            for k in range(len(distinctShipment)):
+                                shipment=models.Product_Shipment_Method.objects.get(id=distinctShipment[k])
+                                order_id=models.Shop_Order.objects.create(
+                                id=uuid.uuid4(),
+                                #order_number=
+                                shop_id=shopping_cart[i]["shop_id"],
+                                shop_name=shop.shop_title,
+                                status=status,
+                                user_id=user_id,
+                                first_name=user.first_name,
+                                last_name=user.last_name,
+                                name_in_address=userAddress.name,
+                                phone=userAddress.phone,
+                                full_address=userAddress.area + userAddress.district + userAddress.road +userAddress.number + userAddress.floor + userAddress.room,
+                                user_address_id=shopping_cart[i]["user_address_id"],
+                                product_shipment_id=distinctShipment[k],
+                                payment_id=shopping_cart[i]["payment_id"],
+                                product_shipment_desc=shipment.shipment_desc #運送方式名稱
+                                # payment_at=
                                 )
-                                    
-                            else:
-                                pass #依照運送方式區分訂單order       
-                responseData['ret_val'] = '訂單新增成功'
+                                d1 = order_id.created_at.strftime("%Y%m%d")
+                                print("d1 =", d1)
+                                d2 = order_id.created_at.strftime("%Y%m%d : %H:%M:%S.%f")
+                                print("d2 =", d2)
+                                order_setting=models.Shop_Order_Setting.objects.get(shop_id=shop.id)
+                                if order_setting.order_number >=1 and order_setting.order_number<=9:
+                                    lpad='0000'
+                                elif order_setting.order_number >=10 and order_setting.order_number<=99:
+                                    lpad='000'
+                                elif order_setting.order_number >=100 and order_setting.order_number<=999:
+                                    lpad='00'
+                                elif order_setting.order_number >=1000 and order_setting.order_number<=9999:
+                                    lpad='0'
+                                order_id.order_number=order_setting.country_code+order_setting.shop_code+lpad+str(order_setting.order_number)+str(d1)#+'dsadassa'
+                                order_id.save()
+                                order_setting.order_number=order_setting.order_number+1
+                                order_setting.save()
+
+                                print(order_id.id)
+                                for j in range(len(shopping_cart[i]["productList"])):
+                                    if shopping_cart[i]["productList"][j]["product_shipment_id"]==distinctShipment[k]:
+                                        cart=models.Shopping_Cart.objects.get(id=shopping_cart[i]["productList"][j]["shopping_cart_item_id"])
+                                        cart.is_delete='Y'
+                                        cart.quantity=shopping_cart[i]["productList"][j]["shopping_cart_quantity"]
+                                        cart.product_shipment_id=shopping_cart[i]["productList"][j]["product_shipment_id"]
+                                        cart.save()
+
+                                        order=models.Shop_Order.objects.get(id=order_id.id)
+                                        product=models.Product.objects.get(id=cart.product_id)
+                                        if cart.product_spec_id=='':
+                                            spec_desc_1=''
+                                            spec_desc_2=''
+                                            spec_dec_1_items=''
+                                            spec_dec_2_items=''
+                                            unit_price=product.product_price
+                                            product.quantity= product.quantity-cart.quantity
+                                            product.save()
+                                        else:
+                                            spec=models.Product_Spec.objects.get(id=cart.product_spec_id)
+                                            spec_desc_1=spec.spec_desc_1
+                                            spec_desc_2=spec.spec_desc_2
+                                            spec_dec_1_items=spec.spec_dec_1_items
+                                            spec_dec_2_items=spec.spec_dec_2_items
+                                            unit_price=spec.price
+                                            spec.quantity=spec.quantity-cart.quantity
+                                            spec.save()
+
+                                        models.Shop_Order_Details.objects.create(
+                                            id=uuid.uuid4(),
+                                            shop_order_id=order.id,
+                                            product_id=cart.product_id,
+                                            product_spec_id=cart.product_spec_id,
+                                            product_shipment_id=shopping_cart[i]["productList"][j]["product_shipment_id"],
+                                            product_description=product.product_title,
+                                            spec_desc_1=spec_desc_1,
+                                            spec_desc_2=spec_desc_2,
+                                            spec_dec_1_items=spec_dec_1_items,
+                                            spec_dec_2_items=spec_dec_2_items,
+                                            unit_price=unit_price,
+                                            quantity=shopping_cart[i]["productList"][j]["shopping_cart_quantity"],
+                                            logistic_fee=0
+                                        )
+                                            
+                                    else:
+                                        pass #依照運送方式區分訂單order       
+                        responseData['ret_val'] = '訂單新增成功'
+                except:
+                    responseData['status']=-2
+                    responseData['ret_val'] = '訂單新增失敗' #同時有多人建立同家shop的訂單造成order_number重複
     return JsonResponse(responseData) 
 
 #購物車轉換成訂單
