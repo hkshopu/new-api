@@ -9,5 +9,9 @@ urlpatterns = [
     path('paypalWebHooks_COC/', views.paypalWebHooks_COC),
     path('paypalWebHooks_COA/', views.paypalWebHooks_COA),
     path('paypalWebHooks_PSC/', views.paypalWebHooks_PSC),
-    path('paypalWebHooks_POC/', views.paypalWebHooks_POC)
+    path('paypalWebHooks_POC/', views.paypalWebHooks_POC),    
+    path('paypal/createPayment/', views.paypal_createPayment),
+    path('paypal/executePayment/', views.paypal_executePayment),
+    path('paypal/cancelPayment/', views.paypal_cancelPayment),
+    path('paypal/getPaymentDetails/', views.paypal_getPaymentDetails)
 ]

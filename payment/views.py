@@ -2,10 +2,19 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from hkshopu import models
 from datetime import datetime
+from django.db.models import Sum
 from django.db import transaction
 import uuid
 import json
 from datetime import datetime
+from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+import paypalrestsdk
+
+paypalrestsdk.configure({
+  "mode": "sandbox", # sandbox or live
+  "client_id": "AdBCLHocOrbf94O5WAIkLVi3OAjuwWseJfwNtX6uHSm96tV5gqB_e1g4uBvfvS6TlQeAs9mjT90b-Ok3",
+  "client_secret": "EFg3J2mb7i__gh7xOjd836JiS_WwXOb6No0mJiSc-bt_SyjIE0resRHWkHDYVuWdsNnWGJN7R3M7_7qX" })
 
 # Create your views here.
 
@@ -196,3 +205,118 @@ def paypalWebHooks_POC(request):
 # CHECKOUT.ORDER.APPROVED
 # PAYMENT.SALE.COMPLETED
 # PAYMENT.ORDER.CANCELLED
+
+def paypal_createPayment(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '',
+        'data': {"approval_url": ""}
+    }
+    
+    hkshopu_order_number = request.POST.get('hkshopu_order_number')
+    email = request.POST.get('payee_email')
+
+    try:
+        shop_order = models.Shop_Order.objects.get(order_number=hkshopu_order_number)
+        if shop_order.status != 'Pending Payment':
+            responseData['status'], responseData['ret_val'] = -2, '訂單已付款'  
+    except:
+        responseData['status'], responseData['ret_val'] = -1, '無此訂單編號'
+
+    if responseData['status'] == 0:
+        shop_order_details = models.Shop_Order_Details.objects.filter(shop_order_id=shop_order.id)
+        total_amount = 0
+        for detail in shop_order_details:
+            total_amount += detail.unit_price*detail.quantity + detail.logistic_fee
+        payment = paypalrestsdk.Payment({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"},
+            "redirect_urls": {
+                # "return_url": "https://hkshopu.df.r.appspot.com/paypal/executePayment/",
+                # "cancel_url": "https://hkshopu.df.r.appspot.com/paypal/cancelPayment/"},                
+                "return_url": "http://localhost:8000/payment/paypal/executePayment/",
+                "cancel_url": "http://localhost:8000/payment/paypal/cancelPayment/"},
+            "transactions": [{
+                "payee": {
+                    "email": email
+                },
+                "amount": {
+                    "total": str(total_amount),
+                    "currency": "HKD"},
+                "description": "HKShopU Paypal Payment."}]})
+        if payment.create():
+            for link in payment.links:
+                if link.rel == "approval_url":
+                    # Convert to str to avoid Google App Engine Unicode issue
+                    # https://github.com/paypal/rest-api-sdk-python/pull/58
+                    approval_url = str(link.href)
+                    #print("Redirect for approval: %s" % (approval_url))
+                    responseData['data']['approval_url'] = approval_url
+            paypal_payment_id = payment.id
+            
+            hkshopu_paypal_transaction = models.Paypal_Transactions.objects.filter(order_number=hkshopu_order_number)
+            if len(hkshopu_paypal_transaction) == 1:
+                hkshopu_paypal_transaction.update(paypal_transaction_id=paypal_payment_id)
+            elif len(hkshopu_paypal_transaction) == 0:
+                models.Paypal_Transactions.objects.create(
+                    id=uuid.uuid4(),
+                    order_number=hkshopu_order_number,
+                    paypal_transaction_id=paypal_payment_id,
+                )
+        else:
+            responseData['status'], responseData['ret_val'] = -2, payment.error
+
+    return JsonResponse(responseData)
+
+def paypal_executePayment(request):
+    paymentId = request.GET.get('paymentId')
+    token = request.GET.get('token')
+    PayerID = request.GET.get('PayerID')
+    payment = paypalrestsdk.Payment.find(paymentId)
+    if payment.execute({"payer_id": PayerID}):
+        payment = paypalrestsdk.Payment.find(paymentId)
+        hkshopu_paypal_transaction = models.Paypal_Transactions.objects.filter(paypal_transaction_id=paymentId)
+        paypal_sale_state = payment['transactions'][0]['related_resources'][0]['sale']['state']
+        if len(hkshopu_paypal_transaction) == 1 and paypal_sale_state == 'completed':
+            transaction_amount = payment['transactions'][0]['amount']['total']
+            transaction_currency_code = payment['transactions'][0]['amount']['currency']
+            fee_amount = payment['transactions'][0]['related_resources'][0]['sale']['transaction_fee']['value']
+            fee_currency_code = payment['transactions'][0]['related_resources'][0]['sale']['transaction_fee']['currency']
+            with transaction.atomic():
+                hkshopu_paypal_transaction.update(
+                    paypal_payer_id=PayerID,
+                    transaction_amount=transaction_amount,
+                    transaction_currency_code=transaction_currency_code,
+                    fee_amount=fee_amount,
+                    fee_currency_code=fee_currency_code
+                )
+                models.Shop_Order.objects.filter(order_number=hkshopu_paypal_transaction[0].order_number).update(
+                    status='Pending Delivery'
+                )
+        return HttpResponse("Paypal payment execute successfully")
+    else:
+        #print(payment.error) # Error Hash
+        return JsonResponse(payment.error)
+
+def paypal_cancelPayment(request):
+    return HttpResponse("PayPal payment has been cancelled")
+
+def paypal_getPaymentDetails(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '',
+        'data': {}
+    }
+    # Fetch Payment
+    id = request.POST.get('id')
+    payment = paypalrestsdk.Payment.find(id)
+    responseData['data'] = payment.to_dict()
+
+    # Get List of Payments
+    # payment_history = paypalrestsdk.Payment.all({"count": 10})
+    # print(payment_history.payments)
+    
+    return JsonResponse(responseData)
