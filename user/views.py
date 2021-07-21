@@ -1420,22 +1420,21 @@ def sale_order_detail(request,order_id):
             }
 
             messages=models.Order_Message.objects.get(order_status=order.status)
-            #傳中文 or 英文
             if order.status=='Pending Payment': 
-                shop_message='待付款'+messages.shop_message_template.replace('<status>','')
+                shop_message=messages.shop_message_content
 
             if order.status=='Pending Delivery': 
                 d1 = order.estimated_deliver_at.strftime("%d/%m/%Y")
-                print("d1 =", d1)
-                shop_message='待發貨'+messages.shop_message_template.replace('<status>','').replace('<estimate_delivery_date>','').replace('前到貨','')+d1+'前到貨'
-
+                # print("d1 =", d1)
+                shop_message=messages.shop_message_content.replace('<estimate_delivery_date>','').replace('前發貨','')+d1+'前發貨'
+                # print(buyer_message[15])
             if order.status=='Pending Good Receive': 
                 d1 = order.actual_deliver_at.strftime("%d/%m/%Y")
-                print("d1 =", d1)
-                shop_message='待收貨'+messages.shop_message_template.replace('<status>','').replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
-
+                # print("d1 =", d1)
+                shop_message=messages.shop_message_content.replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+                
             if order.status=='Completed': 
-                shop_message=messages.shop_message_template
+                shop_message=messages.shop_message_content
                 # order.status
             if order.status=='Cancelled': 
                 shop_message=''
@@ -1443,7 +1442,8 @@ def sale_order_detail(request,order_id):
             if order.status=='Refunded': 
                 shop_message=''
                 # order.status
-            orderInfo["shop_message"]=shop_message
+            orderInfo["shop_message_title"]=messages.shop_message_title
+            orderInfo["shop_message_content"]=shop_message
 
             orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
@@ -1466,4 +1466,4 @@ def sale_order_detail(request,order_id):
 
             responseData['data']=orderInfo
             responseData['ret_val'] = '訂單詳情取得成功'
-    return JsonResponse(responseData)    
+    return JsonResponse(responseData)  

@@ -583,22 +583,21 @@ def order_detail(request,order_id):
                 "actual_finished_at":order.actual_finished_at,
             }
             messages=models.Order_Message.objects.get(order_status=order.status)
-            #傳中文 or 英文
             if order.status=='Pending Payment': 
-                buyer_message='待付款'+messages.buyer_message_template.replace('<status>','')
+                buyer_message=messages.buyer_message_content
 
             if order.status=='Pending Delivery': 
                 d1 = order.estimated_deliver_at.strftime("%d/%m/%Y")
-                print("d1 =", d1)
-                buyer_message='待發貨'+messages.buyer_message_template.replace('<status>','').replace('<estimate_delivery_date>','').replace('前到貨','')+d1+'前到貨'
-
+                # print("d1 =", d1)
+                buyer_message=messages.buyer_message_content.replace('<estimate_delivery_date>','').replace('前發貨','')+d1+'前發貨'
+                # print(buyer_message[15])
             if order.status=='Pending Good Receive': 
                 d1 = order.actual_deliver_at.strftime("%d/%m/%Y")
-                print("d1 =", d1)
-                buyer_message='待收貨'+messages.buyer_message_template.replace('<status>','').replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
-
+                # print("d1 =", d1)
+                buyer_message=messages.buyer_message_content.replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+                
             if order.status=='Completed': 
-                buyer_message=messages.buyer_message_template
+                buyer_message=messages.buyer_message_content
                 # order.status
             if order.status=='Cancelled': 
                 buyer_message=''
@@ -606,7 +605,8 @@ def order_detail(request,order_id):
             if order.status=='Refunded': 
                 buyer_message=''
                 # order.status
-            orderInfo["buyer_message"]=buyer_message
+            orderInfo["buyer_message_title"]=messages.buyer_message_title
+            orderInfo["buyer_message_content"]=buyer_message
             
 
 
