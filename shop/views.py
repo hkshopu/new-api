@@ -1800,10 +1800,13 @@ def get_specific_recommended_shop(request, id):
             # 總銷售量
             orders = models.Shop_Order.objects.filter(shop_id=shop.id)
             for order in orders:
-                order_details = models.Shop_Order_Details.objects.filter(order_id=order.id)
+                order_details = models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
                 for order_detail in order_details:
-                    sum_of_sales += order_detail.purchasing_qty
+                    sum_of_sales += order_detail.quantity
+            #-----chris新增
+            shop_likes=models.Shop_Follower.objects.filter(shop_id=id,follower_id=user_id)
 
+            #-------------
             response_data['data']['shop_id'] = shop.id
             response_data['data']['shop_title'] = shop.shop_title
             response_data['data']['shop_icon'] = shop.shop_icon
@@ -1814,6 +1817,10 @@ def get_specific_recommended_shop(request, id):
             response_data['data']['product_nums_of_shop'] = product_nums_of_shop
             response_data['data']['follower_nums_of_shop'] = follower_nums_of_shop
             response_data['data']['sum_of_sales'] = sum_of_sales
+            if len(shop_likes)==0:
+                response_data['data']['followed'] = 'N'
+            else:
+                response_data['data']['followed'] = 'Y'
             # 寫入 shop_clicked 資料表
             models.Shop_Clicked.objects.create(
                 id=uuid.uuid4(), 

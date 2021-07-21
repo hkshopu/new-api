@@ -1387,6 +1387,8 @@ def sale_list(request):
             responseData['ret_val'] = '訂單資訊取得成功'
     return JsonResponse(responseData)
 
+from datetime import datetime
+from datetime import date
 def sale_order_detail(request,order_id): 
     responseData = {
         'status': 0, 
@@ -1416,6 +1418,33 @@ def sale_order_detail(request,order_id):
                 "order_number":order.order_number,
                 "pay_time":order.updated_at #付款時間 (tbc)
             }
+
+            messages=models.Order_Message.objects.get(order_status=order.status)
+            if order.status=='Pending Payment': 
+                shop_message=messages.shop_message_content
+
+            if order.status=='Pending Delivery': 
+                d1 = order.estimated_deliver_at.strftime("%d/%m/%Y")
+                # print("d1 =", d1)
+                shop_message=messages.shop_message_content.replace('<estimate_delivery_date>','').replace('前發貨','')+d1+'前發貨'
+                # print(buyer_message[15])
+            if order.status=='Pending Good Receive': 
+                d1 = order.actual_deliver_at.strftime("%d/%m/%Y")
+                # print("d1 =", d1)
+                shop_message=messages.shop_message_content.replace('<actual_delivery_date>','').replace('前到貨','')+d1+'前到貨'
+                
+            if order.status=='Completed': 
+                shop_message=messages.shop_message_content
+                # order.status
+            if order.status=='Cancelled': 
+                shop_message=''
+                # order.status
+            if order.status=='Refunded': 
+                shop_message=''
+                # order.status
+            orderInfo["shop_message_title"]=messages.shop_message_title
+            orderInfo["shop_message_content"]=shop_message
+
             orderDetails=models.Shop_Order_Details.objects.filter(shop_order_id=order.id)
             for orderDetail in orderDetails:
                 productPic=models.Selected_Product_Pic.objects.get(product_id=orderDetail.product_id,cover='y')
@@ -1437,4 +1466,4 @@ def sale_order_detail(request,order_id):
 
             responseData['data']=orderInfo
             responseData['ret_val'] = '訂單詳情取得成功'
-    return JsonResponse(responseData)   
+    return JsonResponse(responseData)  
