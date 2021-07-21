@@ -25,8 +25,8 @@ def createPayment(request):
         "payer": {
             "payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": "http://localhost:8000/paypal/executePayment/",
-            "cancel_url": "http://localhost:8000/paypal/cancel/"},
+            "return_url": "https://hkshopu.df.r.appspot.com/paypal/executePayment/",
+            "cancel_url": "https://hkshopu.df.r.appspot.com/paypal/cancel/"},
         "transactions": [{
             "payee": {
                 "email": email
