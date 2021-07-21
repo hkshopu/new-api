@@ -280,7 +280,7 @@ def user_followed(request):
                     "shop_id":shop.id,
                     "shop_title":shop.shop_title,
                     "shop_icon":shop.shop_icon,
-                    "shop_pic":shop.shop_pic,
+                    "shop_pic":pic_path,
                     "follow_count":followCount,
                     "product_pic":pic_path
                     # "shop_rate":shop.id,
