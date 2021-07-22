@@ -16,16 +16,30 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from mimetypes import guess_type as guess_mime_type
 from bs4 import BeautifulSoup
+from google.cloud import storage
+from google.oauth2 import service_account
+from google.cloud.storage import Blob
 import re
 
 SCOPES = ['https://mail.google.com/']
 
 def gmail_authenticate():
+    #/*
+    # google cloud storage
+    project = 'hkshopu'
+    bucket_name = "hkshopu_dev"
+    service_key = 'utils/hkshopu-8c719ce2e5fb.json'
+    credentials = service_account.Credentials.from_service_account_file(service_key)
+    client = storage.Client(project=project,credentials=credentials)
+    bucket = client.get_bucket(bucket_name)
+    #*/
     creds = None
     # the file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first time
-    if os.path.exists("token.pickle"):
-        with open("token.pickle", "rb") as token:
+    token_pickle = "token.pickle"
+    if Blob(token_pickle, bucket).exists():
+        blob = bucket.get_blob(token_pickle)
+        with blob.open("rb") as token:
             creds = pickle.load(token)
     # if there are no (valid) credentials availablle, let the user log in.
     if not creds or not creds.valid:
@@ -34,8 +48,8 @@ def gmail_authenticate():
         else:
             flow = InstalledAppFlow.from_client_secrets_file('utils/client_secret_349041949227-o4nq65m87706hkrdbe84cn1qev379oh7.apps.googleusercontent.com.json', SCOPES)
             creds = flow.run_local_server(port=0)
-        # save the credentials for the next run
-        with open("token.pickle", "wb") as token:
+        # save the credentials for the next run        
+        with blob.open("wb") as token:
             pickle.dump(creds, token)
     return build('gmail', 'v1', credentials=creds)
 
