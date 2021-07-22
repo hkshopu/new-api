@@ -1467,3 +1467,48 @@ def sale_order_detail(request,order_id):
             responseData['data']=orderInfo
             responseData['ret_val'] = '訂單詳情取得成功'
     return JsonResponse(responseData)  
+
+def fps_payment_account(request,id): 
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    } 
+    if request.method=='GET':
+    
+        if responseData['status']==0:
+            payments_y=models.User_Payment_Account.objects.filter(user_id=id,payment_type='FPS',is_default='Y')
+
+            for payment in payments_y:
+                paymentInfo={
+                    "id":payment.id,
+                    "user_id":payment.user_id,
+                    "bank_code":payment.bank_code,
+                    "bank_name":payment.bank_name,
+                    "bank_account_name":payment.bank_account_name,
+                    "contact_type":payment.contact_type,
+                    "phone_country_code":payment.phone_country_code,
+                    "phone_number":payment.phone_number,
+                    "contact_email":payment.contact_email,
+                    "is_default":payment.is_default
+                }
+                
+                responseData['data'].append(paymentInfo) 
+            payments_n=models.User_Payment_Account.objects.filter(user_id=id,payment_type='FPS',is_default='N')
+            for payment_n in payments_n:
+                paymentInfo={
+                    "id":payment_n.id,
+                    "user_id":payment_n.user_id,
+                    "bank_code":payment_n.bank_code,
+                    "bank_name":payment_n.bank_name,
+                    "bank_account_name":payment_n.bank_account_name,
+                    "contact_type":payment_n.contact_type,
+                    "phone_country_code":payment_n.phone_country_code,
+                    "phone_number":payment_n.phone_number,
+                    "contact_email":payment_n.contact_email,
+                    "is_default":payment_n.is_default
+                }
+                
+                responseData['data'].append(paymentInfo)
+            responseData['ret_val'] = '訂單資訊取得成功'
+    return JsonResponse(responseData)

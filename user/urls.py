@@ -33,4 +33,5 @@ urlpatterns = [
     path('adSettingRanking/<ad_category>/<ad_type>/', views.adSettingRanking),
     path('sale_list/', views.sale_list), 
     path('<order_id>/sale_order_detail/', views.sale_order_detail), 
+    path('<id>/fps_payment_account/', views.fps_payment_account), 
 ]
