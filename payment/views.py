@@ -67,9 +67,9 @@ def confirmFPSOrderTransaction(request):
                 responseData['status'], responseData['ret_val'] = -3, 'target_delivery_date應為 %Y-%m-%d'
         if responseData['status']==0:
             try:
-                datetime.strptime(target_delivery_time, '%H-%M-%S')
+                datetime.strptime(target_delivery_time, '%H:%M:%S')
             except:
-                responseData['status'], responseData['ret_val'] = -4, 'target_delivery_time應為 %H-%M-%S'
+                responseData['status'], responseData['ret_val'] = -4, 'target_delivery_time應為 %H:%M:%S'
 
         
         if responseData['status']==0:
