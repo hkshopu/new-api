@@ -1510,5 +1510,5 @@ def fps_payment_account(request,id):
                 }
                 
                 responseData['data'].append(paymentInfo)
-            responseData['ret_val'] = '訂單資訊取得成功'
+            responseData['ret_val'] = '轉速快資訊取得成功'
     return JsonResponse(responseData)
