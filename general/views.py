@@ -6,6 +6,7 @@ from utils.gmail import gmail_authenticate
 from utils.gmail import search_messages
 from utils.gmail import read_message
 import datetime
+from django.db import transaction
 
 
 # Create your views here.
@@ -62,5 +63,25 @@ def searchGmail(request):
         # for each email matched, read it (output plain/text to console & save HTML and attachments)
         for msg in results:
             responseData['data'].append(read_message(service, msg))
+        try:
+            with transaction.atomic():
+                for mail in responseData['data']:
+                    mail_date = datetime.datetime.strptime(mail['Date'], '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%d %H:%M:%S')
+                    account_nickname = mail['body']['parsed_html_data']['Account Nickname']
+                    as_of = mail['body']['parsed_html_data']['As of']
+                    credit_amount = mail['body']['parsed_html_data']['Credit Amount']
+                    paying_bank = mail['body']['parsed_html_data']['Paying Bank']
+                    reference_number = mail['body']['parsed_html_data']['Reference Number']
+                    if not models.Fps_Email_Transaction.objects.filter(reference_number=reference_number).exists():
+                        models.Fps_Email_Transaction.objects.create(
+                            reference_number=reference_number,
+                            account_nickname=account_nickname,
+                            as_of=as_of,
+                            credit_amount=credit_amount,
+                            paying_bank=paying_bank,
+                            mail_date=mail_date
+                        )
+        except:
+            responseData['status'], responseData['ret_val'] = -1, 'This was not supposed to happen, please contact our engineer.'
 
     return JsonResponse(responseData)

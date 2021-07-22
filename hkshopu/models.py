@@ -1133,3 +1133,13 @@ class Fps_Setting(models.Model):
     phone_number = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Fps_Email_Transaction(models.Model):
+    reference_number = models.CharField(primary_key=True, max_length=15)
+    account_nickname = models.CharField(max_length=20)
+    as_of = models.DateTimeField()
+    credit_amount = models.CharField(max_length=20)
+    paying_bank = models.CharField(max_length=255)
+    mail_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
