@@ -13,5 +13,6 @@ urlpatterns = [
     path('paypal/createPayment/', views.paypal_createPayment),
     path('paypal/executePayment/', views.paypal_executePayment),
     path('paypal/cancelPayment/', views.paypal_cancelPayment),
-    path('paypal/getPaymentDetails/', views.paypal_getPaymentDetails)
+    path('paypal/getPaymentDetails/', views.paypal_getPaymentDetails),
+    path('fps/fps_setting/', views.fps_setting)
 ]

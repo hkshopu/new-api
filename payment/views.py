@@ -320,3 +320,24 @@ def paypal_getPaymentDetails(request):
     # print(payment_history.payments)
     
     return JsonResponse(responseData)
+
+def fps_setting(request):
+    # 回傳資料
+    responseData = {
+        'status': 0, 
+        'ret_val': '',
+        'data': []
+    }
+
+    if request.method == 'GET':
+        fps_settings = models.Fps_Setting.objects.all().values('company_name','phone_country_code', 'phone_number')
+
+        for setting in fps_settings:
+            tmp_setting = {}
+            for key in setting:
+                tmp_setting[key] = setting[key]
+            responseData['data'].append(tmp_setting)
+
+
+
+    return JsonResponse(responseData)

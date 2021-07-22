@@ -5,6 +5,8 @@ from django.db.models import Q
 from hkshopu import models
 import re
 import uuid
+from datetime import datetime
+from utils.upload_tools import upload_file
 
 # Create your views here.
 
@@ -143,3 +145,46 @@ def convert_shopping_cart_items_to_order(request):
             response_data['data'] = datas_of_shop_order
             response_data['ret_val'] = '取得訂單資訊成功!'
     return JsonResponse(response_data)
+
+def confirmOrderShipmentDetail(request, shop_order_id):
+    responseData = {
+        'status': 0, 
+        'ret_val': '', 
+        'data': []
+    }
+
+    if request.method == 'POST':
+        waybill_number = request.POST.get('waybill_number')
+        estimated_deliver_at = request.POST.get('estimated_deliver_at')
+        delivery_pic = request.FILES.get('delivery_pic')
+        status = "Pending Good Receive"
+
+        if responseData['status'] == 0:
+            try:
+                shop_order = models.Shop_Order.objects.get(id=shop_order_id)
+            except:
+                responseData['stauts'], responseData['ret_val'] = -1, '無此編號'
+        if responseData['status'] == 0:
+            try:
+                estimated_deliver_at = datetime.strptime(estimated_deliver_at, '%Y-%m-%d')
+            except:
+                responseData['status'], responseData['ret_val'] = -2, '日期格式錯誤'        
+        if responseData['status'] == 0:
+            if delivery_pic:
+                if not(re.match('^.+\.(gif|png|jpg|jpeg)$', str(delivery_pic.name))):
+                    responseData['status'], responseData['ret_val'] = -3, '附件格式錯誤!'
+        if responseData['status'] == 0:            
+            # 上傳圖片
+            destination_path = 'images/shop_order/'
+            delivery_pic_url = upload_file(FILE=delivery_pic,destination_path=destination_path,suffix='pic')
+
+            shop_order.waybill_number = waybill_number
+            shop_order.estimated_deliver_at = estimated_deliver_at
+            shop_order.status = status
+            shop_order.delivery_pic = delivery_pic_url
+            shop_order.save()
+            responseData['ret_val'] = '成功'
+
+    return JsonResponse(responseData)
+    
+    

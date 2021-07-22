@@ -790,6 +790,7 @@ class Shop_Order(models.Model):
     actual_deliver_at   = models.DateTimeField()
     estimated_deliver_at= models.DateTimeField()
     actual_finished_at  = models.DateTimeField()
+    delivery_pic = models.CharField(max_length=255)
 
 class Shop_Order_Details(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
@@ -1124,3 +1125,11 @@ class Order_Message(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     buyer_message_title = models.CharField(max_length=255)
     shop_message_title = models.CharField(max_length=255)
+
+class Fps_Setting(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    company_name = models.CharField(max_length=255)
+    phone_country_code = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
