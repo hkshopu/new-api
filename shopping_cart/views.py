@@ -628,7 +628,7 @@ def covert_shopping_cart(request):
     if request.method=='POST':
         user_id=request.POST.get('user_id', '')
         shopping_cart=json.loads(request.POST.get('shopping_cart'))
-        status=request.POST.get('status', '') #tbc 預設是Pending Payment?
+        # status=request.POST.get('status', '') #tbc 預設是Pending Payment?
         bool=False
         if responseData['status']==0:
             outOfStock=[]   
@@ -680,7 +680,7 @@ def covert_shopping_cart(request):
                                 #order_number=
                                 shop_id=shopping_cart[i]["shop_id"],
                                 shop_name=shop.shop_title,
-                                status=status,
+                                status='Pending Payment',
                                 user_id=user_id,
                                 first_name=user.first_name,
                                 last_name=user.last_name,
